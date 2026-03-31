@@ -1,13 +1,9 @@
-import {useUserProfile} from "../provider/user-provider.tsx";
-
+import { useUserProfile } from '../provider/user-provider.tsx';
 
 const Homepage = () => {
-    const userProfile = useUserProfile();
+  const userProfile = useUserProfile();
 
-
-    return (
-        <p>Welcome: {userProfile.username}</p>
-    )
-}
+  return <p>Welcome: {userProfile.username}</p>;
+};
 
 export default Homepage;
