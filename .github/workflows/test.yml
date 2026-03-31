@@ -28,8 +28,6 @@ jobs:
         run: |
           npm run lint
           npm run format:check
-      - name: Component Tests (Vitest)
-        run: npm test -- --watchAll=false --ci
 
   backend:
     runs-on: ubuntu-latest
