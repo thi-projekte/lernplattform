@@ -1,4 +1,4 @@
-package de.thi.mynd.controller;
+package de.thi.mynd.resource;
 
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -6,7 +6,7 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 
 @Path("/demo")
-public class DemoController {
+public class DemoResource {
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
