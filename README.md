@@ -19,3 +19,10 @@ Now you should be ready to start developing!
 ## Contributing
 
 Take a look at the [Contribution guide](./CONTRIBUTING.md)
+
+## Service Architecture
+
+**NOTE:** The used icons do not represent AWS services. It just uses the AWS icons to increase understandability as most people 
+might know the AWS services. Some of the services do not align with the default behaviour of the AWS services. For example keycloak is the AWS secrets manager here, which is not correct at all. Its just for visualization purposes
+
+<img src="./docs/architecture/diagram.svg">
