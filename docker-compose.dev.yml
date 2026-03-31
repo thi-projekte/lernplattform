@@ -27,6 +27,10 @@ services:
       - KC_DB_PASSWORD=db_password
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+  cibseven:
+    image: cibseven/cibseven:latest
+    ports:
+      - "8082:8080"
   # Mail rcv simulator
   maildev:
     image: maildev/maildev
