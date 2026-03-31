@@ -1,10 +1,15 @@
-import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import './index.css'
 import App from './App.tsx'
+import keycloak from "./keycloak.ts";
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+keycloak.init({
+    onLoad: 'login-required',
+    // Needs to enabled in order to work with vite HMR
+    checkLoginIframe: false
+}).then((authenticated) => {
+    if (authenticated) {
+        createRoot(document.getElementById('root')!).render(<App />);
+    }
+}).catch(err => {
+    console.error("Keycloak init failed", err);
+});
