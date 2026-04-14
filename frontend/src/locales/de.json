@@ -1,5 +1,7 @@
 {
-  "common": {
+  "routes": {
+    "dashboard": "Dashboard",
     "builderMode": "Builder Modus"
-  }
+  },
+  "common": {}
 }
