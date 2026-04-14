@@ -30,6 +30,14 @@ public class Topic extends BaseEntity {
     )
     public List<Category> categories = new ArrayList<>();
 
+    @ManyToMany
+    @JoinTable(
+            name = "topic_relations",
+            joinColumns = @JoinColumn(name = "topic_id"),
+            inverseJoinColumns = @JoinColumn(name = "related_topic_id")
+    )
+    public List<Topic> relatedTopics = new ArrayList<>();
+
     @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
     public List<ContentElement> contentElements = new ArrayList<>();
 }
