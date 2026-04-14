@@ -94,10 +94,10 @@
             <mxPoint x="400" y="480" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="0g_a4OhxqtOjAIT2DoJm-49" connectable="0" parent="0g_a4OhxqtOjAIT2DoJm-48" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;" value="0..n" vertex="1">
+        <mxCell id="0g_a4OhxqtOjAIT2DoJm-49" connectable="0" parent="0g_a4OhxqtOjAIT2DoJm-48" style="edgeLabel;resizable=0;html=1;align=left;verticalAlign=top;" value="1" vertex="1">
           <mxGeometry relative="1" x="-1" as="geometry" />
         </mxCell>
-        <mxCell id="0g_a4OhxqtOjAIT2DoJm-50" connectable="0" parent="0g_a4OhxqtOjAIT2DoJm-48" style="edgeLabel;resizable=0;html=1;align=right;verticalAlign=top;" value="1" vertex="1">
+        <mxCell id="0g_a4OhxqtOjAIT2DoJm-50" connectable="0" parent="0g_a4OhxqtOjAIT2DoJm-48" style="edgeLabel;resizable=0;html=1;align=right;verticalAlign=top;" value="0..n" vertex="1">
           <mxGeometry relative="1" x="1" as="geometry" />
         </mxCell>
         <mxCell id="0g_a4OhxqtOjAIT2DoJm-57" parent="1" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="{ContentType}Element" vertex="1">
