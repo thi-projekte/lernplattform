@@ -2,6 +2,7 @@ package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.entity.Category;
 import de.thi.mynd.topic.repository.CategoryRepository;
+import jakarta.annotation.security.PermitAll;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -21,6 +22,7 @@ public class CategoryResource {
 
     @Path("/search")
     @GET
+    @PermitAll
     public List<Category> searchCategories(@RestQuery String query) {
         if (query == null) {
             return categoryRepository.findAllWithLimit(5);
