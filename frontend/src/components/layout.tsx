@@ -1,8 +1,7 @@
 import {
     AppShell,
     Burger,
-    Group,
-    Text,
+    Group, Image,
     NavLink,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -12,6 +11,8 @@ import {
 import type {FC, ReactNode} from "react";
 import LanguagePicker from "./language-picker.tsx";
 import {useTranslation} from "react-i18next";
+
+import logo from "../assets/logo.png"
 
 interface LayoutProps {
     children: ReactNode;
@@ -31,7 +32,13 @@ export const Layout: FC<LayoutProps> = ({children}) =>  {
                 <Group h="100%" px="md" justify="space-between">
                     <Group>
                         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-                        <Text fw={700} size="xl">ContentHub</Text>
+                        <Image
+                            src={logo}
+                            alt="MYnd Logo"
+                            h={45}
+                            w="auto"
+                            fit="contain"
+                        />
                     </Group>
 
                     <LanguagePicker />
