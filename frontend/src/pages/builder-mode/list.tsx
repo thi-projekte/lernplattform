@@ -3,9 +3,11 @@ import { useQueryPersonalTopicsPaginated } from '../../api/topic.ts';
 import { useState } from 'react';
 import type { PaginationState } from '@tanstack/react-table';
 import { Skeleton } from 'boneyard-js/react';
-import EntityTable from '../../components/entity-table.tsx';
-import { Title } from '@mantine/core';
+import EntityTable, { type EntityTableProps } from '../../components/entity-table.tsx';
+import { Badge, Flex, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
+import type { Category, ListTopicDto } from '../../types/topic.ts';
+import {createColumnHelper} from '@tanstack/react-table';
 
 
 const BuilderModeListPage = () => {
@@ -15,14 +17,39 @@ const BuilderModeListPage = () => {
 
   const {t} = useTranslation();
 
+  const columnHelper = createColumnHelper<ListTopicDto>();
+  const columns: EntityTableProps<ListTopicDto>["columns"] = [
+    columnHelper.accessor('title', {
+      cell: (info) => info.getValue(),
+      header: t('topic.fields.title')
+    }),
+    columnHelper.accessor('categories', {
+      cell: (info) => (
+        <Flex gap={3}>
+          {info.getValue().map((category: Category) => <Badge color={category.color} variant="light">{category.title}</Badge>)}
+        </Flex>
+      ),
+      header: t('topic.fields.categories')
+    }),
+    columnHelper.accessor('updatedAt', {
+      cell: (info) => info.getValue(),
+      header: t('common.updatedAt')
+    }),
+    {
+      id: 'actions',
+      header: t('common.actions'),
+      cell: () => <div />
+    }
+  ]
+
 
   return (
     <Layout>
-      <Title>{t("topic.personalTopics")}</Title>
+      <Title>{t("topic.headings.personalTopics")}</Title>
       <Skeleton loading={isLoading}>
         {data && <EntityTable
           data={data.results}
-          columns={[]}
+          columns={columns}
           pageCount={data.totalPages}
           pagination={pagination}
           setPagination={setPagination}

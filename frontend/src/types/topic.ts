@@ -12,7 +12,7 @@ const ListTopicDtoSchema = z.object({
   id: z.uuid(),
   title: z.string(),
   categories: z.array(CategorySchema),
-  updatedAt: z.iso.datetime()
+  updatedAt: z.iso.datetime().pipe(z.coerce.date())
 });
 
 export type ListTopicDto = z.infer<typeof ListTopicDtoSchema>;

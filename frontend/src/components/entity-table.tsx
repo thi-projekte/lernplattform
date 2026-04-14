@@ -2,8 +2,8 @@ import {
   useReactTable,
   getCoreRowModel,
   type RowData,
-  type ColumnDef,
   type PaginationState,
+  type TableOptions,
   flexRender,
 } from '@tanstack/react-table';
 import { Alert, Box, Group, Pagination, ScrollArea, Select, Table, Text } from '@mantine/core';
@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 export interface EntityTableProps<T> {
   data: T[];
-  columns: ColumnDef<T, unknown>[];
+  columns: TableOptions<T>["columns"]
   pageCount: number;
   pagination: PaginationState;
   setPagination: (state: PaginationState) => void;
@@ -76,7 +76,7 @@ function EntityTable<T extends RowData>({
       </ScrollArea>
 
       {data.length === 0 && !isFetching && (
-        <Alert color="yellow">{t("common.noEntriesFound")}</Alert>
+        <Alert color="yellow" mt={12}>{t("common.noEntriesFound")}</Alert>
       )}
 
       <Group justify="space-between" mt="md">

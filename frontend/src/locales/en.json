@@ -5,9 +5,17 @@
   },
   "common": {
     "rowsPerPage": "Rows per page",
-    "noEntriesFound": "No entries found"
+    "noEntriesFound": "No entries found",
+    "updatedAt": "Updated at",
+    "actions": "Actions"
   },
   "topic": {
-    "personalTopics": "Personal Topics"
+    "headings": {
+      "personalTopics": "Personal topics"
+    },
+    "fields": {
+      "title": "Title",
+      "categories": "Categories"
+    }
   }
 }
