@@ -1,4 +1,5 @@
 import {
+    ActionIcon,
     AppShell,
     Burger,
     Group, Image,
@@ -6,13 +7,14 @@ import {
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import {
-    IconHammer,
+    IconHammer, IconUser,
 } from '@tabler/icons-react';
 import type {FC, ReactNode} from "react";
 import LanguagePicker from "./language-picker.tsx";
 import {useTranslation} from "react-i18next";
 
 import logo from "../assets/logo.png"
+import keycloak from "../keycloak.ts";
 
 interface LayoutProps {
     children: ReactNode;
@@ -41,7 +43,12 @@ export const Layout: FC<LayoutProps> = ({children}) =>  {
                         />
                     </Group>
 
-                    <LanguagePicker />
+                    <Group>
+                        <LanguagePicker />
+                        <ActionIcon variant="default" size="xl" onClick={() => keycloak.accountManagement()}>
+                            <IconUser size={32} stroke={1.5} />
+                        </ActionIcon>
+                    </Group>
                 </Group>
             </AppShell.Header>
 
