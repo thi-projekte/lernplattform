@@ -2,7 +2,7 @@ package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.entity.Category;
 import de.thi.mynd.topic.repository.CategoryRepository;
-import jakarta.annotation.security.PermitAll;
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -14,6 +14,7 @@ import java.util.List;
 
 @Path("/categories")
 @Produces(MediaType.APPLICATION_JSON)
+@Authenticated
 public class CategoryResource {
 
     @Inject
@@ -22,7 +23,6 @@ public class CategoryResource {
 
     @Path("/search")
     @GET
-    @PermitAll
     public List<Category> searchCategories(@RestQuery String query) {
         if (query == null) {
             return categoryRepository.findAllWithLimit(5);
