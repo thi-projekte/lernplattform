@@ -9,14 +9,14 @@ import jakarta.persistence.*;
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 public abstract class ContentElement extends BaseEntity {
 
-    @Column(nullable = false)
-    public String title;
+  @Column(nullable = false)
+  public String title;
 
-    @Column(name = "type", insertable = false, updatable = false)
-    @Enumerated(EnumType.STRING)
-    public ContentType type;
+  @Column(name = "type", insertable = false, updatable = false)
+  @Enumerated(EnumType.STRING)
+  public ContentType type;
 
-    @ManyToOne
-    @JoinColumn(name = "topic_id")
-    public Topic topic;
+  @ManyToOne
+  @JoinColumn(name = "topic_id")
+  public Topic topic;
 }

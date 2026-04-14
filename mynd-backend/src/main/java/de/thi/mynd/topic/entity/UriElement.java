@@ -8,6 +8,6 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("URI")
 public class UriElement extends ContentElement {
 
-    @Column(nullable = false)
-    public String uri;
+  @Column(nullable = false)
+  public String uri;
 }

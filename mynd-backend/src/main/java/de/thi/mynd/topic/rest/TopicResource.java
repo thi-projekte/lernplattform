@@ -16,12 +16,12 @@ import org.jboss.resteasy.reactive.RestQuery;
 @Authenticated
 public class TopicResource {
 
-    @Inject
-    TopicService topicService;
+  @Inject TopicService topicService;
 
-    @GET
-    @Path("/personal")
-    public PaginationDto<ListTopicDto> getPersonalTopicsPaginated(@RestQuery int page, @RestQuery int pageSize) {
-        return topicService.findPersonalTopicsPaginated(page, pageSize);
-    }
+  @GET
+  @Path("/personal")
+  public PaginationDto<ListTopicDto> getPersonalTopicsPaginated(
+      @RestQuery int page, @RestQuery int pageSize) {
+    return topicService.findPersonalTopicsPaginated(page, pageSize);
+  }
 }

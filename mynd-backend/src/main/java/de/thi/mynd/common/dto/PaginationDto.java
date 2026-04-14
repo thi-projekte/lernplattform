@@ -1,17 +1,16 @@
 package de.thi.mynd.common.dto;
 
-import lombok.Builder;
-
 import java.util.List;
+import lombok.Builder;
 
 @Builder
 public final class PaginationDto<T> {
 
-    public List<T> results;
+  public List<T> results;
 
-    public int totalPages;
+  public int totalPages;
 
-    public boolean hasNextPage;
+  public boolean hasNextPage;
 
-    public boolean hasPreviousPage;
+  public boolean hasPreviousPage;
 }

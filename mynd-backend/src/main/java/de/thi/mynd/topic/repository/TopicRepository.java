@@ -9,8 +9,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public class TopicRepository extends MyndBaseRepository<Topic> {
 
-    public PaginationDto<Topic> findForCreatorPaginated(String creatorId, int page, int pageSize) {
-        PanacheQuery<Topic> query =  find("creatorId = ?1", creatorId);
-        return buildPaginationFromQuery(query, page, pageSize);
-    }
+  public PaginationDto<Topic> findForCreatorPaginated(String creatorId, int page, int pageSize) {
+    PanacheQuery<Topic> query = find("creatorId = ?1", creatorId);
+    return buildPaginationFromQuery(query, page, pageSize);
+  }
 }

@@ -8,12 +8,11 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("AUDIO_FILE")
 public class AudioFileElement extends ContentElement {
 
-    @Column(nullable = false)
-    public String s3Key;
+  @Column(nullable = false)
+  public String s3Key;
 
-    @Column
-    public String fileSize;
+  @Column public String fileSize;
 
-    @Column(nullable = false)
-    public String originalFileName;
+  @Column(nullable = false)
+  public String originalFileName;
 }

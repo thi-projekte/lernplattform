@@ -8,6 +8,6 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("YOUTUBE_LINK")
 public class YouTubeLinkElement extends ContentElement {
 
-    @Column(nullable = false)
-    public String uri;
+  @Column(nullable = false)
+  public String uri;
 }

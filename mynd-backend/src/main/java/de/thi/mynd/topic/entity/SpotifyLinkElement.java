@@ -5,5 +5,4 @@ import jakarta.persistence.Entity;
 
 @Entity
 @DiscriminatorValue("SPOTIFY_LINK")
-public class SpotifyLinkElement extends ContentElement{
-}
+public class SpotifyLinkElement extends ContentElement {}

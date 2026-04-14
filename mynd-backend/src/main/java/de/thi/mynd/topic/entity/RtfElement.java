@@ -8,6 +8,6 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("RTF")
 public class RtfElement extends ContentElement {
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    public String rtfText;
+  @Column(nullable = false, columnDefinition = "TEXT")
+  public String rtfText;
 }
