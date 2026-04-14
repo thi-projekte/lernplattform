@@ -15,7 +15,7 @@ import java.util.List;
 @Path("/categories")
 @Produces(MediaType.APPLICATION_JSON)
 @Authenticated
-public class CategoryResource {
+public final class CategoryResource {
 
     @Inject
     CategoryRepository categoryRepository;
