@@ -10,6 +10,8 @@ import {
     IconHammer,
 } from '@tabler/icons-react';
 import type {FC, ReactNode} from "react";
+import LanguagePicker from "./language-picker.tsx";
+import {useTranslation} from "react-i18next";
 
 interface LayoutProps {
     children: ReactNode;
@@ -17,6 +19,7 @@ interface LayoutProps {
 
 export const Layout: FC<LayoutProps> = ({children}) =>  {
     const [opened, { toggle }] = useDisclosure();
+    const {t} = useTranslation();
 
     return (
         <AppShell
@@ -30,12 +33,14 @@ export const Layout: FC<LayoutProps> = ({children}) =>  {
                         <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
                         <Text fw={700} size="xl">ContentHub</Text>
                     </Group>
+
+                    <LanguagePicker />
                 </Group>
             </AppShell.Header>
 
             <AppShell.Navbar p="md">
                 <NavLink
-                    label="Builder Mode"
+                    label={t("common.builderMode")}
                     leftSection={<IconHammer size={16} stroke={1.5} />}
                     active
                 />
