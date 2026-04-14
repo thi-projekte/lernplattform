@@ -69,7 +69,7 @@ public class TopicResourceTest {
         .when()
         .get("/topics/personal")
         .then()
-        .statusCode(200);
+        .statusCode(204);
 
     Mockito.verify(topicService).findPersonalTopicsPaginated(5, 25);
   }

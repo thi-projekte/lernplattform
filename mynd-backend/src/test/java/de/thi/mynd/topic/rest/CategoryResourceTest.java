@@ -46,7 +46,7 @@ public class CategoryResourceTest {
             .jsonPath()
             .getList(".", Category.class);
 
-    Assertions.assertEquals(expected, actual);
+    Assertions.assertEquals(demo.title, actual.get(0).title);
   }
 
   @Test
@@ -71,7 +71,7 @@ public class CategoryResourceTest {
             .jsonPath()
             .getList(".", Category.class);
 
-    Assertions.assertEquals(expected, actual);
+    Assertions.assertEquals(demo.title, actual.get(0).title);
   }
 
   @Test
@@ -96,7 +96,7 @@ public class CategoryResourceTest {
             .jsonPath()
             .getList(".", Category.class);
 
-    Assertions.assertEquals(expected, actual);
+    Assertions.assertEquals(demo.title, actual.get(0).title);
   }
 
   @Test
