@@ -13,7 +13,7 @@ export interface EntityTableProps<T> {
   columns: ColumnDef<T, unknown>[];
   pageCount: number;
   pagination: PaginationState;
-  setPagination: (state: PaginationState) => PaginationState;
+  setPagination: (state: PaginationState) => void;
   isFetching?: boolean;
 }
 
