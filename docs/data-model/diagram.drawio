@@ -1,6 +1,6 @@
 <mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.6.6 Chrome/144.0.7559.236 Electron/40.8.4 Safari/537.36" version="29.6.6">
   <diagram name="Page-1" id="pPr_nJqTTYGWV9rW2vnD">
-    <mxGraphModel dx="1752" dy="1834" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+    <mxGraphModel dx="1958" dy="1981" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -41,16 +41,13 @@
           <mxGeometry height="26" width="140" y="52" as="geometry" />
         </mxCell>
         <mxCell id="0g_a4OhxqtOjAIT2DoJm-28" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="ContentElement" vertex="1">
-          <mxGeometry height="104" width="140" x="410" y="510" as="geometry" />
+          <mxGeometry height="78" width="140" x="410" y="510" as="geometry" />
         </mxCell>
         <mxCell id="0g_a4OhxqtOjAIT2DoJm-29" parent="0g_a4OhxqtOjAIT2DoJm-28" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ type: ContentType" vertex="1">
           <mxGeometry height="26" width="140" y="26" as="geometry" />
         </mxCell>
         <mxCell id="0g_a4OhxqtOjAIT2DoJm-30" parent="0g_a4OhxqtOjAIT2DoJm-28" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ order: String" vertex="1">
           <mxGeometry height="26" width="140" y="52" as="geometry" />
-        </mxCell>
-        <mxCell id="0g_a4OhxqtOjAIT2DoJm-31" parent="0g_a4OhxqtOjAIT2DoJm-28" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="+ content: String" vertex="1">
-          <mxGeometry height="26" width="140" y="78" as="geometry" />
         </mxCell>
         <mxCell id="0g_a4OhxqtOjAIT2DoJm-32" parent="1" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&amp;lt;&amp;lt;enum&amp;gt;&amp;gt; ContentType" vertex="1">
           <mxGeometry height="234" width="180" x="616" y="510" as="geometry" />
@@ -112,10 +109,10 @@
         <mxCell id="0g_a4OhxqtOjAIT2DoJm-63" parent="1" style="text;align=center;fontStyle=1;verticalAlign=middle;spacingLeft=3;spacingRight=3;strokeColor=none;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;html=1;" value="Every entity extends this, but there will be&amp;nbsp;&lt;div&gt;no indicator arrows, because it would be a bit too complex&lt;/div&gt;" vertex="1">
           <mxGeometry height="26" width="80" x="225" y="-10" as="geometry" />
         </mxCell>
-        <mxCell id="0g_a4OhxqtOjAIT2DoJm-67" edge="1" parent="1" source="0g_a4OhxqtOjAIT2DoJm-57" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;entryX=0.486;entryY=1.112;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="0g_a4OhxqtOjAIT2DoJm-31" value="Extends">
+        <mxCell id="0g_a4OhxqtOjAIT2DoJm-67" edge="1" parent="1" source="0g_a4OhxqtOjAIT2DoJm-57" style="endArrow=block;endSize=16;endFill=0;html=1;rounded=0;entryX=0.475;entryY=1.081;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0.5;exitY=0;exitDx=0;exitDy=0;" target="0g_a4OhxqtOjAIT2DoJm-30" value="Extends">
           <mxGeometry relative="1" width="160" as="geometry">
             <mxPoint x="220" y="670" as="sourcePoint" />
-            <mxPoint x="380" y="670" as="targetPoint" />
+            <mxPoint x="478.03999999999996" y="616.9119999999998" as="targetPoint" />
           </mxGeometry>
         </mxCell>
         <mxCell id="0g_a4OhxqtOjAIT2DoJm-68" edge="1" parent="1" source="0g_a4OhxqtOjAIT2DoJm-2" style="endArrow=block;startArrow=block;endFill=1;startFill=1;html=1;rounded=0;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="0g_a4OhxqtOjAIT2DoJm-14" value="">
