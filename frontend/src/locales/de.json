@@ -3,5 +3,11 @@
     "dashboard": "Dashboard",
     "builderMode": "Builder Modus"
   },
-  "common": {}
+  "common": {
+    "rowsPerPage": "Einträge pro Seite",
+    "noEntriesFound": "Keine Enträge gefunden"
+  },
+  "topic": {
+    "personalTopics": "Eigene Themen"
+  }
 }

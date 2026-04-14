@@ -6,7 +6,8 @@ import {
   type PaginationState,
   flexRender,
 } from '@tanstack/react-table';
-import { Box, Group, Pagination, ScrollArea, Select, Table, Text } from '@mantine/core';
+import { Alert, Box, Group, Pagination, ScrollArea, Select, Table, Text } from '@mantine/core';
+import { useTranslation } from 'react-i18next';
 
 export interface EntityTableProps<T> {
   data: T[];
@@ -35,6 +36,8 @@ function EntityTable<T extends RowData>({
     onPaginationChange: (update) => setPagination(update as PaginationState),
     manualPagination: true
   });
+
+  const {t} = useTranslation();
 
   return (
     <Box p="md">
@@ -72,10 +75,14 @@ function EntityTable<T extends RowData>({
         </Table>
       </ScrollArea>
 
+      {data.length === 0 && !isFetching && (
+        <Alert color="yellow">{t("common.noEntriesFound")}</Alert>
+      )}
+
       <Group justify="space-between" mt="md">
         <Group gap="xs">
           <Text size="sm" c="dimmed">
-            Rows per page:
+            {t("common.rowsPerPage")}:
           </Text>
           <Select
             size="xs"
