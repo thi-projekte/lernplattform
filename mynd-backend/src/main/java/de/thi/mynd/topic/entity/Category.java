@@ -1,5 +1,6 @@
 package de.thi.mynd.topic.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.thi.mynd.common.entity.BaseEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -18,5 +19,6 @@ public class Category extends BaseEntity {
   @Column public String color;
 
   @ManyToMany(mappedBy = "categories")
+  @JsonIgnore
   public List<Topic> topics = new ArrayList<>();
 }
