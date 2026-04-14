@@ -15,11 +15,11 @@ const queryClient = new QueryClient();
 function App() {
   return (
     <MantineProvider>
-        <QueryClientProvider client={queryClient}>
-            <UserProvider>
-                <RouterProvider router={router} />
-            </UserProvider>
-        </QueryClientProvider>
+      <QueryClientProvider client={queryClient}>
+        <UserProvider>
+          <RouterProvider router={router} />
+        </UserProvider>
+      </QueryClientProvider>
     </MantineProvider>
   );
 }

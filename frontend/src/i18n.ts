@@ -6,15 +6,15 @@ import deRes from './locales/de.json';
 import enRes from './locales/en.json';
 
 i18n
-    .use(LanguageDetector)
-    .use(initReactI18next)
-    .init({
-        resources: {
-            de: { translation: deRes },
-            en: { translation: enRes }
-        },
-        fallbackLng: 'en',
-        debug: true,
-    });
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    resources: {
+      de: { translation: deRes },
+      en: { translation: enRes },
+    },
+    fallbackLng: 'en',
+    debug: true,
+  });
 
 export default i18n;
