@@ -16,16 +16,15 @@ export const routes: TypedMyndRoute[] = [
     Component: Homepage,
     isSidebar: true,
     icon: IconHome,
-    translation: 'dashboard'
-
+    translation: 'dashboard',
   },
   {
     path: '/builder-mode',
     Component: BuilderModeListPage,
     isSidebar: true,
     icon: IconHammer,
-    translation: 'builderMode'
-  }
+    translation: 'builderMode',
+  },
 ];
 
 export const router = createBrowserRouter(routes);

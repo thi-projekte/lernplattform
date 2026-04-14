@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const BaseEntitySchema = z.object({
   id: z.uuid(),
   createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime()
+  updatedAt: z.iso.datetime(),
 });
 
 export const createPaginatedSchema = <T extends z.ZodTypeAny>(itemSchema: T) => {
@@ -11,6 +11,6 @@ export const createPaginatedSchema = <T extends z.ZodTypeAny>(itemSchema: T) => 
     results: z.array(itemSchema),
     totalPages: z.number(),
     hasNextPage: z.boolean(),
-    hasPreviousPage: z.boolean()
+    hasPreviousPage: z.boolean(),
   });
-}
+};

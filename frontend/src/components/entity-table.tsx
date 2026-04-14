@@ -11,7 +11,7 @@ import { useTranslation } from 'react-i18next';
 
 export interface EntityTableProps<T> {
   data: T[];
-  columns: TableOptions<T>["columns"]
+  columns: TableOptions<T>['columns'];
   pageCount: number;
   pagination: PaginationState;
   setPagination: (state: PaginationState) => void;
@@ -32,12 +32,12 @@ function EntityTable<T extends RowData>({
     data,
     columns,
     pageCount,
-    state: {pagination},
+    state: { pagination },
     onPaginationChange: (update) => setPagination(update as PaginationState),
-    manualPagination: true
+    manualPagination: true,
   });
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Box p="md">
@@ -76,13 +76,15 @@ function EntityTable<T extends RowData>({
       </ScrollArea>
 
       {data.length === 0 && !isFetching && (
-        <Alert color="yellow" mt={12}>{t("common.noEntriesFound")}</Alert>
+        <Alert color="yellow" mt={12}>
+          {t('common.noEntriesFound')}
+        </Alert>
       )}
 
       <Group justify="space-between" mt="md">
         <Group gap="xs">
           <Text size="sm" c="dimmed">
-            {t("common.rowsPerPage")}:
+            {t('common.rowsPerPage')}:
           </Text>
           <Select
             size="xs"

@@ -7,57 +7,59 @@ import EntityTable, { type EntityTableProps } from '../../components/entity-tabl
 import { Badge, Flex, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import type { Category, ListTopicDto } from '../../types/topic.ts';
-import {createColumnHelper} from '@tanstack/react-table';
-
+import { createColumnHelper } from '@tanstack/react-table';
 
 const BuilderModeListPage = () => {
-  
-  const [pagination, setPagination] = useState<PaginationState>({pageSize: 20, pageIndex: 0});
-  const {data, isLoading} = useQueryPersonalTopicsPaginated(pagination);
+  const [pagination, setPagination] = useState<PaginationState>({ pageSize: 20, pageIndex: 0 });
+  const { data, isLoading } = useQueryPersonalTopicsPaginated(pagination);
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const columnHelper = createColumnHelper<ListTopicDto>();
-  const columns: EntityTableProps<ListTopicDto>["columns"] = [
+  const columns: EntityTableProps<ListTopicDto>['columns'] = [
     columnHelper.accessor('title', {
       cell: (info) => info.getValue(),
-      header: t('topic.fields.title')
+      header: t('topic.fields.title'),
     }),
     columnHelper.accessor('categories', {
       cell: (info) => (
         <Flex gap={3}>
-          {info.getValue().map((category: Category) => <Badge color={category.color} variant="light">{category.title}</Badge>)}
+          {info.getValue().map((category: Category) => (
+            <Badge color={category.color} variant="light">
+              {category.title}
+            </Badge>
+          ))}
         </Flex>
       ),
-      header: t('topic.fields.categories')
+      header: t('topic.fields.categories'),
     }),
     columnHelper.accessor('updatedAt', {
       cell: (info) => info.getValue(),
-      header: t('common.updatedAt')
+      header: t('common.updatedAt'),
     }),
     {
       id: 'actions',
       header: t('common.actions'),
-      cell: () => <div />
-    }
-  ]
-
+      cell: () => <div />,
+    },
+  ];
 
   return (
     <Layout>
-      <Title>{t("topic.headings.personalTopics")}</Title>
+      <Title>{t('topic.headings.personalTopics')}</Title>
       <Skeleton loading={isLoading}>
-        {data && <EntityTable
-          data={data.results}
-          columns={columns}
-          pageCount={data.totalPages}
-          pagination={pagination}
-          setPagination={setPagination}
-        />}
+        {data && (
+          <EntityTable
+            data={data.results}
+            columns={columns}
+            pageCount={data.totalPages}
+            pagination={pagination}
+            setPagination={setPagination}
+          />
+        )}
       </Skeleton>
     </Layout>
   );
-}
-
+};
 
 export default BuilderModeListPage;

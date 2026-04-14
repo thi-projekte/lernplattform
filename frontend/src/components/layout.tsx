@@ -1,7 +1,7 @@
 import { ActionIcon, AppShell, Burger, Group, Image, NavLink } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconUser } from '@tabler/icons-react';
-import  { type FC, type ReactNode } from 'react';
+import { type FC, type ReactNode } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import { useTranslation } from 'react-i18next';
 
@@ -24,10 +24,12 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
   const activePaths = matches.map((m) => m.pathname);
 
-
   const longestActiveTarget = sidebarRoutes
     .filter((route) => activePaths.includes(route.path ?? ''))
-    .reduce((prev, current) => ((current.path ?? '').length > prev.length ? current.path ?? '' : prev), '');
+    .reduce(
+      (prev, current) => ((current.path ?? '').length > prev.length ? (current.path ?? '') : prev),
+      ''
+    );
 
   const isActive = (path: string) => longestActiveTarget === path;
 
