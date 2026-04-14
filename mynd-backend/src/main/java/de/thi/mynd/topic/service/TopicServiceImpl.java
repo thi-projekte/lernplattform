@@ -10,7 +10,7 @@ import jakarta.inject.Inject;
 import java.util.List;
 
 @ApplicationScoped
-public class TopicServiceImpl implements TopicService {
+public final class TopicServiceImpl implements TopicService {
 
   @Inject SecurityIdentity identity;
 

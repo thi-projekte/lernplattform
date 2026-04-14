@@ -7,7 +7,7 @@ import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class TopicRepository extends MyndBaseRepository<Topic> {
+public final class TopicRepository extends MyndBaseRepository<Topic> {
 
   public PaginationDto<Topic> findForCreatorPaginated(String creatorId, int page, int pageSize) {
     PanacheQuery<Topic> query = find("creatorId = ?1", creatorId);

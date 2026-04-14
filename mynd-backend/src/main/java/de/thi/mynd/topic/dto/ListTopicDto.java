@@ -7,7 +7,7 @@ import java.util.List;
 import lombok.Builder;
 
 @Builder
-public class ListTopicDto {
+public final class ListTopicDto {
 
   public String title;
 
