@@ -14,7 +14,7 @@ import org.jboss.resteasy.reactive.RestQuery;
 @Path("/topics")
 @Produces(MediaType.APPLICATION_JSON)
 @Authenticated
-public class TopicResource {
+public final class TopicResource {
 
   @Inject TopicService topicService;
 
