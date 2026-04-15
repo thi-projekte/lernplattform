@@ -10,7 +10,8 @@
     "updatedAt": "Updated at",
     "actions": "Actions",
     "back": "Back",
-    "next": "Next"
+    "next": "Next",
+    "nothingFound": "Nothing found"
   },
   "topic": {
     "headings": {
@@ -33,6 +34,9 @@
     "steps": {
       "coreDataTitle": "Core data",
       "coreDataDescription": "Enter Core Data"
+    },
+    "other": {
+      "selectUpToThreeCategories": "Select up to three categories"
     }
   }
 }

@@ -10,7 +10,8 @@
     "updatedAt": "Zuletzt aktualisiert",
     "actions": "Aktionen",
     "back": "Zurück",
-    "next": "Weiter"
+    "next": "Weiter",
+    "nothingFound": "Keine Einträge gefunden"
   },
   "topic": {
     "headings": {
@@ -33,6 +34,9 @@
     "steps": {
       "coreDataTitle": "Stammdaten",
       "coreDataDescription": "Eingabe der Stammdatem"
+    },
+    "other": {
+      "selectUpToThreeCategories": "Wähle bis zu drei Kategorien aus"
     }
   }
 }

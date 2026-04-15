@@ -62,6 +62,7 @@ const CategorySelect = ({onChange, value, error, onFocus, onBlur}: GetInputProps
       error={error}
       onBlur={onBlur}
       onFocus={onFocus}
+      withAsterisk
     />
   );
 };
