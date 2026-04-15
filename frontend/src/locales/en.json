@@ -12,7 +12,8 @@
     "back": "Back",
     "next": "Next",
     "nothingFound": "Nothing found",
-    "shouldNotBeEmpty": "Field should not be empty"
+    "shouldNotBeEmpty": "Field should not be empty",
+    "creatorFullName": "Creator"
   },
   "topic": {
     "headings": {

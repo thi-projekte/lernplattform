@@ -12,7 +12,8 @@
     "back": "Zurück",
     "next": "Weiter",
     "nothingFound": "Keine Einträge gefunden",
-    "shouldNotBeEmpty": "Feld sollte nicht leer sein"
+    "shouldNotBeEmpty": "Feld sollte nicht leer sein",
+    "creatorFullName": "Ersteller"
   },
   "topic": {
     "headings": {

@@ -29,6 +29,14 @@ export const useTopicColumns = (withActions = false) => {
       cell: (info) => formatDate(info.getValue()),
       header: t('common.updatedAt'),
     }),
+    columnHelper.accessor('creatorFullName', {
+      cell: (info) => (
+        <Badge color="indigo" variant="light">
+          {info.getValue()}
+        </Badge>
+      ),
+      header: t('common.creatorFullName'),
+    }),
   ];
 
   if (withActions) {
