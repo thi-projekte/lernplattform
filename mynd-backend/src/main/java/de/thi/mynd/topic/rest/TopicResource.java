@@ -11,6 +11,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import org.jboss.resteasy.reactive.RestQuery;
 
+import java.util.List;
+
 @Path("/topics")
 @Produces(MediaType.APPLICATION_JSON)
 @Authenticated
@@ -23,5 +25,11 @@ public final class TopicResource {
   public PaginationDto<ListTopicDto> getPersonalTopicsPaginated(
       @RestQuery int page, @RestQuery int pageSize) {
     return topicService.findPersonalTopicsPaginated(page, pageSize);
+  }
+
+  @GET
+  @Path("/search")
+  public List<ListTopicDto> search(@RestQuery String search) {
+    return topicService.findTopicsBySearchMax5(search);
   }
 }
