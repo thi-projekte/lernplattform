@@ -21,12 +21,18 @@
     },
     "fields": {
       "title": "Titel",
-      "categories": "Kategorien"
+      "categories": "Kategorien",
+      "teaser": "Kurzbeschreibung",
+      "estimatedLearningDuration": "Geschätzte Lerndauer"
     },
     "errors": {
       "titleMissing": "Titel fehlt",
       "minOneCategory": "Mindestens eine Kategorie auswählen",
       "maxThreeCategory": "Maximal drei Kategorien auswählen"
+    },
+    "steps": {
+      "coreDataTitle": "Stammdaten",
+      "coreDataDescription": "Eingabe der Stammdatem"
     }
   }
 }

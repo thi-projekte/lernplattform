@@ -21,12 +21,18 @@
     },
     "fields": {
       "title": "Title",
-      "categories": "Categories"
+      "categories": "Categories",
+      "teaser": "Teaser",
+      "estimatedLearningDuration": "Estimated learning duration"
     },
     "errors": {
       "titleMissing": "Title missing",
       "minOneCategory": "At least one category",
       "maxThreeCategory": "Max three categories"
+    },
+    "steps": {
+      "coreDataTitle": "Core data",
+      "coreDataDescription": "Enter Core Data"
     }
   }
 }

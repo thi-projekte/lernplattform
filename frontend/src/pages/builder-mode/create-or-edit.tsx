@@ -27,7 +27,7 @@ const CreateOrEditTopicPage = () => {
 
   return (
     <Layout>
-      <Title>{t("routes.createTopic")}</Title>
+      <Title mb={32}>{t("routes.createTopic")}</Title>
       <StepperProgress steps={steps} />
     </Layout>
   );
