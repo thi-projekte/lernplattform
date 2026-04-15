@@ -11,7 +11,6 @@ public final class ListTopicDtoMapper extends AbstractMappingProcessor<Topic, Li
 
     @Override
     public ListTopicDto mapAndEnrich(Topic topic) {
-        System.out.println(topic);
         return ListTopicDto.builder()
                 .id(topic.id)
                 .title(topic.title)

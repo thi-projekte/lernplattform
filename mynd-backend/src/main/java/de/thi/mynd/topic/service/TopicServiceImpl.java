@@ -8,14 +8,11 @@ import de.thi.mynd.topic.repository.TopicRepository;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.jboss.logging.Logger;
 
 import java.util.List;
 
 @ApplicationScoped
 public final class TopicServiceImpl implements TopicService {
-
-  private static final Logger LOG = Logger.getLogger(TopicServiceImpl.class);
 
   @Inject SecurityIdentity identity;
 
@@ -40,9 +37,6 @@ public final class TopicServiceImpl implements TopicService {
   @Override
   public List<ListTopicDto> findTopicsBySearchMax5(String search) {
     List<Topic> topics = topicRepository.findBySearch(search, 5);
-
-    LOG.info("We have topics: " + topics.size());
-
     return mappingRegistry.mapList(topics, ListTopicDto.class);
   }
 }

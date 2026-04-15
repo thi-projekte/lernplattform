@@ -16,8 +16,8 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
   }
 
   public List<Topic> findBySearch(String search, int limit) {
-    String formattedSearch = "%" + search + "%";
-    return find("title like ?1 or teaser like ?2", formattedSearch, formattedSearch)
+    String formattedSearch = ("%" + search + "%").toLowerCase();
+    return find("lower(title) like ?1 or lower(teaser) like ?2", formattedSearch, formattedSearch)
         .range(0, limit)
         .list();
   }
