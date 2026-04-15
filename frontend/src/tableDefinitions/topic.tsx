@@ -1,0 +1,40 @@
+import { Badge, Flex } from '@mantine/core';
+import { type EntityTableProps } from '../components/entity-table.tsx';
+import { createColumnHelper } from '@tanstack/react-table';
+import type { Category, ListTopicDto } from '../schemas/topic.ts';
+import { useTranslation } from 'react-i18next';
+
+
+export const useTopicColumns = () => {
+  const {t} = useTranslation();
+  const columnHelper = createColumnHelper<ListTopicDto>();
+  const columns: EntityTableProps<ListTopicDto>['columns'] = [
+    columnHelper.accessor('title', {
+      cell: (info) => info.getValue(),
+      header: t('topic.fields.title'),
+    }),
+    columnHelper.accessor('categories', {
+      cell: (info) => (
+        <Flex gap={3}>
+          {info.getValue().map((category: Category) => (
+            <Badge color={category.color} variant="light">
+              {category.title}
+            </Badge>
+          ))}
+        </Flex>
+      ),
+      header: t('topic.fields.categories'),
+    }),
+    columnHelper.accessor('updatedAt', {
+      cell: (info) => info.getValue(),
+      header: t('common.updatedAt'),
+    }),
+    {
+      id: 'actions',
+      header: t('common.actions'),
+      cell: () => <div />,
+    },
+  ];
+
+  return columns;
+}

@@ -2,6 +2,8 @@ import { apiClient } from './common.ts';
 import {
   type Category,
   CategorySchema,
+  type ListTopicDto,
+  ListTopicDtoSchema,
   type PaginatedListTopicDto,
   PaginatedListTopicDtoSchema,
 } from '../schemas/topic.ts';
@@ -38,5 +40,21 @@ export const useQueryPersonalTopicsPaginated = (pagination: PaginationState) => 
   return useQuery({
     queryKey: ['personalTopics', pagination.pageSize, pagination.pageIndex],
     queryFn: () => fetchPersonalTopicsPaginated(pagination.pageIndex, pagination.pageSize),
+  });
+};
+
+const fetchTopicsList = async (
+  search: string
+): Promise<ListTopicDto[]> => {
+  const result = await apiClient.get(`/topics/personal?search=${search}`, {
+    validateStatus: (status) => status <= 204,
+  });
+  return z.array(ListTopicDtoSchema).parse(result.data);
+};
+
+export const useQuerySearchTopic = (search: string) => {
+  return useQuery({
+    queryKey: ['topics', search],
+    queryFn: () => fetchTopicsList(search)
   });
 };

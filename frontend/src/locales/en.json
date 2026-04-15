@@ -39,7 +39,8 @@
       "associatedTopicsDescription": "Select associated topics"
     },
     "other": {
-      "selectUpToThreeCategories": "Select up to three categories"
+      "selectUpToThreeCategories": "Select up to three categories",
+      "searchByTitleOrTeaser": "Search by title or teaser"
     }
   }
 }

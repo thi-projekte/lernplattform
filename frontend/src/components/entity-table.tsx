@@ -12,10 +12,11 @@ import { useTranslation } from 'react-i18next';
 export interface EntityTableProps<T> {
   data: T[];
   columns: TableOptions<T>['columns'];
-  pageCount: number;
-  pagination: PaginationState;
-  setPagination: (state: PaginationState) => void;
+  pageCount?: number;
+  pagination?: PaginationState;
+  setPagination?: (state: PaginationState) => void;
   isFetching?: boolean;
+  hidePagination?: boolean;
 }
 
 function EntityTable<T extends RowData>({
@@ -25,6 +26,7 @@ function EntityTable<T extends RowData>({
   pagination,
   setPagination,
   isFetching,
+  hidePagination
 }: EntityTableProps<T>) {
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({
@@ -33,7 +35,7 @@ function EntityTable<T extends RowData>({
     columns,
     pageCount,
     state: { pagination },
-    onPaginationChange: (update) => setPagination(update as PaginationState),
+    onPaginationChange: (update) => setPagination?.(update as PaginationState),
     manualPagination: true,
   });
 
@@ -81,29 +83,30 @@ function EntityTable<T extends RowData>({
         </Alert>
       )}
 
-      <Group justify="space-between" mt="md">
-        <Group gap="xs">
-          <Text size="sm" c="dimmed">
-            {t('common.rowsPerPage')}:
-          </Text>
-          <Select
-            size="xs"
-            w={80}
-            data={['10', '20', '50']}
-            value={pagination.pageSize.toString()}
-            onChange={(val) => table.setPageSize(Number(val))}
+      {!hidePagination && pagination && pageCount && (
+        <Group justify="space-between" mt="md">
+          <Group gap="xs">
+            <Text size="sm" c="dimmed">
+              {t('common.rowsPerPage')}:
+            </Text>
+            <Select
+              size="xs"
+              w={80}
+              data={['10', '20', '50']}
+              value={pagination?.pageSize.toString()}
+              onChange={(val) => table.setPageSize(Number(val))}
+            />
+          </Group>
+          <Pagination
+            total={pageCount}
+            value={pagination.pageIndex + 1}
+            onChange={(page) => table.setPageIndex(page - 1)}
+            withEdges
+            size="sm"
+            disabled={isFetching}
           />
         </Group>
-
-        <Pagination
-          total={pageCount}
-          value={pagination.pageIndex + 1}
-          onChange={(page) => table.setPageIndex(page - 1)}
-          withEdges
-          size="sm"
-          disabled={isFetching}
-        />
-      </Group>
+      )}
     </Box>
   );
 }
