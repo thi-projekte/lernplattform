@@ -5,12 +5,11 @@ import jakarta.inject.Inject;
 
 public abstract class AbstractMappingProcessor<E, D> {
 
+  @Inject protected IdentityService identityService;
 
-    @Inject
-    protected IdentityService identityService;
+  public abstract D mapAndEnrich(E entity);
 
-    public abstract D mapAndEnrich(E entity);
+  public abstract Class<E> getEntityType();
 
-    public abstract Class<E> getEntityType();
-    public abstract Class<D> getDtoType();
+  public abstract Class<D> getDtoType();
 }

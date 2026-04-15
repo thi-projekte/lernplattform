@@ -4,6 +4,6 @@ import io.quarkus.cache.CacheResult;
 
 public interface IdentityService {
 
-    @CacheResult(cacheName = "external-user")
-    String getFullNameByUsername(String username);
+  @CacheResult(cacheName = "external-user")
+  String getFullNameByUsername(String username);
 }

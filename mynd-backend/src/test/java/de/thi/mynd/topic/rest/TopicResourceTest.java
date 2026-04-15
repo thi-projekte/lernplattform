@@ -32,10 +32,7 @@ public class TopicResourceTest {
             .build();
 
     PaginationDto<ListTopicDto> mockResponse =
-        PaginationDto.<ListTopicDto>builder()
-            .results(List.of(dto))
-            .totalPages(1)
-            .build();
+        PaginationDto.<ListTopicDto>builder().results(List.of(dto)).totalPages(1).build();
 
     Mockito.when(topicService.findPersonalTopicsPaginated(anyInt(), anyInt()))
         .thenReturn(mockResponse);

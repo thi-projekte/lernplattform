@@ -1,7 +1,6 @@
 package de.thi.mynd.topic.dto;
 
 import de.thi.mynd.topic.entity.Category;
-import de.thi.mynd.topic.entity.Topic;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;

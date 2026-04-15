@@ -8,7 +8,6 @@ import de.thi.mynd.topic.repository.TopicRepository;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.List;
 
 @ApplicationScoped
@@ -16,8 +15,7 @@ public final class TopicServiceImpl implements TopicService {
 
   @Inject SecurityIdentity identity;
 
-  @Inject
-  MappingRegistry mappingRegistry;
+  @Inject MappingRegistry mappingRegistry;
 
   @Inject TopicRepository topicRepository;
 
@@ -26,7 +24,8 @@ public final class TopicServiceImpl implements TopicService {
     PaginationDto<Topic> paginatedTopics =
         topicRepository.findForCreatorPaginated(identity.getPrincipal().getName(), page, pageSize);
 
-    List<ListTopicDto> listDtos = mappingRegistry.mapList(paginatedTopics.results, ListTopicDto.class);
+    List<ListTopicDto> listDtos =
+        mappingRegistry.mapList(paginatedTopics.results, ListTopicDto.class);
 
     return PaginationDto.<ListTopicDto>builder()
         .results(listDtos)
