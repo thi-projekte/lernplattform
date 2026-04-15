@@ -44,8 +44,6 @@ const CategorySelect = ({onChange, value, error, onFocus, onBlur}: GetInputProps
 
   const renderMultiSelectPill: MultiSelectProps['renderPill'] = (props) => {
     const category = selectedCategories.find((c) => c.id === props.value);
-
-    console.log(category);
     return (
       <Pill
         withRemoveButton
