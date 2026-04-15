@@ -8,7 +8,9 @@
     "rowsPerPage": "Einträge pro Seite",
     "noEntriesFound": "Keine Enträge gefunden",
     "updatedAt": "Zuletzt aktualisiert",
-    "actions": "Aktionen"
+    "actions": "Aktionen",
+    "back": "Zurück",
+    "next": "Weiter"
   },
   "topic": {
     "headings": {

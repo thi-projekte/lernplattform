@@ -8,7 +8,9 @@
     "rowsPerPage": "Rows per page",
     "noEntriesFound": "No entries found",
     "updatedAt": "Updated at",
-    "actions": "Actions"
+    "actions": "Actions",
+    "back": "Back",
+    "next": "Next"
   },
   "topic": {
     "headings": {
