@@ -36,7 +36,9 @@
       "coreDataTitle": "Core data",
       "coreDataDescription": "Enter Core Data",
       "associatedTopicsTitle": "Associated Topics",
-      "associatedTopicsDescription": "Select associated topics"
+      "associatedTopicsDescription": "Select associated topics",
+      "contentElementsTitle": "Content elements",
+      "contentElementsDescription": "Create content elements"
     },
     "other": {
       "selectUpToThreeCategories": "Select up to three categories",

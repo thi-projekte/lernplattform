@@ -3,6 +3,7 @@ import { type EntityTableProps } from '../components/entity-table.tsx';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { Category, ListTopicDto } from '../schemas/topic.ts';
 import { useTranslation } from 'react-i18next';
+import { formatDate } from '../utils/date.ts';
 
 
 export const useTopicColumns = () => {
@@ -26,7 +27,7 @@ export const useTopicColumns = () => {
       header: t('topic.fields.categories'),
     }),
     columnHelper.accessor('updatedAt', {
-      cell: (info) => info.getValue(),
+      cell: (info) => formatDate(info.getValue()),
       header: t('common.updatedAt'),
     }),
     {

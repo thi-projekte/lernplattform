@@ -46,7 +46,7 @@ export const useQueryPersonalTopicsPaginated = (pagination: PaginationState) => 
 const fetchTopicsList = async (
   search: string
 ): Promise<ListTopicDto[]> => {
-  const result = await apiClient.get(`/topics/personal?search=${search}`, {
+  const result = await apiClient.get(`/topics?search=${search}`, {
     validateStatus: (status) => status <= 204,
   });
   return z.array(ListTopicDtoSchema).parse(result.data);

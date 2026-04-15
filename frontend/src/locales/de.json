@@ -36,7 +36,9 @@
       "coreDataTitle": "Stammdaten",
       "coreDataDescription": "Eingabe der Stammdatem",
       "associatedTopicsTitle": "Benachbarte Themen",
-      "associatedTopicsDescription": "Benachbarte Themen auswählen"
+      "associatedTopicsDescription": "Benachbarte Themen auswählen",
+      "contentElementsTitle": "Inhalte",
+      "contentElementsDescription": "Erstellen Sie ihre Lerninhalte"
     },
     "other": {
       "selectUpToThreeCategories": "Wähle bis zu drei Kategorien aus",

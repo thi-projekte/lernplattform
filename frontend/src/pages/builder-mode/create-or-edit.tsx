@@ -27,7 +27,13 @@ const CreateOrEditTopicPage = () => {
       label: t('topic.steps.associatedTopicsTitle'),
       description: t('topic.steps.associatedTopicsDescription'),
       canProceed: TopicAssociatedTopicsSchema.safeParse(topic).success ?? false,
-      step: <AssociatedTopicsStep topic={topic} setTopic={setTopic}  />,
+      step: <AssociatedTopicsStep topic={topic} setTopic={setTopic} />,
+    },
+    {
+      label: t('topic.steps.contentElementsTitle'),
+      description: t('topic.steps.contentElementsDescription'),
+      canProceed: false,
+      step: <div>Content</div>,
     },
   ];
 
