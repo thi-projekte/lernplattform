@@ -1,7 +1,8 @@
 {
   "routes": {
     "dashboard": "Dashboard",
-    "builderMode": "Builder Mode"
+    "builderMode": "Builder Mode",
+    "createTopic": "Create topic"
   },
   "common": {
     "rowsPerPage": "Rows per page",
@@ -12,6 +13,9 @@
   "topic": {
     "headings": {
       "personalTopics": "Personal topics"
+    },
+    "actions": {
+      "create": "Create topic"
     },
     "fields": {
       "title": "Title",

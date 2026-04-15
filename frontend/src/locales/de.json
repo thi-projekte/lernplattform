@@ -1,7 +1,8 @@
 {
   "routes": {
     "dashboard": "Dashboard",
-    "builderMode": "Builder Modus"
+    "builderMode": "Builder Modus",
+    "createTopic": "Thema erstellen"
   },
   "common": {
     "rowsPerPage": "Einträge pro Seite",
@@ -12,6 +13,9 @@
   "topic": {
     "headings": {
       "personalTopics": "Eigene Themen"
+    },
+    "actions": {
+      "create": "Thema erstellen"
     },
     "fields": {
       "title": "Titel",
