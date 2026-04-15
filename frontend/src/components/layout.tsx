@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import logo from '../assets/logo.png';
 import keycloak from '../keycloak.ts';
 import { routes } from '../routing.tsx';
-import { useMatches, useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,20 +18,17 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const [opened, { toggle }] = useDisclosure();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const matches = useMatches();
+  const {pathname} = useLocation();
 
   const sidebarRoutes = routes.filter((r) => r.isSidebar && r.path);
 
-  const activePaths = matches.map((m) => m.pathname);
-
   const longestActiveTarget = sidebarRoutes
-    .filter((route) => activePaths.includes(route.path ?? ''))
-    .reduce(
-      (prev, current) => ((current.path ?? '').length > prev.length ? (current.path ?? '') : prev),
-      ''
-    );
+    .filter((route) => pathname.indexOf(route.path ?? '') > -1)
+    .reduce((longest, current) => {
+      return (current.path?.length || 0) > (longest.path?.length || 0) ? current : longest;
+    }, {});
 
-  const isActive = (path: string) => longestActiveTarget === path;
+  const isActive = (path: string) => longestActiveTarget.path === path;
 
   return (
     <AppShell
