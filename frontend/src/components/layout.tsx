@@ -59,6 +59,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             leftSection={route.icon ? <route.icon size={32} stroke={1.5} /> : undefined}
             active={isActive(route.path ?? '')}
             onClick={() => navigate(route.path ?? '')}
+            key={route.path}
           />
         ))}
       </AppShell.Navbar>
