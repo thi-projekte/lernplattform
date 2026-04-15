@@ -4,8 +4,8 @@ import { NumberInput, Textarea, TextInput } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 interface TopicCoreDataStepProps {
-  topic: Topic;
-  setTopic: (topic: Topic) => void;
+  topic: Partial<Topic>;
+  setTopic: (topic: Partial<Topic>) => void;
 }
 
 const TopicCoreDataStep = ({topic, setTopic}: TopicCoreDataStepProps) => {

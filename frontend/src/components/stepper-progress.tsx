@@ -15,14 +15,14 @@ interface StepperProgressProps {
 
 const StepperProgress = ({steps}: StepperProgressProps) => {
 
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(0);
 
   const nextStep = () => setActive((current) => (current < 3 ? current + 1 : current));
   const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
 
   const {t} = useTranslation();
 
-  const canProceed = steps[active-1].canProceed;
+  const canProceed = steps[active].canProceed;
 
 
   return (
@@ -38,7 +38,7 @@ const StepperProgress = ({steps}: StepperProgressProps) => {
         <Button variant="default" onClick={prevStep} disabled={active === 1}>
           {t("common.back")}
         </Button>
-        <Button onClick={nextStep} disabled={canProceed}>{t("common.next")}</Button>
+        <Button onClick={nextStep} disabled={!canProceed}>{t("common.next")}</Button>
       </Group>
     </>
   );

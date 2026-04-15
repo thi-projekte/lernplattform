@@ -11,13 +11,13 @@ const CreateOrEditTopicPage = () => {
 
   const {t} = useTranslation();
 
-  const [topic, setTopic] = useState<Topic>({title: '', teaser: '', estimatedLearningDuration: 0, categories: []});
+  const [topic, setTopic] = useState<Partial<Topic>>({});
 
   const steps: StepperStep[] = [
     {
       label: t('topic.steps.coreDataTitle'),
       description: t('topic.steps.coreDataDescription'),
-      canProceed: TopicCoreDataSchema.safeParse(topic).success,
+      canProceed: TopicCoreDataSchema.safeParse(topic).success ?? false,
       step: (
         <CoreDataStep topic={topic} setTopic={setTopic} />
       )
