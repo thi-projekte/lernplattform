@@ -6,10 +6,8 @@ import { type Topic, TopicCoreDataSchema } from '../../schemas/topic.ts';
 import StepperProgress, { type StepperStep } from '../../components/stepper-progress.tsx';
 import CoreDataStep from '../../components/topic/core-data-step.tsx';
 
-
 const CreateOrEditTopicPage = () => {
-
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const [topic, setTopic] = useState<Partial<Topic>>({});
 
@@ -28,7 +26,6 @@ const CreateOrEditTopicPage = () => {
     },
   ];
 
-
   return (
     <Layout>
       <Title mb={32}>{t('routes.createTopic')}</Title>
@@ -37,6 +34,6 @@ const CreateOrEditTopicPage = () => {
       </Container>
     </Layout>
   );
-}
+};
 
 export default CreateOrEditTopicPage;

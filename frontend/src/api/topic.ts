@@ -9,21 +9,20 @@ import type { PaginationState } from '@tanstack/react-table';
 import { useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
 
-
 const fetchCategories = async (search: string): Promise<Category[]> => {
   const result = await apiClient.get(`/categories/search?query=${search}`, {
-    validateStatus: (status) => status <= 204
+    validateStatus: (status) => status <= 204,
   });
   return z.array(CategorySchema).parse(result.data);
-}
+};
 
 export const useQueryCategories = (search: string) => {
   return useQuery({
     queryKey: ['categories', search],
     enabled: !!search,
-    queryFn: () => fetchCategories(search)
+    queryFn: () => fetchCategories(search),
   });
-}
+};
 
 const fetchPersonalTopicsPaginated = async (
   page: number,

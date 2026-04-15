@@ -7,7 +7,7 @@ import { useQueryCategories } from '../../api/topic.ts';
 import type { GetInputPropsReturnType } from '@mantine/form';
 import { getContrastColor } from '../../utils/color.ts';
 
-const CategorySelect = ({onChange, value, error, onFocus, onBlur}: GetInputPropsReturnType) => {
+const CategorySelect = ({ onChange, value, error, onFocus, onBlur }: GetInputPropsReturnType) => {
   const { t } = useTranslation();
 
   const selectedCategories = (value ?? []) as Category[];
@@ -51,8 +51,9 @@ const CategorySelect = ({onChange, value, error, onFocus, onBlur}: GetInputProps
         styles={{
           root: {
             backgroundColor: category?.color ? `#${category.color}` : undefined,
-            color: category?.color ? getContrastColor(category.color) : undefined
-        }}}
+            color: category?.color ? getContrastColor(category.color) : undefined,
+          },
+        }}
         variant="filled"
       >
         {props.option.label}
@@ -70,7 +71,9 @@ const CategorySelect = ({onChange, value, error, onFocus, onBlur}: GetInputProps
       searchable
       searchValue={searchValue}
       onSearchChange={setSearchValue}
-      nothingFoundMessage={(isFetching || isLoading) && !!debouncedSearch ? undefined : t('common.nothingFound')}
+      nothingFoundMessage={
+        (isFetching || isLoading) && !!debouncedSearch ? undefined : t('common.nothingFound')
+      }
       rightSection={(isLoading || isFetching) && !!debouncedSearch ? <Loader size="xs" /> : null}
       maxValues={3}
       hidePickedOptions

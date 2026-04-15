@@ -29,8 +29,8 @@ export const routes: TypedMyndRoute[] = [
   {
     path: '/builder-mode/topics/create',
     Component: CreateOrEditTopicPage,
-    translation: 'createTopic'
-  }
+    translation: 'createTopic',
+  },
 ];
 
 export const router = createBrowserRouter(routes);

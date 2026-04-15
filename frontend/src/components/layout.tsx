@@ -18,7 +18,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const [opened, { toggle }] = useDisclosure();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const {pathname} = useLocation();
+  const { pathname } = useLocation();
 
   const sidebarRoutes = routes.filter((r) => r.isSidebar && r.path);
 

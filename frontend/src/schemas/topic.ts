@@ -21,7 +21,6 @@ export type ListTopicDto = z.infer<typeof ListTopicDtoSchema>;
 export const PaginatedListTopicDtoSchema = createPaginatedSchema(ListTopicDtoSchema);
 export type PaginatedListTopicDto = z.infer<typeof PaginatedListTopicDtoSchema>;
 
-
 export const TopicCoreDataSchema = z.object({
   title: z.string({ error: i18n.t('topic.errors.titleMissing') }),
   teaser: z.string({ error: i18n.t('common.shouldNotBeEmpty') }),
@@ -32,8 +31,10 @@ export const TopicCoreDataSchema = z.object({
   estimatedLearningDuration: z.number({ error: i18n.t('common.shouldNotBeEmpty') }),
 });
 
-export const TopicSchema = z.object({
-  id: z.uuid().optional()
-}).extend(TopicCoreDataSchema.shape);
+export const TopicSchema = z
+  .object({
+    id: z.uuid().optional(),
+  })
+  .extend(TopicCoreDataSchema.shape);
 
 export type Topic = z.infer<typeof TopicSchema>;

@@ -10,7 +10,6 @@ export const apiClient = axios.create({
 });
 
 apiClient.interceptors.request.use(async (config) => {
-
   if (keycloak.isTokenExpired()) {
     await keycloak.updateToken(300);
   }
