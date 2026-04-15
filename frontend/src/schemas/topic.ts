@@ -15,7 +15,7 @@ export const ListTopicDtoSchema = z.object({
   categories: z.array(CategorySchema),
   updatedAt: z.coerce.date(),
   creatorId: z.string(),
-  creatorFullName: z.string()
+  creatorFullName: z.string(),
 });
 
 export type ListTopicDto = z.infer<typeof ListTopicDtoSchema>;
