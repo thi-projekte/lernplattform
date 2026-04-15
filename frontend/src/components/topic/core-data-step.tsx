@@ -2,6 +2,7 @@ import { type Topic, TopicCoreDataSchema } from '../../schemas/topic.ts';
 import { schemaResolver, useForm } from '@mantine/form';
 import { NumberInput, Textarea, TextInput } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
+import CategorySelect from './category-select.tsx';
 
 interface TopicCoreDataStepProps {
   topic: Partial<Topic>;
@@ -13,11 +14,11 @@ const TopicCoreDataStep = ({topic, setTopic}: TopicCoreDataStepProps) => {
   const {t} = useTranslation();
 
   const form = useForm({
-    mode: 'uncontrolled',
+    mode: 'controlled',
     initialValues: {
       title: topic.title,
       teaser: topic.teaser,
-      categories: topic.categories,
+      categories: topic.categories ?? [],
       estimatedLearningDuration: topic.estimatedLearningDuration
     },
     validate: schemaResolver(TopicCoreDataSchema, {sync: true})
@@ -44,6 +45,7 @@ const TopicCoreDataStep = ({topic, setTopic}: TopicCoreDataStepProps) => {
         key={form.key('teaser')}
         {...form.getInputProps('teaser')}
       />
+      <CategorySelect key={form.key('categories')} {...form.getInputProps('categories')} />
       <NumberInput
         label={t("topic.fields.estimatedLearningDuration")}
         withAsterisk

@@ -2,7 +2,7 @@ import { z } from 'zod';
 import i18n from '../i18n.ts';
 import { BaseEntitySchema, createPaginatedSchema } from './common.ts';
 
-const CategorySchema = BaseEntitySchema.extend({
+export const CategorySchema = BaseEntitySchema.extend({
   title: z.string(),
   color: z.string().optional(),
 });
@@ -13,7 +13,7 @@ const ListTopicDtoSchema = z.object({
   id: z.uuid(),
   title: z.string(),
   categories: z.array(CategorySchema),
-  updatedAt: z.iso.datetime().pipe(z.coerce.date()),
+  updatedAt: z.coerce.date(),
 });
 
 export type ListTopicDto = z.infer<typeof ListTopicDtoSchema>;
