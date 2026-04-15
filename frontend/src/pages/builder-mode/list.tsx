@@ -34,6 +34,7 @@ const BuilderModeListPage = () => {
             columns={columns}
             pageCount={data.totalPages}
             pagination={pagination}
+            isFetching={isLoading}
             setPagination={setPagination}
           />
         )}

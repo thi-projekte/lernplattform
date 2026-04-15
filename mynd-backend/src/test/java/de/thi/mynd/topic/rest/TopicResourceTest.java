@@ -35,8 +35,6 @@ public class TopicResourceTest {
         PaginationDto.<ListTopicDto>builder()
             .results(List.of(dto))
             .totalPages(1)
-            .hasNextPage(false)
-            .hasPreviousPage(false)
             .build();
 
     Mockito.when(topicService.findPersonalTopicsPaginated(anyInt(), anyInt()))

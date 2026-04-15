@@ -18,12 +18,7 @@ public final class ListTopicDto {
 
   public LocalDateTime updatedAt;
 
-  public static ListTopicDto from(Topic topic) {
-    return ListTopicDto.builder()
-        .id(topic.id)
-        .title(topic.title)
-        .categories(topic.categories)
-        .updatedAt(topic.updatedAt)
-        .build();
-  }
+  public String creatorId;
+
+  public String creatorFullName;
 }

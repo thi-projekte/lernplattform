@@ -1,18 +1,26 @@
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.dto.PaginationDto;
+import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.jboss.logging.Logger;
+
 import java.util.List;
 
 @ApplicationScoped
 public final class TopicServiceImpl implements TopicService {
 
+  private static final Logger LOG = Logger.getLogger(TopicServiceImpl.class);
+
   @Inject SecurityIdentity identity;
+
+  @Inject
+  MappingRegistry mappingRegistry;
 
   @Inject TopicRepository topicRepository;
 
@@ -21,18 +29,20 @@ public final class TopicServiceImpl implements TopicService {
     PaginationDto<Topic> paginatedTopics =
         topicRepository.findForCreatorPaginated(identity.getPrincipal().getName(), page, pageSize);
 
-    List<ListTopicDto> listDtos = paginatedTopics.results.stream().map(ListTopicDto::from).toList();
+    List<ListTopicDto> listDtos = mappingRegistry.mapList(paginatedTopics.results, ListTopicDto.class);
 
     return PaginationDto.<ListTopicDto>builder()
         .results(listDtos)
         .totalPages(paginatedTopics.totalPages)
-        .hasNextPage(paginatedTopics.hasNextPage)
-        .hasPreviousPage(paginatedTopics.hasPreviousPage)
         .build();
   }
 
   @Override
   public List<ListTopicDto> findTopicsBySearchMax5(String search) {
-    return topicRepository.findBySearch(search, 5).stream().map(ListTopicDto::from).toList();
+    List<Topic> topics = topicRepository.findBySearch(search, 5);
+
+    LOG.info("We have topics: " + topics.size());
+
+    return mappingRegistry.mapList(topics, ListTopicDto.class);
   }
 }
