@@ -9,9 +9,8 @@ import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
-import org.jboss.resteasy.reactive.RestQuery;
-
 import java.util.List;
+import org.jboss.resteasy.reactive.RestQuery;
 
 @Path("/topics")
 @Produces(MediaType.APPLICATION_JSON)

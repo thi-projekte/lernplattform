@@ -33,9 +33,6 @@ public final class TopicServiceImpl implements TopicService {
 
   @Override
   public List<ListTopicDto> findTopicsBySearchMax5(String search) {
-    return topicRepository.findBySearch(search, 5)
-            .stream()
-            .map(ListTopicDto::from)
-            .toList();
+    return topicRepository.findBySearch(search, 5).stream().map(ListTopicDto::from).toList();
   }
 }
