@@ -22,6 +22,11 @@
     "fields": {
       "title": "Titel",
       "categories": "Kategorien"
+    },
+    "errors": {
+      "titleMissing": "Titel fehlt",
+      "minOneCategory": "Mindestens eine Kategorie auswählen",
+      "maxThreeCategory": "Maximal drei Kategorien auswählen"
     }
   }
 }

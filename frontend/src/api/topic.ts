@@ -1,5 +1,5 @@
 import { apiClient } from './common.ts';
-import { type PaginatedListTopicDto, PaginatedListTopicDtoSchema } from '../types/topic.ts';
+import { type PaginatedListTopicDto, PaginatedListTopicDtoSchema } from '../schemas/topic.ts';
 import type { PaginationState } from '@tanstack/react-table';
 import { useQuery } from '@tanstack/react-query';
 

@@ -22,6 +22,11 @@
     "fields": {
       "title": "Title",
       "categories": "Categories"
+    },
+    "errors": {
+      "titleMissing": "Title missing",
+      "minOneCategory": "At least one category",
+      "maxThreeCategory": "Max three categories"
     }
   }
 }

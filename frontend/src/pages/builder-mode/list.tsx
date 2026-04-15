@@ -6,7 +6,7 @@ import { Skeleton } from 'boneyard-js/react';
 import EntityTable, { type EntityTableProps } from '../../components/entity-table.tsx';
 import { Badge, Button, Flex, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import type { Category, ListTopicDto } from '../../types/topic.ts';
+import type { Category, ListTopicDto } from '../../schemas/topic.ts';
 import { createColumnHelper } from '@tanstack/react-table';
 import { IconPlusFilled } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';

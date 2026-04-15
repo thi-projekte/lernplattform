@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import i18n from '../i18n.ts';
 import { BaseEntitySchema, createPaginatedSchema } from './common.ts';
 
 const CategorySchema = BaseEntitySchema.extend({
@@ -19,3 +20,20 @@ export type ListTopicDto = z.infer<typeof ListTopicDtoSchema>;
 
 export const PaginatedListTopicDtoSchema = createPaginatedSchema(ListTopicDtoSchema);
 export type PaginatedListTopicDto = z.infer<typeof PaginatedListTopicDtoSchema>;
+
+
+export const TopicCoreDataSchema = z.object({
+  title: z.string({ error: i18n.t('topic.errors.titleMissing') }),
+  teaser: z.string(),
+  categories: z
+    .array(CategorySchema)
+    .min(1, { error: i18n.t('topic.errors.minOneCategory') })
+    .max(3, { error: i18n.t('topic.errors.maxThreeCategory') }),
+  estimatedLearningDuration: z.number(),
+});
+
+export const TopicSchema = z.object({
+  id: z.uuid().optional()
+}).extend(TopicCoreDataSchema.shape);
+
+export type Topic = z.infer<typeof TopicSchema>;
