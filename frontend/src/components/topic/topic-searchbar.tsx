@@ -14,7 +14,7 @@ const TopicSearchbar = ({ onAdd, existingIds = [] }: TopicSearchbarProps) => {
   const [value, setValue] = useState('');
   const [debouncedSearch] = useDebouncedValue(value, 300);
 
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const { data: suggestions, isLoading, isFetching } = useQuerySearchTopic(debouncedSearch);
 
@@ -33,7 +33,7 @@ const TopicSearchbar = ({ onAdd, existingIds = [] }: TopicSearchbarProps) => {
 
   return (
     <Autocomplete
-      placeholder={t("topic.other.searchByTitleOrTeaser")}
+      placeholder={t('topic.other.searchByTitleOrTeaser')}
       value={value}
       onChange={setValue}
       onOptionSubmit={handleOptionSubmit}
@@ -42,6 +42,6 @@ const TopicSearchbar = ({ onAdd, existingIds = [] }: TopicSearchbarProps) => {
       rightSectionPointerEvents="all"
     />
   );
-}
+};
 
 export default TopicSearchbar;

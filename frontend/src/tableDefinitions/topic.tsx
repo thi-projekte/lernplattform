@@ -5,9 +5,8 @@ import type { Category, ListTopicDto } from '../schemas/topic.ts';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '../utils/date.ts';
 
-
 export const useTopicColumns = (withActions = false) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const columnHelper = createColumnHelper<ListTopicDto>();
   const columns: EntityTableProps<ListTopicDto>['columns'] = [
     columnHelper.accessor('title', {
@@ -31,7 +30,7 @@ export const useTopicColumns = (withActions = false) => {
       header: t('common.updatedAt'),
     }),
   ];
-  
+
   if (withActions) {
     columns.push({
       id: 'actions',
@@ -41,4 +40,4 @@ export const useTopicColumns = (withActions = false) => {
   }
 
   return columns;
-}
+};

@@ -26,7 +26,7 @@ function EntityTable<T extends RowData>({
   pagination,
   setPagination,
   isFetching,
-  hidePagination
+  hidePagination,
 }: EntityTableProps<T>) {
   // eslint-disable-next-line react-hooks/incompatible-library
   const table = useReactTable({

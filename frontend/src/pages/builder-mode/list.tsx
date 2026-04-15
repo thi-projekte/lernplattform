@@ -18,7 +18,6 @@ const BuilderModeListPage = () => {
   const navigate = useNavigate();
   const columns = useTopicColumns(true);
 
-
   return (
     <Layout>
       <Title>{t('topic.headings.personalTopics')}</Title>

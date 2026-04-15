@@ -43,9 +43,7 @@ export const useQueryPersonalTopicsPaginated = (pagination: PaginationState) => 
   });
 };
 
-const fetchTopicsList = async (
-  search: string
-): Promise<ListTopicDto[]> => {
+const fetchTopicsList = async (search: string): Promise<ListTopicDto[]> => {
   const result = await apiClient.get(`/topics?search=${search}`, {
     validateStatus: (status) => status <= 204,
   });
@@ -55,6 +53,6 @@ const fetchTopicsList = async (
 export const useQuerySearchTopic = (search: string) => {
   return useQuery({
     queryKey: ['topics', search],
-    queryFn: () => fetchTopicsList(search)
+    queryFn: () => fetchTopicsList(search),
   });
 };
