@@ -10,7 +10,7 @@ import { getContrastColor } from '../../utils/color.ts';
 const CategorySelect = ({ onChange, value, error, onFocus, onBlur }: GetInputPropsReturnType) => {
   const { t } = useTranslation();
 
-  const selectedCategories = (value ?? []) as Category[];
+  const selectedCategories = useMemo<Category[]>(() => (value ?? []) as Category[], [value]);
 
   const [searchValue, setSearchValue] = useState('');
   const [debouncedSearch] = useDebouncedValue(searchValue, 300);
