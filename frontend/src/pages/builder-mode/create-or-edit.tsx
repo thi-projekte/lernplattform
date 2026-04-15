@@ -1,5 +1,5 @@
 import { Layout } from '../../components/layout.tsx';
-import { Title } from '@mantine/core';
+import { Container, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
 import { type Topic, TopicCoreDataSchema } from '../../schemas/topic.ts';
@@ -18,17 +18,23 @@ const CreateOrEditTopicPage = () => {
       label: t('topic.steps.coreDataTitle'),
       description: t('topic.steps.coreDataDescription'),
       canProceed: TopicCoreDataSchema.safeParse(topic).success ?? false,
-      step: (
-        <CoreDataStep topic={topic} setTopic={setTopic} />
-      )
-    }
+      step: <CoreDataStep topic={topic} setTopic={setTopic} />,
+    },
+    {
+      label: t('topic.steps.associatedTopicsTitle'),
+      description: t('topic.steps.associatedTopicsDescription'),
+      canProceed: false,
+      step: <div>Create or Edit</div>,
+    },
   ];
 
 
   return (
     <Layout>
-      <Title mb={32}>{t("routes.createTopic")}</Title>
-      <StepperProgress steps={steps} />
+      <Title mb={32}>{t('routes.createTopic')}</Title>
+      <Container>
+        <StepperProgress steps={steps} />
+      </Container>
     </Layout>
   );
 }

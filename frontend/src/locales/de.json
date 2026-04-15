@@ -11,7 +11,8 @@
     "actions": "Aktionen",
     "back": "Zurück",
     "next": "Weiter",
-    "nothingFound": "Keine Einträge gefunden"
+    "nothingFound": "Keine Einträge gefunden",
+    "shouldNotBeEmpty": "Feld sollte nicht leer sein"
   },
   "topic": {
     "headings": {
@@ -33,7 +34,9 @@
     },
     "steps": {
       "coreDataTitle": "Stammdaten",
-      "coreDataDescription": "Eingabe der Stammdatem"
+      "coreDataDescription": "Eingabe der Stammdatem",
+      "associatedTopicsTitle": "Benachbarte Themen",
+      "associatedTopicsDescription": "Benachbarte Themen auswählen"
     },
     "other": {
       "selectUpToThreeCategories": "Wähle bis zu drei Kategorien aus"

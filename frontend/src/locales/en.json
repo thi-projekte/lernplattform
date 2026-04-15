@@ -11,7 +11,8 @@
     "actions": "Actions",
     "back": "Back",
     "next": "Next",
-    "nothingFound": "Nothing found"
+    "nothingFound": "Nothing found",
+    "shouldNotBeEmpty": "Field should not be empty"
   },
   "topic": {
     "headings": {
@@ -33,7 +34,9 @@
     },
     "steps": {
       "coreDataTitle": "Core data",
-      "coreDataDescription": "Enter Core Data"
+      "coreDataDescription": "Enter Core Data",
+      "associatedTopicsTitle": "Associated Topics",
+      "associatedTopicsDescription": "Select associated topics"
     },
     "other": {
       "selectUpToThreeCategories": "Select up to three categories"

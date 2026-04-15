@@ -21,18 +21,12 @@ const TopicCoreDataStep = ({topic, setTopic}: TopicCoreDataStepProps) => {
       categories: topic.categories ?? [],
       estimatedLearningDuration: topic.estimatedLearningDuration
     },
-    validate: schemaResolver(TopicCoreDataSchema, {sync: true})
-  });
-
-  const onSubmit = form.onSubmit((values) => {
-    setTopic({
-      ...topic,
-      ...values
-    });
+    validate: schemaResolver(TopicCoreDataSchema, {sync: true}),
+    onValuesChange: (values) => form.validate() && form.isValid() && setTopic({...topic, ...values})
   });
 
   return (
-    <form onSubmit={onSubmit}>
+    <>
       <TextInput
         label={t("topic.fields.title")}
         withAsterisk
@@ -52,7 +46,7 @@ const TopicCoreDataStep = ({topic, setTopic}: TopicCoreDataStepProps) => {
         key={form.key('estimatedLearningDuration')}
         {...form.getInputProps('estimatedLearningDuration')}
       />
-    </form>
+    </>
   )
 
 }

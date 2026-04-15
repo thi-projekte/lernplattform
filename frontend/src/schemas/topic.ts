@@ -24,12 +24,12 @@ export type PaginatedListTopicDto = z.infer<typeof PaginatedListTopicDtoSchema>;
 
 export const TopicCoreDataSchema = z.object({
   title: z.string({ error: i18n.t('topic.errors.titleMissing') }),
-  teaser: z.string(),
+  teaser: z.string({ error: i18n.t('common.shouldNotBeEmpty') }),
   categories: z
     .array(CategorySchema)
     .min(1, { error: i18n.t('topic.errors.minOneCategory') })
     .max(3, { error: i18n.t('topic.errors.maxThreeCategory') }),
-  estimatedLearningDuration: z.number(),
+  estimatedLearningDuration: z.number({ error: i18n.t('common.shouldNotBeEmpty') }),
 });
 
 export const TopicSchema = z.object({

@@ -22,14 +22,14 @@ const StepperProgress = ({steps}: StepperProgressProps) => {
 
   const {t} = useTranslation();
 
-  const canProceed = steps[active].canProceed;
+  const canProceed = (idx: number) => idx < steps.length && (idx === -1 || steps[idx].canProceed);
 
 
   return (
     <>
       <Stepper active={active} onStepClick={setActive}>
-        {steps.map((step) => (
-          <Stepper.Step label={step.label} description={step.description}>
+        {steps.map((step, i) => (
+          <Stepper.Step label={step.label} description={step.description} allowStepSelect={canProceed(i-1)}>
             {step.step}
           </Stepper.Step>
         ))}
@@ -38,7 +38,7 @@ const StepperProgress = ({steps}: StepperProgressProps) => {
         <Button variant="default" onClick={prevStep} disabled={active === 1}>
           {t("common.back")}
         </Button>
-        <Button onClick={nextStep} disabled={!canProceed}>{t("common.next")}</Button>
+        <Button onClick={nextStep} disabled={!canProceed(active)}>{t("common.next")}</Button>
       </Group>
     </>
   );
