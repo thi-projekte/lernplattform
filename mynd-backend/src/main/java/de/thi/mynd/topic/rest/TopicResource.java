@@ -27,7 +27,6 @@ public final class TopicResource {
   }
 
   @GET
-  @Path("/search")
   public List<ListTopicDto> search(@RestQuery String search) {
     return topicService.findTopicsBySearchMax5(search);
   }
