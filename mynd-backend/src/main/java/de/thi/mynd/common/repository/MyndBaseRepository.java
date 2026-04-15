@@ -18,8 +18,6 @@ public abstract class MyndBaseRepository<T extends BaseEntity> implements Panach
     return PaginationDto.<T>builder()
         .results(query.list())
         .totalPages(query.pageCount())
-        .hasNextPage(query.hasNextPage())
-        .hasPreviousPage(query.hasPreviousPage())
         .build();
   }
 }
