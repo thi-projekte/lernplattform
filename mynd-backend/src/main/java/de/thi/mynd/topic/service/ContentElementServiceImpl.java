@@ -4,17 +4,23 @@ import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.topic.dto.content.*;
 import de.thi.mynd.topic.entity.*;
 import de.thi.mynd.topic.processor.content.ContentElementProcessorManager;
+import de.thi.mynd.topic.repository.ContentElementRepository;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.io.File;
+import java.util.List;
+import java.util.UUID;
 
 @ApplicationScoped
 public class ContentElementServiceImpl implements ContentElementService {
 
     @Inject
     ContentElementProcessorManager contentElementProcessorManager;
+
+    @Inject
+    ContentElementRepository contentElementRepository;
 
     @Inject
     MappingRegistry mappingRegistry;
@@ -26,6 +32,13 @@ public class ContentElementServiceImpl implements ContentElementService {
         return mappingRegistry.map(contentElement, getContentElementDtoClass(contentElement));
     }
 
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<ContentElementDto> getContentElementsForTopic(UUID topicId) {
+        List<ContentElement> elements = contentElementRepository.findForTopic(topicId);
+
+        return (List<ContentElementDto>) mappingRegistry.mapList(elements, this::getContentElementDtoClass);
+    }
 
     private Class<? extends ContentElementDto> getContentElementDtoClass(ContentElement contentElement) {
         return switch (contentElement) {
