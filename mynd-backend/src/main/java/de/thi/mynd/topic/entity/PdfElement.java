@@ -8,6 +8,9 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("PDF")
 public class PdfElement extends ContentElement {
 
+  @Column
+  public boolean uploadComplete = false;
+
   @Column(nullable = false)
   public String s3Key;
 

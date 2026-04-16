@@ -8,6 +8,9 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("IMAGE")
 public class ImageElement extends ContentElement {
 
+  @Column
+  public boolean uploadComplete = false;
+
   @Column(nullable = false)
   public String s3Key;
 
