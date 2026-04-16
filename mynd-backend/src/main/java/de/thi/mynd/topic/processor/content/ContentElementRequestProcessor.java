@@ -5,7 +5,7 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 
 import java.io.File;
 
-public interface ContentElementProcessor<R extends ContentElementRequest> {
+public interface ContentElementRequestProcessor<R extends ContentElementRequest> {
 
     ContentElement creteContentElementFromRequest(R request, File file);
 

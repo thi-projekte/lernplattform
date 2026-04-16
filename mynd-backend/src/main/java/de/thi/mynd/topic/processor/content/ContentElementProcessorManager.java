@@ -1,6 +1,5 @@
 package de.thi.mynd.topic.processor.content;
 
-import de.thi.mynd.common.entity.BaseEntity;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -13,11 +12,11 @@ import java.io.File;
 public final class ContentElementProcessorManager {
 
     @Inject
-    Instance<ContentElementProcessor<? extends ContentElementRequest>> processors;
+    Instance<ContentElementRequestProcessor<? extends ContentElementRequest>> processors;
 
     @SuppressWarnings("unchecked")
     public ContentElement createContentElementFromRequest(ContentElementRequest request, File file) {
-        ContentElementProcessor<ContentElementRequest> processor = (ContentElementProcessor<ContentElementRequest>) processors.stream()
+        ContentElementRequestProcessor<ContentElementRequest> processor = (ContentElementRequestProcessor<ContentElementRequest>) processors.stream()
                 .filter(p -> p.supports(request))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("No processor for type: " + request.getClass()));
