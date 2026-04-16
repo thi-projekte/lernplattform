@@ -8,29 +8,28 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.RtfElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.io.File;
 
 @ApplicationScoped
-public final class RtfElementRequestProcessor implements ContentElementRequestProcessor<RtfElementRequest> {
+public final class RtfElementRequestProcessor
+    implements ContentElementRequestProcessor<RtfElementRequest> {
 
-    @Inject
-    ContentElementRepository contentElementRepository;
+  @Inject ContentElementRepository contentElementRepository;
 
-    @Override
-    public ContentElement creteContentElementFromRequest(RtfElementRequest request, File file) {
+  @Override
+  public ContentElement creteContentElementFromRequest(RtfElementRequest request, File file) {
 
-        RtfElement contentElement = new RtfElement();
-        contentElement.title = request.title;
-        contentElement.type = ContentType.Rtf;
-        contentElement.rtfText = request.rtfText;
-        contentElementRepository.persistAndFlush(contentElement);
+    RtfElement contentElement = new RtfElement();
+    contentElement.title = request.title;
+    contentElement.type = ContentType.Rtf;
+    contentElement.rtfText = request.rtfText;
+    contentElementRepository.persistAndFlush(contentElement);
 
-        return contentElement;
-    }
+    return contentElement;
+  }
 
-    @Override
-    public boolean supports(ContentElementRequest request) {
-        return request instanceof RtfElementRequest;
-    }
+  @Override
+  public boolean supports(ContentElementRequest request) {
+    return request instanceof RtfElementRequest;
+  }
 }

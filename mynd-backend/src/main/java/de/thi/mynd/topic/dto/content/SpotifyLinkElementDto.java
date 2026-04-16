@@ -5,5 +5,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public final class SpotifyLinkElementDto extends ContentElementDto {
 
-    public String uri;
+  public String uri;
 }

@@ -5,5 +5,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public final class YouTubeLinkElementDto extends ContentElementDto {
 
-    public String uri;
+  public String uri;
 }

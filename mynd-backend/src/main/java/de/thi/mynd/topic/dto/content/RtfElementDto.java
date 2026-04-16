@@ -5,5 +5,5 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public final class RtfElementDto extends ContentElementDto {
 
-    public String rtfText;
+  public String rtfText;
 }

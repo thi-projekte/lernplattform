@@ -1,7 +1,6 @@
 package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.entity.Category;
-import de.thi.mynd.topic.repository.CategoryRepository;
 import de.thi.mynd.topic.service.CategoryService;
 import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
@@ -17,8 +16,7 @@ import org.jboss.resteasy.reactive.RestQuery;
 @Authenticated
 public final class CategoryResource {
 
-  @Inject
-  CategoryService categoryService;
+  @Inject CategoryService categoryService;
 
   @Path("/search")
   @GET

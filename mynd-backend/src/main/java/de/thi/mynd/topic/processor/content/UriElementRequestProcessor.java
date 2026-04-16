@@ -2,36 +2,33 @@ package de.thi.mynd.topic.processor.content;
 
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.ContentType;
-import de.thi.mynd.topic.entity.SpotifyLinkElement;
 import de.thi.mynd.topic.entity.UriElement;
 import de.thi.mynd.topic.repository.ContentElementRepository;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.UriElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.io.File;
 
 @ApplicationScoped
-public final class UriElementRequestProcessor implements ContentElementRequestProcessor<UriElementRequest> {
+public final class UriElementRequestProcessor
+    implements ContentElementRequestProcessor<UriElementRequest> {
 
-    @Inject
-    ContentElementRepository contentElementRepository;
+  @Inject ContentElementRepository contentElementRepository;
 
+  @Override
+  public ContentElement creteContentElementFromRequest(UriElementRequest request, File file) {
+    UriElement contentElement = new UriElement();
+    contentElement.title = request.title;
+    contentElement.type = ContentType.Uri;
+    contentElement.uri = request.uri;
+    contentElementRepository.persistAndFlush(contentElement);
 
-    @Override
-    public ContentElement creteContentElementFromRequest(UriElementRequest request, File file) {
-        UriElement contentElement = new UriElement();
-        contentElement.title = request.title;
-        contentElement.type = ContentType.Uri;
-        contentElement.uri = request.uri;
-        contentElementRepository.persistAndFlush(contentElement);
+    return contentElement;
+  }
 
-        return contentElement;
-    }
-
-    @Override
-    public boolean supports(ContentElementRequest request) {
-        return request instanceof UriElementRequest;
-    }
+  @Override
+  public boolean supports(ContentElementRequest request) {
+    return request instanceof UriElementRequest;
+  }
 }

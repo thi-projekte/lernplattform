@@ -3,8 +3,6 @@ package de.thi.mynd.common.processor;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -41,11 +39,10 @@ public final class MappingRegistry {
     return entities.stream().map(e -> this.map(e, dtoClass)).toList();
   }
 
-  public <E, D> List<? extends D> mapList(List<E> entities, Function<E, Class<? extends D>> typeResolver) {
+  public <E, D> List<? extends D> mapList(
+      List<E> entities, Function<E, Class<? extends D>> typeResolver) {
     if (entities == null) return List.of();
 
-    return entities.stream()
-            .map(e -> this.map(e, typeResolver.apply(e)))
-            .toList();
+    return entities.stream().map(e -> this.map(e, typeResolver.apply(e))).toList();
   }
 }

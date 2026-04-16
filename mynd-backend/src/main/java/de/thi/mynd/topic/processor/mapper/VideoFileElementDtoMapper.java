@@ -8,30 +8,30 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public final class VideoFileElementDtoMapper extends AbstractMappingProcessor<VideoFileElement, VideoFileElementDto> {
+public final class VideoFileElementDtoMapper
+    extends AbstractMappingProcessor<VideoFileElement, VideoFileElementDto> {
 
-    @Inject
-    ObjectStorageService objectStorageService;
+  @Inject ObjectStorageService objectStorageService;
 
-    @Override
-    public VideoFileElementDto mapAndEnrich(VideoFileElement entity) {
-        return VideoFileElementDto.builder()
-                .id(entity.id)
-                .title(entity.title)
-                .createdAt(entity.createdAt)
-                .updatedAt(entity.updatedAt)
-                .originalFileName(entity.originalFileName)
-                .presignedUrl(objectStorageService.getPresignedUrlForFile(entity.s3Key))
-                .build();
-    }
+  @Override
+  public VideoFileElementDto mapAndEnrich(VideoFileElement entity) {
+    return VideoFileElementDto.builder()
+        .id(entity.id)
+        .title(entity.title)
+        .createdAt(entity.createdAt)
+        .updatedAt(entity.updatedAt)
+        .originalFileName(entity.originalFileName)
+        .presignedUrl(objectStorageService.getPresignedUrlForFile(entity.s3Key))
+        .build();
+  }
 
-    @Override
-    public Class<VideoFileElement> getEntityType() {
-        return VideoFileElement.class;
-    }
+  @Override
+  public Class<VideoFileElement> getEntityType() {
+    return VideoFileElement.class;
+  }
 
-    @Override
-    public Class<VideoFileElementDto> getDtoType() {
-        return VideoFileElementDto.class;
-    }
+  @Override
+  public Class<VideoFileElementDto> getDtoType() {
+    return VideoFileElementDto.class;
+  }
 }

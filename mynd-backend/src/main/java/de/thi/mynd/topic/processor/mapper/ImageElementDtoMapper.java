@@ -8,30 +8,30 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public final class ImageElementDtoMapper extends AbstractMappingProcessor<ImageElement, ImageElementDto> {
+public final class ImageElementDtoMapper
+    extends AbstractMappingProcessor<ImageElement, ImageElementDto> {
 
-    @Inject
-    ObjectStorageService objectStorageService;
+  @Inject ObjectStorageService objectStorageService;
 
-    @Override
-    public ImageElementDto mapAndEnrich(ImageElement entity) {
-        return ImageElementDto.builder()
-                .id(entity.id)
-                .title(entity.title)
-                .createdAt(entity.createdAt)
-                .updatedAt(entity.updatedAt)
-                .originalFileName(entity.originalFileName)
-                .presignedUrl(objectStorageService.getPresignedUrlForFile(entity.s3Key))
-                .build();
-    }
+  @Override
+  public ImageElementDto mapAndEnrich(ImageElement entity) {
+    return ImageElementDto.builder()
+        .id(entity.id)
+        .title(entity.title)
+        .createdAt(entity.createdAt)
+        .updatedAt(entity.updatedAt)
+        .originalFileName(entity.originalFileName)
+        .presignedUrl(objectStorageService.getPresignedUrlForFile(entity.s3Key))
+        .build();
+  }
 
-    @Override
-    public Class<ImageElement> getEntityType() {
-        return ImageElement.class;
-    }
+  @Override
+  public Class<ImageElement> getEntityType() {
+    return ImageElement.class;
+  }
 
-    @Override
-    public Class<ImageElementDto> getDtoType() {
-        return ImageElementDto.class;
-    }
+  @Override
+  public Class<ImageElementDto> getDtoType() {
+    return ImageElementDto.class;
+  }
 }

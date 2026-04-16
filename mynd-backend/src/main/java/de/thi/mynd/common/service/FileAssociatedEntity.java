@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface FileAssociatedEntity {
 
-    List<String> getFileKeys();
+  List<String> getFileKeys();
 }

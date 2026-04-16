@@ -13,7 +13,6 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
 import java.util.UUID;
-
 import org.jboss.resteasy.reactive.RestQuery;
 
 @Path("/topics")
@@ -23,8 +22,7 @@ public final class TopicResource {
 
   @Inject TopicService topicService;
 
-  @Inject
-  ContentElementService contentElementService;
+  @Inject ContentElementService contentElementService;
 
   @GET
   @Path("/personal")

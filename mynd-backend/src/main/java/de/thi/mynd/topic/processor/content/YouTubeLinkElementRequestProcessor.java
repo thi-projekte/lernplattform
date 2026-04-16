@@ -8,28 +8,28 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.YouTubeLinkElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.io.File;
 
 @ApplicationScoped
-public class YouTubeLinkElementRequestProcessor implements ContentElementRequestProcessor<YouTubeLinkElementRequest> {
+public class YouTubeLinkElementRequestProcessor
+    implements ContentElementRequestProcessor<YouTubeLinkElementRequest> {
 
-    @Inject
-    ContentElementRepository contentElementRepository;
+  @Inject ContentElementRepository contentElementRepository;
 
-    @Override
-    public ContentElement creteContentElementFromRequest(YouTubeLinkElementRequest request, File file) {
-        YouTubeLinkElement contentElement = new YouTubeLinkElement();
-        contentElement.title = request.title;
-        contentElement.type = ContentType.Rtf;
-        contentElement.uri = request.uri;
-        contentElementRepository.persistAndFlush(contentElement);
+  @Override
+  public ContentElement creteContentElementFromRequest(
+      YouTubeLinkElementRequest request, File file) {
+    YouTubeLinkElement contentElement = new YouTubeLinkElement();
+    contentElement.title = request.title;
+    contentElement.type = ContentType.Rtf;
+    contentElement.uri = request.uri;
+    contentElementRepository.persistAndFlush(contentElement);
 
-        return contentElement;
-    }
+    return contentElement;
+  }
 
-    @Override
-    public boolean supports(ContentElementRequest request) {
-        return request instanceof YouTubeLinkElementRequest;
-    }
+  @Override
+  public boolean supports(ContentElementRequest request) {
+    return request instanceof YouTubeLinkElementRequest;
+  }
 }

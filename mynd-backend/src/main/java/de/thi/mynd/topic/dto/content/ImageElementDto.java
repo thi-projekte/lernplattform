@@ -1,13 +1,12 @@
 package de.thi.mynd.topic.dto.content;
 
-import lombok.experimental.SuperBuilder;
-
 import java.net.URL;
+import lombok.experimental.SuperBuilder;
 
 @SuperBuilder
 public final class ImageElementDto extends ContentElementDto {
 
-    public URL presignedUrl;
+  public URL presignedUrl;
 
-    public String originalFileName;
+  public String originalFileName;
 }

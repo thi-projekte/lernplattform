@@ -8,6 +8,6 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("SPOTIFY_LINK")
 public class SpotifyLinkElement extends ContentElement {
 
-    @Column(nullable = false)
-    public String uri;
+  @Column(nullable = false)
+  public String uri;
 }
