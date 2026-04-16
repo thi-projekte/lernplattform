@@ -8,8 +8,6 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("VIDEO_FILE")
 public class VideoFileElement extends ContentElement {
 
-  @Column
-  public boolean uploadComplete = false;
 
   @Column(nullable = false)
   public String s3Key;
