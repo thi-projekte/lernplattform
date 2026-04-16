@@ -1,9 +1,11 @@
 package de.thi.mynd.common.service;
 
 import de.thi.mynd.common.entity.BaseEntity;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -28,7 +30,7 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
     S3Presigner presigner;
 
     @Inject
-    S3Client s3Client;
+    S3AsyncClient s3Client;
 
     @Override
     public URL getPresignedUrlForEntityFile(BaseEntity entity, String filename) {
@@ -57,7 +59,14 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
                 .contentType(contentType)
                 .build();
 
-        s3Client.putObject(request, file.toPath());
+        s3Client.putObject(request, file.toPath())
+                .whenComplete((response, exception) -> {
+                    if (exception != null) {
+                        Log.error(exception.getMessage());
+                    } else {
+                        Log.infof("Successfully uploaded object %s", objectKey);
+                    }
+                });
 
         return objectKey;
     }
