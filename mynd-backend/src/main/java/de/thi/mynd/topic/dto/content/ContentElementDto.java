@@ -2,6 +2,7 @@ package de.thi.mynd.topic.dto.content;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -16,12 +17,13 @@ import java.util.UUID;
         @JsonSubTypes.Type(value = PdfElementDto.class, name = "PDF"),
         @JsonSubTypes.Type(value = VideoFileElementDto.class, name = "VIDEO_FILE"),
         @JsonSubTypes.Type(value = AudioFileElementDto.class, name = "AUDIO_FILE"),
-        @JsonSubTypes.Type(value = YouTubeLinkDto.class, name = "YOUTUBE_LINK"),
+        @JsonSubTypes.Type(value = YouTubeLinkElementDto.class, name = "YOUTUBE_LINK"),
         @JsonSubTypes.Type(value = SpotifyLinkElementDto.class, name = "SPOTIFY_LINK"),
         @JsonSubTypes.Type(value = RtfElementDto.class, name = "RTF"),
         @JsonSubTypes.Type(value = UriElementDto.class, name = "URI"),
         @JsonSubTypes.Type(value = ImageElementDto.class, name = "IMAGE")
 })
+@SuperBuilder
 public abstract class ContentElementDto {
 
     public UUID id;

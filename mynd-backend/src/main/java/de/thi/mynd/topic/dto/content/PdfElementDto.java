@@ -1,11 +1,13 @@
 package de.thi.mynd.topic.dto.content;
 
-import lombok.Builder;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+import java.net.URL;
+
+@SuperBuilder
 public final class PdfElementDto extends ContentElementDto {
 
-    public String presignedUrl;
+    public URL presignedUrl;
 
     public String originalFileName;
 }

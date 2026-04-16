@@ -10,5 +10,5 @@ public interface ObjectStorageService {
 
     String uploadObject(BaseEntity entity, File file) throws IOException;
 
-    URL getPresignedUrlForEntityFile(BaseEntity entity, String filename);
+    URL getPresignedUrlForFile(String objectKey);
 }

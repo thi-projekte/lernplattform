@@ -33,10 +33,10 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
     S3AsyncClient s3Client;
 
     @Override
-    public URL getPresignedUrlForEntityFile(BaseEntity entity, String filename) {
+    public URL getPresignedUrlForFile(String objectKey) {
         GetObjectRequest objectRequest = GetObjectRequest.builder()
                 .bucket(bucketName)
-                .key(getS3FileName(entity, filename))
+                .key(objectKey)
                 .build();
 
         GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()

@@ -1,8 +1,8 @@
 package de.thi.mynd.topic.dto.content;
 
-import lombok.Builder;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@SuperBuilder
 public final class RtfElementDto extends ContentElementDto {
 
     public String rtfText;
