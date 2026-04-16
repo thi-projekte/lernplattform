@@ -1,6 +1,8 @@
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.processor.MappingRegistry;
+import de.thi.mynd.common.service.FileAssociatedEntity;
+import de.thi.mynd.common.service.ObjectStorageService;
 import de.thi.mynd.topic.dto.content.*;
 import de.thi.mynd.topic.entity.*;
 import de.thi.mynd.topic.processor.content.ContentElementProcessorManager;
@@ -8,6 +10,7 @@ import de.thi.mynd.topic.repository.ContentElementRepository;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.NotFoundException;
 
 import java.io.File;
 import java.util.List;
@@ -21,6 +24,9 @@ public class ContentElementServiceImpl implements ContentElementService {
 
     @Inject
     ContentElementRepository contentElementRepository;
+
+    @Inject
+    ObjectStorageService objectStorageService;
 
     @Inject
     MappingRegistry mappingRegistry;
@@ -38,6 +44,22 @@ public class ContentElementServiceImpl implements ContentElementService {
         List<ContentElement> elements = contentElementRepository.findForTopic(topicId);
 
         return (List<ContentElementDto>) mappingRegistry.mapList(elements, this::getContentElementDtoClass);
+    }
+
+    @Override
+    public void deleteContentElement(UUID elementId) {
+        ContentElement element = contentElementRepository.findById(elementId);
+        if (element == null) {
+            throw new NotFoundException("Content element does not exist");
+        }
+
+        if (element instanceof FileAssociatedEntity fileAssociatedEntity) {
+            for (String objectKey : fileAssociatedEntity.getFileKeys()) {
+                objectStorageService.tryDeleteObject(objectKey);
+            }
+        }
+
+        contentElementRepository.delete(element);
     }
 
     private Class<? extends ContentElementDto> getContentElementDtoClass(ContentElement contentElement) {

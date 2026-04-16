@@ -12,4 +12,6 @@ public interface ContentElementService {
     ContentElementDto createContentElement(ContentElementRequest request, File uploadedFile);
 
     List<ContentElementDto> getContentElementsForTopic(UUID topicId);
+
+    void deleteContentElement(UUID elementId);
 }

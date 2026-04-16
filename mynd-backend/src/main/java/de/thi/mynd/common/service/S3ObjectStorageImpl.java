@@ -7,6 +7,7 @@ import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.S3Object;
@@ -69,6 +70,23 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
                 });
 
         return objectKey;
+    }
+
+    @Override
+    public void tryDeleteObject(String objectKey) {
+        DeleteObjectRequest request = DeleteObjectRequest.builder()
+                .bucket(bucketName)
+                .key(objectKey)
+                .build();
+
+        s3Client.deleteObject(request)
+                .whenComplete((response, exception) -> {
+                    if (exception != null) {
+                        Log.error(exception.getMessage());
+                    } else {
+                        Log.infof("Successfully deleted object %s", objectKey);
+                    }
+                });
     }
 
     private String getS3FileName(BaseEntity entity, String filename) {
