@@ -14,6 +14,8 @@ const BuilderModeListPage = () => {
   const [pagination, setPagination] = useState<PaginationState>({ pageSize: 20, pageIndex: 0 });
   const { data, isLoading } = useQueryPersonalTopicsPaginated(pagination);
 
+  console.log(data);
+
   const { t } = useTranslation();
   const navigate = useNavigate();
   const columns = useTopicColumns(true);

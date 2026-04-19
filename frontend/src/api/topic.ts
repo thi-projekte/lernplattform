@@ -8,7 +8,7 @@ import {
   PaginatedListTopicDtoSchema, type Topic, TopicCoreDataSchema,
 } from '../schemas/topic.ts';
 import type { PaginationState } from '@tanstack/react-table';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { z } from 'zod';
 import {
   type AnyContentElementDto,
@@ -97,7 +97,14 @@ const createTopic = async (createTopic: Partial<Topic>) => {
   return TopicCoreDataSchema.parse(result.data);
 };
 
-export const useCreateTopicMutation = () => useMutation({
-  mutationKey: ["createTopic"],
-  mutationFn: createTopic
-});
+export const useCreateTopicMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ['createTopic'],
+    mutationFn: createTopic,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['personalTopics'] });
+    },
+  });
+}
