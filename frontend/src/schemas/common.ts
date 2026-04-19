@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 export const BaseEntitySchema = z.object({
   id: z.uuid(),
-  createdAt: z.iso.datetime(),
-  updatedAt: z.iso.datetime(),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
 });
 
 export const createPaginatedSchema = <T extends z.ZodTypeAny>(itemSchema: T) => {

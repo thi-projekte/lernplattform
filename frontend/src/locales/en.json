@@ -1,21 +1,45 @@
 {
   "routes": {
     "dashboard": "Dashboard",
-    "builderMode": "Builder Mode"
+    "builderMode": "Builder Mode",
+    "createTopic": "Create topic"
   },
   "common": {
     "rowsPerPage": "Rows per page",
     "noEntriesFound": "No entries found",
     "updatedAt": "Updated at",
-    "actions": "Actions"
+    "actions": "Actions",
+    "back": "Back",
+    "next": "Next",
+    "nothingFound": "Nothing found",
+    "shouldNotBeEmpty": "Field should not be empty"
   },
   "topic": {
     "headings": {
       "personalTopics": "Personal topics"
     },
+    "actions": {
+      "create": "Create topic"
+    },
     "fields": {
       "title": "Title",
-      "categories": "Categories"
+      "categories": "Categories",
+      "teaser": "Teaser",
+      "estimatedLearningDuration": "Estimated learning duration"
+    },
+    "errors": {
+      "titleMissing": "Title missing",
+      "minOneCategory": "At least one category",
+      "maxThreeCategory": "Max three categories"
+    },
+    "steps": {
+      "coreDataTitle": "Core data",
+      "coreDataDescription": "Enter Core Data",
+      "associatedTopicsTitle": "Associated Topics",
+      "associatedTopicsDescription": "Select associated topics"
+    },
+    "other": {
+      "selectUpToThreeCategories": "Select up to three categories"
     }
   }
 }

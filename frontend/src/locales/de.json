@@ -1,21 +1,45 @@
 {
   "routes": {
     "dashboard": "Dashboard",
-    "builderMode": "Builder Modus"
+    "builderMode": "Builder Modus",
+    "createTopic": "Thema erstellen"
   },
   "common": {
     "rowsPerPage": "Einträge pro Seite",
     "noEntriesFound": "Keine Enträge gefunden",
     "updatedAt": "Zuletzt aktualisiert",
-    "actions": "Aktionen"
+    "actions": "Aktionen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "nothingFound": "Keine Einträge gefunden",
+    "shouldNotBeEmpty": "Feld sollte nicht leer sein"
   },
   "topic": {
     "headings": {
       "personalTopics": "Eigene Themen"
     },
+    "actions": {
+      "create": "Thema erstellen"
+    },
     "fields": {
       "title": "Titel",
-      "categories": "Kategorien"
+      "categories": "Kategorien",
+      "teaser": "Kurzbeschreibung",
+      "estimatedLearningDuration": "Geschätzte Lerndauer"
+    },
+    "errors": {
+      "titleMissing": "Titel fehlt",
+      "minOneCategory": "Mindestens eine Kategorie auswählen",
+      "maxThreeCategory": "Maximal drei Kategorien auswählen"
+    },
+    "steps": {
+      "coreDataTitle": "Stammdaten",
+      "coreDataDescription": "Eingabe der Stammdatem",
+      "associatedTopicsTitle": "Benachbarte Themen",
+      "associatedTopicsDescription": "Benachbarte Themen auswählen"
+    },
+    "other": {
+      "selectUpToThreeCategories": "Wähle bis zu drei Kategorien aus"
     }
   }
 }
