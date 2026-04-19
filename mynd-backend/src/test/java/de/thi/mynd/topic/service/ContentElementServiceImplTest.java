@@ -9,6 +9,7 @@ import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.service.ObjectStorageService;
 import de.thi.mynd.topic.dto.content.ContentElementDto;
 import de.thi.mynd.topic.dto.content.PdfElementDto;
+import de.thi.mynd.topic.entity.ContentType;
 import de.thi.mynd.topic.entity.PdfElement;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.processor.content.ContentElementProcessorManager;
@@ -44,6 +45,7 @@ class ContentElementServiceImplTest {
     FileUpload file = mock(FileUpload.class);
     PdfElement element = new PdfElement();
     element.id = UUID.randomUUID();
+    element.type = ContentType.PDF;
     PdfElementDto expectedDto = PdfElementDto.builder().build();
 
     when(processorManager.createContentElementFromRequest(request, file)).thenReturn(element);
