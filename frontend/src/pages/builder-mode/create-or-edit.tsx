@@ -5,6 +5,7 @@ import { useState } from 'react';
 import {
   type Topic,
   TopicAssociatedTopicsSchema,
+  TopicContentElementsSchema,
   TopicCoreDataSchema,
 } from '../../schemas/topic.ts';
 import StepperProgress, { type StepperStep } from '../../components/stepper-progress.tsx';
@@ -33,7 +34,7 @@ const CreateOrEditTopicPage = () => {
     {
       label: t('topic.steps.contentElementsTitle'),
       description: t('topic.steps.contentElementsDescription'),
-      canProceed: false,
+      canProceed: TopicContentElementsSchema.safeParse(topic).success ?? false,
       step: <ContentElementsDnd topic={topic} setTopic={setTopic} />,
     },
   ];
