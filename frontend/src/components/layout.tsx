@@ -1,12 +1,14 @@
 import { ActionIcon, AppShell, Burger, Group, Image, NavLink } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconHammer, IconUser } from '@tabler/icons-react';
-import type { FC, ReactNode } from 'react';
+import { IconUser } from '@tabler/icons-react';
+import { type FC, type ReactNode } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import { useTranslation } from 'react-i18next';
 
 import logo from '../assets/logo.png';
 import keycloak from '../keycloak.ts';
+import { routes } from '../routing.tsx';
+import { useMatches, useNavigate } from 'react-router';
 
 interface LayoutProps {
   children: ReactNode;
@@ -15,6 +17,21 @@ interface LayoutProps {
 export const Layout: FC<LayoutProps> = ({ children }) => {
   const [opened, { toggle }] = useDisclosure();
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const matches = useMatches();
+
+  const sidebarRoutes = routes.filter((r) => r.isSidebar && r.path);
+
+  const activePaths = matches.map((m) => m.pathname);
+
+  const longestActiveTarget = sidebarRoutes
+    .filter((route) => activePaths.includes(route.path ?? ''))
+    .reduce(
+      (prev, current) => ((current.path ?? '').length > prev.length ? (current.path ?? '') : prev),
+      ''
+    );
+
+  const isActive = (path: string) => longestActiveTarget === path;
 
   return (
     <AppShell
@@ -39,11 +56,14 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
-        <NavLink
-          label={t('common.builderMode')}
-          leftSection={<IconHammer size={16} stroke={1.5} />}
-          active
-        />
+        {sidebarRoutes.map((route) => (
+          <NavLink
+            label={route.translation ? t(`routes.${route.translation}`) : undefined}
+            leftSection={route.icon ? <route.icon size={32} stroke={1.5} /> : undefined}
+            active={isActive(route.path ?? '')}
+            onClick={() => navigate(route.path ?? '')}
+          />
+        ))}
       </AppShell.Navbar>
 
       <AppShell.Main>{children}</AppShell.Main>

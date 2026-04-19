@@ -1,5 +1,21 @@
 {
-  "common": {
+  "routes": {
+    "dashboard": "Dashboard",
     "builderMode": "Builder Modus"
+  },
+  "common": {
+    "rowsPerPage": "Einträge pro Seite",
+    "noEntriesFound": "Keine Enträge gefunden",
+    "updatedAt": "Zuletzt aktualisiert",
+    "actions": "Aktionen"
+  },
+  "topic": {
+    "headings": {
+      "personalTopics": "Eigene Themen"
+    },
+    "fields": {
+      "title": "Titel",
+      "categories": "Kategorien"
+    }
   }
 }
