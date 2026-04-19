@@ -38,8 +38,12 @@ public final class VideoFileElementRequestProcessor
       VideoFileElement contentElement = new VideoFileElement();
       contentElement.title = request.title;
       contentElement.type = ContentType.VideoFile;
-      contentElement.s3Key = storageService.uploadObject(contentElement, file.uploadedFile().toFile());
+      contentElement.s3Key = "";
       contentElement.originalFileName = request.originalFileName;
+
+      contentElementRepository.persist(contentElement);
+
+      contentElement.s3Key = storageService.uploadObject(contentElement, file.uploadedFile().toFile());
 
       contentElementRepository.persistAndFlush(contentElement);
 

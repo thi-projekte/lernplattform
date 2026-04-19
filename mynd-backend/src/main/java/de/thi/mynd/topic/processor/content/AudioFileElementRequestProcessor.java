@@ -40,8 +40,12 @@ public final class AudioFileElementRequestProcessor
       AudioFileElement contentElement = new AudioFileElement();
       contentElement.title = request.title;
       contentElement.type = ContentType.AudioFile;
-      contentElement.s3Key = storageService.uploadObject(contentElement, file.uploadedFile().toFile());
+      contentElement.s3Key = "";
       contentElement.originalFileName = request.originalFileName;
+
+      contentElementRepository.persist(contentElement);
+
+      contentElement.s3Key = storageService.uploadObject(contentElement, file.uploadedFile().toFile());
 
       contentElementRepository.persistAndFlush(contentElement);
 
