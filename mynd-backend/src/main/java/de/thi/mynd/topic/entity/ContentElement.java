@@ -15,6 +15,9 @@ public abstract class ContentElement extends BaseEntity {
   @Enumerated(EnumType.STRING)
   public ContentType type;
 
+  @Column(name = "rank", nullable = true)
+  public Integer rank;
+
   @ManyToOne
   @JoinColumn(name = "topic_id")
   public Topic topic;

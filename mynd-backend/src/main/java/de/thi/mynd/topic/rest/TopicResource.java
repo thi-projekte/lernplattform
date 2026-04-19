@@ -2,12 +2,17 @@ package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.topic.dto.ListTopicDto;
+import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.dto.content.ContentElementDto;
+import de.thi.mynd.topic.requests.CreateTopicRequest;
 import de.thi.mynd.topic.service.ContentElementService;
 import de.thi.mynd.topic.service.TopicService;
 import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
@@ -40,5 +45,11 @@ public final class TopicResource {
   @Path("/{topicId}/content-elements")
   public List<ContentElementDto> getContentElementsForTopic(UUID topicId) {
     return contentElementService.getContentElementsForTopic(topicId);
+  }
+
+  @POST
+  @RolesAllowed("builder")
+  public TopicDto createTopic(@Valid CreateTopicRequest createTopicRequest) {
+    return topicService.createTopic(createTopicRequest);
   }
 }

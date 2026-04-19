@@ -3,6 +3,7 @@ package de.thi.mynd.topic.rest;
 import de.thi.mynd.topic.dto.content.ContentElementDto;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.service.ContentElementService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.DELETE;
@@ -21,6 +22,7 @@ public final class ContentElementResource {
   @Inject ContentElementService contentElementService;
 
   @POST
+  @RolesAllowed("builder")
   public ContentElementDto createContentElement(
       @RestForm @PartType(MediaType.APPLICATION_JSON) @Valid ContentElementRequest request,
       @RestForm("file") FileUpload fileUpload) {

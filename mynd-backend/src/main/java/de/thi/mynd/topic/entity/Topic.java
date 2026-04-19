@@ -34,6 +34,6 @@ public class Topic extends BaseEntity {
       inverseJoinColumns = @JoinColumn(name = "related_topic_id"))
   public List<Topic> relatedTopics = new ArrayList<>();
 
-  @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
   public List<ContentElement> contentElements = new ArrayList<>();
 }

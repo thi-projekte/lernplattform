@@ -7,12 +7,18 @@ import de.thi.mynd.topic.dto.content.*;
 import de.thi.mynd.topic.entity.*;
 import de.thi.mynd.topic.processor.content.ContentElementProcessorManager;
 import de.thi.mynd.topic.repository.ContentElementRepository;
+import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
@@ -30,6 +36,9 @@ public final class ContentElementServiceImpl implements ContentElementService {
   public ContentElementDto createContentElement(ContentElementRequest request, FileUpload file) {
     ContentElement contentElement =
         contentElementProcessorManager.createContentElementFromRequest(request, file);
+
+    Log.infof("Created new content element with id %s and type %s", contentElement.id, contentElement.type.label);
+
     return mappingRegistry.map(contentElement, getContentElementDtoClass(contentElement));
   }
 
@@ -43,6 +52,7 @@ public final class ContentElementServiceImpl implements ContentElementService {
   }
 
   @Override
+  @Transactional
   public void deleteContentElement(UUID elementId) {
     ContentElement element = contentElementRepository.findById(elementId);
     if (element == null) {
@@ -56,6 +66,23 @@ public final class ContentElementServiceImpl implements ContentElementService {
     }
 
     contentElementRepository.delete(element);
+    Log.infof("Successfully deleted content element with ID %s", element.id);
+  }
+
+  @Override
+  @Transactional
+  public void updateTopicAssociation(Topic topic, List<AssociatedContentElementRequest> associatedElements) {
+    Map<UUID, Integer> ranking = associatedElements.stream()
+            .collect(Collectors.toMap(e -> e.id, e -> e.rank));
+
+    List<ContentElement> contentElements = contentElementRepository.findByIdsTypeSafe(ranking.keySet().stream().toList());
+    for (ContentElement element : contentElements) {
+      element.topic = topic;
+      element.rank = ranking.get(element.id);
+      contentElementRepository.persist(element);
+    }
+
+    contentElementRepository.flush();
   }
 
   private Class<? extends ContentElementDto> getContentElementDtoClass(
