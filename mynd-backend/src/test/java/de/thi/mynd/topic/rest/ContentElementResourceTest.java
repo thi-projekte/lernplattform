@@ -27,8 +27,12 @@ class ContentElementResourceTest {
   @TestSecurity(user = "test-builder", roles = "builder")
   void testCreateContentElement() {
     // Arrange
-    PdfElementRequest request = new PdfElementRequest();
-    request.title = "Test PDF";
+    String jsonBody =
+        "{"
+            + "\"title\": \"Test PDF\","
+            + "\"originalFileName\": \"test.pdf\","
+            + "\"type\": \"PDF\""
+            + "}";
 
     ContentElementDto responseDto =
         PdfElementDto.builder().id(UUID.randomUUID()).title("Test PDF").build();
@@ -39,7 +43,7 @@ class ContentElementResourceTest {
 
     // Act & Assert
     given()
-        .multiPart("request", request, MediaType.APPLICATION_JSON)
+        .multiPart("request", jsonBody, MediaType.APPLICATION_JSON)
         .multiPart("file", "test.pdf", "This is the file content".getBytes())
         .when()
         .post("/content-elements")
