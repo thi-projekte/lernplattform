@@ -7,27 +7,27 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public final class TopicDtoMapper extends AbstractMappingProcessor<Topic, TopicDto> {
-    @Override
-    public TopicDto mapAndEnrich(Topic entity) {
-        return TopicDto.builder()
-                .id(entity.id)
-                .title(entity.title)
-                .teaser(entity.teaser)
-                .creatorId(entity.creatorId)
-                .creatorFullName(identityService.getFullNameByUsername(entity.creatorId))
-                .estimatedLearningDuration(entity.estimatedLearningDuration)
-                .categories(entity.categories)
-                .updatedAt(entity.updatedAt)
-                .build();
-    }
+  @Override
+  public TopicDto mapAndEnrich(Topic entity) {
+    return TopicDto.builder()
+        .id(entity.id)
+        .title(entity.title)
+        .teaser(entity.teaser)
+        .creatorId(entity.creatorId)
+        .creatorFullName(identityService.getFullNameByUsername(entity.creatorId))
+        .estimatedLearningDuration(entity.estimatedLearningDuration)
+        .categories(entity.categories)
+        .updatedAt(entity.updatedAt)
+        .build();
+  }
 
-    @Override
-    public Class<Topic> getEntityType() {
-        return Topic.class;
-    }
+  @Override
+  public Class<Topic> getEntityType() {
+    return Topic.class;
+  }
 
-    @Override
-    public Class<TopicDto> getDtoType() {
-        return TopicDto.class;
-    }
+  @Override
+  public Class<TopicDto> getDtoType() {
+    return TopicDto.class;
+  }
 }

@@ -14,7 +14,6 @@ import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -58,7 +57,8 @@ public final class TopicServiceImpl implements TopicService {
     Topic topic = new Topic();
     topic.creatorId = identity.getPrincipal().getName();
     topic.categories = categoryService.findByAssociatedEntities(request.categories);
-    topic.relatedTopics = topicRepository.findByIdsTypeSafe(getIdsFromAssociatedEntities(request.relatedTopics));
+    topic.relatedTopics =
+        topicRepository.findByIdsTypeSafe(getIdsFromAssociatedEntities(request.relatedTopics));
     topic.estimatedLearningDuration = request.estimatedLearningDuration;
     topic.teaser = request.teaser;
 
@@ -70,16 +70,14 @@ public final class TopicServiceImpl implements TopicService {
     return mappingRegistry.map(topic, TopicDto.class);
   }
 
-  private void updateContentAssignments(Topic topic, List<AssociatedContentElementRequest> newElements) {
+  private void updateContentAssignments(
+      Topic topic, List<AssociatedContentElementRequest> newElements) {
 
-    Set<UUID> incomingIds = newElements.stream()
-            .map(e -> e.id)
-            .filter(Objects::nonNull)
-            .collect(Collectors.toSet());
+    Set<UUID> incomingIds =
+        newElements.stream().map(e -> e.id).filter(Objects::nonNull).collect(Collectors.toSet());
 
-    List<ContentElement> elementsToRemove = topic.contentElements.stream()
-            .filter(e -> !incomingIds.contains(e.id))
-            .toList();
+    List<ContentElement> elementsToRemove =
+        topic.contentElements.stream().filter(e -> !incomingIds.contains(e.id)).toList();
 
     for (ContentElement element : elementsToRemove) {
       contentElementService.deleteContentElement(element.id);
@@ -88,13 +86,9 @@ public final class TopicServiceImpl implements TopicService {
     contentElementService.updateTopicAssociation(topic, newElements);
   }
 
-  private void filterContentElementsForCreator() {
-
-  }
+  private void filterContentElementsForCreator() {}
 
   private List<UUID> getIdsFromAssociatedEntities(List<AssociatedEntityRequest> entityRequests) {
-    return entityRequests.stream()
-            .map((e) -> e.id)
-            .toList();
+    return entityRequests.stream().map((e) -> e.id).toList();
   }
 }

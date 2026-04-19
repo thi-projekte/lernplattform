@@ -1,7 +1,6 @@
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.topic.dto.content.ContentElementDto;
-import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;

@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
@@ -37,7 +36,9 @@ public final class ContentElementServiceImpl implements ContentElementService {
     ContentElement contentElement =
         contentElementProcessorManager.createContentElementFromRequest(request, file);
 
-    Log.infof("Created new content element with id %s and type %s", contentElement.id, contentElement.type.label);
+    Log.infof(
+        "Created new content element with id %s and type %s",
+        contentElement.id, contentElement.type.label);
 
     return mappingRegistry.map(contentElement, getContentElementDtoClass(contentElement));
   }
@@ -71,11 +72,13 @@ public final class ContentElementServiceImpl implements ContentElementService {
 
   @Override
   @Transactional
-  public void updateTopicAssociation(Topic topic, List<AssociatedContentElementRequest> associatedElements) {
-    Map<UUID, Integer> ranking = associatedElements.stream()
-            .collect(Collectors.toMap(e -> e.id, e -> e.rank));
+  public void updateTopicAssociation(
+      Topic topic, List<AssociatedContentElementRequest> associatedElements) {
+    Map<UUID, Integer> ranking =
+        associatedElements.stream().collect(Collectors.toMap(e -> e.id, e -> e.rank));
 
-    List<ContentElement> contentElements = contentElementRepository.findByIdsTypeSafe(ranking.keySet().stream().toList());
+    List<ContentElement> contentElements =
+        contentElementRepository.findByIdsTypeSafe(ranking.keySet().stream().toList());
     for (ContentElement element : contentElements) {
       element.topic = topic;
       element.rank = ranking.get(element.id);

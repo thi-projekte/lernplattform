@@ -22,7 +22,5 @@ import jakarta.validation.constraints.NotNull;
 })
 public abstract class ContentElementRequest {
 
-  @NotNull
-  @NotBlank
-  public String title;
+  @NotNull @NotBlank public String title;
 }

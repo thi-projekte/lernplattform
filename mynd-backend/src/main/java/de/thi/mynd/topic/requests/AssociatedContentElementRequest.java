@@ -6,8 +6,7 @@ import jakarta.validation.constraints.NotBlank;
 
 public final class AssociatedContentElementRequest extends AssociatedEntityRequest {
 
-    @NotBlank
-    @Min(0)
-    public Integer rank;
-
+  @NotBlank
+  @Min(0)
+  public Integer rank;
 }

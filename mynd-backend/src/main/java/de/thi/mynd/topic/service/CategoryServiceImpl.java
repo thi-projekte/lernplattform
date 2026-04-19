@@ -23,9 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
 
   @Override
   public List<Category> findByAssociatedEntities(List<AssociatedEntityRequest> entities) {
-    List<UUID> ids = entities.stream()
-            .map((e) -> e.id)
-            .toList();
+    List<UUID> ids = entities.stream().map((e) -> e.id).toList();
     return categoryRepository.findByIdsTypeSafe(ids);
   }
 }
