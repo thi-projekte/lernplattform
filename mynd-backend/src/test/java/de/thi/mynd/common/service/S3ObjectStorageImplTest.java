@@ -121,7 +121,7 @@ class S3ObjectStorageImplTest {
     s3ObjectStorage.bucketName = "default";
 
     CompletableFuture<DeleteObjectResponse> future =
-            CompletableFuture.completedFuture(DeleteObjectResponse.builder().build());
+        CompletableFuture.completedFuture(DeleteObjectResponse.builder().build());
 
     when(s3Client.deleteObject(any(DeleteObjectRequest.class))).thenReturn(future);
 
@@ -129,8 +129,10 @@ class S3ObjectStorageImplTest {
     s3ObjectStorage.tryDeleteObject(objectKey);
 
     // Assert
-    verify(s3Client).deleteObject(argThat((DeleteObjectRequest req) ->
-            req.bucket().equals("default") && req.key().equals(objectKey)
-    ));
+    verify(s3Client)
+        .deleteObject(
+            argThat(
+                (DeleteObjectRequest req) ->
+                    req.bucket().equals("default") && req.key().equals(objectKey)));
   }
 }
