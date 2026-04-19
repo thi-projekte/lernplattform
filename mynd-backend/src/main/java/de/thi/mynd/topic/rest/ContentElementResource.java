@@ -4,6 +4,7 @@ import de.thi.mynd.topic.dto.content.ContentElementDto;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.service.ContentElementService;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -21,7 +22,7 @@ public final class ContentElementResource {
 
   @POST
   public ContentElementDto createContentElement(
-      @RestForm @PartType(MediaType.APPLICATION_JSON) ContentElementRequest request,
+      @RestForm @PartType(MediaType.APPLICATION_JSON) @Valid ContentElementRequest request,
       @RestForm("file") FileUpload fileUpload) {
     return contentElementService.createContentElement(request, fileUpload);
   }

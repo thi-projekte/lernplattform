@@ -2,6 +2,8 @@ package de.thi.mynd.topic.requests.content;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.NAME,
@@ -20,5 +22,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 })
 public abstract class ContentElementRequest {
 
+  @NotNull
+  @NotBlank
   public String title;
 }
