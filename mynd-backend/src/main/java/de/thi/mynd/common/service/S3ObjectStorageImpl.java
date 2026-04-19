@@ -4,15 +4,11 @@ import de.thi.mynd.common.entity.BaseEntity;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.time.Duration;
-import java.util.Base64;
-
-import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
@@ -30,8 +26,7 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
 
   @Inject S3Presigner presigner;
 
-  @Inject
-  S3AsyncClient s3Client;
+  @Inject S3AsyncClient s3Client;
 
   @Override
   public URL getPresignedUrlForFile(String objectKey) {
@@ -58,7 +53,8 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
   }
 
   @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-  public String uploadObject(BaseEntity entity, File file, String originalFileName) throws IOException {
+  public String uploadObject(BaseEntity entity, File file, String originalFileName)
+      throws IOException {
     String objectKey = getS3FileName(entity, originalFileName);
     uploadAsync(objectKey, file);
 
@@ -83,22 +79,18 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
   }
 
   private void uploadAsync(String objectKey, File file) {
-    PutObjectRequest request =
-            PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(objectKey)
-                    .build();
+    PutObjectRequest request = PutObjectRequest.builder().bucket(bucketName).key(objectKey).build();
 
     s3Client
-            .putObject(request, file.toPath())
-            .whenComplete(
-                    (response, exception) -> {
-                      if (exception != null) {
-                        Log.error(exception.getMessage());
-                      } else {
-                        Log.infof("Successfully uploaded object %s", objectKey);
-                      }
-                    });
+        .putObject(request, file.toPath())
+        .whenComplete(
+            (response, exception) -> {
+              if (exception != null) {
+                Log.error(exception.getMessage());
+              } else {
+                Log.infof("Successfully uploaded object %s", objectKey);
+              }
+            });
   }
 
   private String getS3FileName(BaseEntity entity, String filename) {

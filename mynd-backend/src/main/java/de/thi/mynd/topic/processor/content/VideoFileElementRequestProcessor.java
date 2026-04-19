@@ -10,9 +10,8 @@ import de.thi.mynd.topic.requests.content.VideoFileElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import org.jboss.resteasy.reactive.multipart.FileUpload;
-
 import java.io.IOException;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
 public final class VideoFileElementRequestProcessor
@@ -24,7 +23,8 @@ public final class VideoFileElementRequestProcessor
 
   @Override
   @Transactional
-  public ContentElement creteContentElementFromRequest(VideoFileElementRequest request, FileUpload file) {
+  public ContentElement creteContentElementFromRequest(
+      VideoFileElementRequest request, FileUpload file) {
 
     if (file == null) {
       throw new NoFileProvidedException("Video file is missing");
@@ -43,7 +43,9 @@ public final class VideoFileElementRequestProcessor
 
       contentElementRepository.persist(contentElement);
 
-      contentElement.s3Key = storageService.uploadObject(contentElement, file.uploadedFile().toFile(), request.originalFileName);
+      contentElement.s3Key =
+          storageService.uploadObject(
+              contentElement, file.uploadedFile().toFile(), request.originalFileName);
 
       contentElementRepository.persistAndFlush(contentElement);
 
@@ -60,10 +62,10 @@ public final class VideoFileElementRequestProcessor
   }
 
   private boolean isFileTypeValid(FileUpload file) {
-      String contentType = file.contentType();
-      if (contentType == null) {
-        return false;
-      }
-      return contentType.startsWith("video/");
+    String contentType = file.contentType();
+    if (contentType == null) {
+      return false;
+    }
+    return contentType.startsWith("video/");
   }
 }

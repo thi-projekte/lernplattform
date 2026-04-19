@@ -12,9 +12,8 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import org.jboss.resteasy.reactive.multipart.FileUpload;
-
 import java.io.IOException;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
 public final class AudioFileElementRequestProcessor
@@ -26,7 +25,8 @@ public final class AudioFileElementRequestProcessor
 
   @Override
   @Transactional
-  public ContentElement creteContentElementFromRequest(AudioFileElementRequest request, FileUpload file) {
+  public ContentElement creteContentElementFromRequest(
+      AudioFileElementRequest request, FileUpload file) {
 
     if (file == null) {
       throw new NoFileProvidedException("Image file is missing");
@@ -45,7 +45,9 @@ public final class AudioFileElementRequestProcessor
 
       contentElementRepository.persist(contentElement);
 
-      contentElement.s3Key = storageService.uploadObject(contentElement, file.uploadedFile().toFile(), request.originalFileName);
+      contentElement.s3Key =
+          storageService.uploadObject(
+              contentElement, file.uploadedFile().toFile(), request.originalFileName);
 
       contentElementRepository.persistAndFlush(contentElement);
 
@@ -62,11 +64,11 @@ public final class AudioFileElementRequestProcessor
   }
 
   private boolean isFileTypeValid(FileUpload file) {
-      String contentType = file.contentType();;
-      if (contentType == null) {
-        return false;
-      }
-      return contentType.startsWith("audio/");
-
+    String contentType = file.contentType();
+    ;
+    if (contentType == null) {
+      return false;
+    }
+    return contentType.startsWith("audio/");
   }
 }

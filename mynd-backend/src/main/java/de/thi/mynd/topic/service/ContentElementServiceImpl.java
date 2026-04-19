@@ -11,11 +11,9 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
-import org.jboss.resteasy.reactive.multipart.FileUpload;
-
-import java.io.File;
 import java.util.List;
 import java.util.UUID;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
 public final class ContentElementServiceImpl implements ContentElementService {

@@ -13,7 +13,8 @@ public final class ContentElementProcessorManager {
   @Inject Instance<ContentElementRequestProcessor<? extends ContentElementRequest>> processors;
 
   @SuppressWarnings("unchecked")
-  public ContentElement createContentElementFromRequest(ContentElementRequest request, FileUpload file) {
+  public ContentElement createContentElementFromRequest(
+      ContentElementRequest request, FileUpload file) {
     ContentElementRequestProcessor<ContentElementRequest> processor =
         (ContentElementRequestProcessor<ContentElementRequest>)
             processors.stream()

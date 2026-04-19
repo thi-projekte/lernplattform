@@ -11,7 +11,6 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
-
 @ApplicationScoped
 public final class SpotifyLinkElementRequestProcessor
     implements ContentElementRequestProcessor<SpotifyLinkElementRequest> {
