@@ -23,14 +23,11 @@ public final class ContentElementResource {
 
   @Inject ContentElementService contentElementService;
 
-  @Inject
-  SecurityIdentity identity;
-
   @POST
+  @RolesAllowed("builder")
   public ContentElementDto createContentElement(
       @RestForm @PartType(MediaType.APPLICATION_JSON) @Valid ContentElementRequest request,
       @RestForm("file") FileUpload fileUpload) {
-    Log.info(identity.getRoles());
     return contentElementService.createContentElement(request, fileUpload);
   }
 

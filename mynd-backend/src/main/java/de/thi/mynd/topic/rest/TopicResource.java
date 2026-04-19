@@ -48,7 +48,7 @@ public final class TopicResource {
   }
 
   @POST
-
+  @RolesAllowed("builder")
   public TopicDto createTopic(@Valid CreateTopicRequest createTopicRequest) {
     return topicService.createTopic(createTopicRequest);
   }
