@@ -2,9 +2,14 @@ import { Layout } from '../../components/layout.tsx';
 import { Container, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
-import { type Topic, TopicCoreDataSchema } from '../../schemas/topic.ts';
+import {
+  type Topic,
+  TopicAssociatedTopicsSchema,
+  TopicCoreDataSchema,
+} from '../../schemas/topic.ts';
 import StepperProgress, { type StepperStep } from '../../components/stepper-progress.tsx';
 import CoreDataStep from '../../components/topic/core-data-step.tsx';
+import AssociatedTopicsStep from '../../components/topic/associated-topics-step.tsx';
 
 const CreateOrEditTopicPage = () => {
   const { t } = useTranslation();
@@ -21,8 +26,14 @@ const CreateOrEditTopicPage = () => {
     {
       label: t('topic.steps.associatedTopicsTitle'),
       description: t('topic.steps.associatedTopicsDescription'),
+      canProceed: TopicAssociatedTopicsSchema.safeParse(topic).success ?? false,
+      step: <AssociatedTopicsStep topic={topic} setTopic={setTopic} />,
+    },
+    {
+      label: t('topic.steps.contentElementsTitle'),
+      description: t('topic.steps.contentElementsDescription'),
       canProceed: false,
-      step: <div>Create or Edit</div>,
+      step: <div>Content</div>,
     },
   ];
 

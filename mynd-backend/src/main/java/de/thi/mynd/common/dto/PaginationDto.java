@@ -9,8 +9,4 @@ public final class PaginationDto<T> {
   public List<T> results;
 
   public int totalPages;
-
-  public boolean hasNextPage;
-
-  public boolean hasPreviousPage;
 }

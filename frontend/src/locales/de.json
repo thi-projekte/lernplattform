@@ -12,7 +12,8 @@
     "back": "Zurück",
     "next": "Weiter",
     "nothingFound": "Keine Einträge gefunden",
-    "shouldNotBeEmpty": "Feld sollte nicht leer sein"
+    "shouldNotBeEmpty": "Feld sollte nicht leer sein",
+    "creatorFullName": "Ersteller"
   },
   "topic": {
     "headings": {
@@ -36,10 +37,13 @@
       "coreDataTitle": "Stammdaten",
       "coreDataDescription": "Eingabe der Stammdatem",
       "associatedTopicsTitle": "Benachbarte Themen",
-      "associatedTopicsDescription": "Benachbarte Themen auswählen"
+      "associatedTopicsDescription": "Benachbarte Themen auswählen",
+      "contentElementsTitle": "Inhalte",
+      "contentElementsDescription": "Erstellen Sie ihre Lerninhalte"
     },
     "other": {
-      "selectUpToThreeCategories": "Wähle bis zu drei Kategorien aus"
+      "selectUpToThreeCategories": "Wähle bis zu drei Kategorien aus",
+      "searchByTitleOrTeaser": "Suche nach Titel oder Kurzbeschreibung"
     }
   }
 }

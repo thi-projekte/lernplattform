@@ -12,7 +12,8 @@
     "back": "Back",
     "next": "Next",
     "nothingFound": "Nothing found",
-    "shouldNotBeEmpty": "Field should not be empty"
+    "shouldNotBeEmpty": "Field should not be empty",
+    "creatorFullName": "Creator"
   },
   "topic": {
     "headings": {
@@ -36,10 +37,13 @@
       "coreDataTitle": "Core data",
       "coreDataDescription": "Enter Core Data",
       "associatedTopicsTitle": "Associated Topics",
-      "associatedTopicsDescription": "Select associated topics"
+      "associatedTopicsDescription": "Select associated topics",
+      "contentElementsTitle": "Content elements",
+      "contentElementsDescription": "Create content elements"
     },
     "other": {
-      "selectUpToThreeCategories": "Select up to three categories"
+      "selectUpToThreeCategories": "Select up to three categories",
+      "searchByTitleOrTeaser": "Search by title or teaser"
     }
   }
 }

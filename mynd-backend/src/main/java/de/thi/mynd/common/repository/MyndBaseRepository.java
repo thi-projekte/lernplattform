@@ -15,11 +15,6 @@ public abstract class MyndBaseRepository<T extends BaseEntity> implements Panach
   protected PaginationDto<T> buildPaginationFromQuery(
       PanacheQuery<T> query, int page, int pageSize) {
     query.page(page, pageSize);
-    return PaginationDto.<T>builder()
-        .results(query.list())
-        .totalPages(query.pageCount())
-        .hasNextPage(query.hasNextPage())
-        .hasPreviousPage(query.hasPreviousPage())
-        .build();
+    return PaginationDto.<T>builder().results(query.list()).totalPages(query.pageCount()).build();
   }
 }

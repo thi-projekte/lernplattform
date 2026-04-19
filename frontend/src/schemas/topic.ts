@@ -9,11 +9,13 @@ export const CategorySchema = BaseEntitySchema.extend({
 
 export type Category = z.infer<typeof CategorySchema>;
 
-const ListTopicDtoSchema = z.object({
+export const ListTopicDtoSchema = z.object({
   id: z.uuid(),
   title: z.string(),
   categories: z.array(CategorySchema),
   updatedAt: z.coerce.date(),
+  creatorId: z.string(),
+  creatorFullName: z.string(),
 });
 
 export type ListTopicDto = z.infer<typeof ListTopicDtoSchema>;
@@ -31,10 +33,15 @@ export const TopicCoreDataSchema = z.object({
   estimatedLearningDuration: z.number({ error: i18n.t('common.shouldNotBeEmpty') }),
 });
 
+export const TopicAssociatedTopicsSchema = z.object({
+  relatedTopics: z.array(ListTopicDtoSchema).min(1).max(4),
+});
+
 export const TopicSchema = z
   .object({
     id: z.uuid().optional(),
   })
-  .extend(TopicCoreDataSchema.shape);
+  .extend(TopicCoreDataSchema.shape)
+  .extend(TopicAssociatedTopicsSchema.shape);
 
 export type Topic = z.infer<typeof TopicSchema>;
