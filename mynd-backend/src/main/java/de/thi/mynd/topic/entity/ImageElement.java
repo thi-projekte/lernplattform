@@ -4,12 +4,10 @@ import de.thi.mynd.common.service.FileAssociatedEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
 
 import java.util.List;
 
 @Entity
-@Table(name = "image_element")
 @DiscriminatorValue("IMAGE")
 public class ImageElement extends ContentElement implements FileAssociatedEntity {
 
