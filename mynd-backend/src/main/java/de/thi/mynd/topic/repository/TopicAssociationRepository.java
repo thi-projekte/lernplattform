@@ -11,6 +11,6 @@ import java.util.UUID;
 public final class TopicAssociationRepository extends MyndBaseRepository<TopicAssociation> {
 
     public List<TopicAssociation> findOwningAssociationsByIdsAndUsername(UUID topicId, List<UUID> ids, String username) {
-        return find("owningTopic = ?1 AND creatorId = ?1 AND foreignTopic IN ?3", topicId, username, ids).list();
+        return find("owningTopic.id = ?1 AND creatorId = ?2 AND foreignTopic.id IN ?3", topicId, username, ids).list();
     }
 }
