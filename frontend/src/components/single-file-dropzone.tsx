@@ -59,7 +59,7 @@ const SingleFileDropzone = ({ acceptedTypes, onDrop, loading, maxFileSize }: Fil
     <Dropzone
       onDrop={handleDrop}
       onReject={(files) => console.error('rejected files', files)}
-      maxSize={maxFileSize ?? 5 * 1024 ** 2}
+      maxSize={maxFileSize ?? 50 * 1024 ** 2}
       accept={acceptedTypes}
       multiple={false}
       loading={loading}

@@ -17,7 +17,8 @@
     "cancel": "Cancel",
     "create": "Create",
     "uri": "Url",
-    "dropYourFileHere": "Drop your file here"
+    "dropYourFileHere": "Drop your file here",
+    "download": "Download"
   },
   "topic": {
     "headings": {

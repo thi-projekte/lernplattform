@@ -7,6 +7,7 @@ import CreateContentElementModal from './modal/create-content-element.tsx';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import { DragDropContext, Draggable, Droppable, type OnDragEndResponder } from '@hello-pangea/dnd';
 import { useMemo } from 'react';
+import ContentElementDisplay from './content-element-display.tsx';
 
 interface ContentElementsDndProps {
   topic: Partial<Topic>;
@@ -88,7 +89,8 @@ const ContentElementsDnd = ({topic, setTopic}: ContentElementsDndProps) => {
                         </ThemeIcon>
                       </div>
                       <Stack>
-                        <Text fw={500}>{item.title}</Text>
+                        <Text fw={700}>{item.title}</Text>
+                        <ContentElementDisplay contentElement={item} />
                       </Stack>
                     </Paper>
                   )}
