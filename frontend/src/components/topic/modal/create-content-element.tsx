@@ -107,6 +107,7 @@ const CreateContentElementModal = ({opened, onClose, onAddContentElement}: Creat
               form.setFieldValue('uri', '');
               form.setFieldValue('rtfText', '');
             }}
+            required
           />
           {form.values.type && typesWithFile.includes(form.values.type) && (
             <SingleFileDropzone

@@ -8,10 +8,11 @@ import { Select } from '@mantine/core';
 interface ContentElementTypeSelectProps {
   value?: ContentElementType;
   onChange: (val: ContentElementType | null) => void;
+  required?: boolean;
   error?: string;
 }
 
-const ContentElementTypeSelect = ({value, onChange, error}: ContentElementTypeSelectProps) => {
+const ContentElementTypeSelect = ({value, onChange, error, required}: ContentElementTypeSelectProps) => {
   const { t } = useTranslation();
 
   const data = ContentElementTypeSchema.options.map((type) => ({
@@ -28,6 +29,7 @@ const ContentElementTypeSelect = ({value, onChange, error}: ContentElementTypeSe
       onChange={onChange}
       clearable
       error={error}
+      withAsterisk={required}
     />
   );
 }
