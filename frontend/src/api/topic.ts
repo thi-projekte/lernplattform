@@ -8,8 +8,13 @@ import {
   PaginatedListTopicDtoSchema,
 } from '../schemas/topic.ts';
 import type { PaginationState } from '@tanstack/react-table';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { z } from 'zod';
+import {
+  type AnyContentElementDto,
+  AnyContentElementDtoSchema,
+  type AnyContentElementRequest,
+} from '../schemas/content-element.ts';
 
 const fetchCategories = async (search: string): Promise<Category[]> => {
   const result = await apiClient.get(`/categories/search?query=${search}`, {
@@ -56,3 +61,27 @@ export const useQuerySearchTopic = (search: string) => {
     queryFn: () => fetchTopicsList(search),
   });
 };
+
+const createContentElement = async (request: AnyContentElementRequest, file: File|null): Promise<AnyContentElementDto> => {
+  const formData = new FormData();
+  const jsonBlob = new Blob([JSON.stringify(request)], {
+    type: 'application/json',
+  });
+  formData.set("request", jsonBlob);
+  if (file !== null) {
+    formData.set('file', file);
+  }
+
+  const result = await apiClient.post('/content-elements', formData, {
+    validateStatus: status => status <= 201
+  });
+
+  return AnyContentElementDtoSchema.parse(result.data);
+}
+
+export const useCreateContentElementMutation = () =>
+  useMutation({
+    mutationKey: ['createContentElement'],
+    mutationFn: ({ request, file }: { request: AnyContentElementRequest; file: File }) =>
+      createContentElement(request, file),
+  });
