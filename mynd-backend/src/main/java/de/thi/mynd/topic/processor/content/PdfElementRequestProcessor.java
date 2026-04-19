@@ -11,11 +11,10 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.PdfElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 @ApplicationScoped
 public final class PdfElementRequestProcessor
@@ -26,6 +25,7 @@ public final class PdfElementRequestProcessor
   @Inject ContentElementRepository contentElementRepository;
 
   @Override
+  @Transactional
   public ContentElement creteContentElementFromRequest(PdfElementRequest request, FileUpload file) {
 
     if (file == null) {

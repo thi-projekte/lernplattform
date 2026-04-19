@@ -9,6 +9,7 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.VideoFileElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ public final class VideoFileElementRequestProcessor
   @Inject ContentElementRepository contentElementRepository;
 
   @Override
+  @Transactional
   public ContentElement creteContentElementFromRequest(VideoFileElementRequest request, FileUpload file) {
 
     if (file == null) {

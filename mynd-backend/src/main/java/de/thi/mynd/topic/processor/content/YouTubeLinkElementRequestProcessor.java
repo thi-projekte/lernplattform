@@ -8,6 +8,7 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.YouTubeLinkElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
@@ -17,6 +18,7 @@ public final class YouTubeLinkElementRequestProcessor
   @Inject ContentElementRepository contentElementRepository;
 
   @Override
+  @Transactional
   public ContentElement creteContentElementFromRequest(
       YouTubeLinkElementRequest request, FileUpload file) {
     YouTubeLinkElement contentElement = new YouTubeLinkElement();

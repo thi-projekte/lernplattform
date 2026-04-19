@@ -8,6 +8,7 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.SpotifyLinkElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 
@@ -18,6 +19,7 @@ public final class SpotifyLinkElementRequestProcessor
   @Inject ContentElementRepository contentElementRepository;
 
   @Override
+  @Transactional
   public ContentElement creteContentElementFromRequest(
       SpotifyLinkElementRequest request, FileUpload file) {
     SpotifyLinkElement contentElement = new SpotifyLinkElement();

@@ -11,6 +11,7 @@ import de.thi.mynd.topic.requests.content.AudioFileElementRequest;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 import java.io.File;
@@ -26,6 +27,7 @@ public final class AudioFileElementRequestProcessor
   @Inject ContentElementRepository contentElementRepository;
 
   @Override
+  @Transactional
   public ContentElement creteContentElementFromRequest(AudioFileElementRequest request, FileUpload file) {
 
     if (file == null) {
