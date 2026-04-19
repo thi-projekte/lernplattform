@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import i18n from '../i18n.ts';
 import { BaseEntitySchema, createPaginatedSchema } from './common.ts';
+import { AnyContentElementDtoSchema } from './content-element.ts';
 
 export const CategorySchema = BaseEntitySchema.extend({
   title: z.string(),
@@ -38,7 +39,7 @@ export const TopicAssociatedTopicsSchema = z.object({
 });
 
 export const TopicContentElementsSchema = z.object({
-  contentElementIds: z.array(z.string())
+  contentElements: z.array(AnyContentElementDtoSchema)
 });
 
 export const TopicSchema = z

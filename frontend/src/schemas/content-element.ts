@@ -101,6 +101,7 @@ const ContentElementDtoSchema = z
   .object({
     title: z.string(),
     type: ContentElementTypeSchema,
+    rank: z.number().optional()
   })
   .extend(BaseEntitySchema.shape);
 
