@@ -37,7 +37,7 @@ public final class VideoFileElementRequestProcessor
     try {
       VideoFileElement contentElement = new VideoFileElement();
       contentElement.title = request.title;
-      contentElement.type = ContentType.VideoFile;
+      contentElement.type = ContentType.VIDEO_FILE;
       contentElement.s3Key = "";
       contentElement.originalFileName = request.originalFileName;
 

@@ -55,6 +55,7 @@ public final class TopicServiceImpl implements TopicService {
   public TopicDto createTopic(CreateTopicRequest request) {
 
     Topic topic = new Topic();
+    topic.title = request.title;
     topic.creatorId = identity.getPrincipal().getName();
     topic.categories = categoryService.findByAssociatedEntities(request.categories);
     topic.relatedTopics =

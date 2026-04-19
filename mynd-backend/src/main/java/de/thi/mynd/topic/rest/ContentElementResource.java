@@ -3,6 +3,8 @@ package de.thi.mynd.topic.rest;
 import de.thi.mynd.topic.dto.content.ContentElementDto;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.service.ContentElementService;
+import io.quarkus.logging.Log;
+import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -21,11 +23,14 @@ public final class ContentElementResource {
 
   @Inject ContentElementService contentElementService;
 
+  @Inject
+  SecurityIdentity identity;
+
   @POST
-  @RolesAllowed("builder")
   public ContentElementDto createContentElement(
       @RestForm @PartType(MediaType.APPLICATION_JSON) @Valid ContentElementRequest request,
       @RestForm("file") FileUpload fileUpload) {
+    Log.info(identity.getRoles());
     return contentElementService.createContentElement(request, fileUpload);
   }
 

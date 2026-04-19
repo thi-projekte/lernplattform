@@ -16,6 +16,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
@@ -74,14 +75,14 @@ public final class ContentElementServiceImpl implements ContentElementService {
   @Transactional
   public void updateTopicAssociation(
       Topic topic, List<AssociatedContentElementRequest> associatedElements) {
-    Map<UUID, Integer> ranking =
-        associatedElements.stream().collect(Collectors.toMap(e -> e.id, e -> e.rank));
+    Map<UUID, Optional<Integer>> ranking =
+        associatedElements.stream().collect(Collectors.toMap(e -> e.id, e -> Optional.ofNullable(e.rank)));
 
     List<ContentElement> contentElements =
         contentElementRepository.findByIdsTypeSafe(ranking.keySet().stream().toList());
     for (ContentElement element : contentElements) {
       element.topic = topic;
-      element.rank = ranking.get(element.id);
+      element.rank = ranking.get(element.id).orElse(null);
       contentElementRepository.persist(element);
     }
 

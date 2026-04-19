@@ -12,9 +12,13 @@ import StepperProgress, { type StepperStep } from '../../components/stepper-prog
 import CoreDataStep from '../../components/topic/core-data-step.tsx';
 import AssociatedTopicsStep from '../../components/topic/associated-topics-step.tsx';
 import ContentElementsDnd from '../../components/topic/content-elements-dnd.tsx';
+import { useCreateTopicMutation } from '../../api/topic.ts';
+import { useNavigate } from 'react-router';
 
 const CreateOrEditTopicPage = () => {
   const { t } = useTranslation();
+  const {isPending, mutateAsync} = useCreateTopicMutation();
+  const navigate = useNavigate();
 
   const [topic, setTopic] = useState<Partial<Topic>>({});
 
@@ -39,11 +43,16 @@ const CreateOrEditTopicPage = () => {
     },
   ];
 
+  const onComplete = async () => {
+    await mutateAsync(topic);
+    navigate('/builder-mode');
+  }
+
   return (
     <Layout>
       <Title mb={32}>{t('routes.createTopic')}</Title>
       <Container>
-        <StepperProgress steps={steps} />
+        <StepperProgress steps={steps} onComplete={onComplete} isLoading={isPending} lastStepLabel={t("topic.actions.create")} />
       </Container>
     </Layout>
   );

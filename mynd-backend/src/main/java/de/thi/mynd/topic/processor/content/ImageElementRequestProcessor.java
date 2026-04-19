@@ -39,7 +39,7 @@ public final class ImageElementRequestProcessor
     try {
       ImageElement contentElement = new ImageElement();
       contentElement.title = request.title;
-      contentElement.type = ContentType.Image;
+      contentElement.type = ContentType.IMAGE;
       contentElement.s3Key = "";
       contentElement.originalFileName = request.originalFileName;
 

@@ -1,9 +1,11 @@
 package de.thi.mynd.common.requests;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+
 import java.util.UUID;
 
 public class AssociatedEntityRequest {
 
-  @NotBlank public UUID id;
+  @NotNull
+  public UUID id;
 }

@@ -23,7 +23,7 @@ public final class YouTubeLinkElementRequestProcessor
       YouTubeLinkElementRequest request, FileUpload file) {
     YouTubeLinkElement contentElement = new YouTubeLinkElement();
     contentElement.title = request.title;
-    contentElement.type = ContentType.Rtf;
+    contentElement.type = ContentType.RTF;
     contentElement.uri = request.uri;
     contentElementRepository.persistAndFlush(contentElement);
 

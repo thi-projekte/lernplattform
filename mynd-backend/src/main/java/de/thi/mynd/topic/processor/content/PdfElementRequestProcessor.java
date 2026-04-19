@@ -38,7 +38,7 @@ public final class PdfElementRequestProcessor
     try {
       PdfElement contentElement = new PdfElement();
       contentElement.title = request.title;
-      contentElement.type = ContentType.Pdf;
+      contentElement.type = ContentType.PDF;
       contentElement.s3Key = "";
       contentElement.originalFileName = request.originalFileName;
 
