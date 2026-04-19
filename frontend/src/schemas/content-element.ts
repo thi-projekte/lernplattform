@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { BaseEntitySchema } from './common.ts';
 
-export const ContentElementType = z.enum([
+export const ContentElementTypeSchema = z.enum([
   'PDF',
   'VIDEO_FILE',
   'AUDIO_FILE',
@@ -12,11 +12,13 @@ export const ContentElementType = z.enum([
   'IMAGE',
 ]);
 
+export type ContentElementType = z.infer<typeof ContentElementTypeSchema>
+
 // ---- REQUESTS ----
 
 const ContentElementRequestSchema = z.object({
   title: z.string(),
-  type: ContentElementType,
+  type: ContentElementTypeSchema,
 });
 
 export const PdfElementRequestSchema = z
@@ -98,7 +100,7 @@ export type AnyContentElementRequest =
 const ContentElementDtoSchema = z
   .object({
     title: z.string(),
-    type: ContentElementType,
+    type: ContentElementTypeSchema,
   })
   .extend(BaseEntitySchema.shape);
 

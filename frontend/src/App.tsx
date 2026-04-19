@@ -9,17 +9,20 @@ import './i18n.ts';
 import '@mantine/core/styles.css';
 import '@mantine/dropzone/styles.css';
 import '@mantine/tiptap/styles.css';
+import { ModalsProvider } from '@mantine/modals';
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
     <MantineProvider>
-      <QueryClientProvider client={queryClient}>
-        <UserProvider>
-          <RouterProvider router={router} />
-        </UserProvider>
-      </QueryClientProvider>
+      <ModalsProvider>
+        <QueryClientProvider client={queryClient}>
+          <UserProvider>
+            <RouterProvider router={router} />
+          </UserProvider>
+        </QueryClientProvider>
+      </ModalsProvider>
     </MantineProvider>
   );
 }

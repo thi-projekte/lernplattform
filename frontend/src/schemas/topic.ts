@@ -37,11 +37,16 @@ export const TopicAssociatedTopicsSchema = z.object({
   relatedTopics: z.array(ListTopicDtoSchema).min(1).max(4),
 });
 
+export const TopicContentElementsSchema = z.object({
+  contentElementIds: z.array(z.string())
+});
+
 export const TopicSchema = z
   .object({
     id: z.uuid().optional(),
   })
   .extend(TopicCoreDataSchema.shape)
-  .extend(TopicAssociatedTopicsSchema.shape);
+  .extend(TopicAssociatedTopicsSchema.shape)
+  .extend(TopicContentElementsSchema.shape);
 
 export type Topic = z.infer<typeof TopicSchema>;
