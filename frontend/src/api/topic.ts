@@ -5,7 +5,9 @@ import {
   type ListTopicDto,
   ListTopicDtoSchema,
   type PaginatedListTopicDto,
-  PaginatedListTopicDtoSchema, type Topic, TopicCoreDataSchema,
+  PaginatedListTopicDtoSchema,
+  type Topic,
+  TopicCoreDataSchema,
 } from '../schemas/topic.ts';
 import type { PaginationState } from '@tanstack/react-table';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -107,4 +109,4 @@ export const useCreateTopicMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['personalTopics'] });
     },
   });
-}
+};

@@ -33,7 +33,7 @@ const ContentElementDisplay = ({ contentElement }: ContentElementDisplayProps) =
   }
 
   if (contentElement.type === 'SPOTIFY_LINK') {
-    return <SpotifyEmbed link={(contentElement as SpotifyLinkElementDto).uri} />
+    return <SpotifyEmbed link={(contentElement as SpotifyLinkElementDto).uri} />;
   }
 
   if (contentElement.type === 'YOUTUBE_LINK') {

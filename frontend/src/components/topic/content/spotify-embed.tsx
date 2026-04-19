@@ -1,12 +1,8 @@
-
-
 interface SpotifyEmbedProps {
   link: string;
 }
 
 const SpotifyEmbed = ({ link }: SpotifyEmbedProps) => {
-
-
   const getEmbedUrl = (url: string) => {
     return url.replace('open.spotify.com/', 'open.spotify.com/embed/');
   };

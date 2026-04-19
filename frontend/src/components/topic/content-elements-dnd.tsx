@@ -79,7 +79,7 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
                         ...provided.draggableProps.style,
                         display: 'flex',
                         alignItems: 'center',
-                        width: '100%'
+                        width: '100%',
                       }}
                     >
                       <div {...provided.dragHandleProps} style={{ marginRight: '10px' }}>
@@ -87,8 +87,8 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
                           <IconGripVertical size={18} />
                         </ThemeIcon>
                       </div>
-                      <Stack style={{flex: 1}}>
-                        <Title  order={3}>{item.title}</Title>
+                      <Stack style={{ flex: 1 }}>
+                        <Title order={3}>{item.title}</Title>
                         <ContentElementDisplay contentElement={item} />
                       </Stack>
                     </Paper>

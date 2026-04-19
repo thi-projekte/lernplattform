@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router';
 
 const CreateOrEditTopicPage = () => {
   const { t } = useTranslation();
-  const {isPending, mutateAsync} = useCreateTopicMutation();
+  const { isPending, mutateAsync } = useCreateTopicMutation();
   const navigate = useNavigate();
 
   const [topic, setTopic] = useState<Partial<Topic>>({});
@@ -46,13 +46,18 @@ const CreateOrEditTopicPage = () => {
   const onComplete = async () => {
     await mutateAsync(topic);
     navigate('/builder-mode');
-  }
+  };
 
   return (
     <Layout>
       <Title mb={32}>{t('routes.createTopic')}</Title>
       <Container>
-        <StepperProgress steps={steps} onComplete={onComplete} isLoading={isPending} lastStepLabel={t("topic.actions.create")} />
+        <StepperProgress
+          steps={steps}
+          onComplete={onComplete}
+          isLoading={isPending}
+          lastStepLabel={t('topic.actions.create')}
+        />
       </Container>
     </Layout>
   );

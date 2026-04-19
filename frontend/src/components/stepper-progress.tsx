@@ -24,7 +24,7 @@ const StepperProgress = ({ steps, onComplete, isLoading, lastStepLabel }: Steppe
 
   const { t } = useTranslation();
 
-  const isLastStep = active === steps.length -1;
+  const isLastStep = active === steps.length - 1;
 
   const canProceed = (idx: number) => idx < steps.length && (idx === -1 || steps[idx].canProceed);
 
@@ -45,7 +45,11 @@ const StepperProgress = ({ steps, onComplete, isLoading, lastStepLabel }: Steppe
         <Button variant="default" onClick={prevStep} disabled={active === 1 || isLoading}>
           {t('common.back')}
         </Button>
-        <Button onClick={isLastStep ? onComplete : nextStep} disabled={!canProceed(active)} loading={isLoading}>
+        <Button
+          onClick={isLastStep ? onComplete : nextStep}
+          disabled={!canProceed(active)}
+          loading={isLoading}
+        >
           {isLastStep && lastStepLabel ? lastStepLabel : t('common.next')}
         </Button>
       </Group>
