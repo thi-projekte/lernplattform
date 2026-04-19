@@ -2,7 +2,6 @@ package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.common.processor.MappingRegistry;
-import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.entity.ContentElement;
@@ -29,6 +28,8 @@ public final class TopicServiceImpl implements TopicService {
   @Inject CategoryService categoryService;
 
   @Inject ContentElementService contentElementService;
+
+  @Inject TopicAssociationService topicAssociationService;
 
   @Override
   public PaginationDto<ListTopicDto> findPersonalTopicsPaginated(int page, int pageSize) {
@@ -58,8 +59,7 @@ public final class TopicServiceImpl implements TopicService {
     topic.title = request.title;
     topic.creatorId = identity.getPrincipal().getName();
     topic.categories = categoryService.findByAssociatedEntities(request.categories);
-    topic.relatedTopics =
-        topicRepository.findByIdsTypeSafe(getIdsFromAssociatedEntities(request.relatedTopics));
+    topic.ownedAssociations = topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUser(topic, request.relatedTopics, identity.getPrincipal().getName());
     topic.estimatedLearningDuration = request.estimatedLearningDuration;
     topic.teaser = request.teaser;
 
@@ -74,6 +74,8 @@ public final class TopicServiceImpl implements TopicService {
   private void updateContentAssignments(
       Topic topic, List<AssociatedContentElementRequest> newElements) {
 
+    // TODO: Ensure all topics are owned by the user who wants to change
+
     Set<UUID> incomingIds =
         newElements.stream().map(e -> e.id).filter(Objects::nonNull).collect(Collectors.toSet());
 
@@ -85,11 +87,5 @@ public final class TopicServiceImpl implements TopicService {
     }
 
     contentElementService.updateTopicAssociation(topic, newElements);
-  }
-
-  private void filterContentElementsForCreator() {}
-
-  private List<UUID> getIdsFromAssociatedEntities(List<AssociatedEntityRequest> entityRequests) {
-    return entityRequests.stream().map((e) -> e.id).toList();
   }
 }
