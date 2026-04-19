@@ -12,7 +12,6 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import java.io.IOException;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
@@ -36,26 +35,21 @@ public final class AudioFileElementRequestProcessor
       throw new InvalidFileTypeException("The file is not a valid image");
     }
 
-    try {
-      AudioFileElement contentElement = new AudioFileElement();
-      contentElement.title = request.title;
-      contentElement.type = ContentType.AUDIO_FILE;
-      contentElement.s3Key = "";
-      contentElement.originalFileName = request.originalFileName;
+    AudioFileElement contentElement = new AudioFileElement();
+    contentElement.title = request.title;
+    contentElement.type = ContentType.AUDIO_FILE;
+    contentElement.s3Key = "";
+    contentElement.originalFileName = request.originalFileName;
 
-      contentElementRepository.persist(contentElement);
+    contentElementRepository.persist(contentElement);
 
-      contentElement.s3Key =
-          storageService.uploadObject(
-              contentElement, file.uploadedFile().toFile(), request.originalFileName);
+    contentElement.s3Key =
+        storageService.uploadObject(
+            contentElement, file.uploadedFile().toFile(), request.originalFileName);
 
-      contentElementRepository.persistAndFlush(contentElement);
+    contentElementRepository.persistAndFlush(contentElement);
 
-      return contentElement;
-
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    return contentElement;
   }
 
   @Override
