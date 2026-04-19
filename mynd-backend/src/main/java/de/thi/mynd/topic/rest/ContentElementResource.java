@@ -30,6 +30,7 @@ public final class ContentElementResource {
   }
 
   @DELETE
+  @RolesAllowed("builder")
   @Path("/{elementId}")
   public Response deleteContentElement(UUID elementId) {
     contentElementService.deleteContentElement(elementId);
