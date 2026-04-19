@@ -87,9 +87,6 @@ const SingleFileDropzone = ({ acceptedTypes, onDrop, loading, maxFileSize }: Fil
           <Text size="xl" inline>
             {t('common.dropYourFileHere')}
           </Text>
-          <Text size="sm" c="dimmed" inline mt={7}>
-            {t('common.fileSizeLimit', { size: '5MB' })}
-          </Text>
         </Stack>
       </Group>
     </Dropzone>
