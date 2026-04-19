@@ -8,7 +8,7 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.UriElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import java.io.File;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
 public final class UriElementRequestProcessor
@@ -17,7 +17,7 @@ public final class UriElementRequestProcessor
   @Inject ContentElementRepository contentElementRepository;
 
   @Override
-  public ContentElement creteContentElementFromRequest(UriElementRequest request, File file) {
+  public ContentElement creteContentElementFromRequest(UriElementRequest request, FileUpload file) {
     UriElement contentElement = new UriElement();
     contentElement.title = request.title;
     contentElement.type = ContentType.Uri;

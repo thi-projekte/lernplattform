@@ -9,9 +9,9 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.VideoFileElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import java.io.File;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
+
 import java.io.IOException;
-import java.nio.file.Files;
 
 @ApplicationScoped
 public final class VideoFileElementRequestProcessor
@@ -22,7 +22,7 @@ public final class VideoFileElementRequestProcessor
   @Inject ContentElementRepository contentElementRepository;
 
   @Override
-  public ContentElement creteContentElementFromRequest(VideoFileElementRequest request, File file) {
+  public ContentElement creteContentElementFromRequest(VideoFileElementRequest request, FileUpload file) {
 
     if (file == null) {
       throw new NoFileProvidedException("Video file is missing");
@@ -36,7 +36,7 @@ public final class VideoFileElementRequestProcessor
       VideoFileElement contentElement = new VideoFileElement();
       contentElement.title = request.title;
       contentElement.type = ContentType.VideoFile;
-      contentElement.s3Key = storageService.uploadObject(contentElement, file);
+      contentElement.s3Key = storageService.uploadObject(contentElement, file.uploadedFile().toFile());
       contentElement.originalFileName = request.originalFileName;
 
       contentElementRepository.persistAndFlush(contentElement);
@@ -53,15 +53,11 @@ public final class VideoFileElementRequestProcessor
     return request instanceof VideoFileElementRequest;
   }
 
-  private boolean isFileTypeValid(File file) {
-    try {
-      String contentType = Files.probeContentType(file.toPath());
+  private boolean isFileTypeValid(FileUpload file) {
+      String contentType = file.contentType();
       if (contentType == null) {
         return false;
       }
       return contentType.startsWith("video/");
-    } catch (IOException e) {
-      return false;
-    }
   }
 }

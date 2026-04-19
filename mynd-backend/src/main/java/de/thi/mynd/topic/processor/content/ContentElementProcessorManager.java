@@ -5,7 +5,7 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
-import java.io.File;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
 public final class ContentElementProcessorManager {
@@ -13,7 +13,7 @@ public final class ContentElementProcessorManager {
   @Inject Instance<ContentElementRequestProcessor<? extends ContentElementRequest>> processors;
 
   @SuppressWarnings("unchecked")
-  public ContentElement createContentElementFromRequest(ContentElementRequest request, File file) {
+  public ContentElement createContentElementFromRequest(ContentElementRequest request, FileUpload file) {
     ContentElementRequestProcessor<ContentElementRequest> processor =
         (ContentElementRequestProcessor<ContentElementRequest>)
             processors.stream()

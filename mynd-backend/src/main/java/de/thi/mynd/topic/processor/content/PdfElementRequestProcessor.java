@@ -11,6 +11,8 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.PdfElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -24,7 +26,7 @@ public final class PdfElementRequestProcessor
   @Inject ContentElementRepository contentElementRepository;
 
   @Override
-  public ContentElement creteContentElementFromRequest(PdfElementRequest request, File file) {
+  public ContentElement creteContentElementFromRequest(PdfElementRequest request, FileUpload file) {
 
     if (file == null) {
       throw new NoFileProvidedException("Pdf file is missing");
@@ -38,7 +40,7 @@ public final class PdfElementRequestProcessor
       PdfElement contentElement = new PdfElement();
       contentElement.title = request.title;
       contentElement.type = ContentType.Pdf;
-      contentElement.s3Key = storageService.uploadObject(contentElement, file);
+      contentElement.s3Key = storageService.uploadObject(contentElement, file.uploadedFile().toFile());
       contentElement.originalFileName = request.originalFileName;
 
       contentElementRepository.persistAndFlush(contentElement);
@@ -55,15 +57,11 @@ public final class PdfElementRequestProcessor
     return request instanceof PdfElementRequest;
   }
 
-  private boolean isFileTypeValid(File file) {
-    try {
-      String contentType = Files.probeContentType(file.toPath());
+  private boolean isFileTypeValid(FileUpload file) {
+      String contentType = file.contentType();
       if (contentType == null) {
         return false;
       }
       return contentType.equals("application/pdf");
-    } catch (IOException e) {
-      return false;
-    }
   }
 }

@@ -8,17 +8,17 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.YouTubeLinkElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import java.io.File;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
-public class YouTubeLinkElementRequestProcessor
+public final class YouTubeLinkElementRequestProcessor
     implements ContentElementRequestProcessor<YouTubeLinkElementRequest> {
 
   @Inject ContentElementRepository contentElementRepository;
 
   @Override
   public ContentElement creteContentElementFromRequest(
-      YouTubeLinkElementRequest request, File file) {
+      YouTubeLinkElementRequest request, FileUpload file) {
     YouTubeLinkElement contentElement = new YouTubeLinkElement();
     contentElement.title = request.title;
     contentElement.type = ContentType.Rtf;

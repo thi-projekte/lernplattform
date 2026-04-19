@@ -8,7 +8,7 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.RtfElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import java.io.File;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
 public final class RtfElementRequestProcessor
@@ -17,7 +17,7 @@ public final class RtfElementRequestProcessor
   @Inject ContentElementRepository contentElementRepository;
 
   @Override
-  public ContentElement creteContentElementFromRequest(RtfElementRequest request, File file) {
+  public ContentElement creteContentElementFromRequest(RtfElementRequest request, FileUpload file) {
 
     RtfElement contentElement = new RtfElement();
     contentElement.title = request.title;

@@ -11,12 +11,14 @@ import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
+
 import java.io.File;
 import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
-public class ContentElementServiceImpl implements ContentElementService {
+public final class ContentElementServiceImpl implements ContentElementService {
 
   @Inject ContentElementProcessorManager contentElementProcessorManager;
 
@@ -27,7 +29,7 @@ public class ContentElementServiceImpl implements ContentElementService {
   @Inject MappingRegistry mappingRegistry;
 
   @Override
-  public ContentElementDto createContentElement(ContentElementRequest request, File file) {
+  public ContentElementDto createContentElement(ContentElementRequest request, FileUpload file) {
     ContentElement contentElement =
         contentElementProcessorManager.createContentElementFromRequest(request, file);
     return mappingRegistry.map(contentElement, getContentElementDtoClass(contentElement));

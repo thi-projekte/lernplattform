@@ -23,7 +23,7 @@ public final class ContentElementResource {
   public ContentElementDto createContentElement(
       @RestForm @PartType(MediaType.APPLICATION_JSON) ContentElementRequest request,
       @RestForm("file") FileUpload fileUpload) {
-    return contentElementService.createContentElement(request, fileUpload.uploadedFile().toFile());
+    return contentElementService.createContentElement(request, fileUpload);
   }
 
   @DELETE
