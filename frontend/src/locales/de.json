@@ -13,20 +13,27 @@
     "next": "Weiter",
     "nothingFound": "Keine Einträge gefunden",
     "shouldNotBeEmpty": "Feld sollte nicht leer sein",
-    "creatorFullName": "Ersteller"
+    "creatorFullName": "Ersteller",
+    "cancel": "Abbrechen",
+    "create": "Erstellen",
+    "uri": "Url",
+    "dropYourFileHere": "Legen Sie ihre Datei hier ab"
   },
   "topic": {
     "headings": {
-      "personalTopics": "Eigene Themen"
+      "personalTopics": "Eigene Themen",
+      "createContentElement": "Inhalt anlegen"
     },
     "actions": {
-      "create": "Thema erstellen"
+      "create": "Thema erstellen",
+      "createContentElement": "Inhalt anlegen"
     },
     "fields": {
       "title": "Titel",
       "categories": "Kategorien",
       "teaser": "Kurzbeschreibung",
-      "estimatedLearningDuration": "Geschätzte Lerndauer"
+      "estimatedLearningDuration": "Geschätzte Lerndauer",
+      "contentElementTitle": "Titel"
     },
     "errors": {
       "titleMissing": "Titel fehlt",
@@ -44,6 +51,18 @@
     "other": {
       "selectUpToThreeCategories": "Wähle bis zu drei Kategorien aus",
       "searchByTitleOrTeaser": "Suche nach Titel oder Kurzbeschreibung"
+    },
+    "contentElementType": {
+      "label": "Typ",
+      "placeholder": "Bitte auswählen",
+      "PDF": "PDF",
+      "AUDIO_FILE": "Audio Datei",
+      "VIDEO_FILE": "Video Datei",
+      "RTF": "Rich text",
+      "SPOTIFY_LINK": "Spotify",
+      "YOUTUBE_LINK": "YouTube",
+      "URI": "URL",
+      "IMAGE": "Bild"
     }
   }
 }
