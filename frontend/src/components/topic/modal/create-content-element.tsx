@@ -32,6 +32,7 @@ const typesWithFile: ContentElementType[] = ['AUDIO_FILE', 'PDF', 'VIDEO_FILE', 
 const typesWithUri: ContentElementType[] = ['URI', 'SPOTIFY_LINK', 'YOUTUBE_LINK'];
 const typesWithRtfEditor: ContentElementType[] = ['RTF'];
 
+/* eslint-disable-next-line */
 export const allowedFileTypes: Partial<Record<ContentElementType, string[]>> = {
   AUDIO_FILE: ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac'],
   PDF: [MIME_TYPES.pdf],
