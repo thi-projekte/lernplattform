@@ -7,8 +7,12 @@ import jakarta.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.time.Duration;
+import java.util.Base64;
+
+import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
@@ -26,7 +30,8 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
 
   @Inject S3Presigner presigner;
 
-  @Inject S3AsyncClient s3Client;
+  @Inject
+  S3AsyncClient s3Client;
 
   @Override
   public URL getPresignedUrlForFile(String objectKey) {
@@ -44,27 +49,18 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
   }
 
   @Override
+  @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
   public String uploadObject(BaseEntity entity, File file) throws IOException {
     String objectKey = getS3FileName(entity, file.getName());
-    String contentType = Files.probeContentType(file.toPath());
+    uploadAsync(objectKey, file);
 
-    PutObjectRequest request =
-        PutObjectRequest.builder()
-            .bucket(bucketName)
-            .key(objectKey)
-            .contentType(contentType)
-            .build();
+    return objectKey;
+  }
 
-    s3Client
-        .putObject(request, file.toPath())
-        .whenComplete(
-            (response, exception) -> {
-              if (exception != null) {
-                Log.error(exception.getMessage());
-              } else {
-                Log.infof("Successfully uploaded object %s", objectKey);
-              }
-            });
+  @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
+  public String uploadObject(BaseEntity entity, File file, String originalFileName) throws IOException {
+    String objectKey = getS3FileName(entity, originalFileName);
+    uploadAsync(objectKey, file);
 
     return objectKey;
   }
@@ -86,7 +82,26 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
             });
   }
 
+  private void uploadAsync(String objectKey, File file) {
+    PutObjectRequest request =
+            PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(objectKey)
+                    .build();
+
+    s3Client
+            .putObject(request, file.toPath())
+            .whenComplete(
+                    (response, exception) -> {
+                      if (exception != null) {
+                        Log.error(exception.getMessage());
+                      } else {
+                        Log.infof("Successfully uploaded object %s", objectKey);
+                      }
+                    });
+  }
+
   private String getS3FileName(BaseEntity entity, String filename) {
-    return String.format("%s/%s/%s", entity.getClass(), entity.id, filename);
+    return String.format("%s/%s/%s", entity.getClass(), entity.id, filename).replaceAll(" ", "_");
   }
 }

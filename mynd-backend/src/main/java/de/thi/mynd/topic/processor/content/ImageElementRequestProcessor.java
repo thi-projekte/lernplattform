@@ -45,7 +45,7 @@ public final class ImageElementRequestProcessor
 
       contentElementRepository.persist(contentElement);
 
-      contentElement.s3Key = storageService.uploadObject(contentElement, file.uploadedFile().toFile());
+      contentElement.s3Key = storageService.uploadObject(contentElement, file.uploadedFile().toFile(), request.originalFileName);
 
       contentElementRepository.persistAndFlush(contentElement);
 
