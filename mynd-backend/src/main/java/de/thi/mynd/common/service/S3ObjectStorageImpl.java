@@ -45,7 +45,7 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
 
   @Override
   @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-  public String uploadObject(BaseEntity entity, File file) throws IOException {
+  public String uploadObject(BaseEntity entity, File file) {
     String objectKey = getS3FileName(entity, file.getName());
     uploadAsync(objectKey, file);
 
@@ -53,8 +53,7 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
   }
 
   @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-  public String uploadObject(BaseEntity entity, File file, String originalFileName)
-      throws IOException {
+  public String uploadObject(BaseEntity entity, File file, String originalFileName) {
     String objectKey = getS3FileName(entity, originalFileName);
     uploadAsync(objectKey, file);
 

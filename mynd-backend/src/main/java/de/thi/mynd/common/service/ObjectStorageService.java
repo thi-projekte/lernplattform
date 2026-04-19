@@ -7,9 +7,9 @@ import java.net.URL;
 
 public interface ObjectStorageService {
 
-  String uploadObject(BaseEntity entity, File file) throws IOException;
+  String uploadObject(BaseEntity entity, File file);
 
-  String uploadObject(BaseEntity entity, File file, String originalFileName) throws IOException;
+  String uploadObject(BaseEntity entity, File file, String originalFileName);
 
   URL getPresignedUrlForFile(String objectKey);
 
