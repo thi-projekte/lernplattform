@@ -10,6 +10,7 @@ import {
 import StepperProgress, { type StepperStep } from '../../components/stepper-progress.tsx';
 import CoreDataStep from '../../components/topic/core-data-step.tsx';
 import AssociatedTopicsStep from '../../components/topic/associated-topics-step.tsx';
+import ContentElementsDnd from '../../components/topic/content-elements-dnd.tsx';
 
 const CreateOrEditTopicPage = () => {
   const { t } = useTranslation();
@@ -33,7 +34,7 @@ const CreateOrEditTopicPage = () => {
       label: t('topic.steps.contentElementsTitle'),
       description: t('topic.steps.contentElementsDescription'),
       canProceed: false,
-      step: <div>Content</div>,
+      step: <ContentElementsDnd topic={topic} setTopic={setTopic} />,
     },
   ];
 

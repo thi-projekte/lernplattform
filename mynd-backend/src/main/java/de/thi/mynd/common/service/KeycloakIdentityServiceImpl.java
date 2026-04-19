@@ -8,7 +8,7 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.UserRepresentation;
 
 @ApplicationScoped
-public class KeycloakIdentityServiceImpl implements IdentityService {
+public final class KeycloakIdentityServiceImpl implements IdentityService {
 
   @Inject Keycloak keycloak;
 

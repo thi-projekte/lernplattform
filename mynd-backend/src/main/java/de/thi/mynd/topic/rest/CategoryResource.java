@@ -1,7 +1,7 @@
 package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.entity.Category;
-import de.thi.mynd.topic.repository.CategoryRepository;
+import de.thi.mynd.topic.service.CategoryService;
 import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -16,14 +16,11 @@ import org.jboss.resteasy.reactive.RestQuery;
 @Authenticated
 public final class CategoryResource {
 
-  @Inject CategoryRepository categoryRepository;
+  @Inject CategoryService categoryService;
 
   @Path("/search")
   @GET
   public List<Category> searchCategories(@RestQuery String query) {
-    if (query == null) {
-      return categoryRepository.findAllWithLimit(5);
-    }
-    return categoryRepository.findByTitleWithLimit(query, 5);
+    return categoryService.search(query);
   }
 }

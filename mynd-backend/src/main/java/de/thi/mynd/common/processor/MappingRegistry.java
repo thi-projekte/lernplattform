@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import java.util.List;
+import java.util.function.Function;
 
 @ApplicationScoped
 public final class MappingRegistry {
@@ -36,5 +37,12 @@ public final class MappingRegistry {
     if (entities == null) return List.of();
 
     return entities.stream().map(e -> this.map(e, dtoClass)).toList();
+  }
+
+  public <E, D> List<? extends D> mapList(
+      List<E> entities, Function<E, Class<? extends D>> typeResolver) {
+    if (entities == null) return List.of();
+
+    return entities.stream().map(e -> this.map(e, typeResolver.apply(e))).toList();
   }
 }

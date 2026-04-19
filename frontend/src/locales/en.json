@@ -13,20 +13,28 @@
     "next": "Next",
     "nothingFound": "Nothing found",
     "shouldNotBeEmpty": "Field should not be empty",
-    "creatorFullName": "Creator"
+    "creatorFullName": "Creator",
+    "cancel": "Cancel",
+    "create": "Create",
+    "uri": "Url",
+    "dropYourFileHere": "Drop your file here",
+    "download": "Download"
   },
   "topic": {
     "headings": {
-      "personalTopics": "Personal topics"
+      "personalTopics": "Personal topics",
+      "createContentElement": "Create content element"
     },
     "actions": {
-      "create": "Create topic"
+      "create": "Create topic",
+      "createContentElement": "Create content element"
     },
     "fields": {
       "title": "Title",
       "categories": "Categories",
       "teaser": "Teaser",
-      "estimatedLearningDuration": "Estimated learning duration"
+      "estimatedLearningDuration": "Estimated learning duration",
+      "contentElementTitle": "Title"
     },
     "errors": {
       "titleMissing": "Title missing",
@@ -44,6 +52,18 @@
     "other": {
       "selectUpToThreeCategories": "Select up to three categories",
       "searchByTitleOrTeaser": "Search by title or teaser"
+    },
+    "contentElementType": {
+      "label": "Type",
+      "placeholder": "Please select",
+      "PDF": "PDF",
+      "AUDIO_FILE": "Audio file",
+      "VIDEO_FILE": "Video file",
+      "RTF": "Rich text",
+      "SPOTIFY_LINK": "Spotify",
+      "YOUTUBE_LINK": "YouTube",
+      "URI": "URL",
+      "IMAGE": "Image"
     }
   }
 }

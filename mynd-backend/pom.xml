@@ -27,6 +27,13 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>${quarkus.platform.group-id}</groupId>
+                <artifactId>quarkus-amazon-services-bom</artifactId>
+                <version>${quarkus.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -75,6 +82,18 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.30</version>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkiverse.amazonservices</groupId>
+            <artifactId>quarkus-amazon-s3</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>url-connection-client</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>netty-nio-client</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
@@ -150,7 +169,7 @@
                 <version>2.43.0</version>
                 <configuration>
                     <java>
-                        <googleJavaFormat/> <removeUnusedImports/>
+                        <googleJavaFormat /> <removeUnusedImports />
                     </java>
                 </configuration>
             </plugin>
