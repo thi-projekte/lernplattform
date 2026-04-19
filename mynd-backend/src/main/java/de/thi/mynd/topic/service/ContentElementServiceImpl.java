@@ -76,7 +76,8 @@ public final class ContentElementServiceImpl implements ContentElementService {
   public void updateTopicAssociation(
       Topic topic, List<AssociatedContentElementRequest> associatedElements) {
     Map<UUID, Optional<Integer>> ranking =
-        associatedElements.stream().collect(Collectors.toMap(e -> e.id, e -> Optional.ofNullable(e.rank)));
+        associatedElements.stream()
+            .collect(Collectors.toMap(e -> e.id, e -> Optional.ofNullable(e.rank)));
 
     List<ContentElement> contentElements =
         contentElementRepository.findByIdsTypeSafe(ranking.keySet().stream().toList());

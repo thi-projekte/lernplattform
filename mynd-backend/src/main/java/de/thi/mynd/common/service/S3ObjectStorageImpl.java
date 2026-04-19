@@ -6,7 +6,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
 import org.eclipse.microprofile.config.inject.ConfigProperty;

@@ -10,12 +10,10 @@ import jakarta.persistence.Table;
 @Table(name = "topic_association")
 public class TopicAssociation extends BaseEntity {
 
-    @Column(nullable = false)
-    public String creatorId;
+  @Column(nullable = false)
+  public String creatorId;
 
-    @ManyToOne
-    public Topic owningTopic;
+  @ManyToOne public Topic owningTopic;
 
-    @ManyToOne
-    public Topic foreignTopic;
+  @ManyToOne public Topic foreignTopic;
 }
