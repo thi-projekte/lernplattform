@@ -23,17 +23,13 @@ const UriInput = ({ value, onChange, error }: UriInputProps) => {
       rightSectionPointerEvents="all"
       rightSection={
         value ? (
-          <ActionIcon
-            variant="transparent"
-            color="dimmed"
-            onClick={() => onChange('')}
-          >
+          <ActionIcon variant="transparent" color="dimmed" onClick={() => onChange('')}>
             <IconX style={{ width: rem(16), height: rem(16) }} />
           </ActionIcon>
         ) : null
       }
     />
   );
-}
+};
 
 export default UriInput;

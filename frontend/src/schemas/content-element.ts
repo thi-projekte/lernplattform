@@ -12,7 +12,7 @@ export const ContentElementTypeSchema = z.enum([
   'IMAGE',
 ]);
 
-export type ContentElementType = z.infer<typeof ContentElementTypeSchema>
+export type ContentElementType = z.infer<typeof ContentElementTypeSchema>;
 
 // ---- REQUESTS ----
 
@@ -101,7 +101,7 @@ const ContentElementDtoSchema = z
   .object({
     title: z.string(),
     type: ContentElementTypeSchema,
-    rank: z.number().optional()
+    rank: z.number().optional(),
   })
   .extend(BaseEntitySchema.shape);
 
@@ -173,6 +173,12 @@ export const ImageElementDtoSchema = z
 
 export type ImageElementDto = z.infer<typeof ImageElementDtoSchema>;
 
-export const AnyContentElementDtoSchema = PdfElementDtoSchema.or(VideoFileElementDtoSchema).or(AudioFileElementDtoSchema).or(YouTubeLinkElementDtoSchema).or(SpotifyLinkElementDtoSchema).or(RtfElementDtoSchema).or(UriElementDtoSchema).or(ImageElementDtoSchema);
+export const AnyContentElementDtoSchema = PdfElementDtoSchema.or(VideoFileElementDtoSchema)
+  .or(AudioFileElementDtoSchema)
+  .or(YouTubeLinkElementDtoSchema)
+  .or(SpotifyLinkElementDtoSchema)
+  .or(RtfElementDtoSchema)
+  .or(UriElementDtoSchema)
+  .or(ImageElementDtoSchema);
 
 export type AnyContentElementDto = z.infer<typeof AnyContentElementDtoSchema>;

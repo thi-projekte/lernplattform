@@ -6,8 +6,6 @@ interface YouTubeEmbedProps {
 }
 
 const YouTubeEmbed = ({ url }: YouTubeEmbedProps) => {
-
-
   const getID = (url: string) => {
     const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
     const match = url.match(regExp);
@@ -18,9 +16,7 @@ const YouTubeEmbed = ({ url }: YouTubeEmbedProps) => {
 
   if (!videoId) return <p>Invalid YouTube Link</p>;
 
-  return (
-    <LiteYouTubeEmbed id={videoId} title="" />
-  );
+  return <LiteYouTubeEmbed id={videoId} title="" />;
 };
 
 export default YouTubeEmbed;

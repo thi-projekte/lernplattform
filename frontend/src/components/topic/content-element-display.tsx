@@ -15,63 +15,61 @@ import { AspectRatio, Button, Group, Image, Text } from '@mantine/core';
 import { IconDownload, IconFileTypePdf } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 
-
 interface ContentElementDisplayProps {
   contentElement: AnyContentElementDto;
 }
 
-const ContentElementDisplay = ({contentElement}: ContentElementDisplayProps) => {
+const ContentElementDisplay = ({ contentElement }: ContentElementDisplayProps) => {
+  const { t } = useTranslation();
 
-  const {t} = useTranslation();
-
-  if (contentElement.type === "RTF") {
-    return <div dangerouslySetInnerHTML={{
-    __html: (contentElement as RtfElementDto).rtfText
-    }} />
-  }
-
-  if (contentElement.type === "SPOTIFY_LINK") {
+  if (contentElement.type === 'RTF') {
     return (
-      <Spotify link={(contentElement as SpotifyLinkElementDto).uri} />
-    )
+      <div
+        dangerouslySetInnerHTML={{
+          __html: (contentElement as RtfElementDto).rtfText,
+        }}
+      />
+    );
   }
 
-  if (contentElement.type === "YOUTUBE_LINK") {
-    return (
-      <YouTubeEmbed url={(contentElement as YouTubeLinkElementDto).uri} />
-    )
+  if (contentElement.type === 'SPOTIFY_LINK') {
+    return <Spotify link={(contentElement as SpotifyLinkElementDto).uri} />;
   }
 
-  if (contentElement.type === "URI") {
+  if (contentElement.type === 'YOUTUBE_LINK') {
+    return <YouTubeEmbed url={(contentElement as YouTubeLinkElementDto).uri} />;
+  }
+
+  if (contentElement.type === 'URI') {
     return (
       <Text>
         <a href={(contentElement as UriElementDto).uri}>{contentElement.title}</a>
       </Text>
-    )
+    );
   }
 
   if (contentElement.type === 'PDF') {
     const pdf = contentElement as PdfElementDto;
     return (
-        <Group justify="space-between">
-          <Group>
-            <IconFileTypePdf size={32} color="red" />
-            <div>
-              <Text size="sm" fw={500}>
-                {pdf.title || 'Document.pdf'}
-              </Text>
-            </div>
-          </Group>
-          <Button
-            component="a"
-            href={pdf.presignedUrl}
-            download
-            leftSection={<IconDownload size={16} />}
-            variant="light"
-          >
-            {t("common.download")}
-          </Button>
+      <Group justify="space-between">
+        <Group>
+          <IconFileTypePdf size={32} color="red" />
+          <div>
+            <Text size="sm" fw={500}>
+              {pdf.title || 'Document.pdf'}
+            </Text>
+          </div>
         </Group>
+        <Button
+          component="a"
+          href={pdf.presignedUrl}
+          download
+          leftSection={<IconDownload size={16} />}
+          variant="light"
+        >
+          {t('common.download')}
+        </Button>
+      </Group>
     );
   }
 
@@ -104,14 +102,8 @@ const ContentElementDisplay = ({contentElement}: ContentElementDisplayProps) => 
 
   if (contentElement.type === 'IMAGE') {
     const img = contentElement as ImageElementDto;
-    return (
-      <Image
-        src={img.presignedUrl}
-        alt={img.title || 'Content Image'}
-        radius="md"
-      />
-    );
+    return <Image src={img.presignedUrl} alt={img.title || 'Content Image'} radius="md" />;
   }
-}
+};
 
 export default ContentElementDisplay;

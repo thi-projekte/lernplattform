@@ -28,9 +28,9 @@ interface CreateContentElementModalProps {
   onAddContentElement: (contentElement: AnyContentElementDto) => void;
 }
 
-const typesWithFile: ContentElementType[] = ["AUDIO_FILE", "PDF", "VIDEO_FILE", "IMAGE"];
-const typesWithUri: ContentElementType[] = ["URI", "SPOTIFY_LINK", "YOUTUBE_LINK"];
-const typesWithRtfEditor: ContentElementType[] = ["RTF"];
+const typesWithFile: ContentElementType[] = ['AUDIO_FILE', 'PDF', 'VIDEO_FILE', 'IMAGE'];
+const typesWithUri: ContentElementType[] = ['URI', 'SPOTIFY_LINK', 'YOUTUBE_LINK'];
+const typesWithRtfEditor: ContentElementType[] = ['RTF'];
 
 export const allowedFileTypes: Partial<Record<ContentElementType, string[]>> = {
   AUDIO_FILE: ['audio/mpeg', 'audio/wav', 'audio/ogg', 'audio/aac'],
@@ -47,15 +47,17 @@ const requestValidatorMapping: Record<ContentElementType, ZodObject> = {
   SPOTIFY_LINK: SpotifyLinkElementRequestSchema,
   RTF: RtfElementRequestSchema,
   URI: UriElementRequestSchema,
-  IMAGE: ImageElementRequestSchema
+  IMAGE: ImageElementRequestSchema,
 };
 
+const CreateContentElementModal = ({
+  opened,
+  onClose,
+  onAddContentElement,
+}: CreateContentElementModalProps) => {
+  const { t } = useTranslation();
 
-const CreateContentElementModal = ({opened, onClose, onAddContentElement}: CreateContentElementModalProps) => {
-
-  const {t} = useTranslation();
-
-  const {isPending, mutateAsync} = useCreateContentElementMutation();
+  const { isPending, mutateAsync } = useCreateContentElementMutation();
 
   const form = useForm({
     initialValues: {
@@ -77,7 +79,7 @@ const CreateContentElementModal = ({opened, onClose, onAddContentElement}: Creat
   const submit = form.onSubmit(async (values) => {
     const contentElement = await mutateAsync({
       request: values as AnyContentElementRequest,
-      file: values.file as unknown as File
+      file: values.file as unknown as File,
     });
 
     onAddContentElement(contentElement);
@@ -137,6 +139,6 @@ const CreateContentElementModal = ({opened, onClose, onAddContentElement}: Creat
       </form>
     </Modal>
   );
-}
+};
 
 export default CreateContentElementModal;

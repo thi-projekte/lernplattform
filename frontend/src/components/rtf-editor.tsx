@@ -46,6 +46,6 @@ const RtfEditor = ({ value, onChange }: RtfEditorProps) => {
       <RichTextEditor.Content />
     </RichTextEditor>
   );
-}
+};
 
 export default RtfEditor;

@@ -12,7 +12,12 @@ interface ContentElementTypeSelectProps {
   error?: string;
 }
 
-const ContentElementTypeSelect = ({value, onChange, error, required}: ContentElementTypeSelectProps) => {
+const ContentElementTypeSelect = ({
+  value,
+  onChange,
+  error,
+  required,
+}: ContentElementTypeSelectProps) => {
   const { t } = useTranslation();
 
   const data = ContentElementTypeSchema.options.map((type) => ({
@@ -32,6 +37,6 @@ const ContentElementTypeSelect = ({value, onChange, error, required}: ContentEle
       withAsterisk={required}
     />
   );
-}
+};
 
 export default ContentElementTypeSelect;

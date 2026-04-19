@@ -39,7 +39,7 @@ export const TopicAssociatedTopicsSchema = z.object({
 });
 
 export const TopicContentElementsSchema = z.object({
-  contentElements: z.array(AnyContentElementDtoSchema)
+  contentElements: z.array(AnyContentElementDtoSchema),
 });
 
 export const TopicSchema = z

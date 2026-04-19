@@ -14,23 +14,21 @@ interface ContentElementsDndProps {
   setTopic: (topic: Partial<Topic>) => void;
 }
 
-const ContentElementsDnd = ({topic, setTopic}: ContentElementsDndProps) => {
+const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
+  const { t } = useTranslation();
 
-  const {t} = useTranslation();
-
-  const [opened, {close, open}] = useDisclosure(false);
+  const [opened, { close, open }] = useDisclosure(false);
 
   const addContentElement = (contentElement: AnyContentElementDto) => {
-      setTopic({
-        ...topic,
-        contentElements: [...(topic.contentElements ?? []), contentElement]
-      });
-  }
+    setTopic({
+      ...topic,
+      contentElements: [...(topic.contentElements ?? []), contentElement],
+    });
+  };
 
   const sortedContentElements = useMemo<AnyContentElementDto[]>(() => {
-    return (topic.contentElements ?? [])
-      .sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0))
-  }, [topic.contentElements])
+    return (topic.contentElements ?? []).sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0));
+  }, [topic.contentElements]);
 
   const onDragEnd: OnDragEndResponder<string> = (result) => {
     if (!result.destination) return;
@@ -102,6 +100,6 @@ const ContentElementsDnd = ({topic, setTopic}: ContentElementsDndProps) => {
       </DragDropContext>
     </>
   );
-}
+};
 
 export default ContentElementsDnd;

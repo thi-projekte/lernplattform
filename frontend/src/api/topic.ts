@@ -62,22 +62,25 @@ export const useQuerySearchTopic = (search: string) => {
   });
 };
 
-const createContentElement = async (request: AnyContentElementRequest, file: File|null): Promise<AnyContentElementDto> => {
+const createContentElement = async (
+  request: AnyContentElementRequest,
+  file: File | null
+): Promise<AnyContentElementDto> => {
   const formData = new FormData();
   const jsonBlob = new Blob([JSON.stringify(request)], {
     type: 'application/json',
   });
-  formData.set("request", jsonBlob);
+  formData.set('request', jsonBlob);
   if (file !== null) {
     formData.set('file', file);
   }
 
   const result = await apiClient.post('/content-elements', formData, {
-    validateStatus: status => status <= 201
+    validateStatus: (status) => status <= 201,
   });
 
   return AnyContentElementDtoSchema.parse(result.data);
-}
+};
 
 export const useCreateContentElementMutation = () =>
   useMutation({
