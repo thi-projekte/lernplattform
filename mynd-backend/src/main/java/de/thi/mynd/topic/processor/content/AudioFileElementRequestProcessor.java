@@ -14,9 +14,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
-import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
 
 @ApplicationScoped
 public final class AudioFileElementRequestProcessor
