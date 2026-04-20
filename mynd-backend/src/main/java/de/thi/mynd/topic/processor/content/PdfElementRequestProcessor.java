@@ -12,7 +12,6 @@ import de.thi.mynd.topic.requests.content.PdfElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import java.io.IOException;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
@@ -35,26 +34,21 @@ public final class PdfElementRequestProcessor
       throw new InvalidFileTypeException("The file is not a valid pdf");
     }
 
-    try {
-      PdfElement contentElement = new PdfElement();
-      contentElement.title = request.title;
-      contentElement.type = ContentType.Pdf;
-      contentElement.s3Key = "";
-      contentElement.originalFileName = request.originalFileName;
+    PdfElement contentElement = new PdfElement();
+    contentElement.title = request.title;
+    contentElement.type = ContentType.PDF;
+    contentElement.s3Key = "";
+    contentElement.originalFileName = request.originalFileName;
 
-      contentElementRepository.persist(contentElement);
+    contentElementRepository.persist(contentElement);
 
-      contentElement.s3Key =
-          storageService.uploadObject(
-              contentElement, file.uploadedFile().toFile(), request.originalFileName);
+    contentElement.s3Key =
+        storageService.uploadObject(
+            contentElement, file.uploadedFile().toFile(), request.originalFileName);
 
-      contentElementRepository.persistAndFlush(contentElement);
+    contentElementRepository.persistAndFlush(contentElement);
 
-      return contentElement;
-
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
+    return contentElement;
   }
 
   @Override

@@ -6,7 +6,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.io.File;
-import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -45,7 +44,7 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
 
   @Override
   @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-  public String uploadObject(BaseEntity entity, File file) throws IOException {
+  public String uploadObject(BaseEntity entity, File file) {
     String objectKey = getS3FileName(entity, file.getName());
     uploadAsync(objectKey, file);
 
@@ -53,8 +52,7 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
   }
 
   @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-  public String uploadObject(BaseEntity entity, File file, String originalFileName)
-      throws IOException {
+  public String uploadObject(BaseEntity entity, File file, String originalFileName) {
     String objectKey = getS3FileName(entity, originalFileName);
     uploadAsync(objectKey, file);
 

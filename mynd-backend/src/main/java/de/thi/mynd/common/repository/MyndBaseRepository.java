@@ -19,4 +19,8 @@ public abstract class MyndBaseRepository<T extends BaseEntity>
     query.page(page, pageSize);
     return PaginationDto.<T>builder().results(query.list()).totalPages(query.pageCount()).build();
   }
+
+  public List<T> findByIdsTypeSafe(List<UUID> ids) {
+    return find("id IN ?1", ids).list();
+  }
 }

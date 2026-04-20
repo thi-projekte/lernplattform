@@ -5,15 +5,20 @@ import { useState } from 'react';
 import {
   type Topic,
   TopicAssociatedTopicsSchema,
+  TopicContentElementsSchema,
   TopicCoreDataSchema,
 } from '../../schemas/topic.ts';
 import StepperProgress, { type StepperStep } from '../../components/stepper-progress.tsx';
 import CoreDataStep from '../../components/topic/core-data-step.tsx';
 import AssociatedTopicsStep from '../../components/topic/associated-topics-step.tsx';
 import ContentElementsDnd from '../../components/topic/content-elements-dnd.tsx';
+import { useCreateTopicMutation } from '../../api/topic.ts';
+import { useNavigate } from 'react-router';
 
 const CreateOrEditTopicPage = () => {
   const { t } = useTranslation();
+  const { isPending, mutateAsync } = useCreateTopicMutation();
+  const navigate = useNavigate();
 
   const [topic, setTopic] = useState<Partial<Topic>>({});
 
@@ -33,16 +38,26 @@ const CreateOrEditTopicPage = () => {
     {
       label: t('topic.steps.contentElementsTitle'),
       description: t('topic.steps.contentElementsDescription'),
-      canProceed: false,
+      canProceed: TopicContentElementsSchema.safeParse(topic).success ?? false,
       step: <ContentElementsDnd topic={topic} setTopic={setTopic} />,
     },
   ];
+
+  const onComplete = async () => {
+    await mutateAsync(topic);
+    navigate('/builder-mode');
+  };
 
   return (
     <Layout>
       <Title mb={32}>{t('routes.createTopic')}</Title>
       <Container>
-        <StepperProgress steps={steps} />
+        <StepperProgress
+          steps={steps}
+          onComplete={onComplete}
+          isLoading={isPending}
+          lastStepLabel={t('topic.actions.create')}
+        />
       </Container>
     </Layout>
   );

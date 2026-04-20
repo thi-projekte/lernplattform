@@ -23,7 +23,7 @@ public final class SpotifyLinkElementRequestProcessor
       SpotifyLinkElementRequest request, FileUpload file) {
     SpotifyLinkElement contentElement = new SpotifyLinkElement();
     contentElement.title = request.title;
-    contentElement.type = ContentType.SpotifyLink;
+    contentElement.type = ContentType.SPOTIFY_LINK;
     contentElement.uri = request.uri;
     contentElementRepository.persistAndFlush(contentElement);
 

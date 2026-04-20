@@ -9,11 +9,11 @@ import type {
   VideoFileElementDto,
   YouTubeLinkElementDto,
 } from '../../schemas/content-element.ts';
-import { Spotify } from 'react-spotify-embed';
 import YouTubeEmbed from './content/youtube-embed.tsx';
 import { AspectRatio, Button, Group, Image, Text } from '@mantine/core';
 import { IconDownload, IconFileTypePdf } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
+import SpotifyEmbed from './content/spotify-embed.tsx';
 
 interface ContentElementDisplayProps {
   contentElement: AnyContentElementDto;
@@ -33,7 +33,7 @@ const ContentElementDisplay = ({ contentElement }: ContentElementDisplayProps) =
   }
 
   if (contentElement.type === 'SPOTIFY_LINK') {
-    return <Spotify link={(contentElement as SpotifyLinkElementDto).uri} />;
+    return <SpotifyEmbed link={(contentElement as SpotifyLinkElementDto).uri} />;
   }
 
   if (contentElement.type === 'YOUTUBE_LINK') {

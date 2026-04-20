@@ -1,4 +1,4 @@
-import { Button, Flex, Paper, Stack, Text, ThemeIcon } from '@mantine/core';
+import { Button, Flex, Paper, Stack, ThemeIcon, Title } from '@mantine/core';
 import { IconGripVertical, IconPlusFilled } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { Topic } from '../../schemas/topic.ts';
@@ -79,6 +79,7 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
                         ...provided.draggableProps.style,
                         display: 'flex',
                         alignItems: 'center',
+                        width: '100%',
                       }}
                     >
                       <div {...provided.dragHandleProps} style={{ marginRight: '10px' }}>
@@ -86,8 +87,8 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
                           <IconGripVertical size={18} />
                         </ThemeIcon>
                       </div>
-                      <Stack>
-                        <Text fw={700}>{item.title}</Text>
+                      <Stack style={{ flex: 1 }}>
+                        <Title order={3}>{item.title}</Title>
                         <ContentElementDisplay contentElement={item} />
                       </Stack>
                     </Paper>

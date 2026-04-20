@@ -23,7 +23,7 @@ public final class RtfElementRequestProcessor
 
     RtfElement contentElement = new RtfElement();
     contentElement.title = request.title;
-    contentElement.type = ContentType.Rtf;
+    contentElement.type = ContentType.RTF;
     contentElement.rtfText = request.rtfText;
     contentElementRepository.persistAndFlush(contentElement);
 

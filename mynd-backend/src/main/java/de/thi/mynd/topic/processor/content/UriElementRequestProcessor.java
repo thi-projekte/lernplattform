@@ -22,7 +22,7 @@ public final class UriElementRequestProcessor
   public ContentElement creteContentElementFromRequest(UriElementRequest request, FileUpload file) {
     UriElement contentElement = new UriElement();
     contentElement.title = request.title;
-    contentElement.type = ContentType.Uri;
+    contentElement.type = ContentType.URI;
     contentElement.uri = request.uri;
     contentElementRepository.persistAndFlush(contentElement);
 

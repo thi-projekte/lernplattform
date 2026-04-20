@@ -1,14 +1,14 @@
 package de.thi.mynd.topic.entity;
 
 public enum ContentType {
-  Pdf("PDF"),
-  VideoFile("VIDEO_FILE"),
-  AudioFile("AUDIO_FILE"),
-  YouTubeLink("YOUTUBE_LINK"),
-  SpotifyLink("SPOTIFY_LINK"),
-  Rtf("RTF"),
-  Uri("URI"),
-  Image("IMAGE");
+  PDF("PDF"),
+  VIDEO_FILE("VIDEO_FILE"),
+  AUDIO_FILE("AUDIO_FILE"),
+  YOUTUBE_LINK("YOUTUBE_LINK"),
+  SPOTIFY_LINK("SPOTIFY_LINK"),
+  RTF("RTF"),
+  URI("URI"),
+  IMAGE("IMAGE");
 
   public final String label;
 
