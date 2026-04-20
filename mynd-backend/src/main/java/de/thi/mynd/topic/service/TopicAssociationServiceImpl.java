@@ -22,7 +22,6 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
 
     List<UUID> desiredTopics = getIdsFromAssociatedEntities(associatedTopics);
 
-    // TODO: Also create here lol
     List<TopicAssociation> existingAssociations =
         topicAssociationRepository.findOwningAssociationsByIdsAndUsername(
             topic.id, desiredTopics, username);
