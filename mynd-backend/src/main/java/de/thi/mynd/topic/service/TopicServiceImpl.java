@@ -60,7 +60,7 @@ public final class TopicServiceImpl implements TopicService {
     topic.creatorId = identity.getPrincipal().getName();
     topic.categories = categoryService.findByAssociatedEntities(request.categories);
     topic.ownedAssociations =
-        topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUser(
+        topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
             topic, request.relatedTopics, identity.getPrincipal().getName());
     topic.estimatedLearningDuration = request.estimatedLearningDuration;
     topic.teaser = request.teaser;

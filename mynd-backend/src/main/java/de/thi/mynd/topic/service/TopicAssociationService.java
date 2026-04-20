@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface TopicAssociationService {
 
-  List<TopicAssociation> findOrCreateOwningTopicAssociationsOwnedByUser(
+  List<TopicAssociation> findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
       Topic topic, List<AssociatedEntityRequest> associatedTopics, String username);
 }

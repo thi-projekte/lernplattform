@@ -7,7 +7,9 @@ import de.thi.mynd.topic.repository.TopicAssociationRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public final class TopicAssociationServiceImpl implements TopicAssociationService {
@@ -15,10 +17,33 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
   @Inject TopicAssociationRepository topicAssociationRepository;
 
   @Override
-  public List<TopicAssociation> findOrCreateOwningTopicAssociationsOwnedByUser(
+  public List<TopicAssociation> findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
       Topic topic, List<AssociatedEntityRequest> associatedTopics, String username) {
-    return topicAssociationRepository.findOwningAssociationsByIdsAndUsername(
-        topic.id, getIdsFromAssociatedEntities(associatedTopics), username);
+
+    List<UUID> desiredTopics = getIdsFromAssociatedEntities(associatedTopics);
+
+    // TODO: Also create here lol
+    List<TopicAssociation> existingAssociations =
+        topicAssociationRepository.findOwningAssociationsByIdsAndUsername(
+            topic.id, desiredTopics, username);
+
+    Set<UUID> existingIds =
+        existingAssociations.stream().map(a -> a.id).collect(Collectors.toSet());
+
+    List<UUID> idsToCreate =
+        desiredTopics.stream().filter(id -> !existingIds.contains(id)).toList();
+
+    for (UUID idToCreate : idsToCreate) {
+      TopicAssociation newAssociation = new TopicAssociation();
+      newAssociation.creatorId = username;
+      newAssociation.owningTopic = topic;
+      newAssociation.foreignTopic =
+          topicAssociationRepository.getEntityManager().getReference(Topic.class, idToCreate);
+      existingAssociations.add(newAssociation);
+      topicAssociationRepository.persist(newAssociation);
+    }
+
+    return existingAssociations;
   }
 
   private List<UUID> getIdsFromAssociatedEntities(List<AssociatedEntityRequest> entities) {
