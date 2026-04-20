@@ -15,12 +15,11 @@ import de.thi.mynd.topic.service.TopicService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
+import io.restassured.http.ContentType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
-import io.restassured.http.ContentType;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 
@@ -42,8 +41,7 @@ public class TopicResourceTest {
     PaginationDto<ListTopicDto> mockResponse =
         PaginationDto.<ListTopicDto>builder().results(List.of(dto)).totalPages(1).build();
 
-    when(topicService.findPersonalTopicsPaginated(anyInt(), anyInt()))
-        .thenReturn(mockResponse);
+    when(topicService.findPersonalTopicsPaginated(anyInt(), anyInt())).thenReturn(mockResponse);
 
     given()
         .queryParam("page", 0)
@@ -77,43 +75,41 @@ public class TopicResourceTest {
     verify(topicService).findPersonalTopicsPaginated(5, 25);
   }
 
-    @Test
-    @TestSecurity(user = "alice")
-    public void testSearchTopics() {
-      ListTopicDto dto = ListTopicDto.builder().title("Found Topic").build();
-      when(topicService.findTopicsBySearchMax5("search-term")).thenReturn(List.of(dto));
+  @Test
+  @TestSecurity(user = "alice")
+  public void testSearchTopics() {
+    ListTopicDto dto = ListTopicDto.builder().title("Found Topic").build();
+    when(topicService.findTopicsBySearchMax5("search-term")).thenReturn(List.of(dto));
 
-      given()
-              .queryParam("search", "search-term")
-              .when()
-              .get("/topics")
-              .then()
-              .statusCode(200)
-              .body("[0].title", is("Found Topic"));
+    given()
+        .queryParam("search", "search-term")
+        .when()
+        .get("/topics")
+        .then()
+        .statusCode(200)
+        .body("[0].title", is("Found Topic"));
 
-      verify(topicService).findTopicsBySearchMax5("search-term");
-    }
+    verify(topicService).findTopicsBySearchMax5("search-term");
+  }
 
-    @Test
-    @TestSecurity(user = "builder-user", roles = "builder")
-    public void testCreateTopicAsBuilderWithInvalidRequestBody() {
-      CreateTopicRequest request = new CreateTopicRequest();
-      request.title = "New Title";
+  @Test
+  @TestSecurity(user = "builder-user", roles = "builder")
+  public void testCreateTopicAsBuilderWithInvalidRequestBody() {
+    CreateTopicRequest request = new CreateTopicRequest();
+    request.title = "New Title";
 
-      TopicDto responseDto = TopicDto.builder()
-              .title("New Title")
-              .build();
+    TopicDto responseDto = TopicDto.builder().title("New Title").build();
 
-      when(topicService.createTopic(ArgumentMatchers.any())).thenReturn(responseDto);
+    when(topicService.createTopic(ArgumentMatchers.any())).thenReturn(responseDto);
 
-      given()
-              .contentType(ContentType.JSON)
-              .body(request)
-              .when()
-              .post("/topics")
-              .then()
-              .statusCode(400);
-    }
+    given()
+        .contentType(ContentType.JSON)
+        .body(request)
+        .when()
+        .post("/topics")
+        .then()
+        .statusCode(400);
+  }
 
   @Test
   @TestSecurity(user = "builder-user", roles = "builder")
@@ -136,36 +132,34 @@ public class TopicResourceTest {
     request.estimatedLearningDuration = 12;
     request.contentElements = List.of(contentElementRequest);
 
-    TopicDto responseDto = TopicDto.builder()
-            .title("New Title")
-            .build();
+    TopicDto responseDto = TopicDto.builder().title("New Title").build();
 
     when(topicService.createTopic(ArgumentMatchers.any())).thenReturn(responseDto);
 
     given()
-            .contentType(ContentType.JSON)
-            .body(request)
-            .when()
-            .post("/topics")
-            .then()
-            .statusCode(200)
-            .body("title", is("New Title"));
+        .contentType(ContentType.JSON)
+        .body(request)
+        .when()
+        .post("/topics")
+        .then()
+        .statusCode(200)
+        .body("title", is("New Title"));
 
     verify(topicService).createTopic(ArgumentMatchers.any());
   }
 
-    @Test
-    @TestSecurity(user = "regular-user", roles = "user")
-    public void testCreateTopicForbiddenForRegularUser() {
-      CreateTopicRequest request = new CreateTopicRequest();
-      request.title = "Forbidden Title";
+  @Test
+  @TestSecurity(user = "regular-user", roles = "user")
+  public void testCreateTopicForbiddenForRegularUser() {
+    CreateTopicRequest request = new CreateTopicRequest();
+    request.title = "Forbidden Title";
 
-      given()
-              .contentType(ContentType.JSON)
-              .body(request)
-              .when()
-              .post("/topics")
-              .then()
-              .statusCode(403);
-    }
+    given()
+        .contentType(ContentType.JSON)
+        .body(request)
+        .when()
+        .post("/topics")
+        .then()
+        .statusCode(403);
+  }
 }
