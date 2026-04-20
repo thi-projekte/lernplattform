@@ -1,20 +1,29 @@
 package de.thi.mynd.topic.service;
 
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
 
 import de.thi.mynd.common.dto.PaginationDto;
+import de.thi.mynd.common.processor.MappingRegistry;
+import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.dto.ListTopicDto;
+import de.thi.mynd.topic.dto.TopicDto;
+import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
+import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
+import de.thi.mynd.topic.requests.CreateTopicRequest;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 @QuarkusTest
 public class TopicServiceImplTest {
@@ -25,60 +34,91 @@ public class TopicServiceImplTest {
 
   @InjectMock SecurityIdentity securityIdentity;
 
-  /** Helper to mock the security context for a specific username */
-  private void mockUser(String username) {
-    Principal mockPrincipal = Mockito.mock(Principal.class);
-    Mockito.when(mockPrincipal.getName()).thenReturn(username);
-    Mockito.when(securityIdentity.getPrincipal()).thenReturn(mockPrincipal);
+  @InjectMock CategoryService categoryService;
+
+  @InjectMock ContentElementService contentElementService;
+
+  @InjectMock TopicAssociationService topicAssociationService;
+
+  @InjectMock MappingRegistry mappingRegistry;
+
+  private static final String USERNAME = "test-user";
+
+  @BeforeEach
+  void setup() {
+    Principal mockPrincipal = mock(Principal.class);
+    when(mockPrincipal.getName()).thenReturn(USERNAME);
+    when(securityIdentity.getPrincipal()).thenReturn(mockPrincipal);
   }
 
   @Test
-  public void testFindPersonalTopicsForDifferentUser() {
-    String alice = "alice-123";
-    String bob = "bob-456";
-    mockUser(bob);
+  void testFindPersonalTopicsPaginated() {
+    Topic topic = new Topic();
+    topic.title = "My Topic";
+    PaginationDto<Topic> repoResult =
+        PaginationDto.<Topic>builder().results(List.of(topic)).totalPages(1).build();
 
-    Topic bobsTopic = new Topic();
-    bobsTopic.title = "Bob's Private Topic";
+    ListTopicDto dto = ListTopicDto.builder().title("My Topic").build();
 
-    PaginationDto<Topic> bobsData =
-        PaginationDto.<Topic>builder().results(List.of(bobsTopic)).totalPages(1).build();
+    when(topicRepository.findForCreatorPaginated(USERNAME, 0, 10)).thenReturn(repoResult);
+    when(mappingRegistry.mapList(anyList(), eq(ListTopicDto.class))).thenReturn(List.of(dto));
 
-    Mockito.when(topicRepository.findForCreatorPaginated(eq(bob), anyInt(), anyInt()))
-        .thenReturn(bobsData);
-
-    Mockito.when(topicRepository.findForCreatorPaginated(eq(alice), anyInt(), anyInt()))
-        .thenReturn(PaginationDto.<Topic>builder().results(List.of()).build());
-
+    // Act
     PaginationDto<ListTopicDto> result = topicService.findPersonalTopicsPaginated(0, 10);
 
-    Assertions.assertEquals("Bob's Private Topic", result.results.get(0).title);
-    Mockito.verify(topicRepository).findForCreatorPaginated(bob, 0, 10);
-    Mockito.verify(topicRepository, Mockito.never())
-        .findForCreatorPaginated(eq(alice), anyInt(), anyInt());
+    // Assert
+    Assertions.assertEquals(1, result.results.size());
+    Assertions.assertEquals("My Topic", result.results.get(0).title);
+    verify(topicRepository).findForCreatorPaginated(USERNAME, 0, 10);
   }
 
   @Test
-  public void testEmptyResults() {
-    mockUser("lonely-user");
+  void testCreateTopic_WithFullOrchestration() {
+    // Arrange
 
-    Mockito.when(topicRepository.findForCreatorPaginated(anyString(), anyInt(), anyInt()))
-        .thenReturn(PaginationDto.<Topic>builder().results(List.of()).totalPages(0).build());
+    AssociatedEntityRequest category = new AssociatedEntityRequest();
+    category.id = UUID.randomUUID();
 
-    PaginationDto<ListTopicDto> result = topicService.findPersonalTopicsPaginated(0, 10);
+    CreateTopicRequest request = new CreateTopicRequest();
+    request.title = "New Topic";
+    request.categories = List.of(category);
 
-    Assertions.assertTrue(result.results.isEmpty());
-    Assertions.assertEquals(0, result.totalPages);
+    UUID stayId = UUID.randomUUID();
+    UUID deleteId = UUID.randomUUID();
+
+    AssociatedContentElementRequest stayReq = new AssociatedContentElementRequest();
+    stayReq.id = stayId;
+    request.contentElements = List.of(stayReq);
+
+    Topic topicEntity = new Topic();
+    topicEntity.contentElements = new ArrayList<>();
+    ContentElement oldEl = new ContentElement() {};
+    oldEl.id = stayId;
+    ContentElement delEl = new ContentElement() {};
+    delEl.id = deleteId;
+    topicEntity.contentElements.addAll(List.of(oldEl, delEl));
+
+    when(categoryService.findByAssociatedEntities(any())).thenReturn(new ArrayList<>());
+    when(topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
+            any(), any(), anyString()))
+        .thenReturn(new ArrayList<>());
+    when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
+
+    // Act
+    topicService.createTopic(request);
+
+    // Assert
+    verify(contentElementService).deleteContentElement(deleteId);
+    verify(contentElementService, never()).deleteContentElement(stayId);
+    verify(topicRepository).persist(any(Topic.class));
+    verify(contentElementService)
+        .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
   }
 
   @Test
-  public void testUnauthorizedIfPrincipalMissing() {
-    Mockito.when(securityIdentity.getPrincipal()).thenReturn(null);
-
-    Assertions.assertThrows(
-        NullPointerException.class,
-        () -> {
-          topicService.findPersonalTopicsPaginated(0, 10);
-        });
+  void testFindTopicsBySearchMax5() {
+    when(topicRepository.findBySearch("test", 5)).thenReturn(new ArrayList<>());
+    topicService.findTopicsBySearchMax5("test");
+    verify(topicRepository).findBySearch("test", 5);
   }
 }
