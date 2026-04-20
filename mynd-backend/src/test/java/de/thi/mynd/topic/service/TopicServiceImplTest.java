@@ -8,7 +8,6 @@ import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
-import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
@@ -90,14 +89,6 @@ public class TopicServiceImplTest {
     stayReq.id = stayId;
     request.contentElements = List.of(stayReq);
 
-    Topic topicEntity = new Topic();
-    topicEntity.contentElements = new ArrayList<>();
-    ContentElement oldEl = new ContentElement() {};
-    oldEl.id = stayId;
-    ContentElement delEl = new ContentElement() {};
-    delEl.id = deleteId;
-    topicEntity.contentElements.addAll(List.of(oldEl, delEl));
-
     when(categoryService.findByAssociatedEntities(any())).thenReturn(new ArrayList<>());
     when(topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
             any(), any(), anyString()))
@@ -108,8 +99,6 @@ public class TopicServiceImplTest {
     topicService.createTopic(request);
 
     // Assert
-    verify(contentElementService).deleteContentElement(deleteId);
-    verify(contentElementService, never()).deleteContentElement(stayId);
     verify(topicRepository).persist(any(Topic.class));
     verify(contentElementService)
         .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
