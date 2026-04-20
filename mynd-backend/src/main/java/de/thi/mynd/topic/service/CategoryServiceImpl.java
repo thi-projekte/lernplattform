@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
-public class CategoryServiceImpl implements CategoryService {
+public final class CategoryServiceImpl implements CategoryService {
 
   @Inject CategoryRepository categoryRepository;
 
