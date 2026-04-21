@@ -26,8 +26,6 @@ public final class TopicResource {
 
   @Inject TopicService topicService;
 
-  @Inject ContentElementService contentElementService;
-
   @GET
   @Path("/personal")
   public PaginationDto<ListTopicDto> getPersonalTopicsPaginated(
@@ -38,12 +36,6 @@ public final class TopicResource {
   @GET
   public List<ListTopicDto> search(@RestQuery String search) {
     return topicService.findTopicsBySearchMax5(search);
-  }
-
-  @GET
-  @Path("/{topicId}/content-elements")
-  public List<ContentElementDto> getContentElementsForTopic(UUID topicId) {
-    return contentElementService.getContentElementsForTopic(topicId);
   }
 
   @POST
