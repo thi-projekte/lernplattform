@@ -10,8 +10,7 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public final class TopicDtoMapper extends AbstractMappingProcessor<Topic, TopicDto> {
 
-  @Inject
-  ContentElementService contentElementService;
+  @Inject ContentElementService contentElementService;
 
   @Override
   public TopicDto mapAndEnrich(Topic entity) {
