@@ -5,7 +5,6 @@ import de.thi.mynd.topic.entity.Category;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import lombok.Builder;
 import lombok.experimental.SuperBuilder;
 
 @SuperBuilder

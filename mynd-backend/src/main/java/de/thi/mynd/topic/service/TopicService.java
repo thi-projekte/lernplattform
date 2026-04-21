@@ -20,7 +20,8 @@ public interface TopicService {
 
   TopicDto updateTopic(UUID topicId, TopicRequest request) throws EntityInstanceNotFoundException;
 
-  TopicDto getTopic(UUID topicId, boolean withOwnedRelatedTopics) throws EntityInstanceNotFoundException;
+  TopicDto getTopic(UUID topicId, boolean withOwnedRelatedTopics)
+      throws EntityInstanceNotFoundException;
 
   void deleteTopic(UUID topicId) throws EntityInstanceNotFoundException;
 }

@@ -9,6 +9,7 @@ import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
+import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.ContentType;
 import de.thi.mynd.topic.entity.PdfElement;
@@ -223,5 +224,26 @@ public class TopicServiceImplTest {
     verify(topicRepository).persist(any(Topic.class));
     verify(contentElementService)
         .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
+  }
+
+  @Test
+  void testGetOwnedRelatedTopicsForTopic() {
+    when(topicRepository.findByOwningTopicId(any())).thenReturn(List.of());
+
+    topicService.getOwnedRelatedTopicsForTopic(UUID.randomUUID());
+
+    verify(mappingRegistry, times(1)).mapList(any(), ListTopicDto.class);
+  }
+
+  @Test
+  void testGetTopicMappingBasedOnWithOwnedRelatedTopicsFlag()
+      throws EntityInstanceNotFoundException {
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+
+    TopicDto topicDto1 = topicService.getTopic(UUID.randomUUID(), true);
+    TopicDto topicDto2 = topicService.getTopic(UUID.randomUUID(), false);
+
+    Assertions.assertInstanceOf(TopicWithOwnedRelatedTopicsDto.class, topicDto1);
+    Assertions.assertFalse(topicDto2 instanceof TopicWithOwnedRelatedTopicsDto);
   }
 }

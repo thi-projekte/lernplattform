@@ -9,12 +9,12 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public final class TopicWithOwnedRelatedTopicsDtoMapper extends AbstractMappingProcessor<Topic, TopicWithOwnedRelatedTopicsDto> {
+public final class TopicWithOwnedRelatedTopicsDtoMapper
+    extends AbstractMappingProcessor<Topic, TopicWithOwnedRelatedTopicsDto> {
 
   @Inject ContentElementService contentElementService;
 
-  @Inject
-  TopicService topicService;
+  @Inject TopicService topicService;
 
   @Override
   public TopicWithOwnedRelatedTopicsDto mapAndEnrich(Topic entity) {
@@ -28,7 +28,7 @@ public final class TopicWithOwnedRelatedTopicsDtoMapper extends AbstractMappingP
         .categories(entity.categories)
         .contentElements(contentElementService.getContentElementsForTopic(entity.id))
         .updatedAt(entity.updatedAt)
-            .relatedTopics(topicService.getOwnedRelatedTopicsForTopic(entity.id))
+        .relatedTopics(topicService.getOwnedRelatedTopicsForTopic(entity.id))
         .build();
   }
 

@@ -52,7 +52,8 @@ public final class TopicServiceImpl implements TopicService {
   }
 
   @Override
-  public TopicDto getTopic(UUID topicId, boolean withOwnedRelatedTopics) throws EntityInstanceNotFoundException {
+  public TopicDto getTopic(UUID topicId, boolean withOwnedRelatedTopics)
+      throws EntityInstanceNotFoundException {
     Topic topic = getTopicByIdElseException(topicId);
 
     if (withOwnedRelatedTopics) {
