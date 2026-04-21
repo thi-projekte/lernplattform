@@ -2,7 +2,8 @@
   "routes": {
     "dashboard": "Dashboard",
     "builderMode": "Builder Mode",
-    "createTopic": "Create topic"
+    "createTopic": "Create topic",
+    "editTopic": "Edit topic"
   },
   "common": {
     "rowsPerPage": "Rows per page",
@@ -18,7 +19,8 @@
     "create": "Create",
     "uri": "Url",
     "dropYourFileHere": "Drop your file here",
-    "download": "Download"
+    "download": "Download",
+    "save": "Save"
   },
   "topic": {
     "headings": {

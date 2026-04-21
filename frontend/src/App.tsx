@@ -1,6 +1,6 @@
 import { UserProvider } from './provider/user-provider.tsx';
 import { RouterProvider } from 'react-router/dom';
-import { router } from './routing.tsx';
+import { router } from './routing.ts';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { MantineProvider } from '@mantine/core';
 

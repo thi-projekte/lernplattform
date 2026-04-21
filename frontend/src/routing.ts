@@ -4,6 +4,7 @@ import BuilderModeListPage from './pages/builder-mode/list.tsx';
 import type { ComponentType } from 'react';
 import { IconHammer, IconHome, type IconProps } from '@tabler/icons-react';
 import CreateTopicPage from './pages/builder-mode/create.tsx';
+import EditTopicPage from './pages/builder-mode/edit.tsx';
 
 export interface TypedMyndRoute extends BaseRouteObject {
   isSidebar?: boolean;
@@ -31,6 +32,11 @@ export const routes: TypedMyndRoute[] = [
     Component: CreateTopicPage,
     translation: 'createTopic',
   },
+  {
+    path: '/builder-mode/topics/:topicId/edit',
+    Component: EditTopicPage,
+    translation: 'editTopic'
+  }
 ];
 
 export const router = createBrowserRouter(routes);

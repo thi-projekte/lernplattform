@@ -134,7 +134,7 @@ const fetchTopic = async (topicId: string) => {
     validateStatus: (status) => status <= 204
   });
 
-  return TopicSchema.parse(result.data)
+  return TopicSchema.omit({relatedTopics: true}).parse(result.data);
 }
 
 export const useQueryTopic = (topicId: string) => {

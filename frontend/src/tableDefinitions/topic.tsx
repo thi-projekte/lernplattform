@@ -4,13 +4,15 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { Category, ListTopicDto } from '../schemas/topic.ts';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '../utils/date.ts';
-import { IconTrash } from '@tabler/icons-react';
+import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { useDeleteTopicMutation } from '../api/topic.ts';
+import { useNavigate } from 'react-router';
 
-export const useTopicColumns = (withActions = false, withDeleteAction = false) => {
+export const useTopicColumns = (withActions = false, withDeleteAction = false, withEditAction = false) => {
   const { t } = useTranslation();
 
   const { mutate } = useDeleteTopicMutation();
+  const navigate = useNavigate();
 
   const columnHelper = createColumnHelper<ListTopicDto>();
   const columns: EntityTableProps<ListTopicDto>['columns'] = [
@@ -49,7 +51,15 @@ export const useTopicColumns = (withActions = false, withDeleteAction = false) =
       id: 'actions',
       header: t('common.actions'),
       cell: ({ row }) => (
-        <Flex direction="row" gap={1}>
+        <Flex direction="row" gap={4}>
+          {withEditAction && (
+            <ActionIcon
+              variant="default"
+              onClick={() => navigate(`/builder-mode/topics/${row.original.id}/edit`)}
+            >
+              <IconPencil />
+            </ActionIcon>
+          )}
           {withDeleteAction && (
             <ActionIcon variant="default" onClick={() => mutate(row.original.id)}>
               <IconTrash />
