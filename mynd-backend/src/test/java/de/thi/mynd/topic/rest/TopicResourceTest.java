@@ -63,7 +63,7 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "bob")
+  @TestSecurity(user = "bob", roles = "builder")
   public void testPaginationParameters() {
     given()
         .queryParam("page", 5)
