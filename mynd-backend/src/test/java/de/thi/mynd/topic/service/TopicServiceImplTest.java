@@ -4,10 +4,14 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import de.thi.mynd.common.dto.PaginationDto;
+import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
+import de.thi.mynd.topic.entity.ContentElement;
+import de.thi.mynd.topic.entity.ContentType;
+import de.thi.mynd.topic.entity.PdfElement;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
@@ -19,7 +23,10 @@ import jakarta.inject.Inject;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+
+import jakarta.ws.rs.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -109,5 +116,43 @@ public class TopicServiceImplTest {
     when(topicRepository.findBySearch("test", 5)).thenReturn(new ArrayList<>());
     topicService.findTopicsBySearchMax5("test");
     verify(topicRepository).findBySearch("test", 5);
+  }
+
+  @Test
+  void testDeleteTopicWithInvalidId() {
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.empty());
+
+    Exception ex = Assertions.assertThrows(EntityInstanceNotFoundException.class, () -> {
+      topicService.deleteTopic(UUID.randomUUID());
+    });
+
+    Assertions.assertEquals("No topic exists for the provided UUID", ex.getMessage());
+  }
+
+  @Test
+  void testDeleteTopicWithValidId() {
+
+    UUID contentElementId = UUID.randomUUID();
+    ContentElement contentElement = new PdfElement();
+    contentElement.id = contentElementId;
+    contentElement.title = "Content";
+    contentElement.type = ContentType.PDF;
+
+    UUID topicId = UUID.randomUUID();
+
+    Topic topic = new Topic();
+    topic.id = topicId;
+    topic.contentElements = new ArrayList<>();
+    topic.contentElements.add(contentElement);
+
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(topic));
+
+    Assertions.assertDoesNotThrow(() -> {
+      topicService.deleteTopic(topicId);
+    });
+
+    verify(topicRepository, times(1)).findByIdOptional(topicId);
+    verify(contentElementService, times(1)).deleteContentElement(contentElementId);
+    verify(topicRepository, times(1)).delete(topic);
   }
 }

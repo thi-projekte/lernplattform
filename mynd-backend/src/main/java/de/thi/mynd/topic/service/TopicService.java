@@ -1,6 +1,7 @@
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.dto.PaginationDto;
+import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.requests.CreateTopicRequest;
@@ -15,5 +16,5 @@ public interface TopicService {
 
   TopicDto createTopic(CreateTopicRequest request);
 
-  void deleteTopic(UUID topicId);
+  void deleteTopic(UUID topicId) throws EntityInstanceNotFoundException;
 }

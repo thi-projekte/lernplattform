@@ -1,6 +1,7 @@
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.dto.PaginationDto;
+import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
@@ -13,7 +14,6 @@ import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -77,10 +77,10 @@ public final class TopicServiceImpl implements TopicService {
 
   @Override
   @Transactional
-  public void deleteTopic(UUID topicId) {
+  public void deleteTopic(UUID topicId) throws EntityInstanceNotFoundException {
     Optional<Topic> topicOptional = topicRepository.findByIdOptional(topicId);
     if (topicOptional.isEmpty()) {
-      throw new NotFoundException("No topic exists for the provided UUID");
+      throw new EntityInstanceNotFoundException("No topic exists for the provided UUID");
     }
 
     Topic topic = topicOptional.get();
