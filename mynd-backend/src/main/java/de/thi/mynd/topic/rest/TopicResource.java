@@ -32,7 +32,15 @@ public final class TopicResource {
     return topicService.findPersonalTopicsPaginated(page, pageSize);
   }
 
-
+  @GET
+  @Path("/{topicId}")
+  public TopicDto getTopic(UUID topicId) {
+    try {
+      return topicService.getTopic(topicId);
+    } catch (EntityInstanceNotFoundException e) {
+      throw new NotFoundException(e);
+    }
+  }
 
   @GET
   public List<ListTopicDto> search(@RestQuery String search) {
@@ -43,6 +51,17 @@ public final class TopicResource {
   @RolesAllowed("builder")
   public TopicDto createTopic(@Valid TopicRequest createTopicRequest) {
     return topicService.createTopic(createTopicRequest);
+  }
+
+  @PUT
+  @Path("/{topicId}")
+  @RolesAllowed("builder")
+  public TopicDto updateTopic(UUID topicId, @Valid TopicRequest updateTopicRequest) {
+    try {
+      return topicService.updateTopic(topicId, updateTopicRequest);
+    } catch (EntityInstanceNotFoundException e) {
+      throw new NotFoundException(e);
+    }
   }
 
   @DELETE
