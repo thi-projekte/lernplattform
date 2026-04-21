@@ -8,7 +8,11 @@ import { IconPencil, IconTrash } from '@tabler/icons-react';
 import { useDeleteTopicMutation } from '../api/topic.ts';
 import { useNavigate } from 'react-router';
 
-export const useTopicColumns = (withActions = false, withDeleteAction = false, withEditAction = false) => {
+export const useTopicColumns = (
+  withActions = false,
+  withDeleteAction = false,
+  withEditAction = false
+) => {
   const { t } = useTranslation();
 
   const { mutate } = useDeleteTopicMutation();

@@ -35,8 +35,8 @@ export const routes: TypedMyndRoute[] = [
   {
     path: '/builder-mode/topics/:topicId/edit',
     Component: EditTopicPage,
-    translation: 'editTopic'
-  }
+    translation: 'editTopic',
+  },
 ];
 
 export const router = createBrowserRouter(routes);

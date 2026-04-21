@@ -10,15 +10,13 @@ import CoreDataStep from '../../components/topic/core-data-step.tsx';
 import AssociatedTopicsStep from '../../components/topic/associated-topics-step.tsx';
 import ContentElementsDnd from '../../components/topic/content-elements-dnd.tsx';
 
-
 const EditTopicPage = () => {
-
-  const {t} = useTranslation();
-  const {topicId} = useParams<{topicId: string}>();
+  const { t } = useTranslation();
+  const { topicId } = useParams<{ topicId: string }>();
 
   const [topic, setTopic] = useState<Partial<Topic>>({});
 
-  const {data, isLoading} = useQueryTopic(topicId ?? '', true);
+  const { data, isLoading } = useQueryTopic(topicId ?? '', true);
 
   useEffect(() => {
     if (data && Object.keys(topic).length === 0) {
@@ -49,14 +47,12 @@ const EditTopicPage = () => {
             </Tabs.Panel>
           </Tabs>
           <Group justify="flex-end" mt="xl">
-            <Button>
-              {t('common.save')}
-            </Button>
+            <Button>{t('common.save')}</Button>
           </Group>
         </LoadingWrapper>
       </Container>
     </Layout>
   );
-}
+};
 
 export default EditTopicPage;

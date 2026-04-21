@@ -130,12 +130,15 @@ export const useDeleteTopicMutation = () => {
 };
 
 const fetchTopic = async (topicId: string, withOwnedRelatedTopics: boolean) => {
-  const result = await apiClient.get(`/topics/${topicId}?withOwnedRelatedTopics=${withOwnedRelatedTopics}`, {
-    validateStatus: (status) => status <= 204
-  });
+  const result = await apiClient.get(
+    `/topics/${topicId}?withOwnedRelatedTopics=${withOwnedRelatedTopics}`,
+    {
+      validateStatus: (status) => status <= 204,
+    }
+  );
 
   return TopicSchema.parse(result.data);
-}
+};
 
 export const useQueryTopic = (topicId: string, withOwnedRelatedTopics: boolean) => {
   return useQuery({
