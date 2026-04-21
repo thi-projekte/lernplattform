@@ -14,11 +14,13 @@ public interface TopicService {
 
   List<ListTopicDto> findTopicsBySearchMax5(String search);
 
+  List<ListTopicDto> getOwnedRelatedTopicsForTopic(UUID topicId);
+
   TopicDto createTopic(TopicRequest request);
 
   TopicDto updateTopic(UUID topicId, TopicRequest request) throws EntityInstanceNotFoundException;
 
-  TopicDto getTopic(UUID topicId) throws EntityInstanceNotFoundException;
+  TopicDto getTopic(UUID topicId, boolean withOwnedRelatedTopics) throws EntityInstanceNotFoundException;
 
   void deleteTopic(UUID topicId) throws EntityInstanceNotFoundException;
 }

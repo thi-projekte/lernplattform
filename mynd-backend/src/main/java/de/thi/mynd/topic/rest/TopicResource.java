@@ -34,9 +34,9 @@ public final class TopicResource {
 
   @GET
   @Path("/{topicId}")
-  public TopicDto getTopic(UUID topicId) {
+  public TopicDto getTopic(UUID topicId, @RestQuery boolean withOwnedRelatedTopics) {
     try {
-      return topicService.getTopic(topicId);
+      return topicService.getTopic(topicId, withOwnedRelatedTopics);
     } catch (EntityInstanceNotFoundException e) {
       throw new NotFoundException(e);
     }

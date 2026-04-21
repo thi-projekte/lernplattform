@@ -166,7 +166,7 @@ public class TopicServiceImplTest {
 
     Assertions.assertDoesNotThrow(
         () -> {
-          topicService.getTopic(topicId);
+          topicService.getTopic(topicId, false);
         });
 
     verify(topicRepository, times(1)).findByIdOptional(topicId);
@@ -181,7 +181,7 @@ public class TopicServiceImplTest {
     Assertions.assertThrows(
         EntityInstanceNotFoundException.class,
         () -> {
-          topicService.getTopic(topicId);
+          topicService.getTopic(topicId, false);
         });
 
     verify(topicRepository, times(1)).findByIdOptional(topicId);

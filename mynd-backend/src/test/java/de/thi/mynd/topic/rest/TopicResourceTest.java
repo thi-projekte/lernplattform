@@ -230,7 +230,7 @@ public class TopicResourceTest {
   @Test
   @TestSecurity(user = "user")
   public void testGetTopicWithValidId() throws EntityInstanceNotFoundException {
-    when(topicService.getTopic(any())).thenReturn(TopicDto.builder().build());
+    when(topicService.getTopic(any(), false)).thenReturn(TopicDto.builder().build());
 
     given().when().get("/topics/" + UUID.randomUUID()).then().statusCode(200);
   }
@@ -238,7 +238,7 @@ public class TopicResourceTest {
   @Test
   @TestSecurity(user = "user")
   public void testGetTopicWithInvalidId() throws EntityInstanceNotFoundException {
-    when(topicService.getTopic(any())).thenThrow(new EntityInstanceNotFoundException(""));
+    when(topicService.getTopic(any(), false)).thenThrow(new EntityInstanceNotFoundException(""));
 
     given().when().get("/topics/" + UUID.randomUUID()).then().statusCode(404);
   }
