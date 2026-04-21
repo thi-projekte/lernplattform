@@ -129,18 +129,17 @@ export const useDeleteTopicMutation = () => {
   });
 };
 
-const fetchTopic = async (topicId: string) => {
-  const result = await apiClient.get(`/topics/${topicId}`, {
+const fetchTopic = async (topicId: string, withOwnedRelatedTopics: boolean) => {
+  const result = await apiClient.get(`/topics/${topicId}?withOwnedRelatedTopics=${withOwnedRelatedTopics}`, {
     validateStatus: (status) => status <= 204
   });
 
-  return TopicSchema.omit({relatedTopics: true}).parse(result.data);
+  return TopicSchema.parse(result.data);
 }
 
-export const useQueryTopic = (topicId: string) => {
-
+export const useQueryTopic = (topicId: string, withOwnedRelatedTopics: boolean) => {
   return useQuery({
-    queryKey: ["topic", topicId],
-    queryFn: () => fetchTopic(topicId)
-  })
-}
+    queryKey: ['topic', topicId, withOwnedRelatedTopics],
+    queryFn: () => fetchTopic(topicId, withOwnedRelatedTopics),
+  });
+};

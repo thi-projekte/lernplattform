@@ -18,7 +18,7 @@ const EditTopicPage = () => {
 
   const [topic, setTopic] = useState<Partial<Topic>>({});
 
-  const {data, isLoading} = useQueryTopic(topicId ?? '');
+  const {data, isLoading} = useQueryTopic(topicId ?? '', true);
 
   useEffect(() => {
     if (data && Object.keys(topic).length === 0) {
@@ -33,7 +33,7 @@ const EditTopicPage = () => {
       <Container>
         <LoadingWrapper isLoading={isLoading || !topic.title}>
           <Tabs defaultValue="coreData">
-            <Tabs.List>
+            <Tabs.List mb={16}>
               <Tabs.Tab value="coreData">{t('topic.steps.coreDataTitle')}</Tabs.Tab>
               <Tabs.Tab value="associatedTopics">{t('topic.steps.associatedTopicsTitle')}</Tabs.Tab>
               <Tabs.Tab value="contentElements">{t('topic.steps.contentElementsTitle')}</Tabs.Tab>
