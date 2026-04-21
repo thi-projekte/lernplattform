@@ -25,8 +25,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import jakarta.ws.rs.NotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -122,9 +120,12 @@ public class TopicServiceImplTest {
   void testDeleteTopicWithInvalidId() {
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.empty());
 
-    Exception ex = Assertions.assertThrows(EntityInstanceNotFoundException.class, () -> {
-      topicService.deleteTopic(UUID.randomUUID());
-    });
+    Exception ex =
+        Assertions.assertThrows(
+            EntityInstanceNotFoundException.class,
+            () -> {
+              topicService.deleteTopic(UUID.randomUUID());
+            });
 
     Assertions.assertEquals("No topic exists for the provided UUID", ex.getMessage());
   }
@@ -147,9 +148,10 @@ public class TopicServiceImplTest {
 
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(topic));
 
-    Assertions.assertDoesNotThrow(() -> {
-      topicService.deleteTopic(topicId);
-    });
+    Assertions.assertDoesNotThrow(
+        () -> {
+          topicService.deleteTopic(topicId);
+        });
 
     verify(topicRepository, times(1)).findByIdOptional(topicId);
     verify(contentElementService, times(1)).deleteContentElement(contentElementId);

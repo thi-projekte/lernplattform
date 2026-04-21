@@ -167,10 +167,6 @@ public class TopicResourceTest {
   @TestSecurity(user = "builder-user", roles = "builder")
   public void testDeleteTopic() {
 
-    given()
-            .when()
-            .delete("/topics/" + UUID.randomUUID())
-            .then()
-            .statusCode(200);
+    given().when().delete("/topics/" + UUID.randomUUID()).then().statusCode(200);
   }
 }
