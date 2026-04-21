@@ -174,7 +174,7 @@ public class TopicServiceImplTest {
 
   @Test
   void testGetTopicWithInvalidId() {
-    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.empty());
 
     UUID topicId = UUID.randomUUID();
 
