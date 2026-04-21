@@ -30,7 +30,7 @@ public class TopicResourceTest {
   @InjectMock TopicService topicService;
 
   @Test
-  @TestSecurity(user = "alice")
+  @TestSecurity(user = "alice", roles = "builder")
   public void testGetPersonalTopicsSuccess() {
     ListTopicDto dto =
         ListTopicDto.builder()
@@ -202,7 +202,7 @@ public class TopicResourceTest {
         .statusCode(200)
         .body("title", is("New Title"));
 
-    verify(topicService).createTopic(ArgumentMatchers.any());
+    verify(topicService).updateTopic(ArgumentMatchers.any(), ArgumentMatchers.any());
   }
 
   @Test
