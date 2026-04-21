@@ -30,8 +30,7 @@ import org.mockito.ArgumentMatchers;
 public class TopicResourceTest {
 
   @InjectMock TopicService topicService;
-  @InjectMock
-  TopicRepository topicRepository;
+  @InjectMock TopicRepository topicRepository;
 
   @Test
   @TestSecurity(user = "alice")
@@ -197,13 +196,13 @@ public class TopicResourceTest {
     when(topicService.createTopic(ArgumentMatchers.any())).thenReturn(responseDto);
 
     given()
-            .contentType(ContentType.JSON)
-            .body(request)
-            .when()
-            .put("/topics/" +  topicId)
-            .then()
-            .statusCode(200)
-            .body("title", is("New Title"));
+        .contentType(ContentType.JSON)
+        .body(request)
+        .when()
+        .put("/topics/" + topicId)
+        .then()
+        .statusCode(200)
+        .body("title", is("New Title"));
 
     verify(topicService).createTopic(ArgumentMatchers.any());
   }
@@ -215,12 +214,12 @@ public class TopicResourceTest {
     request.title = "Forbidden Title";
 
     given()
-            .contentType(ContentType.JSON)
-            .body(request)
-            .when()
-            .put("/topics/" + UUID.randomUUID())
-            .then()
-            .statusCode(403);
+        .contentType(ContentType.JSON)
+        .body(request)
+        .when()
+        .put("/topics/" + UUID.randomUUID())
+        .then()
+        .statusCode(403);
   }
 
   @Test
@@ -235,11 +234,7 @@ public class TopicResourceTest {
   public void testGetTopicWithValidId() {
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.empty());
 
-    given()
-            .when()
-            .get("/topics/" + UUID.randomUUID())
-            .then()
-            .statusCode(400);
+    given().when().get("/topics/" + UUID.randomUUID()).then().statusCode(400);
   }
 
   @Test
@@ -247,10 +242,6 @@ public class TopicResourceTest {
   public void testGetTopicWithInvalidId() {
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
 
-    given()
-            .when()
-            .get("/topics/" + UUID.randomUUID())
-            .then()
-            .statusCode(200);
+    given().when().get("/topics/" + UUID.randomUUID()).then().statusCode(200);
   }
 }
