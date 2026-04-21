@@ -1,6 +1,7 @@
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.dto.PaginationDto;
+import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
@@ -71,6 +72,24 @@ public final class TopicServiceImpl implements TopicService {
     updateContentAssignments(topic, request.contentElements);
 
     return mappingRegistry.map(topic, TopicDto.class);
+  }
+
+  @Override
+  @Transactional
+  public void deleteTopic(UUID topicId) throws EntityInstanceNotFoundException {
+    Optional<Topic> topicOptional = topicRepository.findByIdOptional(topicId);
+    if (topicOptional.isEmpty()) {
+      throw new EntityInstanceNotFoundException("No topic exists for the provided UUID");
+    }
+
+    Topic topic = topicOptional.get();
+
+    for (ContentElement contentElement : topic.contentElements) {
+      contentElementService.deleteContentElement(contentElement.id);
+    }
+
+    topicRepository.delete(topic);
+    topicRepository.flush();
   }
 
   private void updateContentAssignments(

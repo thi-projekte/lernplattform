@@ -1,6 +1,7 @@
 package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.common.dto.PaginationDto;
+import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.dto.content.ContentElementDto;
@@ -11,11 +12,9 @@ import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
 import org.jboss.resteasy.reactive.RestQuery;
@@ -51,5 +50,17 @@ public final class TopicResource {
   @RolesAllowed("builder")
   public TopicDto createTopic(@Valid CreateTopicRequest createTopicRequest) {
     return topicService.createTopic(createTopicRequest);
+  }
+
+  @DELETE
+  @Path("/{topicId}")
+  @RolesAllowed("builder")
+  public Response deleteTopic(UUID topicId) {
+    try {
+      topicService.deleteTopic(topicId);
+      return Response.ok().build();
+    } catch (EntityInstanceNotFoundException e) {
+      throw new NotFoundException(e.getMessage());
+    }
   }
 }
