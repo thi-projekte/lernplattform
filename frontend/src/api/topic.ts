@@ -8,6 +8,7 @@ import {
   PaginatedListTopicDtoSchema,
   type Topic,
   TopicCoreDataSchema,
+  TopicSchema,
 } from '../schemas/topic.ts';
 import type { PaginationState } from '@tanstack/react-table';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -129,5 +130,17 @@ export const useDeleteTopicMutation = () => {
 };
 
 const fetchTopic = async (topicId: string) => {
-  const result = await apiClient.get()
+  const result = await apiClient.get(`/topics/${topicId}`, {
+    validateStatus: (status) => status <= 204
+  });
+
+  return TopicSchema.parse(result.data)
+}
+
+export const useQueryTopic = (topicId: string) => {
+
+  return useQuery({
+    queryKey: ["topic", topicId],
+    queryFn: () => fetchTopic(topicId)
+  })
 }

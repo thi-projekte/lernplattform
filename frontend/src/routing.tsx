@@ -3,7 +3,7 @@ import Homepage from './pages/home.tsx';
 import BuilderModeListPage from './pages/builder-mode/list.tsx';
 import type { ComponentType } from 'react';
 import { IconHammer, IconHome, type IconProps } from '@tabler/icons-react';
-import CreateOrEditTopicPage from './pages/builder-mode/create-or-edit.tsx';
+import CreateTopicPage from './pages/builder-mode/create.tsx';
 
 export interface TypedMyndRoute extends BaseRouteObject {
   isSidebar?: boolean;
@@ -28,7 +28,7 @@ export const routes: TypedMyndRoute[] = [
   },
   {
     path: '/builder-mode/topics/create',
-    Component: CreateOrEditTopicPage,
+    Component: CreateTopicPage,
     translation: 'createTopic',
   },
 ];
