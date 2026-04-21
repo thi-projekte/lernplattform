@@ -22,7 +22,8 @@ public final class TopicServiceImpl implements TopicService {
 
   @Inject SecurityIdentity identity;
 
-  @Inject MappingRegistry mappingRegistry;
+  @Inject
+  MappingRegistry mappingRegistry;
 
   @Inject TopicRepository topicRepository;
 
@@ -103,7 +104,8 @@ public final class TopicServiceImpl implements TopicService {
     topicRepository.persist(topic);
     topicRepository.flush();
 
-    updateContentAssignments(topic, request.contentElements);
+    // TODO: Ensure all topics are owned by the user who wants to change
+    contentElementService.updateTopicAssociation(topic, request.contentElements);
   }
 
   private Topic getTopicByIdElseException(UUID topicId) throws EntityInstanceNotFoundException {
@@ -113,23 +115,5 @@ public final class TopicServiceImpl implements TopicService {
     }
 
     return topicOptional.get();
-  }
-
-  private void updateContentAssignments(
-      Topic topic, List<AssociatedContentElementRequest> newElements) {
-
-    // TODO: Ensure all topics are owned by the user who wants to change
-
-    Set<UUID> incomingIds =
-        newElements.stream().map(e -> e.id).filter(Objects::nonNull).collect(Collectors.toSet());
-
-    List<ContentElement> elementsToRemove =
-        topic.contentElements.stream().filter(e -> !incomingIds.contains(e.id)).toList();
-
-    for (ContentElement element : elementsToRemove) {
-      contentElementService.deleteContentElement(element.id);
-    }
-
-    contentElementService.updateTopicAssociation(topic, newElements);
   }
 }

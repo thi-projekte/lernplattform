@@ -157,4 +157,67 @@ public class TopicServiceImplTest {
     verify(contentElementService, times(1)).deleteContentElement(contentElementId);
     verify(topicRepository, times(1)).delete(topic);
   }
+
+  @Test
+  void testGetTopicWithValidId() {
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+
+    UUID topicId = UUID.randomUUID();
+
+    Assertions.assertDoesNotThrow(() -> {
+      topicService.getTopic(topicId);
+    });
+
+    verify(topicRepository, times(1)).findByIdOptional(topicId);
+  }
+
+  @Test
+  void testGetTopicWithInvalidId() {
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+
+    UUID topicId = UUID.randomUUID();
+
+    Assertions.assertThrows(EntityInstanceNotFoundException.class, () -> {
+      topicService.getTopic(topicId);
+    });
+
+    verify(topicRepository, times(1)).findByIdOptional(topicId);
+  }
+
+  @Test
+  void testUpdateTopic_WithFullOrchestration() {
+    // Arrange
+
+    AssociatedEntityRequest category = new AssociatedEntityRequest();
+    category.id = UUID.randomUUID();
+
+    TopicRequest request = new TopicRequest();
+    request.title = "New Topic";
+    request.categories = List.of(category);
+
+    UUID stayId = UUID.randomUUID();
+
+    AssociatedContentElementRequest stayReq = new AssociatedContentElementRequest();
+    stayReq.id = stayId;
+    request.contentElements = List.of(stayReq);
+
+    when(categoryService.findByAssociatedEntities(any())).thenReturn(new ArrayList<>());
+    when(topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
+            any(), any(), anyString()))
+            .thenReturn(new ArrayList<>());
+    when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+
+    UUID topicId = UUID.randomUUID();
+
+    // Act
+    Assertions.assertDoesNotThrow(() -> {
+      topicService.updateTopic(topicId, request);
+    });
+
+    // Assert
+    verify(topicRepository).persist(any(Topic.class));
+    verify(contentElementService)
+            .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
+  }
 }
