@@ -9,7 +9,7 @@ import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
-import de.thi.mynd.topic.requests.CreateTopicRequest;
+import de.thi.mynd.topic.requests.TopicRequest;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -53,23 +53,26 @@ public final class TopicServiceImpl implements TopicService {
   }
 
   @Override
+  public TopicDto getTopic(UUID topicId) throws EntityInstanceNotFoundException {
+    Topic topic = getTopicByIdElseException(topicId);
+    return mappingRegistry.map(topic, TopicDto.class);
+  }
+
+  @Override
   @Transactional
-  public TopicDto createTopic(CreateTopicRequest request) {
+  public TopicDto createTopic(TopicRequest request) {
 
     Topic topic = new Topic();
-    topic.title = request.title;
-    topic.creatorId = identity.getPrincipal().getName();
-    topic.categories = categoryService.findByAssociatedEntities(request.categories);
-    topic.ownedAssociations =
-        topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
-            topic, request.relatedTopics, identity.getPrincipal().getName());
-    topic.estimatedLearningDuration = request.estimatedLearningDuration;
-    topic.teaser = request.teaser;
+    updateTopicFieldsAndAssociations(topic, request);
 
-    topicRepository.persist(topic);
-    topicRepository.flush();
+    return mappingRegistry.map(topic, TopicDto.class);
+  }
 
-    updateContentAssignments(topic, request.contentElements);
+  @Override
+  public TopicDto updateTopic(UUID topicId, TopicRequest request) throws EntityInstanceNotFoundException {
+    Topic topic = getTopicByIdElseException(topicId);
+
+    updateTopicFieldsAndAssociations(topic, request);
 
     return mappingRegistry.map(topic, TopicDto.class);
   }
@@ -77,12 +80,7 @@ public final class TopicServiceImpl implements TopicService {
   @Override
   @Transactional
   public void deleteTopic(UUID topicId) throws EntityInstanceNotFoundException {
-    Optional<Topic> topicOptional = topicRepository.findByIdOptional(topicId);
-    if (topicOptional.isEmpty()) {
-      throw new EntityInstanceNotFoundException("No topic exists for the provided UUID");
-    }
-
-    Topic topic = topicOptional.get();
+    Topic topic = getTopicByIdElseException(topicId);
 
     for (ContentElement contentElement : topic.contentElements) {
       contentElementService.deleteContentElement(contentElement.id);
@@ -90,6 +88,31 @@ public final class TopicServiceImpl implements TopicService {
 
     topicRepository.delete(topic);
     topicRepository.flush();
+  }
+
+  private void updateTopicFieldsAndAssociations(Topic topic, TopicRequest request) {
+    topic.title = request.title;
+    topic.creatorId = identity.getPrincipal().getName();
+    topic.categories = categoryService.findByAssociatedEntities(request.categories);
+    topic.ownedAssociations =
+            topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
+                    topic, request.relatedTopics, identity.getPrincipal().getName());
+    topic.estimatedLearningDuration = request.estimatedLearningDuration;
+    topic.teaser = request.teaser;
+
+    topicRepository.persist(topic);
+    topicRepository.flush();
+
+    updateContentAssignments(topic, request.contentElements);
+  }
+
+  private Topic getTopicByIdElseException(UUID topicId) throws EntityInstanceNotFoundException {
+    Optional<Topic> topicOptional = topicRepository.findByIdOptional(topicId);
+    if (topicOptional.isEmpty()) {
+      throw new EntityInstanceNotFoundException("No topic exists for the provided UUID");
+    }
+
+    return topicOptional.get();
   }
 
   private void updateContentAssignments(

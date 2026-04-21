@@ -15,7 +15,7 @@ import de.thi.mynd.topic.entity.PdfElement;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
-import de.thi.mynd.topic.requests.CreateTopicRequest;
+import de.thi.mynd.topic.requests.TopicRequest;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
@@ -83,7 +83,7 @@ public class TopicServiceImplTest {
     AssociatedEntityRequest category = new AssociatedEntityRequest();
     category.id = UUID.randomUUID();
 
-    CreateTopicRequest request = new CreateTopicRequest();
+    TopicRequest request = new TopicRequest();
     request.title = "New Topic";
     request.categories = List.of(category);
 

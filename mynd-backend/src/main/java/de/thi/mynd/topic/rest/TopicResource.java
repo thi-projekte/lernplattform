@@ -4,7 +4,7 @@ import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
-import de.thi.mynd.topic.requests.CreateTopicRequest;
+import de.thi.mynd.topic.requests.TopicRequest;
 import de.thi.mynd.topic.service.TopicService;
 import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
@@ -38,7 +38,7 @@ public final class TopicResource {
 
   @POST
   @RolesAllowed("builder")
-  public TopicDto createTopic(@Valid CreateTopicRequest createTopicRequest) {
+  public TopicDto createTopic(@Valid TopicRequest createTopicRequest) {
     return topicService.createTopic(createTopicRequest);
   }
 

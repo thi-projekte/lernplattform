@@ -127,3 +127,7 @@ export const useDeleteTopicMutation = () => {
     },
   });
 };
+
+const fetchTopic = async (topicId: string) => {
+  const result = await apiClient.get()
+}
