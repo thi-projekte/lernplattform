@@ -239,6 +239,9 @@ public class TopicServiceImplTest {
   void testGetTopicMappingBasedOnWithOwnedRelatedTopicsFlag()
       throws EntityInstanceNotFoundException {
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+    when(mappingRegistry.map(any(), eq(TopicWithOwnedRelatedTopicsDto.class)))
+        .thenReturn(TopicWithOwnedRelatedTopicsDto.builder().build());
+    when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
 
     TopicDto topicDto1 = topicService.getTopic(UUID.randomUUID(), true);
     TopicDto topicDto2 = topicService.getTopic(UUID.randomUUID(), false);
