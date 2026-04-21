@@ -10,8 +10,7 @@ import { useDeleteTopicMutation } from '../api/topic.ts';
 export const useTopicColumns = (withActions = false, withDeleteAction = false) => {
   const { t } = useTranslation();
 
-  const {mutate} = useDeleteTopicMutation()
-
+  const { mutate } = useDeleteTopicMutation();
 
   const columnHelper = createColumnHelper<ListTopicDto>();
   const columns: EntityTableProps<ListTopicDto>['columns'] = [

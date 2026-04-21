@@ -111,12 +111,12 @@ export const useCreateTopicMutation = () => {
   });
 };
 
-const deleteTopic = async (topicId: string) => await apiClient.delete(`/topics/${topicId}`, {
-  validateStatus: (status) => status === 200
-});
+const deleteTopic = async (topicId: string) =>
+  await apiClient.delete(`/topics/${topicId}`, {
+    validateStatus: (status) => status === 200,
+  });
 
 export const useDeleteTopicMutation = () => {
-
   const queryClient = useQueryClient();
 
   return useMutation({
@@ -126,4 +126,4 @@ export const useDeleteTopicMutation = () => {
       queryClient.invalidateQueries({ queryKey: ['personalTopics'] });
     },
   });
-}
+};
