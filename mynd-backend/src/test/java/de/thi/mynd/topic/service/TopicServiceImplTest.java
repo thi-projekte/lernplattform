@@ -232,7 +232,7 @@ public class TopicServiceImplTest {
 
     topicService.getOwnedRelatedTopicsForTopic(UUID.randomUUID());
 
-    verify(mappingRegistry, times(1)).mapList(any(), ListTopicDto.class);
+    verify(mappingRegistry, times(1)).mapList(any(), eq(ListTopicDto.class));
   }
 
   @Test
