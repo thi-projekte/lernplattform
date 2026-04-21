@@ -16,7 +16,7 @@ const BuilderModeListPage = () => {
 
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const columns = useTopicColumns(true);
+  const columns = useTopicColumns(true, true);
 
   return (
     <Layout>

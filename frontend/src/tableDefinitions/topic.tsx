@@ -1,12 +1,18 @@
-import { Badge, Flex } from '@mantine/core';
+import { ActionIcon, Badge, Flex } from '@mantine/core';
 import { type EntityTableProps } from '../components/entity-table.tsx';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { Category, ListTopicDto } from '../schemas/topic.ts';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '../utils/date.ts';
+import { IconTrash } from '@tabler/icons-react';
+import { useDeleteTopicMutation } from '../api/topic.ts';
 
-export const useTopicColumns = (withActions = false) => {
+export const useTopicColumns = (withActions = false, withDeleteAction = false) => {
   const { t } = useTranslation();
+
+  const {mutate} = useDeleteTopicMutation()
+
+
   const columnHelper = createColumnHelper<ListTopicDto>();
   const columns: EntityTableProps<ListTopicDto>['columns'] = [
     columnHelper.accessor('title', {
@@ -43,7 +49,15 @@ export const useTopicColumns = (withActions = false) => {
     columns.push({
       id: 'actions',
       header: t('common.actions'),
-      cell: () => <div />,
+      cell: ({ row }) => (
+        <Flex direction="row" gap={1}>
+          {withDeleteAction && (
+            <ActionIcon variant="default" onClick={() => mutate(row.original.id)}>
+              <IconTrash />
+            </ActionIcon>
+          )}
+        </Flex>
+      ),
     });
   }
 
