@@ -6,11 +6,10 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 import de.thi.mynd.common.dto.PaginationDto;
+import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
-import de.thi.mynd.topic.entity.Topic;
-import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
 import de.thi.mynd.topic.requests.TopicRequest;
 import de.thi.mynd.topic.service.TopicService;
@@ -21,7 +20,6 @@ import io.restassured.http.ContentType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -30,7 +28,6 @@ import org.mockito.ArgumentMatchers;
 public class TopicResourceTest {
 
   @InjectMock TopicService topicService;
-  @InjectMock TopicRepository topicRepository;
 
   @Test
   @TestSecurity(user = "alice")
@@ -169,10 +166,10 @@ public class TopicResourceTest {
 
   @Test
   @TestSecurity(user = "builder-user", roles = "builder")
-  public void testUpdateTopicAsBuilderWithValidRequestBody() {
+  public void testUpdateTopicAsBuilderWithValidRequestBody()
+      throws EntityInstanceNotFoundException {
 
     UUID topicId = UUID.randomUUID();
-    when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.of(new Topic()));
 
     AssociatedContentElementRequest contentElementRequest = new AssociatedContentElementRequest();
     contentElementRequest.id = UUID.randomUUID();
@@ -193,7 +190,8 @@ public class TopicResourceTest {
 
     TopicDto responseDto = TopicDto.builder().title("New Title").build();
 
-    when(topicService.createTopic(ArgumentMatchers.any())).thenReturn(responseDto);
+    when(topicService.updateTopic(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(responseDto);
 
     given()
         .contentType(ContentType.JSON)
@@ -231,17 +229,17 @@ public class TopicResourceTest {
 
   @Test
   @TestSecurity(user = "user")
-  public void testGetTopicWithValidId() {
-    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.empty());
+  public void testGetTopicWithValidId() throws EntityInstanceNotFoundException {
+    when(topicService.getTopic(any())).thenReturn(TopicDto.builder().build());
 
-    given().when().get("/topics/" + UUID.randomUUID()).then().statusCode(400);
+    given().when().get("/topics/" + UUID.randomUUID()).then().statusCode(200);
   }
 
   @Test
   @TestSecurity(user = "user")
-  public void testGetTopicWithInvalidId() {
-    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+  public void testGetTopicWithInvalidId() throws EntityInstanceNotFoundException {
+    when(topicService.getTopic(any())).thenThrow(new EntityInstanceNotFoundException(""));
 
-    given().when().get("/topics/" + UUID.randomUUID()).then().statusCode(200);
+    given().when().get("/topics/" + UUID.randomUUID()).then().statusCode(404);
   }
 }
