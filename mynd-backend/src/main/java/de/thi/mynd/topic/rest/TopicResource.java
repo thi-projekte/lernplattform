@@ -4,9 +4,7 @@ import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
-import de.thi.mynd.topic.dto.content.ContentElementDto;
 import de.thi.mynd.topic.requests.CreateTopicRequest;
-import de.thi.mynd.topic.service.ContentElementService;
 import de.thi.mynd.topic.service.TopicService;
 import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
@@ -26,8 +24,6 @@ public final class TopicResource {
 
   @Inject TopicService topicService;
 
-  @Inject ContentElementService contentElementService;
-
   @GET
   @Path("/personal")
   public PaginationDto<ListTopicDto> getPersonalTopicsPaginated(
@@ -38,12 +34,6 @@ public final class TopicResource {
   @GET
   public List<ListTopicDto> search(@RestQuery String search) {
     return topicService.findTopicsBySearchMax5(search);
-  }
-
-  @GET
-  @Path("/{topicId}/content-elements")
-  public List<ContentElementDto> getContentElementsForTopic(UUID topicId) {
-    return contentElementService.getContentElementsForTopic(topicId);
   }
 
   @POST
