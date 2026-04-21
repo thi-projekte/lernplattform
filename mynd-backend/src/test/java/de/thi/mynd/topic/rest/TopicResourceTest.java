@@ -9,6 +9,8 @@ import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
+import de.thi.mynd.topic.entity.Topic;
+import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
 import de.thi.mynd.topic.requests.TopicRequest;
 import de.thi.mynd.topic.service.TopicService;
@@ -19,6 +21,7 @@ import io.restassured.http.ContentType;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -27,6 +30,8 @@ import org.mockito.ArgumentMatchers;
 public class TopicResourceTest {
 
   @InjectMock TopicService topicService;
+  @InjectMock
+  TopicRepository topicRepository;
 
   @Test
   @TestSecurity(user = "alice")
@@ -165,8 +170,87 @@ public class TopicResourceTest {
 
   @Test
   @TestSecurity(user = "builder-user", roles = "builder")
+  public void testUpdateTopicAsBuilderWithValidRequestBody() {
+
+    UUID topicId = UUID.randomUUID();
+    when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.of(new Topic()));
+
+    AssociatedContentElementRequest contentElementRequest = new AssociatedContentElementRequest();
+    contentElementRequest.id = UUID.randomUUID();
+
+    AssociatedEntityRequest category = new AssociatedEntityRequest();
+    category.id = UUID.randomUUID();
+
+    AssociatedEntityRequest topic = new AssociatedEntityRequest();
+    topic.id = UUID.randomUUID();
+
+    TopicRequest request = new TopicRequest();
+    request.title = "New Title";
+    request.teaser = "Teaser";
+    request.relatedTopics = List.of(topic);
+    request.categories = List.of(category);
+    request.estimatedLearningDuration = 12;
+    request.contentElements = List.of(contentElementRequest);
+
+    TopicDto responseDto = TopicDto.builder().title("New Title").build();
+
+    when(topicService.createTopic(ArgumentMatchers.any())).thenReturn(responseDto);
+
+    given()
+            .contentType(ContentType.JSON)
+            .body(request)
+            .when()
+            .put("/topics/" +  topicId)
+            .then()
+            .statusCode(200)
+            .body("title", is("New Title"));
+
+    verify(topicService).createTopic(ArgumentMatchers.any());
+  }
+
+  @Test
+  @TestSecurity(user = "regular-user", roles = "user")
+  public void testUpdateTopicForbiddenForRegularUser() {
+    TopicRequest request = new TopicRequest();
+    request.title = "Forbidden Title";
+
+    given()
+            .contentType(ContentType.JSON)
+            .body(request)
+            .when()
+            .put("/topics/" + UUID.randomUUID())
+            .then()
+            .statusCode(403);
+  }
+
+  @Test
+  @TestSecurity(user = "builder-user", roles = "builder")
   public void testDeleteTopic() {
 
     given().when().delete("/topics/" + UUID.randomUUID()).then().statusCode(200);
+  }
+
+  @Test
+  @TestSecurity(user = "user")
+  public void testGetTopicWithValidId() {
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.empty());
+
+    given()
+            .when()
+            .get("/topics/" + UUID.randomUUID())
+            .then()
+            .statusCode(400);
+  }
+
+  @Test
+  @TestSecurity(user = "user")
+  public void testGetTopicWithInvalidId() {
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+
+    given()
+            .when()
+            .get("/topics/" + UUID.randomUUID())
+            .then()
+            .statusCode(200);
   }
 }
