@@ -5,6 +5,7 @@ import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.requests.CreateTopicRequest;
 import java.util.List;
+import java.util.UUID;
 
 public interface TopicService {
 
@@ -13,4 +14,6 @@ public interface TopicService {
   List<ListTopicDto> findTopicsBySearchMax5(String search);
 
   TopicDto createTopic(CreateTopicRequest request);
+
+  void deleteTopic(UUID topicId);
 }

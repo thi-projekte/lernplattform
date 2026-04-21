@@ -13,6 +13,8 @@ import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import jakarta.ws.rs.NotFoundException;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -71,6 +73,24 @@ public final class TopicServiceImpl implements TopicService {
     updateContentAssignments(topic, request.contentElements);
 
     return mappingRegistry.map(topic, TopicDto.class);
+  }
+
+  @Override
+  @Transactional
+  public void deleteTopic(UUID topicId) {
+    Optional<Topic> topicOptional = topicRepository.findByIdOptional(topicId);
+    if (topicOptional.isEmpty()) {
+      throw new NotFoundException("No topic exists for the provided UUID");
+    }
+
+    Topic topic = topicOptional.get();
+
+    for (ContentElement contentElement : topic.contentElements) {
+      contentElementService.deleteContentElement(contentElement.id);
+    }
+
+    topicRepository.delete(topic);
+    topicRepository.flush();
   }
 
   private void updateContentAssignments(
