@@ -26,10 +26,13 @@ public final class TopicResource {
 
   @GET
   @Path("/personal")
+  @RolesAllowed("builder")
   public PaginationDto<ListTopicDto> getPersonalTopicsPaginated(
       @RestQuery int page, @RestQuery int pageSize) {
     return topicService.findPersonalTopicsPaginated(page, pageSize);
   }
+
+
 
   @GET
   public List<ListTopicDto> search(@RestQuery String search) {
