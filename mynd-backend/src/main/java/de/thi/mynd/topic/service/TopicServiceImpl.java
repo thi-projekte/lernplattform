@@ -8,22 +8,19 @@ import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
-import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
 import de.thi.mynd.topic.requests.TopicRequest;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public final class TopicServiceImpl implements TopicService {
 
   @Inject SecurityIdentity identity;
 
-  @Inject
-  MappingRegistry mappingRegistry;
+  @Inject MappingRegistry mappingRegistry;
 
   @Inject TopicRepository topicRepository;
 
@@ -70,7 +67,8 @@ public final class TopicServiceImpl implements TopicService {
   }
 
   @Override
-  public TopicDto updateTopic(UUID topicId, TopicRequest request) throws EntityInstanceNotFoundException {
+  public TopicDto updateTopic(UUID topicId, TopicRequest request)
+      throws EntityInstanceNotFoundException {
     Topic topic = getTopicByIdElseException(topicId);
 
     updateTopicFieldsAndAssociations(topic, request);
@@ -96,8 +94,8 @@ public final class TopicServiceImpl implements TopicService {
     topic.creatorId = identity.getPrincipal().getName();
     topic.categories = categoryService.findByAssociatedEntities(request.categories);
     topic.ownedAssociations =
-            topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
-                    topic, request.relatedTopics, identity.getPrincipal().getName());
+        topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
+            topic, request.relatedTopics, identity.getPrincipal().getName());
     topic.estimatedLearningDuration = request.estimatedLearningDuration;
     topic.teaser = request.teaser;
 

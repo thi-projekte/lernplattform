@@ -164,9 +164,10 @@ public class TopicServiceImplTest {
 
     UUID topicId = UUID.randomUUID();
 
-    Assertions.assertDoesNotThrow(() -> {
-      topicService.getTopic(topicId);
-    });
+    Assertions.assertDoesNotThrow(
+        () -> {
+          topicService.getTopic(topicId);
+        });
 
     verify(topicRepository, times(1)).findByIdOptional(topicId);
   }
@@ -177,9 +178,11 @@ public class TopicServiceImplTest {
 
     UUID topicId = UUID.randomUUID();
 
-    Assertions.assertThrows(EntityInstanceNotFoundException.class, () -> {
-      topicService.getTopic(topicId);
-    });
+    Assertions.assertThrows(
+        EntityInstanceNotFoundException.class,
+        () -> {
+          topicService.getTopic(topicId);
+        });
 
     verify(topicRepository, times(1)).findByIdOptional(topicId);
   }
@@ -204,20 +207,21 @@ public class TopicServiceImplTest {
     when(categoryService.findByAssociatedEntities(any())).thenReturn(new ArrayList<>());
     when(topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
             any(), any(), anyString()))
-            .thenReturn(new ArrayList<>());
+        .thenReturn(new ArrayList<>());
     when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
 
     UUID topicId = UUID.randomUUID();
 
     // Act
-    Assertions.assertDoesNotThrow(() -> {
-      topicService.updateTopic(topicId, request);
-    });
+    Assertions.assertDoesNotThrow(
+        () -> {
+          topicService.updateTopic(topicId, request);
+        });
 
     // Assert
     verify(topicRepository).persist(any(Topic.class));
     verify(contentElementService)
-            .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
+        .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
   }
 }
