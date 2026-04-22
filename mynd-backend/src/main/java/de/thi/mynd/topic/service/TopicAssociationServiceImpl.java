@@ -4,6 +4,7 @@ import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.entity.TopicAssociation;
 import de.thi.mynd.topic.repository.TopicAssociationRepository;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -27,7 +28,9 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
             topic.id, desiredTopics, username);
 
     Set<UUID> existingIds =
-        existingAssociations.stream().map(a -> a.id).collect(Collectors.toSet());
+        existingAssociations.stream().map(a -> a.foreignTopic.id).collect(Collectors.toSet());
+
+    Log.info(existingIds);
 
     List<UUID> idsToCreate =
         desiredTopics.stream().filter(id -> !existingIds.contains(id)).toList();
