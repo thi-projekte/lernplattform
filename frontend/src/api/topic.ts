@@ -153,8 +153,15 @@ const editTopic = async (topicId: string, topic: Partial<Topic>) => {
   });
 };
 
-export const useEditTopicMutation = (topicId: string) =>
-  useMutation({
+export const useEditTopicMutation = (topicId: string) => {
+
+  const queryClient = useQueryClient();
+
+  return useMutation({
     mutationKey: ['editTopic', topicId],
     mutationFn: (topic: Partial<Topic>) => editTopic(topicId, topic),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['topic', topicId]})
+    }
   });
+}

@@ -1,5 +1,5 @@
 import { Layout } from '../../components/layout.tsx';
-import { useQueryPersonalTopicsPaginated } from '../../api/topic.ts';
+import { useDeleteTopicMutation, useQueryPersonalTopicsPaginated } from '../../api/topic.ts';
 import { useState } from 'react';
 import type { PaginationState } from '@tanstack/react-table';
 import { Skeleton } from 'boneyard-js/react';
@@ -16,7 +16,8 @@ const BuilderModeListPage = () => {
 
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const columns = useTopicColumns(true, true, true);
+  const { mutate } = useDeleteTopicMutation();
+  const columns = useTopicColumns({editAction: true, deleteActionHandler: mutate});
 
   return (
     <Layout>
