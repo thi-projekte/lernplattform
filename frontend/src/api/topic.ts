@@ -146,3 +146,15 @@ export const useQueryTopic = (topicId: string, withOwnedRelatedTopics: boolean) 
     queryFn: () => fetchTopic(topicId, withOwnedRelatedTopics),
   });
 };
+
+const editTopic = async (topicId: string, topic: Partial<Topic>) => {
+  return await apiClient.put(`/topics/${topicId}`, topic, {
+    validateStatus: (status) => status <= 204,
+  });
+};
+
+export const useEditTopicMutation = (topicId: string) =>
+  useMutation({
+    mutationKey: ['editTopic', topicId],
+    mutationFn: (topic: Partial<Topic>) => editTopic(topicId, topic),
+  });

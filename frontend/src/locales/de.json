@@ -20,7 +20,9 @@
     "uri": "Url",
     "dropYourFileHere": "Legen Sie ihre Datei hier ab",
     "download": "Herunterladen",
-    "save": "Speichern"
+    "save": "Speichern",
+    "serverError": "Server Fehler",
+    "success": "Erfolg"
   },
   "topic": {
     "headings": {
@@ -53,7 +55,8 @@
     },
     "other": {
       "selectUpToThreeCategories": "Wähle bis zu drei Kategorien aus",
-      "searchByTitleOrTeaser": "Suche nach Titel oder Kurzbeschreibung"
+      "searchByTitleOrTeaser": "Suche nach Titel oder Kurzbeschreibung",
+      "successfullySavedTopic": "Thema erfolgreich gespeichert"
     },
     "contentElementType": {
       "label": "Typ",
