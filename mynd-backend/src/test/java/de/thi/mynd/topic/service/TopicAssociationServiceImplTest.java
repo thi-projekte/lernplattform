@@ -91,8 +91,11 @@ class TopicAssociationServiceImplTest {
     owningTopic.id = UUID.randomUUID();
     UUID id = UUID.randomUUID();
 
+    Topic foreignTopic = new Topic();
+    foreignTopic.id = id;
+
     TopicAssociation existing = new TopicAssociation();
-    existing.id = id;
+    existing.foreignTopic = foreignTopic;
 
     when(topicAssociationRepository.findOwningAssociationsByIdsAndUsername(any(), any(), any()))
         .thenReturn(new ArrayList<>(List.of(existing)));
