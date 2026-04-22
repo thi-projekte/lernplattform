@@ -74,6 +74,7 @@ public final class TopicServiceImpl implements TopicService {
   }
 
   @Override
+  @Transactional
   public TopicDto updateTopic(UUID topicId, TopicRequest request)
       throws EntityInstanceNotFoundException {
     Topic topic = getTopicByIdElseException(topicId);
