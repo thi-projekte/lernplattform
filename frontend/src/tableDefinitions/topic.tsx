@@ -12,9 +12,8 @@ interface TopicColumnProps {
   deleteActionHandler?: (topicId: string) => void;
 }
 
-export const useTopicColumns = ({editAction, deleteActionHandler}: TopicColumnProps) => {
+export const useTopicColumns = ({ editAction, deleteActionHandler }: TopicColumnProps) => {
   const { t } = useTranslation();
-
 
   const navigate = useNavigate();
 

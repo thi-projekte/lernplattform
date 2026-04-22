@@ -10,16 +10,14 @@ interface AssociatedTopicsStepProps {
 }
 
 const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) => {
-
-
   const removeTopic = (topicId: string) => {
     setTopic({
       ...topic,
       relatedTopics: (topic.relatedTopics ?? []).filter((ass) => ass.id !== topicId),
     });
-  }
+  };
 
-  const columns = useTopicColumns({deleteActionHandler: removeTopic});
+  const columns = useTopicColumns({ deleteActionHandler: removeTopic });
 
   return (
     <Stack>
