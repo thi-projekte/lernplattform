@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 
 import logo from '../assets/logo.png';
 import keycloak from '../keycloak.ts';
-import { routes } from '../routing.tsx';
+import { routes } from '../routing.ts';
 import { useLocation, useNavigate } from 'react-router';
 
 interface LayoutProps {

@@ -9,13 +9,14 @@ import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
+import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.ContentType;
 import de.thi.mynd.topic.entity.PdfElement;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
-import de.thi.mynd.topic.requests.CreateTopicRequest;
+import de.thi.mynd.topic.requests.TopicRequest;
 import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
@@ -83,7 +84,7 @@ public class TopicServiceImplTest {
     AssociatedEntityRequest category = new AssociatedEntityRequest();
     category.id = UUID.randomUUID();
 
-    CreateTopicRequest request = new CreateTopicRequest();
+    TopicRequest request = new TopicRequest();
     request.title = "New Topic";
     request.categories = List.of(category);
 
@@ -156,5 +157,96 @@ public class TopicServiceImplTest {
     verify(topicRepository, times(1)).findByIdOptional(topicId);
     verify(contentElementService, times(1)).deleteContentElement(contentElementId);
     verify(topicRepository, times(1)).delete(topic);
+  }
+
+  @Test
+  void testGetTopicWithValidId() {
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+
+    UUID topicId = UUID.randomUUID();
+
+    Assertions.assertDoesNotThrow(
+        () -> {
+          topicService.getTopic(topicId, false);
+        });
+
+    verify(topicRepository, times(1)).findByIdOptional(topicId);
+  }
+
+  @Test
+  void testGetTopicWithInvalidId() {
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.empty());
+
+    UUID topicId = UUID.randomUUID();
+
+    Assertions.assertThrows(
+        EntityInstanceNotFoundException.class,
+        () -> {
+          topicService.getTopic(topicId, false);
+        });
+
+    verify(topicRepository, times(1)).findByIdOptional(topicId);
+  }
+
+  @Test
+  void testUpdateTopic_WithFullOrchestration() {
+    // Arrange
+
+    AssociatedEntityRequest category = new AssociatedEntityRequest();
+    category.id = UUID.randomUUID();
+
+    TopicRequest request = new TopicRequest();
+    request.title = "New Topic";
+    request.categories = List.of(category);
+
+    UUID stayId = UUID.randomUUID();
+
+    AssociatedContentElementRequest stayReq = new AssociatedContentElementRequest();
+    stayReq.id = stayId;
+    request.contentElements = List.of(stayReq);
+
+    when(categoryService.findByAssociatedEntities(any())).thenReturn(new ArrayList<>());
+    when(topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
+            any(), any(), anyString()))
+        .thenReturn(new ArrayList<>());
+    when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+
+    UUID topicId = UUID.randomUUID();
+
+    // Act
+    Assertions.assertDoesNotThrow(
+        () -> {
+          topicService.updateTopic(topicId, request);
+        });
+
+    // Assert
+    verify(topicRepository).persist(any(Topic.class));
+    verify(contentElementService)
+        .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
+  }
+
+  @Test
+  void testGetOwnedRelatedTopicsForTopic() {
+    when(topicRepository.findByOwningTopicId(any())).thenReturn(List.of());
+
+    topicService.getOwnedRelatedTopicsForTopic(UUID.randomUUID());
+
+    verify(mappingRegistry, times(1)).mapList(any(), eq(ListTopicDto.class));
+  }
+
+  @Test
+  void testGetTopicMappingBasedOnWithOwnedRelatedTopicsFlag()
+      throws EntityInstanceNotFoundException {
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+    when(mappingRegistry.map(any(), eq(TopicWithOwnedRelatedTopicsDto.class)))
+        .thenReturn(TopicWithOwnedRelatedTopicsDto.builder().build());
+    when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
+
+    TopicDto topicDto1 = topicService.getTopic(UUID.randomUUID(), true);
+    TopicDto topicDto2 = topicService.getTopic(UUID.randomUUID(), false);
+
+    Assertions.assertInstanceOf(TopicWithOwnedRelatedTopicsDto.class, topicDto1);
+    Assertions.assertFalse(topicDto2 instanceof TopicWithOwnedRelatedTopicsDto);
   }
 }

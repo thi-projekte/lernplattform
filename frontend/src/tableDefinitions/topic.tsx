@@ -4,13 +4,18 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { Category, ListTopicDto } from '../schemas/topic.ts';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '../utils/date.ts';
-import { IconTrash } from '@tabler/icons-react';
-import { useDeleteTopicMutation } from '../api/topic.ts';
+import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { useNavigate } from 'react-router';
 
-export const useTopicColumns = (withActions = false, withDeleteAction = false) => {
+interface TopicColumnProps {
+  editAction?: boolean;
+  deleteActionHandler?: (topicId: string) => void;
+}
+
+export const useTopicColumns = ({ editAction, deleteActionHandler }: TopicColumnProps) => {
   const { t } = useTranslation();
 
-  const { mutate } = useDeleteTopicMutation();
+  const navigate = useNavigate();
 
   const columnHelper = createColumnHelper<ListTopicDto>();
   const columns: EntityTableProps<ListTopicDto>['columns'] = [
@@ -22,7 +27,7 @@ export const useTopicColumns = (withActions = false, withDeleteAction = false) =
       cell: (info) => (
         <Flex gap={3}>
           {info.getValue().map((category: Category) => (
-            <Badge color={category.color} variant="light">
+            <Badge color={category.color} variant="light" key={category.id}>
               {category.title}
             </Badge>
           ))}
@@ -44,14 +49,22 @@ export const useTopicColumns = (withActions = false, withDeleteAction = false) =
     }),
   ];
 
-  if (withActions) {
+  if (editAction || deleteActionHandler) {
     columns.push({
       id: 'actions',
       header: t('common.actions'),
       cell: ({ row }) => (
-        <Flex direction="row" gap={1}>
-          {withDeleteAction && (
-            <ActionIcon variant="default" onClick={() => mutate(row.original.id)}>
+        <Flex direction="row" gap={4}>
+          {editAction && (
+            <ActionIcon
+              variant="default"
+              onClick={() => navigate(`/builder-mode/topics/${row.original.id}/edit`)}
+            >
+              <IconPencil />
+            </ActionIcon>
+          )}
+          {deleteActionHandler && (
+            <ActionIcon variant="default" onClick={() => deleteActionHandler(row.original.id)}>
               <IconTrash />
             </ActionIcon>
           )}

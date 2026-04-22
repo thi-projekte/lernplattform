@@ -15,7 +15,7 @@ import ContentElementsDnd from '../../components/topic/content-elements-dnd.tsx'
 import { useCreateTopicMutation } from '../../api/topic.ts';
 import { useNavigate } from 'react-router';
 
-const CreateOrEditTopicPage = () => {
+const CreateTopicPage = () => {
   const { t } = useTranslation();
   const { isPending, mutateAsync } = useCreateTopicMutation();
   const navigate = useNavigate();
@@ -63,4 +63,4 @@ const CreateOrEditTopicPage = () => {
   );
 };
 
-export default CreateOrEditTopicPage;
+export default CreateTopicPage;

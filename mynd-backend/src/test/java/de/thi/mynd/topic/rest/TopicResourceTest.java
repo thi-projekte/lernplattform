@@ -6,11 +6,12 @@ import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.*;
 
 import de.thi.mynd.common.dto.PaginationDto;
+import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
-import de.thi.mynd.topic.requests.CreateTopicRequest;
+import de.thi.mynd.topic.requests.TopicRequest;
 import de.thi.mynd.topic.service.TopicService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
@@ -29,7 +30,7 @@ public class TopicResourceTest {
   @InjectMock TopicService topicService;
 
   @Test
-  @TestSecurity(user = "alice")
+  @TestSecurity(user = "alice", roles = "builder")
   public void testGetPersonalTopicsSuccess() {
     ListTopicDto dto =
         ListTopicDto.builder()
@@ -62,7 +63,7 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "bob")
+  @TestSecurity(user = "bob", roles = "builder")
   public void testPaginationParameters() {
     given()
         .queryParam("page", 5)
@@ -95,7 +96,7 @@ public class TopicResourceTest {
   @Test
   @TestSecurity(user = "builder-user", roles = "builder")
   public void testCreateTopicAsBuilderWithInvalidRequestBody() {
-    CreateTopicRequest request = new CreateTopicRequest();
+    TopicRequest request = new TopicRequest();
     request.title = "New Title";
 
     TopicDto responseDto = TopicDto.builder().title("New Title").build();
@@ -124,7 +125,7 @@ public class TopicResourceTest {
     AssociatedEntityRequest topic = new AssociatedEntityRequest();
     topic.id = UUID.randomUUID();
 
-    CreateTopicRequest request = new CreateTopicRequest();
+    TopicRequest request = new TopicRequest();
     request.title = "New Title";
     request.teaser = "Teaser";
     request.relatedTopics = List.of(topic);
@@ -151,7 +152,7 @@ public class TopicResourceTest {
   @Test
   @TestSecurity(user = "regular-user", roles = "user")
   public void testCreateTopicForbiddenForRegularUser() {
-    CreateTopicRequest request = new CreateTopicRequest();
+    TopicRequest request = new TopicRequest();
     request.title = "Forbidden Title";
 
     given()
@@ -165,8 +166,81 @@ public class TopicResourceTest {
 
   @Test
   @TestSecurity(user = "builder-user", roles = "builder")
+  public void testUpdateTopicAsBuilderWithValidRequestBody()
+      throws EntityInstanceNotFoundException {
+
+    UUID topicId = UUID.randomUUID();
+
+    AssociatedContentElementRequest contentElementRequest = new AssociatedContentElementRequest();
+    contentElementRequest.id = UUID.randomUUID();
+
+    AssociatedEntityRequest category = new AssociatedEntityRequest();
+    category.id = UUID.randomUUID();
+
+    AssociatedEntityRequest topic = new AssociatedEntityRequest();
+    topic.id = UUID.randomUUID();
+
+    TopicRequest request = new TopicRequest();
+    request.title = "New Title";
+    request.teaser = "Teaser";
+    request.relatedTopics = List.of(topic);
+    request.categories = List.of(category);
+    request.estimatedLearningDuration = 12;
+    request.contentElements = List.of(contentElementRequest);
+
+    TopicDto responseDto = TopicDto.builder().title("New Title").build();
+
+    when(topicService.updateTopic(ArgumentMatchers.any(), ArgumentMatchers.any()))
+        .thenReturn(responseDto);
+
+    given()
+        .contentType(ContentType.JSON)
+        .body(request)
+        .when()
+        .put("/topics/" + topicId)
+        .then()
+        .statusCode(200)
+        .body("title", is("New Title"));
+
+    verify(topicService).updateTopic(ArgumentMatchers.any(), ArgumentMatchers.any());
+  }
+
+  @Test
+  @TestSecurity(user = "regular-user", roles = "user")
+  public void testUpdateTopicForbiddenForRegularUser() {
+    TopicRequest request = new TopicRequest();
+    request.title = "Forbidden Title";
+
+    given()
+        .contentType(ContentType.JSON)
+        .body(request)
+        .when()
+        .put("/topics/" + UUID.randomUUID())
+        .then()
+        .statusCode(403);
+  }
+
+  @Test
+  @TestSecurity(user = "builder-user", roles = "builder")
   public void testDeleteTopic() {
 
     given().when().delete("/topics/" + UUID.randomUUID()).then().statusCode(200);
+  }
+
+  @Test
+  @TestSecurity(user = "user")
+  public void testGetTopicWithValidId() throws EntityInstanceNotFoundException {
+    when(topicService.getTopic(any(), eq(false))).thenReturn(TopicDto.builder().build());
+
+    given().when().get("/topics/" + UUID.randomUUID()).then().statusCode(200);
+  }
+
+  @Test
+  @TestSecurity(user = "user")
+  public void testGetTopicWithInvalidId() throws EntityInstanceNotFoundException {
+    when(topicService.getTopic(any(), eq(false)))
+        .thenThrow(new EntityInstanceNotFoundException(""));
+
+    given().when().get("/topics/" + UUID.randomUUID()).then().statusCode(404);
   }
 }

@@ -2,7 +2,8 @@
   "routes": {
     "dashboard": "Dashboard",
     "builderMode": "Builder Mode",
-    "createTopic": "Create topic"
+    "createTopic": "Create topic",
+    "editTopic": "Edit topic"
   },
   "common": {
     "rowsPerPage": "Rows per page",
@@ -18,7 +19,10 @@
     "create": "Create",
     "uri": "Url",
     "dropYourFileHere": "Drop your file here",
-    "download": "Download"
+    "download": "Download",
+    "save": "Save",
+    "serverError": "Server error",
+    "success": "Success"
   },
   "topic": {
     "headings": {
@@ -51,7 +55,8 @@
     },
     "other": {
       "selectUpToThreeCategories": "Select up to three categories",
-      "searchByTitleOrTeaser": "Search by title or teaser"
+      "searchByTitleOrTeaser": "Search by title or teaser",
+      "successfullySavedTopic": "Successfully saved topic"
     },
     "contentElementType": {
       "label": "Type",

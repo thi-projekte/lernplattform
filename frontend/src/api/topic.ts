@@ -8,6 +8,7 @@ import {
   PaginatedListTopicDtoSchema,
   type Topic,
   TopicCoreDataSchema,
+  TopicSchema,
 } from '../schemas/topic.ts';
 import type { PaginationState } from '@tanstack/react-table';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -124,6 +125,42 @@ export const useDeleteTopicMutation = () => {
     mutationFn: deleteTopic,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['personalTopics'] });
+    },
+  });
+};
+
+const fetchTopic = async (topicId: string, withOwnedRelatedTopics: boolean) => {
+  const result = await apiClient.get(
+    `/topics/${topicId}?withOwnedRelatedTopics=${withOwnedRelatedTopics}`,
+    {
+      validateStatus: (status) => status <= 204,
+    }
+  );
+
+  return TopicSchema.parse(result.data);
+};
+
+export const useQueryTopic = (topicId: string, withOwnedRelatedTopics: boolean) => {
+  return useQuery({
+    queryKey: ['topic', topicId, withOwnedRelatedTopics],
+    queryFn: () => fetchTopic(topicId, withOwnedRelatedTopics),
+  });
+};
+
+const editTopic = async (topicId: string, topic: Partial<Topic>) => {
+  return await apiClient.put(`/topics/${topicId}`, topic, {
+    validateStatus: (status) => status <= 204,
+  });
+};
+
+export const useEditTopicMutation = (topicId: string) => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ['editTopic', topicId],
+    mutationFn: (topic: Partial<Topic>) => editTopic(topicId, topic),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['topic', topicId] });
     },
   });
 };

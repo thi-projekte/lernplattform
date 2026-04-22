@@ -1,13 +1,14 @@
 package de.thi.mynd.topic.dto;
 
+import de.thi.mynd.topic.dto.content.ContentElementDto;
 import de.thi.mynd.topic.entity.Category;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import lombok.Builder;
+import lombok.experimental.SuperBuilder;
 
-@Builder
-public final class TopicDto {
+@SuperBuilder
+public class TopicDto {
 
   public UUID id;
   public String title;
@@ -17,4 +18,5 @@ public final class TopicDto {
   public String creatorFullName;
   public List<Category> categories;
   public int estimatedLearningDuration;
+  public List<ContentElementDto> contentElements;
 }

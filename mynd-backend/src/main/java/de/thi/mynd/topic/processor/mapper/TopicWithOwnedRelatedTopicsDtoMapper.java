@@ -1,20 +1,24 @@
 package de.thi.mynd.topic.processor.mapper;
 
 import de.thi.mynd.common.processor.AbstractMappingProcessor;
-import de.thi.mynd.topic.dto.TopicDto;
+import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.service.ContentElementService;
+import de.thi.mynd.topic.service.TopicService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public final class TopicDtoMapper extends AbstractMappingProcessor<Topic, TopicDto> {
+public final class TopicWithOwnedRelatedTopicsDtoMapper
+    extends AbstractMappingProcessor<Topic, TopicWithOwnedRelatedTopicsDto> {
 
   @Inject ContentElementService contentElementService;
 
+  @Inject TopicService topicService;
+
   @Override
-  public TopicDto mapAndEnrich(Topic entity) {
-    return TopicDto.builder()
+  public TopicWithOwnedRelatedTopicsDto mapAndEnrich(Topic entity) {
+    return TopicWithOwnedRelatedTopicsDto.builder()
         .id(entity.id)
         .title(entity.title)
         .teaser(entity.teaser)
@@ -24,6 +28,7 @@ public final class TopicDtoMapper extends AbstractMappingProcessor<Topic, TopicD
         .categories(entity.categories)
         .contentElements(contentElementService.getContentElementsForTopic(entity.id))
         .updatedAt(entity.updatedAt)
+        .relatedTopics(topicService.getOwnedRelatedTopicsForTopic(entity.id))
         .build();
   }
 
@@ -33,7 +38,7 @@ public final class TopicDtoMapper extends AbstractMappingProcessor<Topic, TopicD
   }
 
   @Override
-  public Class<TopicDto> getDtoType() {
-    return TopicDto.class;
+  public Class<TopicWithOwnedRelatedTopicsDto> getDtoType() {
+    return TopicWithOwnedRelatedTopicsDto.class;
   }
 }

@@ -4,9 +4,11 @@ import de.thi.mynd.common.service.FileAssociatedEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import java.util.List;
 
 @Entity
+@Table(name = "pdf_element")
 @DiscriminatorValue("PDF")
 public class PdfElement extends ContentElement implements FileAssociatedEntity {
 
