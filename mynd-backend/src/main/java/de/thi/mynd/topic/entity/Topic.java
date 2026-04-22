@@ -27,10 +27,10 @@ public class Topic extends BaseEntity {
       inverseJoinColumns = @JoinColumn(name = "category_id"))
   public List<Category> categories = new ArrayList<>();
 
-  @OneToMany(mappedBy = "owningTopic", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "owningTopic", cascade = CascadeType.ALL, orphanRemoval = true)
   public List<TopicAssociation> ownedAssociations = new ArrayList<>();
 
-  @OneToMany(mappedBy = "foreignTopic", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "foreignTopic", cascade = CascadeType.ALL, orphanRemoval = true)
   public List<TopicAssociation> foreignAssociations = new ArrayList<>();
 
   @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
