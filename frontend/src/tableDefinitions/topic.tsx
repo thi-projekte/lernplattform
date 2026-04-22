@@ -28,7 +28,7 @@ export const useTopicColumns = (
       cell: (info) => (
         <Flex gap={3}>
           {info.getValue().map((category: Category) => (
-            <Badge color={category.color} variant="light">
+            <Badge color={category.color} variant="light" key={category.id}>
               {category.title}
             </Badge>
           ))}

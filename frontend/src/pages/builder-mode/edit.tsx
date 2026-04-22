@@ -3,7 +3,7 @@ import { Layout } from '../../components/layout.tsx';
 import { Button, Container, Group, Tabs, Title } from '@mantine/core';
 import LoadingWrapper from '../../components/loading-wrapper.tsx';
 import { useEffect, useState } from 'react';
-import type { Topic } from '../../schemas/topic.ts';
+import { type Topic, TopicSchema } from '../../schemas/topic.ts';
 import { useEditTopicMutation, useQueryTopic } from '../../api/topic.ts';
 import { useParams } from 'react-router';
 import CoreDataStep from '../../components/topic/core-data-step.tsx';
@@ -21,6 +21,8 @@ const EditTopicPage = () => {
 
   const { mutateAsync, isPending } = useEditTopicMutation(topicId ?? '');
 
+  const canSave = TopicSchema.safeParse(topic).success;
+
   useEffect(() => {
     if (data && Object.keys(topic).length === 0) {
       // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -29,6 +31,7 @@ const EditTopicPage = () => {
   }, [data, topic]);
 
   const saveChanges = async () => {
+    if (!canSave) return;
     const result = await mutateAsync(topic);
     if (result.status < 204) {
       notifications.show({
@@ -47,7 +50,7 @@ const EditTopicPage = () => {
     <Layout>
       <Title mb={32}>{t('routes.editTopic')}</Title>
       <Container>
-        <LoadingWrapper isLoading={isLoading || !topic.title}>
+        <LoadingWrapper isLoading={isLoading || topic.title === undefined}>
           <Tabs defaultValue="coreData">
             <Tabs.List mb={16}>
               <Tabs.Tab value="coreData">{t('topic.steps.coreDataTitle')}</Tabs.Tab>
@@ -65,7 +68,7 @@ const EditTopicPage = () => {
             </Tabs.Panel>
           </Tabs>
           <Group justify="flex-end" mt="xl">
-            <Button loading={isPending} onClick={saveChanges}>
+            <Button loading={isPending} type="button" onClick={saveChanges} disabled={!canSave}>
               {t('common.save')}
             </Button>
           </Group>
