@@ -110,9 +110,8 @@ public final class TopicServiceImpl implements TopicService {
     topic.categories = categoryService.findByAssociatedEntities(request.categories);
     topic.ownedAssociations.clear();
     topic.ownedAssociations.addAll(
-            topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
-                    topic, request.relatedTopics, identity.getPrincipal().getName())
-    );
+        topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
+            topic, request.relatedTopics, identity.getPrincipal().getName()));
     topic.estimatedLearningDuration = request.estimatedLearningDuration;
     topic.teaser = request.teaser;
 
