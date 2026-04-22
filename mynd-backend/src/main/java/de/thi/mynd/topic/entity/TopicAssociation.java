@@ -12,7 +12,13 @@ public class TopicAssociation extends BaseEntity {
   @Column(nullable = false)
   public String creatorId;
 
-  @ManyToOne @JoinColumn(name = "owning_topic_id") @OnDelete(action = OnDeleteAction.CASCADE) public Topic owningTopic;
+  @ManyToOne(cascade = CascadeType.PERSIST)
+  @JoinColumn(name = "owning_topic_id")
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  public Topic owningTopic;
 
-  @ManyToOne @JoinColumn(name = "foreign_topic_id") @OnDelete(action = OnDeleteAction.CASCADE) public Topic foreignTopic;
+  @ManyToOne(cascade = CascadeType.PERSIST)
+  @JoinColumn(name = "foreign_topic_id")
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  public Topic foreignTopic;
 }
