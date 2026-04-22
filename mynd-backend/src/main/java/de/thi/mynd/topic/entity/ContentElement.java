@@ -6,6 +6,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
+@Table(name = "content_element")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
 public abstract class ContentElement extends BaseEntity {
