@@ -2,6 +2,8 @@ package de.thi.mynd.topic.entity;
 
 import de.thi.mynd.common.entity.BaseEntity;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -20,5 +22,6 @@ public abstract class ContentElement extends BaseEntity {
 
   @ManyToOne
   @JoinColumn(name = "topic_id")
+  @OnDelete(action = OnDeleteAction.CASCADE)
   public Topic topic;
 }
