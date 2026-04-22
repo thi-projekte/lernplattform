@@ -31,7 +31,7 @@ class TopicAssociationServiceImplTest {
     Topic owningTopic = new Topic();
     owningTopic.id = UUID.randomUUID();
 
-    // Wir wollen zwei Topics assoziieren
+    // Wir wollen zwei Topics assozieren
     UUID existingTopicId = UUID.randomUUID();
     UUID newTopicId = UUID.randomUUID();
 
@@ -41,10 +41,12 @@ class TopicAssociationServiceImplTest {
     req2.id = newTopicId;
     List<AssociatedEntityRequest> requested = List.of(req1, req2);
 
+    Topic foreignTopic = new Topic();
+    foreignTopic.id = existingTopicId;
+
     // Mock: Eines existiert bereits in der DB
     TopicAssociation existingAssoc = new TopicAssociation();
-    existingAssoc.id =
-        existingTopicId; // In der Logik wird die ID des foreignTopic zur Prüfung genutzt
+    existingAssoc.foreignTopic = foreignTopic;
     List<TopicAssociation> mockExisting = new ArrayList<>();
     mockExisting.add(existingAssoc);
 
@@ -71,7 +73,6 @@ class TopicAssociationServiceImplTest {
     verify(topicAssociationRepository, times(1)).persist(any(TopicAssociation.class));
     verify(mockEm).getReference(Topic.class, newTopicId);
 
-    // Stelle sicher, dass die neue Assoziation korrekt initialisiert wurde
     TopicAssociation newAssoc =
         result.stream()
             .filter(a -> a.creatorId != null && a.creatorId.equals(username))
