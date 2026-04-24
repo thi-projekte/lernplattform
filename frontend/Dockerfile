@@ -1,5 +1,7 @@
 FROM node:22-alpine AS build-stage
 
+RUN apk add --no-cache libc6-compat
+
 WORKDIR /app
 
 ARG VITE_KEYCLOAK_URL
