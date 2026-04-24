@@ -25,6 +25,7 @@ import ContentNode from '../../components/graph-view/content-node.tsx';
 import { useTranslation } from 'react-i18next';
 import ContentSidebarContent from '../../components/graph-view/sidebar/content-sidebar-content.tsx';
 import TopicSidebarContent from '../../components/graph-view/sidebar/topic-sidebar-content.tsx';
+import LayoutLoader from '../../components/layout-loader.tsx';
 
 
 const nodeTypes = {
@@ -124,13 +125,7 @@ const TopicDetailsPage = () => {
     };
 
     if (isLoading) {
-        return (
-            <Layout>
-                <Center h="100vh">
-                    <Loader />
-                </Center>
-            </Layout>
-        );
+        return <LayoutLoader />;
     }
 
     const isTopic = selectedElement && 'teaser' in selectedElement;
