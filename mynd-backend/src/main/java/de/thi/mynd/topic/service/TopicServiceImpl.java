@@ -106,6 +106,7 @@ public final class TopicServiceImpl implements TopicService {
 
   private void updateTopicFieldsAndAssociations(Topic topic, TopicRequest request) {
     topic.title = request.title;
+    topic.teaser = request.teaser;
     topic.creatorId = identity.getPrincipal().getName();
     topic.categories = categoryService.findByAssociatedEntities(request.categories);
     topic.ownedAssociations.clear();
@@ -113,7 +114,7 @@ public final class TopicServiceImpl implements TopicService {
         topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
             topic, request.relatedTopics, identity.getPrincipal().getName()));
     topic.estimatedLearningDuration = request.estimatedLearningDuration;
-    topic.teaser = request.teaser;
+
 
     topicRepository.persist(topic);
     topicRepository.flush();
