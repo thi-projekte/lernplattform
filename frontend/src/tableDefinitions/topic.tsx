@@ -4,15 +4,20 @@ import { createColumnHelper } from '@tanstack/react-table';
 import type { Category, ListTopicDto } from '../schemas/topic.ts';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '../utils/date.ts';
-import { IconPencil, IconTrash } from '@tabler/icons-react';
+import { IconEye, IconPencil, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 
 interface TopicColumnProps {
   editAction?: boolean;
   deleteActionHandler?: (topicId: string) => void;
+  viewAction?: boolean;
 }
 
-export const useTopicColumns = ({ editAction, deleteActionHandler }: TopicColumnProps) => {
+export const useTopicColumns = ({
+  editAction,
+  deleteActionHandler,
+  viewAction,
+}: TopicColumnProps) => {
   const { t } = useTranslation();
 
   const navigate = useNavigate();
@@ -49,12 +54,20 @@ export const useTopicColumns = ({ editAction, deleteActionHandler }: TopicColumn
     }),
   ];
 
-  if (editAction || deleteActionHandler) {
+  if (editAction || deleteActionHandler || viewAction) {
     columns.push({
       id: 'actions',
       header: t('common.actions'),
       cell: ({ row }) => (
         <Flex direction="row" gap={4}>
+          {viewAction && (
+            <ActionIcon
+              variant="default"
+              onClick={() => navigate(`/topics/${row.original.id}/details`)}
+            >
+              <IconEye />
+            </ActionIcon>
+          )}
           {editAction && (
             <ActionIcon
               variant="default"

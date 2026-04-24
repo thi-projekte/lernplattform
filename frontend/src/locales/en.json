@@ -22,7 +22,10 @@
     "download": "Download",
     "save": "Save",
     "serverError": "Server error",
-    "success": "Success"
+    "success": "Success",
+    "edit": "Edit",
+    "clickOnANodeToSeeContent": "Click on a node to see content",
+    "saveAndView": "Save and view"
   },
   "topic": {
     "headings": {

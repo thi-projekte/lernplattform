@@ -43,7 +43,9 @@ const ContentElementDisplay = ({ contentElement }: ContentElementDisplayProps) =
   if (contentElement.type === 'URI') {
     return (
       <Text>
-        <a href={(contentElement as UriElementDto).uri}>{contentElement.title}</a>
+        <a href={(contentElement as UriElementDto).uri} target="_blank" rel="noopener noreferrer">
+          {contentElement.title}
+        </a>
       </Text>
     );
   }
@@ -63,6 +65,7 @@ const ContentElementDisplay = ({ contentElement }: ContentElementDisplayProps) =
         <Button
           component="a"
           href={pdf.presignedUrl}
+          target="_blank"
           download
           leftSection={<IconDownload size={16} />}
           variant="light"

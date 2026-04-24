@@ -44,7 +44,8 @@ const CreateTopicPage = () => {
   ];
 
   const onComplete = async () => {
-    await mutateAsync(topic);
+    const result = await mutateAsync(topic);
+    console.log(result);
     navigate('/builder-mode');
   };
 
