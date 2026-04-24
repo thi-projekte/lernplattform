@@ -5,6 +5,7 @@ import type { ComponentType } from 'react';
 import { IconHammer, IconHome, type IconProps } from '@tabler/icons-react';
 import CreateTopicPage from './pages/builder-mode/create.tsx';
 import EditTopicPage from './pages/builder-mode/edit.tsx';
+import TopicDetailsPage from './pages/topic/details.tsx';
 
 export interface TypedMyndRoute extends BaseRouteObject {
   isSidebar?: boolean;
@@ -37,6 +38,11 @@ export const routes: TypedMyndRoute[] = [
     Component: EditTopicPage,
     translation: 'editTopic',
   },
+  {
+    path: '/topics/:topicId/details',
+    Component: TopicDetailsPage,
+    translation: 'topicDetails'
+  }
 ];
 
 export const router = createBrowserRouter(routes);
