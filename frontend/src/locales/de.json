@@ -43,7 +43,8 @@
     "errors": {
       "titleMissing": "Titel fehlt",
       "minOneCategory": "Mindestens eine Kategorie auswählen",
-      "maxThreeCategory": "Maximal drei Kategorien auswählen"
+      "maxThreeCategory": "Maximal drei Kategorien auswählen",
+      "teaserTooLong": "Kurzbeschreibung darf maximal 512 Zeichen haben"
     },
     "steps": {
       "coreDataTitle": "Stammdaten",
