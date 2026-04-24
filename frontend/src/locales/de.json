@@ -1,5 +1,77 @@
 {
+  "routes": {
+    "dashboard": "Dashboard",
+    "builderMode": "Builder Modus",
+    "createTopic": "Thema erstellen",
+    "editTopic": "Thema bearbeiten"
+  },
   "common": {
-    "builderMode": "Builder Modus"
+    "rowsPerPage": "Einträge pro Seite",
+    "noEntriesFound": "Keine Enträge gefunden",
+    "updatedAt": "Zuletzt aktualisiert",
+    "actions": "Aktionen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "nothingFound": "Keine Einträge gefunden",
+    "shouldNotBeEmpty": "Feld sollte nicht leer sein",
+    "creatorFullName": "Ersteller",
+    "cancel": "Abbrechen",
+    "create": "Erstellen",
+    "uri": "Url",
+    "dropYourFileHere": "Legen Sie ihre Datei hier ab",
+    "download": "Herunterladen",
+    "save": "Speichern",
+    "serverError": "Server Fehler",
+    "success": "Erfolg",
+    "edit": "Bearbeiten",
+    "clickOnANodeToSeeContent": "Klicke auf einen Knoten um den Inhalt zu sehen",
+    "saveAndView": "Speichern und ansehen"
+  },
+  "topic": {
+    "headings": {
+      "personalTopics": "Eigene Themen",
+      "createContentElement": "Inhalt anlegen"
+    },
+    "actions": {
+      "create": "Thema erstellen",
+      "createContentElement": "Inhalt anlegen"
+    },
+    "fields": {
+      "title": "Titel",
+      "categories": "Kategorien",
+      "teaser": "Kurzbeschreibung",
+      "estimatedLearningDuration": "Geschätzte Lerndauer",
+      "contentElementTitle": "Titel"
+    },
+    "errors": {
+      "titleMissing": "Titel fehlt",
+      "minOneCategory": "Mindestens eine Kategorie auswählen",
+      "maxThreeCategory": "Maximal drei Kategorien auswählen"
+    },
+    "steps": {
+      "coreDataTitle": "Stammdaten",
+      "coreDataDescription": "Eingabe der Stammdatem",
+      "associatedTopicsTitle": "Benachbarte Themen",
+      "associatedTopicsDescription": "Benachbarte Themen auswählen",
+      "contentElementsTitle": "Inhalte",
+      "contentElementsDescription": "Erstellen Sie ihre Lerninhalte"
+    },
+    "other": {
+      "selectUpToThreeCategories": "Wähle bis zu drei Kategorien aus",
+      "searchByTitleOrTeaser": "Suche nach Titel oder Kurzbeschreibung",
+      "successfullySavedTopic": "Thema erfolgreich gespeichert"
+    },
+    "contentElementType": {
+      "label": "Typ",
+      "placeholder": "Bitte auswählen",
+      "PDF": "PDF",
+      "AUDIO_FILE": "Audio Datei",
+      "VIDEO_FILE": "Video Datei",
+      "RTF": "Rich text",
+      "SPOTIFY_LINK": "Spotify",
+      "YOUTUBE_LINK": "YouTube",
+      "URI": "URL",
+      "IMAGE": "Bild"
+    }
   }
 }
