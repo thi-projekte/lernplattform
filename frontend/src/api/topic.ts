@@ -137,6 +137,10 @@ const fetchTopic = async (topicId: string, withOwnedRelatedTopics: boolean) => {
     }
   );
 
+  if (false === withOwnedRelatedTopics) {
+    return TopicSchema.omit({ relatedTopics: true }).parse(result.data);
+  }
+
   return TopicSchema.parse(result.data);
 };
 
