@@ -29,7 +29,7 @@ const HexagonIcon = ({ color, children, size = 100 }: any) => {
                     filter="url(#shadow)"
                 />
             </svg>
-            <div style={{ position: 'relative', zIndex: 1, color: 'white' }}>{children}</div>
+            <div style={{ position: 'relative', zIndex: 1, color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{children}</div>
         </div>
     );
 };

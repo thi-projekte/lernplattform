@@ -1,12 +1,9 @@
-import { IconBrandSpotifyFilled, IconBrandYoutubeFilled, IconFileDescription, IconHeadphonesFilled, IconLink, IconPhoto, IconVideo } from "@tabler/icons-react";
+import { IconBrandSpotify, IconBrandYoutube, IconFileDescription, IconHeadphones, IconLink, IconPhoto, IconVideo } from "@tabler/icons-react";
 import type { AnyContentElementDto, ContentElementType } from "../../schemas/content-element";
 import HexagonNode from "./hexagon-node";
-import type { NodeProps } from "@xyflow/react";
+import type { NodeProps, Node } from "@xyflow/react";
 
-
-interface ContentNodeProps extends NodeProps {
-    contentElement: AnyContentElementDto;
-}
+type ContentNodeProps = NodeProps<Node<AnyContentElementDto>>;
 
 const getIconForType = (type: ContentElementType) => {
     switch (type) {
@@ -15,11 +12,11 @@ const getIconForType = (type: ContentElementType) => {
         case 'VIDEO_FILE':
             return IconVideo;
         case 'YOUTUBE_LINK':
-            return IconBrandYoutubeFilled;
+            return IconBrandYoutube;
         case 'AUDIO_FILE':
-            return IconHeadphonesFilled;
+            return IconHeadphones;
         case 'SPOTIFY_LINK':
-            return IconBrandSpotifyFilled;
+            return IconBrandSpotify;
         case 'IMAGE':
             return IconPhoto;
         case 'URI':
@@ -29,9 +26,8 @@ const getIconForType = (type: ContentElementType) => {
     }
 };
 
-const ContentNode = ({ contentElement, ...props }: ContentNodeProps) => {
-
-    return <HexagonNode Icon={getIconForType(contentElement.type)} label={contentElement.title} color="#1c7ed6" iconSize={24} labelSize="sm" {...props} />;
+const ContentNode = ({ data, ...props }: ContentNodeProps) => {
+    return <HexagonNode Icon={getIconForType(data.type)} label={data.title} color="#1c7ed6" size={48} labelSize="xs" labelFontWeight={500} {...props} />;
 };
 
 export default ContentNode;

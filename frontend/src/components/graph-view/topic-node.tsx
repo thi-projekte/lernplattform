@@ -1,15 +1,12 @@
 import { IconBook } from "@tabler/icons-react";
 import type { Topic } from "../../schemas/topic";
 import HexagonNode from "./hexagon-node";
-import type { NodeProps } from "@xyflow/react";
+import type { NodeProps, Node } from "@xyflow/react";
 
+type TopicNodeProps = NodeProps<Node<Topic>>;
 
-interface TopicNodeProps extends NodeProps {
-    topic: Topic;
-}
-
-const TopicNode = ({ topic, ...props }: TopicNodeProps) => (
-    <HexagonNode label={topic.title} color="#e03131" Icon={IconBook} labelSize="md" iconSize={50} {...props} />
+const TopicNode = ({ data, ...props }: TopicNodeProps) => (
+    <HexagonNode label={data.title} color="#e03131" Icon={IconBook} labelSize="sm" labelFontWeight={700} size={80} {...props} />
 )
 
 export default TopicNode;
