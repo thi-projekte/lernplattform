@@ -115,7 +115,6 @@ public final class TopicServiceImpl implements TopicService {
             topic, request.relatedTopics, identity.getPrincipal().getName()));
     topic.estimatedLearningDuration = request.estimatedLearningDuration;
 
-
     topicRepository.persist(topic);
     topicRepository.flush();
 
