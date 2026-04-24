@@ -3,7 +3,7 @@ import { useQueryTopic } from '../../api/topic.ts';
 import { ReactFlow, Controls, Background, type Node, type Edge, MarkerType } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { Layout } from '../../components/layout.tsx';
-import { Loader, Center, Paper, Text, Stack } from '@mantine/core';
+import { Paper, Text, Stack } from '@mantine/core';
 import { useMemo, useState } from 'react';
 import type { Topic } from '../../schemas/topic.ts';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
@@ -104,7 +104,7 @@ const TopicDetailsPage = () => {
     return { nodes, edges };
   }, [topic]);
 
-  const onNodeClick = (_event: any, node: Node) => {
+  const onNodeClick = (_event: React.MouseEvent, node: Node) => {
     if (node.id === 'topic-root') {
       setSelectedElement(topic || null);
     } else if (node.id.startsWith('content-')) {

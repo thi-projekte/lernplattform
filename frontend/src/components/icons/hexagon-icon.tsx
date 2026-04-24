@@ -1,4 +1,11 @@
-const HexagonIcon = ({ color, children, size = 100, selected }: any) => {
+interface HexagonIconProps {
+  color: string;
+  children: React.ReactNode;
+  size?: number;
+  selected?: boolean;
+}
+
+const HexagonIcon = ({ color, children, size = 100, selected }: HexagonIconProps) => {
   return (
     <div
       style={{
