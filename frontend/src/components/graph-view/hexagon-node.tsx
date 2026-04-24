@@ -11,10 +11,11 @@ interface HexagonNodeProps {
     labelSize: TextProps['size'];
     labelFontWeight?: number;
     subLabel?: string;
+    selected?: boolean;
 }
 
 
-const HexagonNode = ({ Icon, color, size, label, labelFontWeight, subLabel, labelSize }: HexagonNodeProps) => (
+const HexagonNode = ({ Icon, color, size, label, labelFontWeight, subLabel, labelSize, selected }: HexagonNodeProps) => (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', width: Math.max(120, size * 1.5) }}>
         <Handle type="target" position={Position.Top} id="top" style={{ opacity: 0 }} />
         <Handle type="target" position={Position.Right} id="right" style={{ opacity: 0 }} />
@@ -26,7 +27,7 @@ const HexagonNode = ({ Icon, color, size, label, labelFontWeight, subLabel, labe
         <Handle type="source" position={Position.Bottom} id="bottom" style={{ opacity: 0 }} />
         <Handle type="source" position={Position.Left} id="left" style={{ opacity: 0 }} />
 
-        <HexagonIcon color={color} size={size}>
+        <HexagonIcon color={color} size={size} selected={selected}>
             <Icon size={size * 0.5} />
         </HexagonIcon>
 
