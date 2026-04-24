@@ -37,6 +37,7 @@ const TopicCoreDataStep = ({ topic, setTopic }: TopicCoreDataStepProps) => {
         label={t('topic.fields.teaser')}
         withAsterisk
         key={form.key('teaser')}
+        maxLength={512}
         {...form.getInputProps('teaser')}
       />
       <CategorySelect key={form.key('categories')} {...form.getInputProps('categories')} />
