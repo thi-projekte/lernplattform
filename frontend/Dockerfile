@@ -1,6 +1,4 @@
-FROM node:22-alpine AS build-stage
-
-RUN apk add --no-cache libc6-compat
+FROM node:22-slim AS build-stage
 
 WORKDIR /app
 
@@ -16,7 +14,7 @@ ENV VITE_KEYCLOAK_CLIENT_ID=$VITE_KEYCLOAK_CLIENT_ID
 ENV VITE_MYND_BACKEND_URI=$VITE_MYND_BACKEND_URI
 
 COPY package*.json ./
-RUN npm i
+RUN npm install --platform=linux --arch=x64
 
 COPY . .
 RUN npm run build
