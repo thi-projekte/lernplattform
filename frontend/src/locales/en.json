@@ -22,7 +22,8 @@
     "download": "Download",
     "save": "Save",
     "serverError": "Server error",
-    "success": "Success"
+    "success": "Success",
+    "edit": "Edit"
   },
   "topic": {
     "headings": {

@@ -4,8 +4,6 @@ import {
     ReactFlow,
     Controls,
     Background,
-    useNodesState,
-    useEdgesState,
     type Node,
     type Edge,
     MarkerType,
@@ -26,11 +24,15 @@ import {
 import {
     IconEdit,
 } from '@tabler/icons-react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { Topic } from '../../schemas/topic.ts';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import TopicNode from '../../components/graph-view/topic-node.tsx';
 import ContentNode from '../../components/graph-view/content-node.tsx';
+import ContentElementDisplay from '../../components/topic/content-element-display.tsx';
+import { useTranslation } from 'react-i18next';
+import ContentSidebarContent from '../../components/graph-view/sidebar/content-sidebar-content.tsx';
+import TopicSidebarContent from '../../components/graph-view/sidebar/topic-sidebar-content.tsx';
 
 
 const nodeTypes = {
@@ -58,6 +60,9 @@ const getOppositeHandle = (handle: string) => {
 };
 
 const TopicDetailsPage = () => {
+
+    const { t } = useTranslation();
+
     const { topicId } = useParams<{ topicId: string }>();
     const navigate = useNavigate();
     const { data: topic, isLoading, error } = useQueryTopic(topicId || '', false);
@@ -161,53 +166,10 @@ const TopicDetailsPage = () => {
                 <Paper shadow="md" p="xl" style={{ width: 400, borderLeft: '1px solid #e9ecef', overflowY: 'auto' }}>
                     {selectedElement ? (
                         <Stack gap="md">
-                            <Title order={3}>{selectedElement.title}</Title>
-
                             {isTopic ? (
-                                <>
-                                    <Group>
-                                        {(selectedElement as Topic).categories?.map((cat, i) => (
-                                            <Badge key={i} color={cat.color || 'blue'}>
-                                                {cat.title}
-                                            </Badge>
-                                        ))}
-                                    </Group>
-                                    <Text size="sm" c="dimmed">
-                                        Lernzeit: {(selectedElement as Topic).estimatedLearningDuration} Minuten
-                                    </Text>
-                                    <Text size="sm">{(selectedElement as Topic).teaser}</Text>
-
-                                    <Button
-                                        leftSection={<IconEdit size={16} />}
-                                        variant="light"
-                                        color="blue"
-                                        fullWidth
-                                        mt="xl"
-                                        onClick={() => navigate(`/builder-mode/topics/${topicId}/edit`)}
-                                    >
-                                        Detailseite / Bearbeiten
-                                    </Button>
-                                </>
+                                <TopicSidebarContent selectedElement={selectedElement as Topic} />
                             ) : (
-                                <>
-                                    <Badge color="teal">{(selectedElement as AnyContentElementDto).type}</Badge>
-                                    <Text size="sm" c="dimmed">
-                                        Dies ist ein Inhaltselement vom Typ {(selectedElement as AnyContentElementDto).type}.
-                                    </Text>
-                                    {'originalFileName' in selectedElement && (
-                                        <Text size="sm">
-                                            <b>Dateiname:</b> {(selectedElement as any).originalFileName}
-                                        </Text>
-                                    )}
-                                    {'uri' in selectedElement && (
-                                        <Text size="sm" style={{ wordBreak: 'break-all' }}>
-                                            <b>Link:</b>{' '}
-                                            <a href={(selectedElement as any).uri} target="_blank" rel="noreferrer">
-                                                {(selectedElement as any).uri}
-                                            </a>
-                                        </Text>
-                                    )}
-                                </>
+                                <ContentSidebarContent selectedElement={selectedElement as AnyContentElementDto} />
                             )}
                         </Stack>
                     ) : (
