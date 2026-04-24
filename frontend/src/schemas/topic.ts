@@ -26,7 +26,9 @@ export type PaginatedListTopicDto = z.infer<typeof PaginatedListTopicDtoSchema>;
 
 export const TopicCoreDataSchema = z.object({
   title: z.string({ error: i18n.t('topic.errors.titleMissing') }),
-  teaser: z.string({ error: i18n.t('common.shouldNotBeEmpty') }).max(512,{error: i18n.t('topic.errors.teaserTooLong')}),
+  teaser: z
+    .string({ error: i18n.t('common.shouldNotBeEmpty') })
+    .max(512, { error: i18n.t('topic.errors.teaserTooLong') }),
   categories: z
     .array(CategorySchema)
     .min(1, { error: i18n.t('topic.errors.minOneCategory') })
