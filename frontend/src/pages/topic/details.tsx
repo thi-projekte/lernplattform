@@ -24,8 +24,6 @@ import {
   Badge,
   Group,
   Stack,
-  Card,
-  ThemeIcon,
 } from '@mantine/core';
 import {
   IconEdit,
@@ -137,7 +135,7 @@ const TopicDetailsPage = () => {
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
-  const [selectedElement, setSelectedElement] = useState<AnyContentElementDto | Topic | null>(null);
+  const [selectedElement, setSelectedElement] = useState<AnyContentElementDto | Omit<Topic, 'relatedTopics'> | null>(null);
 
   useEffect(() => {
     if (topic) {
@@ -153,7 +151,12 @@ const TopicDetailsPage = () => {
       });
 
       const radius = 300;
-      const numContents = topic.contentElements?.length || 0;
+      
+      const sortedContents = [...(topic.contentElements || [])].sort((a, b) => {
+        const rankA = a.rank ?? Infinity;
+        const rankB = b.rank ?? Infinity;
+        return rankA - rankB;
+      });
 
       const getHandleForAngle = (angle: number) => {
         const a = ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
@@ -173,9 +176,11 @@ const TopicDetailsPage = () => {
         }
       };
 
-      topic.contentElements?.forEach((content, index) => {
+      sortedContents.forEach((content, index) => {
         const id = `content-${index}`;
-        const angle = (index / numContents) * 2 * Math.PI - Math.PI / 2;
+        // Fixed step of 30 degrees (1 hour on the clock)
+        const angleStep = Math.PI / 6; 
+        const angle = (index * angleStep) - Math.PI / 2;
         const x = 400 + radius * Math.cos(angle);
         const y = 300 + radius * Math.sin(angle);
 
