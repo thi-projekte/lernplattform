@@ -23,7 +23,8 @@
     "save": "Speichern",
     "serverError": "Server Fehler",
     "success": "Erfolg",
-    "edit": "Bearbeiten"
+    "edit": "Bearbeiten",
+    "clickOnANodeToSeeContent": "Klicke auf einen Knoten um den Inhalt zu sehen"
   },
   "topic": {
     "headings": {

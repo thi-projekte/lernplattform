@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from 'react-router';
+import { useParams } from 'react-router';
 import { useQueryTopic } from '../../api/topic.ts';
 import {
     ReactFlow,
@@ -14,22 +14,14 @@ import {
     Loader,
     Center,
     Paper,
-    Title,
     Text,
-    Button,
-    Badge,
-    Group,
     Stack,
 } from '@mantine/core';
-import {
-    IconEdit,
-} from '@tabler/icons-react';
 import { useMemo, useState } from 'react';
 import type { Topic } from '../../schemas/topic.ts';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import TopicNode from '../../components/graph-view/topic-node.tsx';
 import ContentNode from '../../components/graph-view/content-node.tsx';
-import ContentElementDisplay from '../../components/topic/content-element-display.tsx';
 import { useTranslation } from 'react-i18next';
 import ContentSidebarContent from '../../components/graph-view/sidebar/content-sidebar-content.tsx';
 import TopicSidebarContent from '../../components/graph-view/sidebar/topic-sidebar-content.tsx';
@@ -64,8 +56,7 @@ const TopicDetailsPage = () => {
     const { t } = useTranslation();
 
     const { topicId } = useParams<{ topicId: string }>();
-    const navigate = useNavigate();
-    const { data: topic, isLoading, error } = useQueryTopic(topicId || '', false);
+    const { data: topic, isLoading } = useQueryTopic(topicId || '', false);
 
     const [selectedElement, setSelectedElement] = useState<AnyContentElementDto | Omit<Topic, 'relatedTopics'> | null>(null);
 
@@ -173,7 +164,7 @@ const TopicDetailsPage = () => {
                             )}
                         </Stack>
                     ) : (
-                        <Text c="dimmed">Klicke auf einen Node, um Details zu sehen.</Text>
+                        <Text c="dimmed">{t('common.clickOnANodeToSeeContent')}</Text>
                     )}
                 </Paper>
             </div>

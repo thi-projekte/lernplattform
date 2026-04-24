@@ -23,7 +23,8 @@
     "save": "Save",
     "serverError": "Server error",
     "success": "Success",
-    "edit": "Edit"
+    "edit": "Edit",
+    "clickOnANodeToSeeContent": "Click on a node to see content"
   },
   "topic": {
     "headings": {
