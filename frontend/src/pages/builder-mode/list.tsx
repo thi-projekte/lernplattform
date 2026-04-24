@@ -17,7 +17,7 @@ const BuilderModeListPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { mutate } = useDeleteTopicMutation();
-  const columns = useTopicColumns({ editAction: true, deleteActionHandler: mutate });
+  const columns = useTopicColumns({ editAction: true, deleteActionHandler: mutate, viewAction: true });
 
   return (
     <Layout>
