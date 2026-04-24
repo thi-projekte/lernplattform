@@ -142,7 +142,7 @@ const TopicDetailsPage = () => {
                         fitView
                         nodesDraggable={false}
                         nodesConnectable={false}
-                        fitViewOptions={{ padding: 0.5 }}
+                        fitViewOptions={{ padding: 0.2 }}
                     >
                         <Controls showInteractive={false} />
                         <Background color="#dee2e6" gap={16} />
