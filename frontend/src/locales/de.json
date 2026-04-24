@@ -24,7 +24,8 @@
     "serverError": "Server Fehler",
     "success": "Erfolg",
     "edit": "Bearbeiten",
-    "clickOnANodeToSeeContent": "Klicke auf einen Knoten um den Inhalt zu sehen"
+    "clickOnANodeToSeeContent": "Klicke auf einen Knoten um den Inhalt zu sehen",
+    "saveAndView": "Speichern und ansehen"
   },
   "topic": {
     "headings": {

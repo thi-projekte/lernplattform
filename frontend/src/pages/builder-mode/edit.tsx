@@ -5,7 +5,7 @@ import LoadingWrapper from '../../components/loading-wrapper.tsx';
 import { useEffect, useState } from 'react';
 import { type Topic, TopicSchema } from '../../schemas/topic.ts';
 import { useEditTopicMutation, useQueryTopic } from '../../api/topic.ts';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import CoreDataStep from '../../components/topic/core-data-step.tsx';
 import AssociatedTopicsStep from '../../components/topic/associated-topics-step.tsx';
 import ContentElementsDnd from '../../components/topic/content-elements-dnd.tsx';
@@ -13,6 +13,7 @@ import { notifications } from '@mantine/notifications';
 
 const EditTopicPage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { topicId } = useParams<{ topicId: string }>();
 
   const [topic, setTopic] = useState<Partial<Topic>>({});
@@ -30,7 +31,7 @@ const EditTopicPage = () => {
     }
   }, [data, topic]);
 
-  const saveChanges = async () => {
+  const saveChanges = async (saveAndView: boolean) => {
     if (!canSave) return;
     const result = await mutateAsync(topic);
     if (result.status < 204) {
@@ -39,6 +40,11 @@ const EditTopicPage = () => {
         message: t('topic.other.successfullySavedTopic'),
         color: 'green',
       });
+
+      if (saveAndView) {
+        navigate(`/topics/${topicId}/details`);
+      }
+
     } else {
       notifications.show({
         message: t('common.serverError'),
@@ -68,8 +74,11 @@ const EditTopicPage = () => {
             </Tabs.Panel>
           </Tabs>
           <Group justify="flex-end" mt="xl">
-            <Button loading={isPending} type="button" onClick={saveChanges} disabled={!canSave}>
+            <Button loading={isPending} type="button" onClick={() => saveChanges(false)} disabled={!canSave}>
               {t('common.save')}
+            </Button>
+            <Button loading={isPending} type="button" variant='outline' onClick={() => saveChanges(true)} disabled={!canSave}>
+              {t('common.saveAndView')}
             </Button>
           </Group>
         </LoadingWrapper>
