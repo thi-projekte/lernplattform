@@ -23,6 +23,7 @@
     "fileTooLarge": "File is too large. Maximum allowed: {{size}}",
     "fileRejected": "File could not be uploaded",
     "download": "Download",
+    "delete": "Delete",
     "save": "Save",
     "serverError": "Server error",
     "success": "Success",
