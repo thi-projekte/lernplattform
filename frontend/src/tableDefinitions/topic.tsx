@@ -13,7 +13,11 @@ interface TopicColumnProps {
   viewAction?: boolean;
 }
 
-export const useTopicColumns = ({ editAction, deleteActionHandler, viewAction }: TopicColumnProps) => {
+export const useTopicColumns = ({
+  editAction,
+  deleteActionHandler,
+  viewAction,
+}: TopicColumnProps) => {
   const { t } = useTranslation();
 
   const navigate = useNavigate();
@@ -77,7 +81,6 @@ export const useTopicColumns = ({ editAction, deleteActionHandler, viewAction }:
               <IconTrash />
             </ActionIcon>
           )}
-
         </Flex>
       ),
     });

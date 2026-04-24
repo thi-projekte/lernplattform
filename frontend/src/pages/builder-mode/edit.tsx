@@ -44,7 +44,6 @@ const EditTopicPage = () => {
       if (saveAndView) {
         navigate(`/topics/${topicId}/details`);
       }
-
     } else {
       notifications.show({
         message: t('common.serverError'),
@@ -77,10 +76,21 @@ const EditTopicPage = () => {
           </Tabs.Panel>
         </Tabs>
         <Group justify="flex-end" mt="xl">
-          <Button loading={isPending} type="button" onClick={() => saveChanges(false)} disabled={!canSave}>
+          <Button
+            loading={isPending}
+            type="button"
+            onClick={() => saveChanges(false)}
+            disabled={!canSave}
+          >
             {t('common.save')}
           </Button>
-          <Button loading={isPending} type="button" variant='outline' onClick={() => saveChanges(true)} disabled={!canSave}>
+          <Button
+            loading={isPending}
+            type="button"
+            variant="outline"
+            onClick={() => saveChanges(true)}
+            disabled={!canSave}
+          >
             {t('common.saveAndView')}
           </Button>
         </Group>

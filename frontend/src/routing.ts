@@ -41,8 +41,8 @@ export const routes: TypedMyndRoute[] = [
   {
     path: '/topics/:topicId/details',
     Component: TopicDetailsPage,
-    translation: 'topicDetails'
-  }
+    translation: 'topicDetails',
+  },
 ];
 
 export const router = createBrowserRouter(routes);
