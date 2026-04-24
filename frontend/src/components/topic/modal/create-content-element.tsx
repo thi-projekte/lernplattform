@@ -31,6 +31,7 @@ interface CreateContentElementModalProps {
 const typesWithFile: ContentElementType[] = ['AUDIO_FILE', 'PDF', 'VIDEO_FILE', 'IMAGE'];
 const typesWithUri: ContentElementType[] = ['URI', 'SPOTIFY_LINK', 'YOUTUBE_LINK'];
 const typesWithRtfEditor: ContentElementType[] = ['RTF'];
+const MB = 1024 ** 2;
 
 /* eslint-disable-next-line */
 export const allowedFileTypes: Partial<Record<ContentElementType, string[]>> = {
@@ -38,6 +39,13 @@ export const allowedFileTypes: Partial<Record<ContentElementType, string[]>> = {
   PDF: [MIME_TYPES.pdf],
   VIDEO_FILE: [MIME_TYPES.mp4, 'video/quicktime', 'video/x-msvideo'],
   IMAGE: [MIME_TYPES.png, MIME_TYPES.jpeg, MIME_TYPES.svg, MIME_TYPES.gif],
+};
+
+const maxFileSizes: Partial<Record<ContentElementType, number>> = {
+  PDF: 10 * MB,
+  AUDIO_FILE: 20 * MB,
+  IMAGE: 10 * MB,
+  VIDEO_FILE: 100 * MB,
 };
 
 const requestValidatorMapping: Record<ContentElementType, ZodObject> = {
@@ -109,15 +117,24 @@ const CreateContentElementModal = ({
               form.setFieldValue('file', null);
               form.setFieldValue('uri', '');
               form.setFieldValue('rtfText', '');
+              form.clearFieldError('file');
             }}
             required
           />
           {form.values.type && typesWithFile.includes(form.values.type) && (
             <SingleFileDropzone
               acceptedTypes={allowedFileTypes[form.values.type] ?? []}
+              maxFileSize={maxFileSizes[form.values.type]}
+              error={form.errors.file}
               onDrop={(files) => {
                 form.setFieldValue('file', files.length > 0 ? files[0] : null);
                 form.setFieldValue('originalFileName', files.length > 0 ? files[0].name : '');
+                form.clearFieldError('file');
+              }}
+              onReject={(message) => {
+                form.setFieldValue('file', null);
+                form.setFieldValue('originalFileName', '');
+                form.setFieldError('file', message);
               }}
             />
           )}
