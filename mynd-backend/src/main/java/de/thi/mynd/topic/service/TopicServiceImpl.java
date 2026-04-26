@@ -12,6 +12,7 @@ import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.requests.TopicRequest;
 import de.thi.mynd.topic.security.TopicVoter;
+import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -68,6 +69,8 @@ public final class TopicServiceImpl implements TopicService {
     Topic topic = new Topic();
     updateTopicFieldsAndAssociations(topic, request);
 
+    Log.infof("Successfully created topic (%s, %s)", topic.id, topic.title);
+
     return mappingRegistry.map(topic, TopicDto.class);
   }
 
@@ -80,6 +83,8 @@ public final class TopicServiceImpl implements TopicService {
     securityService.denyUnlessGranted(topic, TopicVoter.Update);
 
     updateTopicFieldsAndAssociations(topic, request);
+
+    Log.infof("Successfully updated topic (%s, %s)", topic.id, topic.title);
 
     return mappingRegistry.map(topic, TopicDto.class);
   }
@@ -97,6 +102,8 @@ public final class TopicServiceImpl implements TopicService {
 
     topicRepository.delete(topic);
     topicRepository.flush();
+
+    Log.infof("Successfully deleted topic with id: %s", topicId);
   }
 
   @Override
