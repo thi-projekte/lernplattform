@@ -9,25 +9,22 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public final class SecurityService {
 
-    @Inject
-    Instance<Voter<?>> voters;
+  @Inject Instance<Voter<?>> voters;
 
-    @Inject
-    SecurityIdentity identity;
+  @Inject SecurityIdentity identity;
 
-
-    public boolean isGranted(Object object, String attribute) {
-        for (Voter voter : voters) {
-            if (voter.supports(attribute, object)) {
-                return voter.vote(identity, attribute, object);
-            }
-        }
-        return false;
+  public boolean isGranted(Object object, String attribute) {
+    for (Voter voter : voters) {
+      if (voter.supports(attribute, object)) {
+        return voter.vote(identity, attribute, object);
+      }
     }
+    return false;
+  }
 
-    public void denyUnlessGranted(Object subject, String attribute) {
-        if (!isGranted(subject, attribute)) {
-            throw new ForbiddenException("Forbidden.");
-        }
+  public void denyUnlessGranted(Object subject, String attribute) {
+    if (!isGranted(subject, attribute)) {
+      throw new ForbiddenException("Forbidden.");
     }
+  }
 }

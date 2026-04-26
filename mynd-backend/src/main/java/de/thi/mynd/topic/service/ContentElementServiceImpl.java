@@ -34,8 +34,7 @@ public final class ContentElementServiceImpl implements ContentElementService {
 
   @Inject MappingRegistry mappingRegistry;
 
-  @Inject
-  SecurityService securityService;
+  @Inject SecurityService securityService;
 
   @Override
   public ContentElementDto createContentElement(ContentElementRequest request, FileUpload file) {
