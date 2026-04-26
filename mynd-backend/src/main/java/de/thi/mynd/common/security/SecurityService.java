@@ -1,5 +1,6 @@
 package de.thi.mynd.common.security;
 
+import io.quarkus.logging.Log;
 import io.quarkus.security.ForbiddenException;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -16,6 +17,7 @@ public final class SecurityService {
   public boolean isGranted(Object object, String attribute) {
     for (Voter voter : voters) {
       if (voter.supports(attribute, object)) {
+          Log.debugf("Voting on %s with attribute %s", object.getClass(), attribute);
         return voter.vote(identity, attribute, object);
       }
     }

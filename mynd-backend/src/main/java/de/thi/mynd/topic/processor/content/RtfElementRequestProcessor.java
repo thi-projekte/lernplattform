@@ -6,6 +6,7 @@ import de.thi.mynd.topic.entity.RtfElement;
 import de.thi.mynd.topic.repository.ContentElementRepository;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.RtfElementRequest;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -26,6 +27,8 @@ public final class RtfElementRequestProcessor
     contentElement.type = ContentType.RTF;
     contentElement.rtfText = request.rtfText;
     contentElementRepository.persistAndFlush(contentElement);
+
+    Log.infof("Successfully created RTF content element with id: %s", contentElement.id);
 
     return contentElement;
   }
