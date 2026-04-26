@@ -1,5 +1,6 @@
 package de.thi.mynd.common.service;
 
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -17,6 +18,7 @@ public final class KeycloakIdentityServiceImpl implements IdentityService {
 
   @Override
   public String getFullNameByUsername(String username) {
+    Log.debugf("Fetching user from keycloak for username: %s", username);
     List<UserRepresentation> users = keycloak.realm(realm).users().search(username, true);
     if (users.isEmpty()) return username;
     UserRepresentation user = users.get(0);

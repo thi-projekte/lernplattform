@@ -9,6 +9,7 @@ import de.thi.mynd.topic.entity.PdfElement;
 import de.thi.mynd.topic.repository.ContentElementRepository;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.PdfElementRequest;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -47,6 +48,8 @@ public final class PdfElementRequestProcessor
             contentElement, file.uploadedFile().toFile(), request.originalFileName);
 
     contentElementRepository.persistAndFlush(contentElement);
+
+    Log.infof("Successfully created PDF content element with id: %s", contentElement.id);
 
     return contentElement;
   }
