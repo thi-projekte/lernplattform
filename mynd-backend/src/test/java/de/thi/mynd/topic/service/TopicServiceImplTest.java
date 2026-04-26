@@ -46,6 +46,7 @@ public class TopicServiceImplTest {
   private static final String USERNAME = "test-user";
 
   @Test
+  @TestSecurity(user = USERNAME)
   void testFindPersonalTopicsPaginated() {
     Topic topic = new Topic();
     topic.title = "My Topic";
