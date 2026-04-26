@@ -30,8 +30,6 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
     Set<UUID> existingIds =
         existingAssociations.stream().map(a -> a.foreignTopic.id).collect(Collectors.toSet());
 
-    Log.info(existingIds);
-
     List<UUID> idsToCreate =
         desiredTopics.stream().filter(id -> !existingIds.contains(id)).toList();
 

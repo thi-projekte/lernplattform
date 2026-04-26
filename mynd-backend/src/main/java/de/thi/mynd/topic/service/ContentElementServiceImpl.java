@@ -1,6 +1,7 @@
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.processor.MappingRegistry;
+import de.thi.mynd.common.security.SecurityService;
 import de.thi.mynd.common.service.FileAssociatedEntity;
 import de.thi.mynd.common.service.ObjectStorageService;
 import de.thi.mynd.topic.dto.content.*;
@@ -9,6 +10,7 @@ import de.thi.mynd.topic.processor.content.ContentElementProcessorManager;
 import de.thi.mynd.topic.repository.ContentElementRepository;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
+import de.thi.mynd.topic.security.ContentElementVoter;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -31,6 +33,9 @@ public final class ContentElementServiceImpl implements ContentElementService {
   @Inject ObjectStorageService objectStorageService;
 
   @Inject MappingRegistry mappingRegistry;
+
+  @Inject
+  SecurityService securityService;
 
   @Override
   public ContentElementDto createContentElement(ContentElementRequest request, FileUpload file) {
@@ -61,6 +66,8 @@ public final class ContentElementServiceImpl implements ContentElementService {
       throw new NotFoundException("Content element does not exist");
     }
 
+    securityService.denyUnlessGranted(element, ContentElementVoter.Delete);
+
     if (element instanceof FileAssociatedEntity fileAssociatedEntity) {
       for (String objectKey : fileAssociatedEntity.getFileKeys()) {
         objectStorageService.tryDeleteObject(objectKey);
@@ -82,6 +89,9 @@ public final class ContentElementServiceImpl implements ContentElementService {
     List<ContentElement> contentElements =
         contentElementRepository.findByIdsTypeSafe(ranking.keySet().stream().toList());
     for (ContentElement element : contentElements) {
+
+      securityService.denyUnlessGranted(element, ContentElementVoter.Assign);
+
       element.topic = topic;
       element.rank = ranking.get(element.id).orElse(null);
       contentElementRepository.persist(element);
