@@ -17,9 +17,9 @@ import de.thi.mynd.topic.repository.ContentElementRepository;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
 import de.thi.mynd.topic.requests.content.PdfElementRequest;
 import io.quarkus.security.ForbiddenException;
-import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.NotFoundException;
 import java.util.List;
@@ -40,8 +40,6 @@ class ContentElementServiceImplTest {
   @InjectMock ObjectStorageService objectStorageService;
 
   @InjectMock MappingRegistry mappingRegistry;
-
-  @InjectMock SecurityIdentity securityIdentity;
 
   @Test
   void testCreateContentElement() {
@@ -66,6 +64,7 @@ class ContentElementServiceImplTest {
   }
 
   @Test
+  @TestSecurity(user = "creator")
   void testDeleteContentElement_WithS3Files() {
     // Arrange
     UUID id = UUID.randomUUID();
@@ -75,7 +74,6 @@ class ContentElementServiceImplTest {
     element.creatorId = "creator";
 
     when(contentElementRepository.findById(id)).thenReturn(element);
-    when(securityIdentity.getPrincipal().getName()).thenReturn("creator");
 
     // Act
     contentElementService.deleteContentElement(id);
@@ -86,6 +84,7 @@ class ContentElementServiceImplTest {
   }
 
   @Test
+  @TestSecurity(user = "creator1")
   void testDeleteContentElement_AsInvalidUser() {
     // Arrange
     UUID id = UUID.randomUUID();
@@ -95,7 +94,6 @@ class ContentElementServiceImplTest {
     element.creatorId = "creator";
 
     when(contentElementRepository.findById(id)).thenReturn(element);
-    when(securityIdentity.getPrincipal().getName()).thenReturn("creator1");
 
     Assertions.assertThrows(
         ForbiddenException.class, () -> contentElementService.deleteContentElement(id));
@@ -112,6 +110,7 @@ class ContentElementServiceImplTest {
   }
 
   @Test
+  @TestSecurity(user = "creator")
   void testUpdateTopicAssociation() {
     // Arrange
     Topic topic = new Topic();
@@ -125,7 +124,6 @@ class ContentElementServiceImplTest {
     element.id = elementId;
 
     when(contentElementRepository.findByIdsTypeSafe(any())).thenReturn(List.of(element));
-    when(securityIdentity.getPrincipal().getName()).thenReturn("creator");
 
     // Act
     contentElementService.updateTopicAssociation(topic, List.of(assocRequest));
@@ -138,6 +136,7 @@ class ContentElementServiceImplTest {
   }
 
   @Test
+  @TestSecurity(user = "creator2")
   void testUpdateTopicAssociationWithInvalidUser() {
     // Arrange
     Topic topic = new Topic();
@@ -151,7 +150,6 @@ class ContentElementServiceImplTest {
     element.id = elementId;
 
     when(contentElementRepository.findByIdsTypeSafe(any())).thenReturn(List.of(element));
-    when(securityIdentity.getPrincipal().getName()).thenReturn("creator2");
 
     Assertions.assertThrows(
         ForbiddenException.class,

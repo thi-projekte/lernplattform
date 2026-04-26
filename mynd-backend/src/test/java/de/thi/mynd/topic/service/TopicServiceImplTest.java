@@ -17,17 +17,15 @@ import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
 import de.thi.mynd.topic.requests.TopicRequest;
-import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
@@ -36,8 +34,6 @@ public class TopicServiceImplTest {
   @Inject TopicServiceImpl topicService;
 
   @InjectMock TopicRepository topicRepository;
-
-  @InjectMock SecurityIdentity securityIdentity;
 
   @InjectMock CategoryService categoryService;
 
@@ -48,13 +44,6 @@ public class TopicServiceImplTest {
   @InjectMock MappingRegistry mappingRegistry;
 
   private static final String USERNAME = "test-user";
-
-  @BeforeEach
-  void setup() {
-    Principal mockPrincipal = mock(Principal.class);
-    when(mockPrincipal.getName()).thenReturn(USERNAME);
-    when(securityIdentity.getPrincipal()).thenReturn(mockPrincipal);
-  }
 
   @Test
   void testFindPersonalTopicsPaginated() {
@@ -132,6 +121,7 @@ public class TopicServiceImplTest {
   }
 
   @Test
+  @TestSecurity(user = "creator")
   void testDeleteTopicWithValidId() {
 
     UUID contentElementId = UUID.randomUUID();
@@ -150,7 +140,6 @@ public class TopicServiceImplTest {
     topic.contentElements.add(contentElement);
 
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(topic));
-    when(securityIdentity.getPrincipal().getName()).thenReturn("creator");
 
     Assertions.assertDoesNotThrow(
         () -> {
@@ -192,6 +181,7 @@ public class TopicServiceImplTest {
   }
 
   @Test
+  @TestSecurity(user = "creator")
   void testUpdateTopic_WithFullOrchestration() {
     // Arrange
 
@@ -217,7 +207,6 @@ public class TopicServiceImplTest {
         .thenReturn(new ArrayList<>());
     when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(topic));
-    when(securityIdentity.getPrincipal().getName()).thenReturn("creator");
 
     UUID topicId = UUID.randomUUID();
 
