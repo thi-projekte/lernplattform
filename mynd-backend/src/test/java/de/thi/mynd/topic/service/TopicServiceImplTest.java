@@ -138,16 +138,19 @@ public class TopicServiceImplTest {
     ContentElement contentElement = new PdfElement();
     contentElement.id = contentElementId;
     contentElement.title = "Content";
+    contentElement.creatorId = "creator";
     contentElement.type = ContentType.PDF;
 
     UUID topicId = UUID.randomUUID();
 
     Topic topic = new Topic();
     topic.id = topicId;
+    topic.creatorId = "creator";
     topic.contentElements = new ArrayList<>();
     topic.contentElements.add(contentElement);
 
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(topic));
+    when(securityIdentity.getPrincipal().getName()).thenReturn("creator");
 
     Assertions.assertDoesNotThrow(
         () -> {
@@ -205,12 +208,16 @@ public class TopicServiceImplTest {
     stayReq.id = stayId;
     request.contentElements = List.of(stayReq);
 
+    Topic topic = new Topic();
+    topic.creatorId = "creator";
+
     when(categoryService.findByAssociatedEntities(any())).thenReturn(new ArrayList<>());
     when(topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
             any(), any(), anyString()))
         .thenReturn(new ArrayList<>());
     when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
-    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(topic));
+    when(securityIdentity.getPrincipal().getName()).thenReturn("creator");
 
     UUID topicId = UUID.randomUUID();
 

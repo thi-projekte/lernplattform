@@ -16,6 +16,8 @@ import de.thi.mynd.topic.processor.content.ContentElementProcessorManager;
 import de.thi.mynd.topic.repository.ContentElementRepository;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
 import de.thi.mynd.topic.requests.content.PdfElementRequest;
+import io.quarkus.security.ForbiddenException;
+import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -23,6 +25,7 @@ import jakarta.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.UUID;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
@@ -37,6 +40,8 @@ class ContentElementServiceImplTest {
   @InjectMock ObjectStorageService objectStorageService;
 
   @InjectMock MappingRegistry mappingRegistry;
+
+  @InjectMock SecurityIdentity securityIdentity;
 
   @Test
   void testCreateContentElement() {
@@ -66,9 +71,11 @@ class ContentElementServiceImplTest {
     UUID id = UUID.randomUUID();
     PdfElement element = new PdfElement();
     element.id = id;
-    element.s3Key = "path/to/file.pdf"; // PdfElement implements FileAssociatedEntity
+    element.s3Key = "path/to/file.pdf";
+    element.creatorId = "creator";
 
     when(contentElementRepository.findById(id)).thenReturn(element);
+    when(securityIdentity.getPrincipal().getName()).thenReturn("creator");
 
     // Act
     contentElementService.deleteContentElement(id);
@@ -76,6 +83,22 @@ class ContentElementServiceImplTest {
     // Assert
     verify(objectStorageService).tryDeleteObject("path/to/file.pdf");
     verify(contentElementRepository).delete(element);
+  }
+
+  @Test
+  void testDeleteContentElement_AsInvalidUser() {
+    // Arrange
+    UUID id = UUID.randomUUID();
+    PdfElement element = new PdfElement();
+    element.id = id;
+    element.s3Key = "path/to/file.pdf";
+    element.creatorId = "creator";
+
+    when(contentElementRepository.findById(id)).thenReturn(element);
+    when(securityIdentity.getPrincipal().getName()).thenReturn("creator1");
+
+    Assertions.assertThrows(
+        ForbiddenException.class, () -> contentElementService.deleteContentElement(id));
   }
 
   @Test
@@ -98,9 +121,11 @@ class ContentElementServiceImplTest {
     assocRequest.rank = 5;
 
     PdfElement element = new PdfElement();
+    element.creatorId = "creator";
     element.id = elementId;
 
     when(contentElementRepository.findByIdsTypeSafe(any())).thenReturn(List.of(element));
+    when(securityIdentity.getPrincipal().getName()).thenReturn("creator");
 
     // Act
     contentElementService.updateTopicAssociation(topic, List.of(assocRequest));
@@ -110,5 +135,26 @@ class ContentElementServiceImplTest {
     assertEquals(5, element.rank);
     verify(contentElementRepository).persist(element);
     verify(contentElementRepository).flush();
+  }
+
+  @Test
+  void testUpdateTopicAssociationWithInvalidUser() {
+    // Arrange
+    Topic topic = new Topic();
+    UUID elementId = UUID.randomUUID();
+    AssociatedContentElementRequest assocRequest = new AssociatedContentElementRequest();
+    assocRequest.id = elementId;
+    assocRequest.rank = 5;
+
+    PdfElement element = new PdfElement();
+    element.creatorId = "creator";
+    element.id = elementId;
+
+    when(contentElementRepository.findByIdsTypeSafe(any())).thenReturn(List.of(element));
+    when(securityIdentity.getPrincipal().getName()).thenReturn("creator2");
+
+    Assertions.assertThrows(
+        ForbiddenException.class,
+        () -> contentElementService.updateTopicAssociation(topic, List.of(assocRequest)));
   }
 }
