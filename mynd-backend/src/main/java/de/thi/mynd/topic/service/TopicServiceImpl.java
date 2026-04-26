@@ -3,6 +3,7 @@ package de.thi.mynd.topic.service;
 import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
+import de.thi.mynd.common.security.SecurityService;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
@@ -10,6 +11,7 @@ import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.requests.TopicRequest;
+import de.thi.mynd.topic.security.TopicVoter;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -20,16 +22,12 @@ import java.util.*;
 public final class TopicServiceImpl implements TopicService {
 
   @Inject SecurityIdentity identity;
-
   @Inject MappingRegistry mappingRegistry;
-
   @Inject TopicRepository topicRepository;
-
   @Inject CategoryService categoryService;
-
   @Inject ContentElementService contentElementService;
-
   @Inject TopicAssociationService topicAssociationService;
+  @Inject SecurityService securityService;
 
   @Override
   public PaginationDto<ListTopicDto> findPersonalTopicsPaginated(int page, int pageSize) {
@@ -79,6 +77,8 @@ public final class TopicServiceImpl implements TopicService {
       throws EntityInstanceNotFoundException {
     Topic topic = getTopicByIdElseException(topicId);
 
+    securityService.denyUnlessGranted(topic, TopicVoter.Update);
+
     updateTopicFieldsAndAssociations(topic, request);
 
     return mappingRegistry.map(topic, TopicDto.class);
@@ -88,6 +88,8 @@ public final class TopicServiceImpl implements TopicService {
   @Transactional
   public void deleteTopic(UUID topicId) throws EntityInstanceNotFoundException {
     Topic topic = getTopicByIdElseException(topicId);
+
+    securityService.denyUnlessGranted(topic, TopicVoter.Delete);
 
     for (ContentElement contentElement : topic.contentElements) {
       contentElementService.deleteContentElement(contentElement.id);
@@ -118,7 +120,6 @@ public final class TopicServiceImpl implements TopicService {
     topicRepository.persist(topic);
     topicRepository.flush();
 
-    // TODO: Ensure all topics are owned by the user who wants to change
     contentElementService.updateTopicAssociation(topic, request.contentElements);
   }
 
