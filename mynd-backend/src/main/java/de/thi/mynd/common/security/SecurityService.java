@@ -17,7 +17,7 @@ public final class SecurityService {
   public boolean isGranted(Object object, String attribute) {
     for (Voter voter : voters) {
       if (voter.supports(attribute, object)) {
-          Log.debugf("Voting on %s with attribute %s", object.getClass(), attribute);
+        Log.debugf("Voting on %s with attribute %s", object.getClass(), attribute);
         return voter.vote(identity, attribute, object);
       }
     }
