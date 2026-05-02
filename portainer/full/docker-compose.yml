@@ -80,7 +80,7 @@ services:
       - nginx-proxy-manager
       - lernplattform-internal-network
     healthcheck:
-      test: ["CMD-SHELL", "exec 3<>/dev/tcp/127.0.0.1/8080; echo -e \"GET /q/health/live HTTP/1.1\\r\\nHost: localhost\\r\\nConnection: close\\r\\n\\r\\n\" >&3; cat <&3 | grep -q \"UP\""]
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/q/health/live || exit 1" ]
       interval: 10s
       timeout: 5s
       retries: 3
