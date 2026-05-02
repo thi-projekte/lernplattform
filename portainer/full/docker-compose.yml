@@ -9,6 +9,8 @@ services:
       POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       POSTGRES_USER: keycloak
       POSTGRES_DB: keycloak
+    networks:
+      - lernplattform-internal-network
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.6
@@ -29,6 +31,7 @@ services:
       KC_HOSTNAME: ${KEYCLOAK_URL}
     networks:
       - nginx-proxy-manager
+      - lernplattform-internal-network
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://localhost:8080/health/live || exit 1" ]
       interval: 10s
@@ -43,6 +46,7 @@ services:
       MINIO_ROOT_PASSWORD: ${S3_SECRET_KEY}
     networks:
       - nginx-proxy-manager
+      - lernplattform-internal-network
     volumes:
       - s3_storage:/data
     command: 'server /data --address "0.0.0.0:9000" --console-address "0.0.0.0:9001"'
@@ -60,6 +64,8 @@ services:
       POSTGRES_PASSWORD: ${MYND_DB_PASSWORD}
       POSTGRES_USER: mynd
       POSTGRES_DB: mynd
+    networks:
+      - lernplattform-internal-network
 
   mynd-backend:
     image: ghcr.io/thi-projekte/lernplattform-mynd-backend:latest
@@ -72,6 +78,7 @@ services:
         condition: service_healthy
     networks:
       - nginx-proxy-manager
+      - lernplattform-internal-network
     healthcheck:
       test: [ "CMD-SHELL", "curl -f http://localhost:8080/q/health/live || exit 1" ]
       interval: 10s
@@ -101,6 +108,7 @@ services:
         condition: service_healthy
     networks:
       - nginx-proxy-manager
+      - lernplattform-internal-network
 
 
 volumes:
@@ -109,6 +117,13 @@ volumes:
   s3_storage:
 
 networks:
+  lernplattform-internal-network:
+    driver: bridge
+    name: lernplattform-internal-network
+    ipam:
+      config:
+        subnet: 172.20.0.0/16
+
   nginx-proxy-manager:
     external: true
     name: nginx-proxy-manager

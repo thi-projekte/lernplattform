@@ -100,7 +100,7 @@ jobs:
           url: ${{ secrets.PORTAINER_URL }}
           token: ${{ secrets.PORTAINER_TOKEN }}
           endpoint: ${{ secrets.PORTAINER_ENDPOINT || '1' }}
-          name: MYnd Lernplattform
+          name: mynd-lernplattform
           file: portainer/full/docker-compose.yml
           pull: 'true'
           type: file
