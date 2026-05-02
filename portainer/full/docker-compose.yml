@@ -120,9 +120,6 @@ networks:
   lernplattform-internal-network:
     driver: bridge
     name: lernplattform-internal-network
-    ipam:
-      config:
-        subnet: 172.20.0.0/16
 
   nginx-proxy-manager:
     external: true
