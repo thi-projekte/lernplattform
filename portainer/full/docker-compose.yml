@@ -33,10 +33,10 @@ services:
       - nginx-proxy-manager
       - lernplattform-internal-network
     healthcheck:
-      test: [ "CMD-SHELL", "curl -f http://localhost:9000/health/live || exit 1" ]
+      test: ["CMD-SHELL", 'exec 3<>/dev/tcp/127.0.0.1/9000; echo -e "GET /health/live HTTP/1.1\r\nHost: localhost\r\nConnection: close\r\n\r\n" >&3; cat <&3 | grep -q "UP"']
       interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 3
       start_period: 30s
 
   s3:
