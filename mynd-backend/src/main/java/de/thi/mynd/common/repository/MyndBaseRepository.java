@@ -1,0 +1,26 @@
+package de.thi.mynd.common.repository;
+
+import de.thi.mynd.common.dto.PaginationDto;
+import de.thi.mynd.common.entity.BaseEntity;
+import io.quarkus.hibernate.orm.panache.PanacheQuery;
+import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
+import java.util.List;
+import java.util.UUID;
+
+public abstract class MyndBaseRepository<T extends BaseEntity>
+    implements PanacheRepositoryBase<T, UUID> {
+
+  public List<T> findAllWithLimit(int limit) {
+    return findAll().range(0, limit).list();
+  }
+
+  protected PaginationDto<T> buildPaginationFromQuery(
+      PanacheQuery<T> query, int page, int pageSize) {
+    query.page(page, pageSize);
+    return PaginationDto.<T>builder().results(query.list()).totalPages(query.pageCount()).build();
+  }
+
+  public List<T> findByIdsTypeSafe(List<UUID> ids) {
+    return find("id IN ?1", ids).list();
+  }
+}

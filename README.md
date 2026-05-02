@@ -22,6 +22,11 @@ Take a look at the [Contribution guide](./CONTRIBUTING.md)
 
 ## Service Architecture
 
+We did not use microservices on purpose. For the current scope of the app microservices would be overkill. But we use domain driven design and build the monoliths architecture loosly coupled
+so we could technically split the application into microservices without huge efforts. 
+
+
+
 **NOTE:** The used icons do not represent AWS services. It just uses the AWS icons to increase understandability as most people 
 might know the AWS services. Some of the services do not align with the default behaviour of the AWS services. For example keycloak is the AWS secrets manager here, which is not correct at all. Its just for visualization purposes
 
