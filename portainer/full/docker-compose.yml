@@ -89,7 +89,7 @@ services:
       DB_PASSWORD: ${MYND_DB_PASSWORD}
       DB_HOST: mynd-database
       DB_NAME: mynd
-      KEYCLOAK_URL: keycloak:8080
+      KEYCLOAK_URL: http://keycloak:8080
       KEYCLOAK_REALM: master
       KEYCLOAK_CLIENT_ID: mynd
       KEYCLOAK_BACKEND_CLIENT_ID: mynd-backend
