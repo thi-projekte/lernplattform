@@ -90,6 +90,7 @@ jobs:
           endpoint: ${{ secrets.PORTAINER_ENDPOINT || '3' }}
           name: MYnd Lernplattform
           file: portainer/full/docker-compose.yml
+          pull: 'true'
           type: file
           env_data: |
             {
