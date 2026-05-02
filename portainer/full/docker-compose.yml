@@ -68,7 +68,7 @@ services:
       - lernplattform-internal-network
 
   mynd-backend:
-    image: ghcr.io/thi-projekte/lernplattform-mynd-backend:latest
+    image: ghcr.io/thi-projekte/lernplattform-mynd-backend:${MYND_IMAGE_TAG}
     depends_on:
       mynd-database:
         condition: service_started
@@ -100,7 +100,7 @@ services:
       S3_SECRET: ${S3_SECRET_KEY}
 
   mynd-frontend:
-    image: ghcr.io/thi-projekte/lernplattform-mynd-frontend:latest
+    image: ghcr.io/thi-projekte/lernplattform-mynd-frontend:${MYND_IMAGE_TAG}
     depends_on:
       keycloak:
         condition: service_healthy
