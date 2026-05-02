@@ -4,7 +4,7 @@ services:
   keycloak-database:
     image: postgres:18
     volumes:
-      - keycloak_database:/var/lib/postgresql/data
+      - keycloak_database:/var/lib/postgresql
     environment:
       POSTGRES_PASSWORD: ${KEYCLOAK_DB_PASSWORD}
       POSTGRES_USER: keycloak
@@ -52,7 +52,7 @@ services:
   mynd-database:
     image: postgres:18
     volumes:
-      - mynd_database:/Var/lib/postgresql/data
+      - mynd_database:/var/lib/postgresql
     environment:
       POSTGRES_PASSWORD: ${MYND_DB_PASSWORD}
       POSTGRES_USER: mynd
