@@ -41,6 +41,7 @@ jobs:
               "S3_SECRET_KEY": "${{ secrets.S3_SECRET_KEY }}",
               "S3_HOST": "${{ secrets.S3_HOST }}",
               "MYND_DB_PASSWORD": "${{ secrets.MYND_DB_PASSWORD }}",
-              "MYND_KC_BACKEND_SECRET": "${{ secrets.MYND_KC_BACKEND_SECRET }}"
+              "MYND_KC_BACKEND_SECRET": "${{ secrets.MYND_KC_BACKEND_SECRET }}",
+              "CORS_ORIGIN": "${{ secrets.CORS_ORIGIN }}"
             }
           standalone: true

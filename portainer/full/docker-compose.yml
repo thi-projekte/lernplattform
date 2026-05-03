@@ -101,6 +101,7 @@ services:
       S3_REGION: local
       S3_ACCESS_KEY: ${S3_ACCESS_KEY}
       S3_SECRET: ${S3_SECRET_KEY}
+      CORS_ORIGIN: ${CORS_ORIGIN}
 
   mynd-frontend:
     container_name: mynd-lernplattform-frontend
