@@ -93,3 +93,4 @@ jobs:
     uses: ./.github/workflows/portainer.yml
     with:
       image_tag: ${{ github.ref_name }}
+    secrets: inherit
