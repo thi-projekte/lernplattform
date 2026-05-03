@@ -85,7 +85,7 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
             (response, exception) -> {
               if (exception != null) {
                 Log.error(exception.getMessage());
-                Log.error(exception.getStackTrace());
+                Log.trace(exception);
               } else {
                 Log.infof("Successfully uploaded object %s", objectKey);
               }
