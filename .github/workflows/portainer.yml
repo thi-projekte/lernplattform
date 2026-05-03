@@ -1,0 +1,46 @@
+name: Deploy to Portainer
+
+on:
+  workflow_call:
+    inputs:
+      image_tag:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: 'Docker image tag to deploy'
+        required: true
+        default: 'latest'
+
+jobs:
+  deploy-to-portainer:
+    name: Deploy to portainer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Deploy stack
+        uses: cssnr/portainer-stack-deploy-action@v1
+        with:
+          url: ${{ secrets.PORTAINER_URL }}
+          token: ${{ secrets.PORTAINER_TOKEN }}
+          endpoint: ${{ secrets.PORTAINER_ENDPOINT || '1' }}
+          name: mynd-lernplattform
+          file: portainer/full/docker-compose.yml
+          pull: 'true'
+          type: file
+          env_data: |
+            {
+              "MYND_IMAGE_TAG": "${{ inputs.image_tag }}",
+              "KEYCLOAK_DB_PASSWORD": "${{ secrets.KEYCLOAK_DB_PASSWORD }}",
+              "KEYCLOAK_ADMIN_USER": "${{ secrets.KEYCLOAK_ADMIN_USER }}",
+              "KEYCLOAK_ADMIN_PASSWORD": "${{ secrets.KEYCLOAK_ADMIN_PASSWORD }}",
+              "KEYCLOAK_URL": "${{ secrets.KEYCLOAK_URL }}",
+              "S3_ACCESS_KEY": "${{ secrets.S3_ACCESS_KEY }}",
+              "S3_SECRET_KEY": "${{ secrets.S3_SECRET_KEY }}",
+              "S3_HOST": "${{ secrets.S3_HOST }}",
+              "MYND_DB_PASSWORD": "${{ secrets.MYND_DB_PASSWORD }}",
+              "MYND_KC_BACKEND_SECRET": "${{ secrets.MYND_KC_BACKEND_SECRET }}"
+            }
+          standalone: true
