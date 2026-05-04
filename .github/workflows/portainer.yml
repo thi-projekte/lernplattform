@@ -40,6 +40,7 @@ jobs:
               "S3_ACCESS_KEY": "${{ secrets.S3_ACCESS_KEY }}",
               "S3_SECRET_KEY": "${{ secrets.S3_SECRET_KEY }}",
               "S3_HOST": "${{ secrets.S3_HOST }}",
+              "S3_HOST_PUBLIC": "${{ secrets.S3_HOST_PUBLIC }}",
               "MYND_DB_PASSWORD": "${{ secrets.MYND_DB_PASSWORD }}",
               "MYND_KC_BACKEND_SECRET": "${{ secrets.MYND_KC_BACKEND_SECRET }}",
               "CORS_ORIGIN": "${{ secrets.CORS_ORIGIN }}"
