@@ -7,6 +7,7 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
 import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.s3.S3Configuration;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 import java.net.URI;
@@ -30,9 +31,14 @@ public class S3PresignerProvider {
 
         AwsBasicCredentials credentials = AwsBasicCredentials.create(accessKey, secretKey);
 
+        S3Configuration configuration = S3Configuration.builder()
+                .pathStyleAccessEnabled(true)
+                .build();
+
         return S3Presigner.builder()
                 .endpointOverride(URI.create(externalEndpoint))
                 .region(Region.EU_CENTRAL_1)
+                .serviceConfiguration(configuration)
                 .credentialsProvider(StaticCredentialsProvider.create(credentials))
                 .build();
     }
