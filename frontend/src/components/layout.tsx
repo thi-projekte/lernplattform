@@ -9,6 +9,7 @@ import logo from '../assets/logo.png';
 import keycloak from '../keycloak.ts';
 import { routes } from '../routing.ts';
 import { useLocation, useNavigate } from 'react-router';
+import { isGranted } from '../auth.ts';
 
 interface LayoutProps {
   children: ReactNode;
@@ -53,7 +54,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
-        {sidebarRoutes.map((route) => (
+        {sidebarRoutes.filter((r) => r.roles ? isGranted(r.roles) : true).map((route) => (
           <NavLink
             label={route.translation ? t(`routes.${route.translation}`) : undefined}
             leftSection={route.icon ? <route.icon size={32} stroke={1.5} /> : undefined}
