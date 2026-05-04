@@ -24,7 +24,8 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
   @ConfigProperty(name = "mynd.s3.bucket")
   String bucketName;
 
-  @Inject @Named("external-presigner")
+  @Inject
+  @Named("external-presigner")
   S3Presigner presigner;
 
   @Inject S3AsyncClient s3Client;
@@ -40,8 +41,7 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
             .getObjectRequest(objectRequest)
             .build();
 
-    PresignedGetObjectRequest finalRequest = presigner
-            .presignGetObject(presignRequest);
+    PresignedGetObjectRequest finalRequest = presigner.presignGetObject(presignRequest);
     return finalRequest.url();
   }
 
