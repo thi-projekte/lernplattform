@@ -4,6 +4,7 @@ import de.thi.mynd.common.entity.BaseEntity;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.inject.Named;
 import jakarta.transaction.Transactional;
 import java.io.File;
 import java.net.URL;
@@ -23,7 +24,8 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
   @ConfigProperty(name = "mynd.s3.bucket")
   String bucketName;
 
-  @Inject S3Presigner presigner;
+  @Inject @Named("external-presigner")
+  S3Presigner presigner;
 
   @Inject S3AsyncClient s3Client;
 
@@ -38,7 +40,8 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
             .getObjectRequest(objectRequest)
             .build();
 
-    PresignedGetObjectRequest finalRequest = presigner.presignGetObject(presignRequest);
+    PresignedGetObjectRequest finalRequest = presigner
+            .presignGetObject(presignRequest);
     return finalRequest.url();
   }
 
