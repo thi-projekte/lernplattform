@@ -45,6 +45,7 @@
       "categories": "Categories",
       "teaser": "Teaser",
       "estimatedLearningDuration": "Estimated learning duration",
+      "estimatedLearningDurationSuffix": "minutes",
       "contentElementTitle": "Title"
     },
     "errors": {
