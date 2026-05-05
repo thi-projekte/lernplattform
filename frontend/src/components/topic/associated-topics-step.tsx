@@ -2,6 +2,7 @@ import type { Topic } from '../../schemas/topic.ts';
 import { Badge, Group, Paper, Stack, Text, Title } from '@mantine/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import type { OnMoveEnd, Viewport } from '@xyflow/react';
 import TopicSearchbar from './topic-searchbar.tsx';
 import EntityTable from '../entity-table.tsx';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
@@ -16,6 +17,7 @@ interface AssociatedTopicsStepProps {
 const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) => {
   const { t } = useTranslation();
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
+  const [lastViewport, setLastViewport] = useState<Viewport | null>(null);
 
   const removeTopic = (topicId: string) => {
     setTopic({
@@ -33,6 +35,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
     selectedTopicNode && 'categories' in selectedTopicNode.payload
       ? selectedTopicNode.payload.categories
       : undefined;
+
+  const handleMoveEnd: OnMoveEnd = (_event, viewport) => {
+    setLastViewport(viewport);
+  };
 
   return (
     <Stack>
@@ -53,6 +59,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
           }}
           onTopicClick={setSelectedTopicNode}
           onAssociationClick={removeTopic}
+          onMoveEnd={handleMoveEnd}
           canDeleteAssociations
           allowNodeDragging
           allowCanvasPanning
@@ -91,6 +98,15 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
               {t('topic.graph.clickAssociationToRemove')}
             </Text>
           </Stack>
+        )}
+        {lastViewport && (
+          <Text size="sm" c="dimmed">
+            {t('topic.graph.viewportStatus', {
+              x: Math.round(lastViewport.x),
+              y: Math.round(lastViewport.y),
+              zoom: lastViewport.zoom.toFixed(2),
+            })}
+          </Text>
         )}
       </Paper>
     </Stack>
