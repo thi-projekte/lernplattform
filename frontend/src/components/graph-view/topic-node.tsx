@@ -5,17 +5,21 @@ import type { GraphTopicNodeData } from './topic-graph.types';
 
 type TopicNodeProps = NodeProps<Node<GraphTopicNodeData>>;
 
-const TopicNode = ({ data, ...props }: TopicNodeProps) => (
-  <HexagonNode
-    label={data.title}
-    color={data.isRoot ? '#e03131' : '#f08c00'}
-    Icon={IconBook}
-    labelSize="sm"
-    labelFontWeight={700}
-    size={80}
-    subLabel={data.creatorFullName}
-    {...props}
-  />
-);
+const TopicNode = ({ data, ...props }: TopicNodeProps) => {
+  const color = data.isRoot ? '#e03131' : data.isIsolated ? '#5c7cfa' : '#f08c00';
+
+  return (
+    <HexagonNode
+      label={data.title}
+      color={color}
+      Icon={IconBook}
+      labelSize="sm"
+      labelFontWeight={700}
+      size={80}
+      subLabel={data.creatorFullName}
+      {...props}
+    />
+  );
+};
 
 export default TopicNode;
