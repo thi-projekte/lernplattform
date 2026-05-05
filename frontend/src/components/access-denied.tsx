@@ -3,11 +3,9 @@ import { IconArrowLeft, IconLockOff } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
-
 const AccessDenied = () => {
-
   const navigate = useNavigate();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Stack align="center" gap="md">
@@ -28,10 +26,10 @@ const AccessDenied = () => {
         leftSection={<IconArrowLeft size={18} />}
         onClick={() => navigate(-1)}
       >
-        {t("common.back")}
+        {t('common.back')}
       </Button>
     </Stack>
   );
-}
+};
 
 export default AccessDenied;

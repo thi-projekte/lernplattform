@@ -23,8 +23,6 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const { pathname } = useLocation();
   const matches = useMatches();
 
-
-
   const sidebarRoutes = routes.filter((r) => r.isSidebar && r.path);
 
   const longestActiveTarget = sidebarRoutes
@@ -42,7 +40,10 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     return null;
   }, [matches]);
 
-  const isCurrentRouteGranted = useMemo(() => matchingRoute?.roles ? isGranted(matchingRoute.roles) : true, [matchingRoute]);
+  const isCurrentRouteGranted = useMemo(
+    () => (matchingRoute?.roles ? isGranted(matchingRoute.roles) : true),
+    [matchingRoute]
+  );
 
   return (
     <AppShell
@@ -67,20 +68,20 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       </AppShell.Header>
 
       <AppShell.Navbar p="md">
-        {sidebarRoutes.filter((r) => r.roles ? isGranted(r.roles) : true).map((route) => (
-          <NavLink
-            label={route.translation ? t(`routes.${route.translation}`) : undefined}
-            leftSection={route.icon ? <route.icon size={32} stroke={1.5} /> : undefined}
-            active={isActive(route.path ?? '')}
-            onClick={() => navigate(route.path ?? '')}
-            key={route.path}
-          />
-        ))}
+        {sidebarRoutes
+          .filter((r) => (r.roles ? isGranted(r.roles) : true))
+          .map((route) => (
+            <NavLink
+              label={route.translation ? t(`routes.${route.translation}`) : undefined}
+              leftSection={route.icon ? <route.icon size={32} stroke={1.5} /> : undefined}
+              active={isActive(route.path ?? '')}
+              onClick={() => navigate(route.path ?? '')}
+              key={route.path}
+            />
+          ))}
       </AppShell.Navbar>
 
-      <AppShell.Main>
-        {isCurrentRouteGranted ? children : <AccessDenied />}
-      </AppShell.Main>
+      <AppShell.Main>{isCurrentRouteGranted ? children : <AccessDenied />}</AppShell.Main>
     </AppShell>
   );
 };

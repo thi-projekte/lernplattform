@@ -29,19 +29,19 @@ export const routes: TypedMyndRoute[] = [
     isSidebar: true,
     icon: IconHammer,
     translation: 'builderMode',
-    roles: [Role.Builder]
+    roles: [Role.Builder],
   },
   {
     path: '/builder-mode/topics/create',
     Component: CreateTopicPage,
     translation: 'createTopic',
-    roles: [Role.Builder]
+    roles: [Role.Builder],
   },
   {
     path: '/builder-mode/topics/:topicId/edit',
     Component: EditTopicPage,
     translation: 'editTopic',
-    roles: [Role.Builder]
+    roles: [Role.Builder],
   },
   {
     path: '/topics/:topicId/details',
