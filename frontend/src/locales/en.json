@@ -84,6 +84,7 @@
       "associatedTopic": "Associated topic",
       "clickTopicNodeToSeeDetails": "Click on a topic node to see its details.",
       "clickAssociationToRemove": "Click on an association line to remove the related topic.",
+      "clickIsolatedTopicToAssociate": "Click on an isolated topic node to create an association.",
       "viewportStatus": "Viewport x: {{x}}, y: {{y}}, zoom: {{zoom}}"
     }
   },

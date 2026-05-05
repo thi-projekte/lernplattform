@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Autocomplete, Loader } from '@mantine/core';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useQuerySearchTopic } from '../../api/topic.ts';
@@ -8,9 +8,14 @@ import { useTranslation } from 'react-i18next';
 interface TopicSearchbarProps {
   onAdd: (topic: ListTopicDto) => void;
   existingIds?: string[];
+  onSuggestionsChange?: (topics: ListTopicDto[], searchTerm: string) => void;
 }
 
-const TopicSearchbar = ({ onAdd, existingIds = [] }: TopicSearchbarProps) => {
+const TopicSearchbar = ({
+  onAdd,
+  existingIds = [],
+  onSuggestionsChange,
+}: TopicSearchbarProps) => {
   const [value, setValue] = useState('');
   const [debouncedSearch] = useDebouncedValue(value, 300);
 
@@ -18,9 +23,18 @@ const TopicSearchbar = ({ onAdd, existingIds = [] }: TopicSearchbarProps) => {
 
   const { data: suggestions, isLoading, isFetching } = useQuerySearchTopic(debouncedSearch);
 
-  const autocompleteData = (suggestions ?? [])
-    .filter((t) => !existingIds.includes(t.id))
-    .map((t) => t.title);
+  const filteredSuggestions = useMemo(
+    () => (suggestions ?? []).filter((t) => !existingIds.includes(t.id)),
+    [existingIds, suggestions]
+  );
+  const autocompleteData = useMemo(
+    () => filteredSuggestions.map((t) => t.title),
+    [filteredSuggestions]
+  );
+
+  useEffect(() => {
+    onSuggestionsChange?.(filteredSuggestions, debouncedSearch);
+  }, [debouncedSearch, filteredSuggestions, onSuggestionsChange]);
 
   const handleOptionSubmit = (val: string) => {
     const selectedTopic = suggestions?.find((t) => t.title === val);

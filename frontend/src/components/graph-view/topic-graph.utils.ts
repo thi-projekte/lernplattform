@@ -40,6 +40,17 @@ const getAssociationAngles = (count: number) => {
   return Array.from({ length: count }, (_, index) => startAngle + index * step);
 };
 
+const getIsolatedAngles = (count: number) => {
+  if (count <= 0) return [];
+  if (count === 1) return [Math.PI / 2];
+
+  const startAngle = Math.PI / 6;
+  const endAngle = (5 * Math.PI) / 6;
+  const step = (endAngle - startAngle) / (count - 1);
+
+  return Array.from({ length: count }, (_, index) => startAngle + index * step);
+};
+
 export const buildTopicDetailsGraph = (
   topic?: Omit<Topic, 'relatedTopics'>
 ): { nodes: TopicGraphNode[]; edges: Edge[] } => {
@@ -134,6 +145,9 @@ export const buildTopicAssociationsGraph = (
   });
 
   const relatedTopics = topic.relatedTopics ?? [];
+  const isolatedTopics = (topic.isolatedTopics ?? []).filter(
+    (isolatedTopic) => !relatedTopics.some((relatedTopic) => relatedTopic.id === isolatedTopic.id)
+  );
   const radius = 250;
   const angles = getAssociationAngles(relatedTopics.length);
 
@@ -167,6 +181,28 @@ export const buildTopicAssociationsGraph = (
       animated: true,
       style: { stroke: '#adb5bd', strokeWidth: 2 },
       markerEnd: { type: MarkerType.ArrowClosed, color: '#adb5bd' },
+    });
+  });
+
+  const isolatedRadius = 320;
+  const isolatedAngles = getIsolatedAngles(isolatedTopics.length);
+
+  isolatedTopics.forEach((isolatedTopic, index) => {
+    const angle = isolatedAngles[index] ?? Math.PI / 2;
+    const x = rootPosition.x + isolatedRadius * Math.cos(angle);
+    const y = rootPosition.y + isolatedRadius * Math.sin(angle);
+
+    nodes.push({
+      id: `isolated-topic-${isolatedTopic.id}`,
+      type: 'topic',
+      position: { x, y },
+      data: {
+        kind: 'topic',
+        title: isolatedTopic.title,
+        creatorFullName: isolatedTopic.creatorFullName,
+        isIsolated: true,
+        payload: isolatedTopic,
+      },
     });
   });
 

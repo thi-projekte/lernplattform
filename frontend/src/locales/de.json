@@ -84,6 +84,7 @@
       "associatedTopic": "Verknüpftes Thema",
       "clickTopicNodeToSeeDetails": "Klicke auf einen Themenknoten, um die Details zu sehen.",
       "clickAssociationToRemove": "Klicke auf eine Verbindungslinie, um das verknüpfte Thema zu entfernen.",
+      "clickIsolatedTopicToAssociate": "Klicke auf einen isolierten Themenknoten, um eine Verknüpfung zu erstellen.",
       "viewportStatus": "Viewport x: {{x}}, y: {{y}}, Zoom: {{zoom}}"
     }
   },

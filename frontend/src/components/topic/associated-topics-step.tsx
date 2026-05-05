@@ -1,6 +1,6 @@
 import type { Topic } from '../../schemas/topic.ts';
 import { Badge, Group, Paper, Stack, Text, Title } from '@mantine/core';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { OnMoveEnd, Viewport } from '@xyflow/react';
 import TopicSearchbar from './topic-searchbar.tsx';
@@ -8,6 +8,7 @@ import EntityTable from '../entity-table.tsx';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
 import TopicAssociationsGraph from '../graph-view/topic-associations-graph.tsx';
 import type { GraphTopicNodeData } from '../graph-view/topic-graph.types.ts';
+import type { ListTopicDto } from '../../schemas/topic.ts';
 
 interface AssociatedTopicsStepProps {
   topic: Partial<Topic>;
@@ -18,6 +19,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
   const { t } = useTranslation();
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
   const [lastViewport, setLastViewport] = useState<Viewport | null>(null);
+  const [searchSuggestions, setSearchSuggestions] = useState<ListTopicDto[]>([]);
 
   const removeTopic = (topicId: string) => {
     setTopic({
@@ -30,7 +32,28 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
     );
   };
 
+  const createAssociation = (topicId: string) => {
+    const topicToAdd = searchSuggestions.find((topic) => topic.id === topicId);
+
+    if (!topicToAdd) {
+      return;
+    }
+
+    setTopic({
+      ...topic,
+      relatedTopics: [...(topic.relatedTopics ?? []), topicToAdd],
+    });
+
+    setSelectedTopicNode({
+      kind: 'topic',
+      title: topicToAdd.title,
+      creatorFullName: topicToAdd.creatorFullName,
+      payload: topicToAdd,
+    });
+  };
+
   const columns = useTopicColumns({ deleteActionHandler: removeTopic });
+  const existingIds = useMemo(() => (topic.relatedTopics ?? []).map((t) => t.id), [topic.relatedTopics]);
   const selectedCategories =
     selectedTopicNode && 'categories' in selectedTopicNode.payload
       ? selectedTopicNode.payload.categories
@@ -40,13 +63,29 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
     setLastViewport(viewport);
   };
 
+  const handleSuggestionsChange = useCallback((topics: ListTopicDto[], searchTerm: string) => {
+    const nextSuggestions = searchTerm.trim() ? topics.slice(0, 4) : [];
+
+    setSearchSuggestions((current) => {
+      if (
+        current.length === nextSuggestions.length &&
+        current.every((topic, index) => topic.id === nextSuggestions[index]?.id)
+      ) {
+        return current;
+      }
+
+      return nextSuggestions;
+    });
+  }, []);
+
   return (
     <Stack>
       <TopicSearchbar
         onAdd={(newTopic) =>
           setTopic({ ...topic, relatedTopics: [...(topic.relatedTopics ?? []), newTopic] })
         }
-        existingIds={(topic.relatedTopics ?? []).map((t) => t.id)}
+        existingIds={existingIds}
+        onSuggestionsChange={handleSuggestionsChange}
       />
       <EntityTable data={topic.relatedTopics ?? []} columns={columns} hidePagination />
       <Paper withBorder radius="md" h={520} style={{ overflow: 'hidden' }}>
@@ -56,10 +95,13 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
             title: topic.title,
             categories: topic.categories,
             relatedTopics: topic.relatedTopics,
+            isolatedTopics: searchSuggestions,
           }}
           onTopicClick={setSelectedTopicNode}
+          onAssociationCreate={createAssociation}
           onAssociationClick={removeTopic}
           onMoveEnd={handleMoveEnd}
+          canEditAssociations
           canDeleteAssociations
           allowNodeDragging
           allowCanvasPanning
@@ -96,6 +138,9 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
             </Text>
             <Text size="sm" c="dimmed">
               {t('topic.graph.clickAssociationToRemove')}
+            </Text>
+            <Text size="sm" c="dimmed">
+              {t('topic.graph.clickIsolatedTopicToAssociate')}
             </Text>
           </Stack>
         )}

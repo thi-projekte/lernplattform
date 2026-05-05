@@ -8,6 +8,7 @@ export interface TopicAssociationsGraphInput extends Record<string, unknown> {
   creatorFullName?: string;
   categories?: Category[];
   relatedTopics?: ListTopicDto[];
+  isolatedTopics?: ListTopicDto[];
 }
 
 export interface GraphTopicNodeData extends Record<string, unknown> {
@@ -15,6 +16,7 @@ export interface GraphTopicNodeData extends Record<string, unknown> {
   title: string;
   creatorFullName?: string;
   isRoot?: boolean;
+  isIsolated?: boolean;
   payload: TopicAssociationsGraphInput | Omit<Topic, 'relatedTopics'> | Topic | ListTopicDto;
 }
 
