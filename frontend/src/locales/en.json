@@ -85,6 +85,8 @@
       "legendRoot": "Current topic",
       "legendAssociated": "Associated topic",
       "legendIsolated": "Isolated topic",
+      "isolatedTopic": "Isolated topic",
+      "hideIsolatedTopic": "Hide from graph",
       "relatedTopicsTableTitle": "Associated topics list",
       "relatedTopicsTableDescription": "The table below shows all currently connected topics and lets you remove them directly.",
       "currentTopic": "Current topic",

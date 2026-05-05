@@ -85,6 +85,8 @@
       "legendRoot": "Aktuelles Thema",
       "legendAssociated": "Verknuepftes Thema",
       "legendIsolated": "Isoliertes Thema",
+      "isolatedTopic": "Isoliertes Thema",
+      "hideIsolatedTopic": "Aus dem Graphen ausblenden",
       "relatedTopicsTableTitle": "Liste verknuepfter Themen",
       "relatedTopicsTableDescription": "Die Tabelle zeigt alle aktuell verbundenen Themen und erlaubt das direkte Entfernen.",
       "currentTopic": "Aktuelles Thema",

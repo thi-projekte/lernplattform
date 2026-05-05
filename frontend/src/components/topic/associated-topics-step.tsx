@@ -1,5 +1,5 @@
 import type { Topic } from '../../schemas/topic.ts';
-import { Badge, Group, Paper, Stack, Text, Title } from '@mantine/core';
+import { Badge, Button, Group, Paper, Stack, Text, Title } from '@mantine/core';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { OnMoveEnd, Viewport } from '@xyflow/react';
@@ -52,6 +52,18 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
       creatorFullName: topicToAdd.creatorFullName,
       payload: topicToAdd,
     });
+  };
+
+  const hideIsolatedTopic = (topicId: string) => {
+    setSearchSuggestions((current) => current.filter((topic) => topic.id !== topicId));
+    setNodePositions((current) => {
+      const next = { ...current };
+      delete next[`isolated-topic-${topicId}`];
+      return next;
+    });
+    setSelectedTopicNode((current) =>
+      current && current.payload.id === topicId ? null : current
+    );
   };
 
   const columns = useTopicColumns({ deleteActionHandler: removeTopic });
@@ -173,8 +185,28 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                 <Text size="sm" c="dimmed">
                   {selectedTopicNode.isRoot
                     ? t('topic.graph.currentTopic')
-                    : t('topic.graph.associatedTopic')}
+                    : selectedTopicNode.isIsolated
+                      ? t('topic.graph.isolatedTopic')
+                      : t('topic.graph.associatedTopic')}
                 </Text>
+                {selectedTopicNode.isIsolated &&
+                  (() => {
+                    const selectedTopicId = selectedTopicNode.payload.id;
+                    if (typeof selectedTopicId !== 'string') {
+                      return null;
+                    }
+
+                    return (
+                      <Button
+                        variant="light"
+                        color="blue"
+                        size="xs"
+                        onClick={() => hideIsolatedTopic(selectedTopicId)}
+                      >
+                        {t('topic.graph.hideIsolatedTopic')}
+                      </Button>
+                    );
+                  })()}
               </Stack>
             ) : (
               <Stack gap="xs">

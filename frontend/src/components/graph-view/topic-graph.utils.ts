@@ -48,8 +48,8 @@ const getIsolatedAngles = (count: number) => {
   if (count <= 0) return [];
   if (count === 1) return [Math.PI / 2];
 
-  const startAngle = Math.PI / 6;
-  const endAngle = (5 * Math.PI) / 6;
+  const startAngle = Math.PI / 4;
+  const endAngle = (3 * Math.PI) / 4;
   const step = (endAngle - startAngle) / (count - 1);
 
   return Array.from({ length: count }, (_, index) => startAngle + index * step);
@@ -134,7 +134,7 @@ export const buildTopicAssociationsGraph = (
 
   const rootId = topic.id ? `topic-${topic.id}` : 'topic-root';
   const rootTitle = topic.title?.trim() || 'Untitled topic';
-  const rootPosition = { x: 400, y: 340 };
+  const rootPosition = { x: 400, y: 320 };
 
   nodes.push({
     id: rootId,
@@ -189,7 +189,7 @@ export const buildTopicAssociationsGraph = (
     });
   });
 
-  const isolatedRadius = 320;
+  const isolatedRadius = 180;
   const isolatedAngles = getIsolatedAngles(isolatedTopics.length);
 
   isolatedTopics.forEach((isolatedTopic, index) => {
