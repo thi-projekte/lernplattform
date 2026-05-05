@@ -1,8 +1,11 @@
 import type { Topic } from '../../schemas/topic.ts';
-import { Stack } from '@mantine/core';
+import { Badge, Group, Paper, Stack, Text, Title } from '@mantine/core';
+import { useState } from 'react';
 import TopicSearchbar from './topic-searchbar.tsx';
 import EntityTable from '../entity-table.tsx';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
+import TopicAssociationsGraph from '../graph-view/topic-associations-graph.tsx';
+import type { GraphTopicNodeData } from '../graph-view/topic-graph.types.ts';
 
 interface AssociatedTopicsStepProps {
   topic: Partial<Topic>;
@@ -10,6 +13,8 @@ interface AssociatedTopicsStepProps {
 }
 
 const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) => {
+  const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
+
   const removeTopic = (topicId: string) => {
     setTopic({
       ...topic,
@@ -18,6 +23,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
   };
 
   const columns = useTopicColumns({ deleteActionHandler: removeTopic });
+  const selectedCategories =
+    selectedTopicNode && 'categories' in selectedTopicNode.payload
+      ? selectedTopicNode.payload.categories
+      : undefined;
 
   return (
     <Stack>
@@ -28,6 +37,46 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
         existingIds={(topic.relatedTopics ?? []).map((t) => t.id)}
       />
       <EntityTable data={topic.relatedTopics ?? []} columns={columns} hidePagination />
+      <Paper withBorder radius="md" h={520} style={{ overflow: 'hidden' }}>
+        <TopicAssociationsGraph
+          topic={{
+            id: topic.id,
+            title: topic.title,
+            categories: topic.categories,
+            relatedTopics: topic.relatedTopics,
+          }}
+          onTopicClick={setSelectedTopicNode}
+          allowNodeDragging
+        />
+      </Paper>
+      <Paper withBorder radius="md" p="md">
+        {selectedTopicNode ? (
+          <Stack gap="xs">
+            <Title order={4}>{selectedTopicNode.title}</Title>
+            {selectedTopicNode.creatorFullName && (
+              <Text size="sm" c="dimmed">
+                {selectedTopicNode.creatorFullName}
+              </Text>
+            )}
+            {selectedCategories && selectedCategories.length > 0 && (
+              <Group gap="xs">
+                {selectedCategories.map((category) => (
+                  <Badge key={category.title} color={`#${category.color}`}>
+                    {category.title}
+                  </Badge>
+                ))}
+              </Group>
+            )}
+            <Text size="sm" c="dimmed">
+              {selectedTopicNode.isRoot ? 'Current topic' : 'Associated topic'}
+            </Text>
+          </Stack>
+        ) : (
+          <Text size="sm" c="dimmed">
+            Click on a topic node to see its details.
+          </Text>
+        )}
+      </Paper>
     </Stack>
   );
 };

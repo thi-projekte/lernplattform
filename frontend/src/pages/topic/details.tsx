@@ -1,7 +1,6 @@
 import { useParams } from 'react-router';
 import { useQueryTopic } from '../../api/topic.ts';
-import { ReactFlow, Controls, Background, type Node, type Edge, MarkerType } from '@xyflow/react';
-import '@xyflow/react/dist/style.css';
+import { type Node, type NodeMouseHandler } from '@xyflow/react';
 import { Layout } from '../../components/layout.tsx';
 import { Paper, Text, Stack } from '@mantine/core';
 import { useMemo, useState } from 'react';
@@ -13,34 +12,13 @@ import { useTranslation } from 'react-i18next';
 import ContentSidebarContent from '../../components/graph-view/sidebar/content-sidebar-content.tsx';
 import TopicSidebarContent from '../../components/graph-view/sidebar/topic-sidebar-content.tsx';
 import LayoutLoader from '../../components/layout-loader.tsx';
+import TopicGraphView from '../../components/graph-view/topic-graph.tsx';
+import { buildTopicDetailsGraph } from '../../components/graph-view/topic-graph.utils.ts';
+import type { TopicGraphNodeData } from '../../components/graph-view/topic-graph.types.ts';
 
 const nodeTypes = {
   topic: TopicNode,
   content: ContentNode,
-};
-
-// PLEASE DO NOT CHANGE THIS LOGIC !!!!
-const getHandleForAngle = (angle: number) => {
-  const a = ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-  if (a >= (7 * Math.PI) / 4 || a < Math.PI / 4) return 'right';
-  if (a >= Math.PI / 4 && a < (3 * Math.PI) / 4) return 'bottom';
-  if (a >= (3 * Math.PI) / 4 && a < (5 * Math.PI) / 4) return 'left';
-  return 'top';
-};
-
-const getOppositeHandle = (handle: string) => {
-  switch (handle) {
-    case 'right':
-      return 'left';
-    case 'left':
-      return 'right';
-    case 'top':
-      return 'bottom';
-    case 'bottom':
-      return 'top';
-    default:
-      return 'left';
-  }
 };
 
 const TopicDetailsPage = () => {
@@ -53,63 +31,19 @@ const TopicDetailsPage = () => {
     AnyContentElementDto | Omit<Topic, 'relatedTopics'> | null
   >(null);
 
-  const { nodes, edges } = useMemo<{ nodes: Node[]; edges: Edge[] }>(() => {
-    const nodes: Node[] = [];
-    const edges: Edge[] = [];
-    if (topic) {
-      nodes.push({
-        id: 'topic-root',
-        type: 'topic',
-        position: { x: 400, y: 300 },
-        data: topic,
-      });
-
-      const radius = 300;
-
-      const sortedContents = [...(topic.contentElements || [])].sort((a, b) => {
-        const rankA = a.rank ?? Infinity;
-        const rankB = b.rank ?? Infinity;
-        return rankA - rankB;
-      });
-
-      sortedContents.forEach((content, index) => {
-        const id = `content-${index}`;
-        const angleStep = Math.PI / 6;
-        const angle = index * angleStep - Math.PI / 2;
-        const x = 400 + radius * Math.cos(angle);
-        const y = 300 + radius * Math.sin(angle);
-
-        nodes.push({
-          id,
-          type: 'content',
-          position: { x, y },
-          data: content,
-        });
-
-        const sourceHandle = getHandleForAngle(angle);
-        const targetHandle = getOppositeHandle(sourceHandle);
-
-        edges.push({
-          id: `edge-root-${id}`,
-          source: 'topic-root',
-          target: id,
-          sourceHandle,
-          targetHandle,
-          animated: true,
-          style: { stroke: '#adb5bd', strokeWidth: 2 },
-          markerEnd: { type: MarkerType.ArrowClosed, color: '#adb5bd' },
-        });
-      });
-    }
-    return { nodes, edges };
+  const { nodes, edges } = useMemo(() => {
+    return buildTopicDetailsGraph(topic);
   }, [topic]);
 
-  const onNodeClick = (_event: React.MouseEvent, node: Node) => {
-    if (node.id === 'topic-root') {
-      setSelectedElement(topic || null);
-    } else if (node.id.startsWith('content-')) {
-      setSelectedElement(node.data as AnyContentElementDto);
+  const onNodeClick: NodeMouseHandler = (_event, node) => {
+    const graphNode = node as Node<TopicGraphNodeData>;
+
+    if (graphNode.data.kind === 'topic') {
+      setSelectedElement(graphNode.data.payload as Omit<Topic, 'relatedTopics'>);
+      return;
     }
+
+    setSelectedElement(graphNode.data.payload as AnyContentElementDto);
   };
 
   if (isLoading) {
@@ -129,19 +63,12 @@ const TopicDetailsPage = () => {
         }}
       >
         <div style={{ flex: 1, position: 'relative', backgroundColor: '#f8f9fa' }}>
-          <ReactFlow
+          <TopicGraphView
             nodes={nodes}
             edges={edges}
             onNodeClick={onNodeClick}
             nodeTypes={nodeTypes}
-            fitView
-            nodesDraggable={false}
-            nodesConnectable={false}
-            fitViewOptions={{ padding: 0.2 }}
-          >
-            <Controls showInteractive={false} />
-            <Background color="#dee2e6" gap={16} />
-          </ReactFlow>
+          />
         </div>
 
         <Paper
