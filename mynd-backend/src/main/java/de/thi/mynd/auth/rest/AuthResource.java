@@ -13,27 +13,26 @@ import jakarta.ws.rs.core.Response;
 @Path("/auth")
 public final class AuthResource {
 
-    @Inject
-    AuthService authService;
+  @Inject AuthService authService;
 
-    @POST
-    @Path("/check-existance")
-    public Response checkUserExists(@Valid CheckUsernameExistsRequestDto requestDto) {
-        if (authService.checkUsernameExists(requestDto.username)) {
-            return Response.ok().build();
-        }
-        return Response.noContent().build();
+  @POST
+  @Path("/check-existance")
+  public Response checkUserExists(@Valid CheckUsernameExistsRequestDto requestDto) {
+    if (authService.checkUsernameExists(requestDto.username)) {
+      return Response.ok().build();
     }
+    return Response.noContent().build();
+  }
 
-    @POST
-    @Path("/register")
-    public Response createUserAccount(@Valid RegisterUserRequestDto requestDto) {
+  @POST
+  @Path("/register")
+  public Response createUserAccount(@Valid RegisterUserRequestDto requestDto) {
 
-        try {
-            authService.registerUser(requestDto);
-            return Response.status(201).build();
-        } catch (UserAlreadyExistsException e) {
-            return Response.status(400).build();
-        }
+    try {
+      authService.registerUser(requestDto);
+      return Response.status(201).build();
+    } catch (UserAlreadyExistsException e) {
+      return Response.status(400).build();
     }
+  }
 }
