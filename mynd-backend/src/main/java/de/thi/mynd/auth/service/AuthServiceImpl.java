@@ -39,7 +39,7 @@ public final class AuthServiceImpl implements AuthService {
     userRepresentation.setEnabled(true);
     userRepresentation.setEmail(requestDto.email);
     userRepresentation.setFirstName(requestDto.firstName);
-    userRepresentation.setUsername(requestDto.lastName);
+    userRepresentation.setLastName(requestDto.lastName);
     userRepresentation.setCredentials(List.of(creds));
 
     List<String> roles = new ArrayList<>();
