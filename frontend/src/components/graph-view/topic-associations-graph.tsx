@@ -11,7 +11,11 @@ import type {
 import TopicNode from './topic-node.tsx';
 import TopicGraphView from './topic-graph.tsx';
 import { buildTopicAssociationsGraph } from './topic-graph.utils.ts';
-import type { GraphTopicNodeData, TopicAssociationsGraphInput } from './topic-graph.types.ts';
+import type {
+  GraphTopicNodeData,
+  TopicAssociationsGraphInput,
+  TopicGraphNodePositions,
+} from './topic-graph.types.ts';
 
 const nodeTypes: NodeTypes = {
   topic: TopicNode,
@@ -24,6 +28,7 @@ interface TopicAssociationsGraphProps {
   onAssociationClick?: (relatedTopicId: string) => void;
   onMoveEnd?: OnMoveEnd;
   onConnect?: OnConnect;
+  onNodePositionChange?: (nodeId: string, position: { x: number; y: number }) => void;
   canEditAssociations?: boolean;
   canDeleteAssociations?: boolean;
   allowNodeDragging?: boolean;
@@ -33,6 +38,7 @@ interface TopicAssociationsGraphProps {
   fitViewPadding?: number;
   backgroundColor?: string;
   backgroundGap?: number;
+  nodePositions?: TopicGraphNodePositions;
 }
 
 const TopicAssociationsGraph = ({
@@ -42,6 +48,7 @@ const TopicAssociationsGraph = ({
   onAssociationClick,
   onMoveEnd,
   onConnect,
+  onNodePositionChange,
   canEditAssociations = false,
   canDeleteAssociations = false,
   allowNodeDragging = false,
@@ -51,8 +58,12 @@ const TopicAssociationsGraph = ({
   fitViewPadding = 0.2,
   backgroundColor = '#dee2e6',
   backgroundGap = 16,
+  nodePositions,
 }: TopicAssociationsGraphProps) => {
-  const { nodes, edges } = useMemo(() => buildTopicAssociationsGraph(topic), [topic]);
+  const { nodes, edges } = useMemo(
+    () => buildTopicAssociationsGraph(topic, nodePositions),
+    [nodePositions, topic]
+  );
 
   const handleNodeClick: NodeMouseHandler = (_event, node) => {
     const graphNode = node as Node<GraphTopicNodeData>;
@@ -79,12 +90,17 @@ const TopicAssociationsGraph = ({
     }
   };
 
+  const handleNodeDragStop: NodeMouseHandler = (_event, node) => {
+    onNodePositionChange?.(node.id, node.position);
+  };
+
   return (
     <TopicGraphView
       nodes={nodes}
       edges={edges}
       nodeTypes={nodeTypes}
       onNodeClick={onTopicClick ? handleNodeClick : undefined}
+      onNodeDragStop={allowNodeDragging ? handleNodeDragStop : undefined}
       onEdgeClick={canDeleteAssociations ? handleEdgeClick : undefined}
       onMoveEnd={onMoveEnd}
       onConnect={onConnect}

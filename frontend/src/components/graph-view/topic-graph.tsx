@@ -20,6 +20,7 @@ interface TopicGraphViewProps {
   edges: Edge[];
   nodeTypes: NodeTypes;
   onNodeClick?: NodeMouseHandler;
+  onNodeDragStop?: NodeMouseHandler;
   onEdgeClick?: EdgeMouseHandler;
   onMoveEnd?: OnMoveEnd;
   onConnect?: OnConnect;
@@ -38,6 +39,7 @@ const TopicGraphView = ({
   edges,
   nodeTypes,
   onNodeClick,
+  onNodeDragStop,
   onEdgeClick,
   onMoveEnd,
   onConnect,
@@ -67,6 +69,7 @@ const TopicGraphView = ({
       edges={internalEdges}
       nodeTypes={nodeTypes}
       onNodeClick={onNodeClick}
+      onNodeDragStop={onNodeDragStop}
       onEdgeClick={onEdgeClick}
       onMoveEnd={onMoveEnd}
       onNodesChange={onNodesChange}

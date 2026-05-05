@@ -29,3 +29,5 @@ export interface GraphContentNodeData extends Record<string, unknown> {
 export type TopicGraphNodeData = GraphTopicNodeData | GraphContentNodeData;
 
 export type TopicGraphNode = Node<TopicGraphNodeData>;
+
+export type TopicGraphNodePositions = Record<string, { x: number; y: number }>;

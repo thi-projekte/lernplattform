@@ -1,6 +1,10 @@
 import { MarkerType, type Edge } from '@xyflow/react';
 import type { ListTopicDto, Topic } from '../../schemas/topic';
-import type { TopicAssociationsGraphInput, TopicGraphNode } from './topic-graph.types';
+import type {
+  TopicAssociationsGraphInput,
+  TopicGraphNode,
+  TopicGraphNodePositions,
+} from './topic-graph.types';
 
 // The edge handles are derived from node angles so arrows stay attached to the
 // most natural side of each node. Be careful when changing this mapping,
@@ -118,7 +122,8 @@ export const buildTopicDetailsGraph = (
 };
 
 export const buildTopicAssociationsGraph = (
-  topic?: TopicAssociationsGraphInput
+  topic?: TopicAssociationsGraphInput,
+  nodePositions: TopicGraphNodePositions = {}
 ): { nodes: TopicGraphNode[]; edges: Edge[] } => {
   const nodes: TopicGraphNode[] = [];
   const edges: Edge[] = [];
@@ -134,7 +139,7 @@ export const buildTopicAssociationsGraph = (
   nodes.push({
     id: rootId,
     type: 'topic',
-    position: rootPosition,
+    position: nodePositions[rootId] ?? rootPosition,
     data: {
       kind: 'topic',
       title: rootTitle,
@@ -160,7 +165,7 @@ export const buildTopicAssociationsGraph = (
     nodes.push({
       id: nodeId,
       type: 'topic',
-      position: { x, y },
+      position: nodePositions[nodeId] ?? { x, y },
       data: {
         kind: 'topic',
         title: relatedTopic.title,
@@ -192,10 +197,12 @@ export const buildTopicAssociationsGraph = (
     const x = rootPosition.x + isolatedRadius * Math.cos(angle);
     const y = rootPosition.y + isolatedRadius * Math.sin(angle);
 
+    const nodeId = `isolated-topic-${isolatedTopic.id}`;
+
     nodes.push({
-      id: `isolated-topic-${isolatedTopic.id}`,
+      id: nodeId,
       type: 'topic',
-      position: { x, y },
+      position: nodePositions[nodeId] ?? { x, y },
       data: {
         kind: 'topic',
         title: isolatedTopic.title,

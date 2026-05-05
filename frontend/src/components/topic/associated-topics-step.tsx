@@ -7,7 +7,7 @@ import TopicSearchbar from './topic-searchbar.tsx';
 import EntityTable from '../entity-table.tsx';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
 import TopicAssociationsGraph from '../graph-view/topic-associations-graph.tsx';
-import type { GraphTopicNodeData } from '../graph-view/topic-graph.types.ts';
+import type { GraphTopicNodeData, TopicGraphNodePositions } from '../graph-view/topic-graph.types.ts';
 import type { ListTopicDto } from '../../schemas/topic.ts';
 
 interface AssociatedTopicsStepProps {
@@ -20,6 +20,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
   const [lastViewport, setLastViewport] = useState<Viewport | null>(null);
   const [searchSuggestions, setSearchSuggestions] = useState<ListTopicDto[]>([]);
+  const [nodePositions, setNodePositions] = useState<TopicGraphNodePositions>({});
 
   const removeTopic = (topicId: string) => {
     setTopic({
@@ -78,6 +79,23 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
     });
   }, []);
 
+  const handleNodePositionChange = useCallback(
+    (nodeId: string, position: { x: number; y: number }) => {
+      setNodePositions((current) => {
+        const previous = current[nodeId];
+        if (previous && previous.x === position.x && previous.y === position.y) {
+          return current;
+        }
+
+        return {
+          ...current,
+          [nodeId]: position,
+        };
+      });
+    },
+    []
+  );
+
   return (
     <Stack>
       <TopicSearchbar
@@ -101,10 +119,12 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
           onAssociationCreate={createAssociation}
           onAssociationClick={removeTopic}
           onMoveEnd={handleMoveEnd}
+          onNodePositionChange={handleNodePositionChange}
           canEditAssociations
           canDeleteAssociations
           allowNodeDragging
           allowCanvasPanning
+          nodePositions={nodePositions}
         />
       </Paper>
       <Paper withBorder radius="md" p="md">
