@@ -5,7 +5,6 @@ import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.security.SecurityService;
 import de.thi.mynd.topic.dto.ListTopicDto;
-import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.Topic;
