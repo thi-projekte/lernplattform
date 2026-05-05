@@ -15,6 +15,8 @@ import org.junit.jupiter.api.Test;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.mockito.ArgumentCaptor;
 
+import java.util.List;
+
 @QuarkusTest
 class AuthServiceImplTest {
 
@@ -50,14 +52,14 @@ class AuthServiceImplTest {
     authService.registerUser(dto);
 
     // Assert
-    ArgumentCaptor<UserRepresentation> captor = ArgumentCaptor.forClass(UserRepresentation.class);
-    verify(identityService).createUser(captor.capture());
+    ArgumentCaptor<List<String>> captor = ArgumentCaptor.forClass(List.class);
+    ArgumentCaptor<UserRepresentation> captor2 = ArgumentCaptor.forClass(UserRepresentation.class);
+    verify(identityService).createUser(captor2.capture(), captor.capture());
 
-    UserRepresentation capturedUser = captor.getValue();
+    UserRepresentation capturedUser = captor2.getValue();
     assertEquals("test@example.com", capturedUser.getEmail());
-    // Note: Your current code has a bug: userRepresentation.setUsername(requestDto.lastName)
-    // will overwrite the username. The test will catch this.
-    assertTrue(capturedUser.getClientRoles().get("mynd").contains("builder"));
+    List<String> roles = captor.getValue();
+    assertTrue(roles.contains("builder"));
   }
 
   @Test
@@ -74,6 +76,6 @@ class AuthServiceImplTest {
           authService.registerUser(dto);
         });
 
-    verify(identityService, never()).createUser(any());
+    verify(identityService, never()).createUser(any(), any());
   }
 }

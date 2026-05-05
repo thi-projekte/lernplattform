@@ -47,11 +47,6 @@ public final class AuthServiceImpl implements AuthService {
       roles.add("builder");
     }
 
-    Map<String, List<String>> clientRoles = new HashMap<>();
-    clientRoles.put("mynd", roles);
-
-    userRepresentation.setClientRoles(clientRoles);
-
-    identityService.createUser(userRepresentation);
+    identityService.createUser(userRepresentation, roles);
   }
 }

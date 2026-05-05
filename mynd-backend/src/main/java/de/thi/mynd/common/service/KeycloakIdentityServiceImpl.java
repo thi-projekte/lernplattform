@@ -4,9 +4,15 @@ import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.Response;
+
+import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
+import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
 @ApplicationScoped
@@ -38,12 +44,23 @@ public final class KeycloakIdentityServiceImpl implements IdentityService {
   }
 
   @Override
-  public void createUser(UserRepresentation userRepresentation) {
-    Response response = keycloak.realm(realm).users().create(userRepresentation);
-    if (response.getStatus() == 201) {
-      Log.infof("Successfully registered new user: %s", userRepresentation.getUsername());
-    } else {
-      Log.error("Error while creating new user");
+  public void createUser(UserRepresentation userRepresentation, List<String> myndRoles) {
+    RealmResource realmResource = keycloak.realm(realm);
+    UsersResource usersRessource = realmResource.users();
+
+    // TODO: Handle case with already existing email
+    // TODO: Do better error handling
+
+    Response response = usersRessource.create(userRepresentation);;
+    String userId = CreatedResponseUtil.getCreatedId(response);
+    String clientUuid = keycloak.realm(realm).clients().findByClientId("mynd").get(0).getId();
+
+    List<RoleRepresentation> reps = new ArrayList<>();
+    for (String role : myndRoles) {
+      RoleRepresentation roleRepresentation = keycloak.realm(realm).clients().get(clientUuid).roles().get(role).toRepresentation();
+      reps.add(roleRepresentation);
     }
+
+      keycloak.realm(realm).users().get(userId).roles().clientLevel(clientUuid).add(reps);
   }
 }
