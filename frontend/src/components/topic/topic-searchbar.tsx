@@ -11,11 +11,7 @@ interface TopicSearchbarProps {
   onSuggestionsChange?: (topics: ListTopicDto[], searchTerm: string) => void;
 }
 
-const TopicSearchbar = ({
-  onAdd,
-  existingIds = [],
-  onSuggestionsChange,
-}: TopicSearchbarProps) => {
+const TopicSearchbar = ({ onAdd, existingIds = [], onSuggestionsChange }: TopicSearchbarProps) => {
   const [value, setValue] = useState('');
   const [debouncedSearch] = useDebouncedValue(value, 300);
 

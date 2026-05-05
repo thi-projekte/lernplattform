@@ -43,12 +43,7 @@ const HexagonNode = ({
       }}
     >
       <Handle type="target" position={Position.Top} id="top" style={{ opacity: 0, top: 2 }} />
-      <Handle
-        type="target"
-        position={Position.Right}
-        id="right"
-        style={{ opacity: 0, right: 2 }}
-      />
+      <Handle type="target" position={Position.Right} id="right" style={{ opacity: 0, right: 2 }} />
       <Handle
         type="target"
         position={Position.Bottom}
@@ -58,12 +53,7 @@ const HexagonNode = ({
       <Handle type="target" position={Position.Left} id="left" style={{ opacity: 0, left: 2 }} />
 
       <Handle type="source" position={Position.Top} id="top" style={{ opacity: 0, top: 2 }} />
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="right"
-        style={{ opacity: 0, right: 2 }}
-      />
+      <Handle type="source" position={Position.Right} id="right" style={{ opacity: 0, right: 2 }} />
       <Handle
         type="source"
         position={Position.Bottom}

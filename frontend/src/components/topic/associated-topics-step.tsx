@@ -7,7 +7,10 @@ import TopicSearchbar from './topic-searchbar.tsx';
 import EntityTable from '../entity-table.tsx';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
 import TopicAssociationsGraph from '../graph-view/topic-associations-graph.tsx';
-import type { GraphTopicNodeData, TopicGraphNodePositions } from '../graph-view/topic-graph.types.ts';
+import type {
+  GraphTopicNodeData,
+  TopicGraphNodePositions,
+} from '../graph-view/topic-graph.types.ts';
 import type { ListTopicDto } from '../../schemas/topic.ts';
 
 interface AssociatedTopicsStepProps {
@@ -28,9 +31,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
       relatedTopics: (topic.relatedTopics ?? []).filter((ass) => ass.id !== topicId),
     });
 
-    setSelectedTopicNode((current) =>
-      current && current.payload.id === topicId ? null : current
-    );
+    setSelectedTopicNode((current) => (current && current.payload.id === topicId ? null : current));
   };
 
   const createAssociation = (topicId: string) => {
@@ -54,7 +55,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
   };
 
   const columns = useTopicColumns({ deleteActionHandler: removeTopic });
-  const existingIds = useMemo(() => (topic.relatedTopics ?? []).map((t) => t.id), [topic.relatedTopics]);
+  const existingIds = useMemo(
+    () => (topic.relatedTopics ?? []).map((t) => t.id),
+    [topic.relatedTopics]
+  );
   const selectedCategories =
     selectedTopicNode && 'categories' in selectedTopicNode.payload
       ? selectedTopicNode.payload.categories
