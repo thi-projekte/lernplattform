@@ -61,9 +61,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
       delete next[`isolated-topic-${topicId}`];
       return next;
     });
-    setSelectedTopicNode((current) =>
-      current && current.payload.id === topicId ? null : current
-    );
+    setSelectedTopicNode((current) => (current && current.payload.id === topicId ? null : current));
   };
 
   const columns = useTopicColumns({ deleteActionHandler: removeTopic });
