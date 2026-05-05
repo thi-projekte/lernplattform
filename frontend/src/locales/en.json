@@ -80,6 +80,13 @@
       "IMAGE": "Image"
     },
     "graph": {
+      "workspaceTitle": "Topic graph",
+      "workspaceDescription": "Drag nodes to arrange the graph, click connected lines to remove associations, and click isolated topics to create new associations.",
+      "legendRoot": "Current topic",
+      "legendAssociated": "Associated topic",
+      "legendIsolated": "Isolated topic",
+      "relatedTopicsTableTitle": "Associated topics list",
+      "relatedTopicsTableDescription": "The table below shows all currently connected topics and lets you remove them directly.",
       "currentTopic": "Current topic",
       "associatedTopic": "Associated topic",
       "clickTopicNodeToSeeDetails": "Click on a topic node to see its details.",

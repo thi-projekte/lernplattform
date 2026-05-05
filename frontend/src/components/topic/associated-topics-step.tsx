@@ -109,6 +109,17 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
         existingIds={existingIds}
         onSuggestionsChange={handleSuggestionsChange}
       />
+      <Stack gap="xs">
+        <Title order={4}>{t('topic.graph.workspaceTitle')}</Title>
+        <Text size="sm" c="dimmed">
+          {t('topic.graph.workspaceDescription')}
+        </Text>
+        <Group gap="xs">
+          <Badge color="red">{t('topic.graph.legendRoot')}</Badge>
+          <Badge color="orange">{t('topic.graph.legendAssociated')}</Badge>
+          <Badge color="blue">{t('topic.graph.legendIsolated')}</Badge>
+        </Group>
+      </Stack>
       <div
         style={{
           display: 'grid',
@@ -190,6 +201,12 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
           </Paper>
         </div>
       </div>
+      <Stack gap="xs">
+        <Title order={4}>{t('topic.graph.relatedTopicsTableTitle')}</Title>
+        <Text size="sm" c="dimmed">
+          {t('topic.graph.relatedTopicsTableDescription')}
+        </Text>
+      </Stack>
       <EntityTable data={topic.relatedTopics ?? []} columns={columns} hidePagination />
     </Stack>
   );

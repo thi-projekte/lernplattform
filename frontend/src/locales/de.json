@@ -80,6 +80,13 @@
       "IMAGE": "Bild"
     },
     "graph": {
+      "workspaceTitle": "Themengraph",
+      "workspaceDescription": "Verschiebe die Knoten, um den Graphen anzuordnen, klicke auf verbundene Linien zum Entfernen von Verknuepfungen und auf isolierte Themen zum Erstellen neuer Verknuepfungen.",
+      "legendRoot": "Aktuelles Thema",
+      "legendAssociated": "Verknuepftes Thema",
+      "legendIsolated": "Isoliertes Thema",
+      "relatedTopicsTableTitle": "Liste verknuepfter Themen",
+      "relatedTopicsTableDescription": "Die Tabelle zeigt alle aktuell verbundenen Themen und erlaubt das direkte Entfernen.",
       "currentTopic": "Aktuelles Thema",
       "associatedTopic": "Verknüpftes Thema",
       "clickTopicNodeToSeeDetails": "Klicke auf einen Themenknoten, um die Details zu sehen.",
