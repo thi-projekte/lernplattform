@@ -1,6 +1,7 @@
 import type { Topic } from '../../schemas/topic.ts';
 import { Badge, Group, Paper, Stack, Text, Title } from '@mantine/core';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import TopicSearchbar from './topic-searchbar.tsx';
 import EntityTable from '../entity-table.tsx';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
@@ -13,6 +14,7 @@ interface AssociatedTopicsStepProps {
 }
 
 const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) => {
+  const { t } = useTranslation();
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
 
   const removeTopic = (topicId: string) => {
@@ -20,6 +22,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
       ...topic,
       relatedTopics: (topic.relatedTopics ?? []).filter((ass) => ass.id !== topicId),
     });
+
+    setSelectedTopicNode((current) =>
+      current && current.payload.id === topicId ? null : current
+    );
   };
 
   const columns = useTopicColumns({ deleteActionHandler: removeTopic });
@@ -46,7 +52,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
             relatedTopics: topic.relatedTopics,
           }}
           onTopicClick={setSelectedTopicNode}
+          onAssociationClick={removeTopic}
+          canDeleteAssociations
           allowNodeDragging
+          allowCanvasPanning
         />
       </Paper>
       <Paper withBorder radius="md" p="md">
@@ -68,13 +77,20 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
               </Group>
             )}
             <Text size="sm" c="dimmed">
-              {selectedTopicNode.isRoot ? 'Current topic' : 'Associated topic'}
+              {selectedTopicNode.isRoot
+                ? t('topic.graph.currentTopic')
+                : t('topic.graph.associatedTopic')}
             </Text>
           </Stack>
         ) : (
-          <Text size="sm" c="dimmed">
-            Click on a topic node to see its details.
-          </Text>
+          <Stack gap="xs">
+            <Text size="sm" c="dimmed">
+              {t('topic.graph.clickTopicNodeToSeeDetails')}
+            </Text>
+            <Text size="sm" c="dimmed">
+              {t('topic.graph.clickAssociationToRemove')}
+            </Text>
+          </Stack>
         )}
       </Paper>
     </Stack>

@@ -78,6 +78,12 @@
       "YOUTUBE_LINK": "YouTube",
       "URI": "URL",
       "IMAGE": "Image"
+    },
+    "graph": {
+      "currentTopic": "Current topic",
+      "associatedTopic": "Associated topic",
+      "clickTopicNodeToSeeDetails": "Click on a topic node to see its details.",
+      "clickAssociationToRemove": "Click on an association line to remove the related topic."
     }
   },
   "auth": {

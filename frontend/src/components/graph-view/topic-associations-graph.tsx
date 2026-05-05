@@ -1,5 +1,13 @@
 import { useMemo } from 'react';
-import type { Node, NodeMouseHandler, NodeTypes, OnConnect, OnMoveEnd } from '@xyflow/react';
+import type {
+  Edge,
+  EdgeMouseHandler,
+  Node,
+  NodeMouseHandler,
+  NodeTypes,
+  OnConnect,
+  OnMoveEnd,
+} from '@xyflow/react';
 import TopicNode from './topic-node.tsx';
 import TopicGraphView from './topic-graph.tsx';
 import { buildTopicAssociationsGraph } from './topic-graph.utils.ts';
@@ -12,10 +20,13 @@ const nodeTypes: NodeTypes = {
 interface TopicAssociationsGraphProps {
   topic?: TopicAssociationsGraphInput;
   onTopicClick?: (topic: GraphTopicNodeData) => void;
+  onAssociationClick?: (relatedTopicId: string) => void;
   onMoveEnd?: OnMoveEnd;
   onConnect?: OnConnect;
   canEditAssociations?: boolean;
+  canDeleteAssociations?: boolean;
   allowNodeDragging?: boolean;
+  allowCanvasPanning?: boolean;
   showControls?: boolean;
   fitView?: boolean;
   fitViewPadding?: number;
@@ -26,10 +37,13 @@ interface TopicAssociationsGraphProps {
 const TopicAssociationsGraph = ({
   topic,
   onTopicClick,
+  onAssociationClick,
   onMoveEnd,
   onConnect,
   canEditAssociations = false,
+  canDeleteAssociations = false,
   allowNodeDragging = false,
+  allowCanvasPanning = true,
   showControls = true,
   fitView = true,
   fitViewPadding = 0.2,
@@ -43,16 +57,29 @@ const TopicAssociationsGraph = ({
     onTopicClick?.(graphNode.data);
   };
 
+  const handleEdgeClick: EdgeMouseHandler = (_event, edge) => {
+    if (!canDeleteAssociations || !onAssociationClick) {
+      return;
+    }
+
+    const relatedTopicId = getRelatedTopicId(edge);
+    if (relatedTopicId) {
+      onAssociationClick(relatedTopicId);
+    }
+  };
+
   return (
     <TopicGraphView
       nodes={nodes}
       edges={edges}
       nodeTypes={nodeTypes}
       onNodeClick={onTopicClick ? handleNodeClick : undefined}
+      onEdgeClick={canDeleteAssociations ? handleEdgeClick : undefined}
       onMoveEnd={onMoveEnd}
       onConnect={onConnect}
       canEditAssociations={canEditAssociations}
       allowNodeDragging={allowNodeDragging}
+      allowCanvasPanning={allowCanvasPanning}
       showControls={showControls}
       fitView={fitView}
       fitViewPadding={fitViewPadding}
@@ -63,3 +90,11 @@ const TopicAssociationsGraph = ({
 };
 
 export default TopicAssociationsGraph;
+
+const getRelatedTopicId = (edge: Edge) => {
+  const relatedNodeId = edge.target.startsWith('related-topic-') ? edge.target : edge.source;
+
+  return relatedNodeId.startsWith('related-topic-')
+    ? relatedNodeId.replace('related-topic-', '')
+    : null;
+};

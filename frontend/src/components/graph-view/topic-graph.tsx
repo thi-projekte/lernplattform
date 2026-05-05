@@ -5,6 +5,7 @@ import {
   useEdgesState,
   useNodesState,
   type Edge,
+  type EdgeMouseHandler,
   type Node,
   type NodeMouseHandler,
   type OnConnect,
@@ -19,10 +20,12 @@ interface TopicGraphViewProps {
   edges: Edge[];
   nodeTypes: NodeTypes;
   onNodeClick?: NodeMouseHandler;
+  onEdgeClick?: EdgeMouseHandler;
   onMoveEnd?: OnMoveEnd;
   onConnect?: OnConnect;
   canEditAssociations?: boolean;
   allowNodeDragging?: boolean;
+  allowCanvasPanning?: boolean;
   showControls?: boolean;
   fitView?: boolean;
   fitViewPadding?: number;
@@ -35,10 +38,12 @@ const TopicGraphView = ({
   edges,
   nodeTypes,
   onNodeClick,
+  onEdgeClick,
   onMoveEnd,
   onConnect,
   canEditAssociations = false,
   allowNodeDragging = false,
+  allowCanvasPanning = true,
   showControls = true,
   fitView = true,
   fitViewPadding = 0.2,
@@ -62,6 +67,7 @@ const TopicGraphView = ({
       edges={internalEdges}
       nodeTypes={nodeTypes}
       onNodeClick={onNodeClick}
+      onEdgeClick={onEdgeClick}
       onMoveEnd={onMoveEnd}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
@@ -70,7 +76,9 @@ const TopicGraphView = ({
       fitViewOptions={{ padding: fitViewPadding }}
       nodesDraggable={canEditAssociations || allowNodeDragging}
       nodesConnectable={canEditAssociations}
-      panOnDrag={!allowNodeDragging}
+      panOnDrag={
+        allowCanvasPanning ? (allowNodeDragging ? [1, 2] : true) : false
+      }
       selectionOnDrag={false}
       elementsSelectable
     >

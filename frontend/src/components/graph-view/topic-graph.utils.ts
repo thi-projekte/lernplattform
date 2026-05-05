@@ -2,7 +2,9 @@ import { MarkerType, type Edge } from '@xyflow/react';
 import type { ListTopicDto, Topic } from '../../schemas/topic';
 import type { TopicAssociationsGraphInput, TopicGraphNode } from './topic-graph.types';
 
-// please do not change this! 
+// The edge handles are derived from node angles so arrows stay attached to the
+// most natural side of each node. Be careful when changing this mapping,
+// because it affects edge routing and label readability across graph variants.
 const getHandleForAngle = (angle: number) => {
   const a = ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
   if (a >= (7 * Math.PI) / 4 || a < Math.PI / 4) return 'right';
