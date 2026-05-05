@@ -109,75 +109,88 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
         existingIds={existingIds}
         onSuggestionsChange={handleSuggestionsChange}
       />
-      <EntityTable data={topic.relatedTopics ?? []} columns={columns} hidePagination />
-      <Paper withBorder radius="md" h={520} style={{ overflow: 'hidden' }}>
-        <TopicAssociationsGraph
-          topic={{
-            id: topic.id,
-            title: topic.title,
-            categories: topic.categories,
-            relatedTopics: topic.relatedTopics,
-            isolatedTopics: searchSuggestions,
-          }}
-          onTopicClick={setSelectedTopicNode}
-          onAssociationCreate={createAssociation}
-          onAssociationClick={removeTopic}
-          onMoveEnd={handleMoveEnd}
-          onNodePositionChange={handleNodePositionChange}
-          canEditAssociations
-          canDeleteAssociations
-          allowNodeDragging
-          allowCanvasPanning
-          nodePositions={nodePositions}
-        />
-      </Paper>
-      <Paper withBorder radius="md" p="md">
-        {selectedTopicNode ? (
-          <Stack gap="xs">
-            <Title order={4}>{selectedTopicNode.title}</Title>
-            {selectedTopicNode.creatorFullName && (
+      <div
+        style={{
+          display: 'grid',
+          gap: '1rem',
+          gridTemplateColumns: 'minmax(0, 2fr) minmax(280px, 1fr)',
+          alignItems: 'stretch',
+        }}
+      >
+        <div>
+          <Paper withBorder radius="md" h={560} style={{ overflow: 'hidden' }}>
+            <TopicAssociationsGraph
+              topic={{
+                id: topic.id,
+                title: topic.title,
+                categories: topic.categories,
+                relatedTopics: topic.relatedTopics,
+                isolatedTopics: searchSuggestions,
+              }}
+              onTopicClick={setSelectedTopicNode}
+              onAssociationCreate={createAssociation}
+              onAssociationClick={removeTopic}
+              onMoveEnd={handleMoveEnd}
+              onNodePositionChange={handleNodePositionChange}
+              canEditAssociations
+              canDeleteAssociations
+              allowNodeDragging
+              allowCanvasPanning
+              nodePositions={nodePositions}
+            />
+          </Paper>
+        </div>
+        <div>
+          <Paper withBorder radius="md" p="md" h="100%">
+            {selectedTopicNode ? (
+              <Stack gap="xs">
+                <Title order={4}>{selectedTopicNode.title}</Title>
+                {selectedTopicNode.creatorFullName && (
+                  <Text size="sm" c="dimmed">
+                    {selectedTopicNode.creatorFullName}
+                  </Text>
+                )}
+                {selectedCategories && selectedCategories.length > 0 && (
+                  <Group gap="xs">
+                    {selectedCategories.map((category) => (
+                      <Badge key={category.title} color={`#${category.color}`}>
+                        {category.title}
+                      </Badge>
+                    ))}
+                  </Group>
+                )}
+                <Text size="sm" c="dimmed">
+                  {selectedTopicNode.isRoot
+                    ? t('topic.graph.currentTopic')
+                    : t('topic.graph.associatedTopic')}
+                </Text>
+              </Stack>
+            ) : (
+              <Stack gap="xs">
+                <Text size="sm" c="dimmed">
+                  {t('topic.graph.clickTopicNodeToSeeDetails')}
+                </Text>
+                <Text size="sm" c="dimmed">
+                  {t('topic.graph.clickAssociationToRemove')}
+                </Text>
+                <Text size="sm" c="dimmed">
+                  {t('topic.graph.clickIsolatedTopicToAssociate')}
+                </Text>
+              </Stack>
+            )}
+            {lastViewport && (
               <Text size="sm" c="dimmed">
-                {selectedTopicNode.creatorFullName}
+                {t('topic.graph.viewportStatus', {
+                  x: Math.round(lastViewport.x),
+                  y: Math.round(lastViewport.y),
+                  zoom: lastViewport.zoom.toFixed(2),
+                })}
               </Text>
             )}
-            {selectedCategories && selectedCategories.length > 0 && (
-              <Group gap="xs">
-                {selectedCategories.map((category) => (
-                  <Badge key={category.title} color={`#${category.color}`}>
-                    {category.title}
-                  </Badge>
-                ))}
-              </Group>
-            )}
-            <Text size="sm" c="dimmed">
-              {selectedTopicNode.isRoot
-                ? t('topic.graph.currentTopic')
-                : t('topic.graph.associatedTopic')}
-            </Text>
-          </Stack>
-        ) : (
-          <Stack gap="xs">
-            <Text size="sm" c="dimmed">
-              {t('topic.graph.clickTopicNodeToSeeDetails')}
-            </Text>
-            <Text size="sm" c="dimmed">
-              {t('topic.graph.clickAssociationToRemove')}
-            </Text>
-            <Text size="sm" c="dimmed">
-              {t('topic.graph.clickIsolatedTopicToAssociate')}
-            </Text>
-          </Stack>
-        )}
-        {lastViewport && (
-          <Text size="sm" c="dimmed">
-            {t('topic.graph.viewportStatus', {
-              x: Math.round(lastViewport.x),
-              y: Math.round(lastViewport.y),
-              zoom: lastViewport.zoom.toFixed(2),
-            })}
-          </Text>
-        )}
-      </Paper>
+          </Paper>
+        </div>
+      </div>
+      <EntityTable data={topic.relatedTopics ?? []} columns={columns} hidePagination />
     </Stack>
   );
 };
