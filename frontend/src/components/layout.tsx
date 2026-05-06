@@ -1,7 +1,7 @@
 import { ActionIcon, AppShell, Burger, Group, Image, NavLink } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconUser } from '@tabler/icons-react';
-import { type FC, type ReactNode, useMemo } from 'react';
+import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import { useTranslation } from 'react-i18next';
 
@@ -18,6 +18,7 @@ interface LayoutProps {
 
 export const Layout: FC<LayoutProps> = ({ children }) => {
   const [opened, { toggle }] = useDisclosure();
+  const [desktopExpanded, setDesktopExpanded] = useState(false);
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -45,11 +46,17 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     [matchingRoute]
   );
 
+  const desktopNavbarWidth = desktopExpanded ? 280 : 76;
+
   return (
     <AppShell
       header={{ height: 60 }}
-      navbar={{ width: 300, breakpoint: 'sm', collapsed: { mobile: !opened } }}
-      padding="md"
+      navbar={{
+        width: desktopNavbarWidth,
+        breakpoint: 'sm',
+        collapsed: { mobile: !opened },
+      }}
+      padding="xs"
     >
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">
@@ -67,18 +74,35 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         </Group>
       </AppShell.Header>
 
-      <AppShell.Navbar p="md">
+      <AppShell.Navbar
+        p="md"
+        onMouseEnter={() => setDesktopExpanded(true)}
+        onMouseLeave={() => setDesktopExpanded(false)}
+        style={{
+          transition: 'width 150ms ease',
+          overflowX: 'hidden',
+        }}
+      >
         {sidebarRoutes
           .filter((r) => (r.roles ? isGranted(r.roles) : true))
-          .map((route) => (
-            <NavLink
-              label={route.translation ? t(`routes.${route.translation}`) : undefined}
-              leftSection={route.icon ? <route.icon size={32} stroke={1.5} /> : undefined}
-              active={isActive(route.path ?? '')}
-              onClick={() => navigate(route.path ?? '')}
-              key={route.path}
-            />
-          ))}
+          .map((route) => {
+            const routeLabel = route.translation ? t(`routes.${route.translation}`) : undefined;
+
+            return (
+              <NavLink
+                label={desktopExpanded ? routeLabel : undefined}
+                leftSection={route.icon ? <route.icon size={32} stroke={1.5} /> : undefined}
+                active={isActive(route.path ?? '')}
+                onClick={() => navigate(route.path ?? '')}
+                key={route.path}
+                title={routeLabel}
+                aria-label={routeLabel}
+                style={{
+                  borderRadius: 12,
+                }}
+              />
+            );
+          })}
       </AppShell.Navbar>
 
       <AppShell.Main>{isCurrentRouteGranted ? children : <AccessDenied />}</AppShell.Main>

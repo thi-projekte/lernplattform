@@ -82,6 +82,8 @@
     "graph": {
       "workspaceTitle": "Topic graph",
       "workspaceDescription": "Drag nodes to arrange the graph, click connected lines to remove associations, and click isolated topics to create new associations.",
+      "inspectorTitle": "Inspector",
+      "inspectorDescription": "Review the selected topic and manage graph actions from here.",
       "legendRoot": "Current topic",
       "legendAssociated": "Associated topic",
       "legendIsolated": "Isolated topic",

@@ -52,7 +52,7 @@ const CreateTopicPage = () => {
   return (
     <Layout>
       <Title mb={32}>{t('routes.createTopic')}</Title>
-      <Container>
+      <Container fluid px={0}>
         <StepperProgress
           steps={steps}
           onComplete={onComplete}
