@@ -95,6 +95,7 @@
       "legendAssociated": "Associated topic",
       "legendIsolated": "Isolated topic",
       "isolatedTopic": "Isolated topic",
+      "addAssociation": "Add association",
       "hideIsolatedTopic": "Hide from graph",
       "removeAssociation": "Remove association",
       "relatedTopicsTableTitle": "Associated topics list",

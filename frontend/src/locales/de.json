@@ -95,6 +95,7 @@
       "legendAssociated": "Verknuepftes Thema",
       "legendIsolated": "Isoliertes Thema",
       "isolatedTopic": "Isoliertes Thema",
+      "addAssociation": "Verknuepfung erstellen",
       "hideIsolatedTopic": "Aus dem Graphen ausblenden",
       "removeAssociation": "Verknuepfung entfernen",
       "relatedTopicsTableTitle": "Liste verknuepfter Themen",

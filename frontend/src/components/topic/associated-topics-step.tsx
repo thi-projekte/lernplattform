@@ -330,7 +330,6 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       isolatedTopics: searchSuggestions,
                     }}
                     onTopicClick={setSelectedTopicNode}
-                    onAssociationCreate={createAssociation}
                     onAssociationClick={removeTopic}
                     onMoveEnd={handleMoveEnd}
                     onNodePositionChange={handleNodePositionChange}
@@ -401,14 +400,24 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                         }
 
                         return (
-                          <Button
-                            variant="light"
-                            color="blue"
-                            size="xs"
-                            onClick={() => hideIsolatedTopic(selectedTopicId)}
-                          >
-                            {t('topic.graph.hideIsolatedTopic')}
-                          </Button>
+                          <Stack gap="xs">
+                            <Button
+                              variant="light"
+                              color="blue"
+                              size="xs"
+                              onClick={() => createAssociation(selectedTopicId)}
+                            >
+                              {t('topic.graph.addAssociation')}
+                            </Button>
+                            <Button
+                              variant="subtle"
+                              color="gray"
+                              size="xs"
+                              onClick={() => hideIsolatedTopic(selectedTopicId)}
+                            >
+                              {t('topic.graph.hideIsolatedTopic')}
+                            </Button>
+                          </Stack>
                         );
                       })()}
                   </Stack>

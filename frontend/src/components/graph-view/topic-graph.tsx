@@ -79,6 +79,7 @@ const TopicGraphView = ({
       fitViewOptions={{ padding: fitViewPadding }}
       nodesDraggable={canEditAssociations || allowNodeDragging}
       nodesConnectable={canEditAssociations}
+      connectOnClick={false}
       panOnDrag={allowCanvasPanning ? (allowNodeDragging ? [1, 2] : true) : false}
       selectionOnDrag={false}
       elementsSelectable
