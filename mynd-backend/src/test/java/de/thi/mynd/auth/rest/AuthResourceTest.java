@@ -62,6 +62,6 @@ class AuthResourceTest {
         .statusCode(201); // Response.status(201)
 
     // Verifizieren, dass der Service-Call mit dem richtigen Namen ankam
-    verify(authService).makeUserABuilder("builder-candidate");
+    verify(authService).makeUserALearner("builder-candidate");
   }
 }

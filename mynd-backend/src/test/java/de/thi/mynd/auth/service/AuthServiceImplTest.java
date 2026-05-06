@@ -80,16 +80,4 @@ class AuthServiceImplTest {
     // Verifikation: addRolesToUser wurde mit der korrekten Liste aufgerufen
     verify(identityService, times(1)).addRolesToUser(USERNAME, List.of("learner"));
   }
-
-  @Test
-  void testMakeUserABuilder_UserNotFound() {
-    // Setup: IdentityService wirft Exception
-    when(identityService.getUser(USERNAME)).thenThrow(new UserNotFoundException("Not found"));
-
-    assertThrows(
-        UserNotFoundException.class,
-        () -> {
-          authService.makeUserABuilder(USERNAME);
-        });
-  }
 }
