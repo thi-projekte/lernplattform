@@ -14,15 +14,12 @@ public final class AuthServiceImpl implements AuthService {
 
   @Override
   public boolean checkUserIsBuilder(String username) {
-    String clientUuid = identityService.getMyndClientId();
-    return identityService.getUser(username).getClientRoles().get(clientUuid).contains("builder");
+    return identityService.getMyndRoles(username).stream()
+            .anyMatch(r -> r.getName().equals("builder"));
   }
 
   @Override
   public void makeUserABuilder(String username) throws UserNotFoundException {
-    if (checkUserIsBuilder(username)) {
-      return;
-    }
     List<String> newRoles = new ArrayList<>();
     newRoles.add("builder");
     identityService.addRolesToUser(username, newRoles);
@@ -30,9 +27,6 @@ public final class AuthServiceImpl implements AuthService {
 
   @Override
   public void makeUserALearner(String username) throws UserNotFoundException {
-    if (checkUserIsBuilder(username)) {
-      return;
-    }
     List<String> newRoles = new ArrayList<>();
     newRoles.add("learner");
     identityService.addRolesToUser(username, newRoles);

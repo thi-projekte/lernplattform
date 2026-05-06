@@ -3,6 +3,8 @@ package de.thi.mynd.common.service;
 import de.thi.mynd.common.exception.UserNotFoundException;
 import io.quarkus.cache.CacheResult;
 import java.util.List;
+
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
 public interface IdentityService {
@@ -15,6 +17,8 @@ public interface IdentityService {
 
   @CacheResult(cacheName = "get-user")
   UserRepresentation getUser(String username) throws UserNotFoundException;
+
+  List<RoleRepresentation> getMyndRoles(String username) throws UserNotFoundException;
 
   void addRolesToUser(String username, List<String> myndRoles) throws UserNotFoundException;
 }

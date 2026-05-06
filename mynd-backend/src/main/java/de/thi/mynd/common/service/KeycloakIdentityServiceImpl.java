@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.RoleRepresentation;
+import org.keycloak.representations.idm.RolesRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
 @ApplicationScoped
@@ -47,6 +48,21 @@ public final class KeycloakIdentityServiceImpl implements IdentityService {
     } catch (NoSuchElementException e) {
       throw new UserNotFoundException("This user does not exist");
     }
+  }
+
+  @Override
+  public List<RoleRepresentation> getMyndRoles(String username) throws UserNotFoundException {
+    UserRepresentation user = getUser(username);
+    String clientUuid = getMyndClientId();
+
+    List<RoleRepresentation> clientRoles = keycloak.realm(realm)
+            .users()
+            .get(user.getId())
+            .roles()
+            .clientLevel(clientUuid)
+            .listAll();
+
+    return clientRoles;
   }
 
   @Override
