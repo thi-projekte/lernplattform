@@ -24,7 +24,6 @@ const nodeTypes: NodeTypes = {
 interface TopicAssociationsGraphProps {
   topic?: TopicAssociationsGraphInput;
   onTopicClick?: (topic: GraphTopicNodeData) => void;
-  onAssociationCreate?: (topicId: string) => void;
   onAssociationClick?: (relatedTopicId: string) => void;
   onMoveEnd?: OnMoveEnd;
   onConnect?: OnConnect;
@@ -44,7 +43,6 @@ interface TopicAssociationsGraphProps {
 const TopicAssociationsGraph = ({
   topic,
   onTopicClick,
-  onAssociationCreate,
   onAssociationClick,
   onMoveEnd,
   onConnect,
@@ -67,15 +65,6 @@ const TopicAssociationsGraph = ({
 
   const handleNodeClick: NodeMouseHandler = (_event, node) => {
     const graphNode = node as Node<GraphTopicNodeData>;
-
-    if (canEditAssociations && graphNode.data.isIsolated && onAssociationCreate) {
-      const topicId = graphNode.data.payload.id;
-      if (typeof topicId === 'string') {
-        onAssociationCreate(topicId);
-      }
-      return;
-    }
-
     onTopicClick?.(graphNode.data);
   };
 

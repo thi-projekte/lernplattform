@@ -168,7 +168,6 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                     isolatedTopics: searchSuggestions,
                   }}
                   onTopicClick={setSelectedTopicNode}
-                  onAssociationCreate={createAssociation}
                   onAssociationClick={removeTopic}
                   onMoveEnd={handleMoveEnd}
                   onNodePositionChange={handleNodePositionChange}
@@ -184,7 +183,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
         </div>
         <div>
           <Paper withBorder radius="md" p="sm" h={760}>
-            <Stack gap="sm" h="100%">
+            <Stack gap="md" h="100%">
               <div>
                 <Title order={4}>{t('topic.graph.inspectorTitle')}</Title>
               </div>
@@ -205,14 +204,15 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       ))}
                     </Group>
                   )}
-                  <Text size="sm" c="dimmed">
+                  <Text size="xs" c="dimmed">
                     {selectedTopicNode.isRoot
                       ? t('topic.graph.currentTopic')
                       : selectedTopicNode.isIsolated
                         ? t('topic.graph.isolatedTopic')
                         : t('topic.graph.associatedTopic')}
                   </Text>
-                  {selectedTopicNode.isIsolated &&
+                  {!selectedTopicNode.isRoot &&
+                    !selectedTopicNode.isIsolated &&
                     (() => {
                       const selectedTopicId = selectedTopicNode.payload.id;
                       if (typeof selectedTopicId !== 'string') {
@@ -222,12 +222,40 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       return (
                         <Button
                           variant="light"
-                          color="blue"
+                          color="red"
                           size="xs"
-                          onClick={() => hideIsolatedTopic(selectedTopicId)}
+                          onClick={() => removeTopic(selectedTopicId)}
                         >
-                          {t('topic.graph.hideIsolatedTopic')}
+                          {t('topic.graph.removeAssociation')}
                         </Button>
+                      );
+                    })()}
+                  {selectedTopicNode.isIsolated &&
+                    (() => {
+                      const selectedTopicId = selectedTopicNode.payload.id;
+                      if (typeof selectedTopicId !== 'string') {
+                        return null;
+                      }
+
+                      return (
+                        <Stack gap="xs">
+                          <Button
+                            variant="light"
+                            color="blue"
+                            size="xs"
+                            onClick={() => createAssociation(selectedTopicId)}
+                          >
+                            {t('topic.graph.addAssociation')}
+                          </Button>
+                          <Button
+                            variant="subtle"
+                            color="gray"
+                            size="xs"
+                            onClick={() => hideIsolatedTopic(selectedTopicId)}
+                          >
+                            {t('topic.graph.hideIsolatedTopic')}
+                          </Button>
+                        </Stack>
                       );
                     })()}
                 </Stack>
