@@ -17,6 +17,8 @@ public class Topic extends BaseEntity {
 
   @Column public int estimatedLearningDuration;
 
+  @Column public int popularityScore = 0;
+
   @ManyToMany
   @JoinTable(
       name = "join_topic_category",
