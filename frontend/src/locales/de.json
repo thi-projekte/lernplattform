@@ -89,6 +89,8 @@
       "graphModeRailTitle": "Ausgewaehlte Themen",
       "graphModeRailDescription": "Suche nach Themen, um sie dem Graphen hinzuzufuegen, und verwalte die aktuell ausgewaehlten Verknuepfungen.",
       "graphModeSearchHint": "Suchergebnisse erscheinen als isolierte Knoten und koennen durch Klicken im Graphen hinzugefuegt werden.",
+      "foundTopicsTitle": "Gefundene Themen",
+      "foundTopicsDescription": "Diese Themen sind aktuell als isolierte Knoten im Graphen sichtbar.",
       "legendRoot": "Aktuelles Thema",
       "legendAssociated": "Verknuepftes Thema",
       "legendIsolated": "Isoliertes Thema",

@@ -89,6 +89,8 @@
       "graphModeRailTitle": "Selected topics",
       "graphModeRailDescription": "Search for topics to add them to the graph and manage the currently selected associations.",
       "graphModeSearchHint": "Search results appear as isolated nodes and can be added by clicking them in the graph.",
+      "foundTopicsTitle": "Found topics",
+      "foundTopicsDescription": "These topics are currently visible in the graph as isolated nodes.",
       "legendRoot": "Current topic",
       "legendAssociated": "Associated topic",
       "legendIsolated": "Isolated topic",

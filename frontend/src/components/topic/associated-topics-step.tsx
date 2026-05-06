@@ -90,6 +90,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
     selectedTopicNode && 'categories' in selectedTopicNode.payload
       ? selectedTopicNode.payload.categories
       : undefined;
+  const isolatedTopicCount = searchSuggestions.length;
 
   const handleMoveEnd: OnMoveEnd = (_event, viewport) => {
     setLastViewport(viewport);
@@ -191,6 +192,50 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                 <Text size="xs" c="dimmed">
                   {t('topic.graph.graphModeSearchHint')}
                 </Text>
+                {isolatedTopicCount > 0 && (
+                  <Paper
+                    radius="md"
+                    p="xs"
+                    style={{
+                      background: 'rgba(34, 139, 230, 0.06)',
+                      border: '1px solid rgba(34, 139, 230, 0.2)',
+                    }}
+                  >
+                    <Stack gap={8}>
+                      <Group justify="space-between" align="center" wrap="nowrap">
+                        <Text fw={600} size="sm" c="blue.7">
+                          {t('topic.graph.foundTopicsTitle')}
+                        </Text>
+                        <Badge color="blue" variant="light">
+                          {isolatedTopicCount}
+                        </Badge>
+                      </Group>
+                      <Text size="xs" c="dimmed">
+                        {t('topic.graph.foundTopicsDescription')}
+                      </Text>
+                      <Stack gap={6}>
+                        {searchSuggestions.map((suggestion) => (
+                          <Paper
+                            key={suggestion.id}
+                            withBorder
+                            radius="md"
+                            p="xs"
+                            style={{ background: 'rgba(255, 255, 255, 0.85)' }}
+                          >
+                            <Text fw={600} size="xs" truncate>
+                              {suggestion.title}
+                            </Text>
+                            {suggestion.creatorFullName && (
+                              <Text size="xs" c="dimmed" truncate>
+                                {suggestion.creatorFullName}
+                              </Text>
+                            )}
+                          </Paper>
+                        ))}
+                      </Stack>
+                    </Stack>
+                  </Paper>
+                )}
                 <Stack gap="xs" style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
                   {(topic.relatedTopics ?? []).map((relatedTopic) => (
                     <Paper
