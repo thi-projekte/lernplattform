@@ -27,4 +27,14 @@ public final class AuthServiceImpl implements AuthService {
     newRoles.add("builder");
     identityService.addRolesToUser(username, newRoles);
   }
+
+  @Override
+  public void makeUserALearner(String username) throws UserNotFoundException {
+    if (checkUserIsBuilder(username)) {
+      return;
+    }
+    List<String> newRoles = new ArrayList<>();
+    newRoles.add("learner");
+    identityService.addRolesToUser(username, newRoles);
+  }
 }

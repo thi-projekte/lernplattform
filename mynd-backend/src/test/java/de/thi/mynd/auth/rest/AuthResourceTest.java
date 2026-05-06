@@ -49,4 +49,19 @@ class AuthResourceTest {
     // Verifizieren, dass der Service-Call mit dem richtigen Namen ankam
     verify(authService).makeUserABuilder("builder-candidate");
   }
+
+  @Test
+  @TestSecurity(user = "builder-candidate")
+  void testMakeUserLearner_Success() {
+    // Hier rufen wir POST auf
+    given()
+        .contentType(ContentType.JSON)
+        .when()
+        .post("/auth/register-as-learner")
+        .then()
+        .statusCode(201); // Response.status(201)
+
+    // Verifizieren, dass der Service-Call mit dem richtigen Namen ankam
+    verify(authService).makeUserABuilder("builder-candidate");
+  }
 }

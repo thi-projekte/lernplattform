@@ -35,4 +35,13 @@ public final class AuthResource {
     authService.makeUserABuilder(username);
     return Response.status(201).build();
   }
+
+  @POST
+  @Path("/register-as-learner")
+  @Authenticated
+  public Response makeUserLearner() {
+    String username = identity.getPrincipal().getName();
+    authService.makeUserALearner(username);
+    return Response.status(201).build();
+  }
 }

@@ -83,6 +83,19 @@ class AuthServiceImplTest {
   }
 
   @Test
+  void testMakeUserALearner_Success() throws UserNotFoundException {
+    // Setup: User ist noch KEIN Builder
+    UserRepresentation user = new UserRepresentation();
+    user.setClientRoles(Map.of(CLIENT_UUID, List.of("viewer")));
+    when(identityService.getUser(USERNAME)).thenReturn(user);
+
+    authService.makeUserABuilder(USERNAME);
+
+    // Verifikation: addRolesToUser wurde mit der korrekten Liste aufgerufen
+    verify(identityService, times(1)).addRolesToUser(USERNAME, List.of("learner"));
+  }
+
+  @Test
   void testMakeUserABuilder_UserNotFound() {
     // Setup: IdentityService wirft Exception
     when(identityService.getUser(USERNAME)).thenThrow(new UserNotFoundException("Not found"));
