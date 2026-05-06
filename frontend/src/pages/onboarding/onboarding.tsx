@@ -14,7 +14,7 @@ const Onboarding = () => {
   const handleSubmit = async () => {
     if (!role) return;
 
-    let result: AxiosResponse|undefined = undefined;
+    let result: AxiosResponse | undefined = undefined;
 
     if (role === 'builder') {
       result = await makeBuilder();
