@@ -82,6 +82,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
     () => (topic.relatedTopics ?? []).map((t) => t.id),
     [topic.relatedTopics]
   );
+  const selectedTopicId =
+    selectedTopicNode && typeof selectedTopicNode.payload.id === 'string'
+      ? selectedTopicNode.payload.id
+      : null;
   const selectedCategories =
     selectedTopicNode && 'categories' in selectedTopicNode.payload
       ? selectedTopicNode.payload.categories
@@ -162,16 +166,21 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
           style={{
             display: 'grid',
             gap: '1rem',
-            gridTemplateColumns: '300px minmax(0, 1fr) 240px',
+            gridTemplateColumns: '220px minmax(0, 1fr) 200px',
             alignItems: 'start',
           }}
         >
           <div>
             <Paper withBorder radius="md" p="sm" h={760}>
-              <Stack gap="sm" h="100%">
+              <Stack gap="md" h="100%">
                 <div>
-                  <Title order={4}>{t('topic.graph.graphModeRailTitle')}</Title>
-                  <Text size="sm" c="dimmed">
+                  <Group justify="space-between" align="center" wrap="nowrap">
+                    <Title order={4}>{t('topic.graph.graphModeRailTitle')}</Title>
+                    <Badge variant="light" color="gray">
+                      {(topic.relatedTopics ?? []).length}
+                    </Badge>
+                  </Group>
+                  <Text size="xs" c="dimmed">
                     {t('topic.graph.graphModeRailDescription')}
                   </Text>
                 </div>
@@ -184,7 +193,27 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                 </Text>
                 <Stack gap="xs" style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
                   {(topic.relatedTopics ?? []).map((relatedTopic) => (
-                    <Paper key={relatedTopic.id} withBorder radius="md" p="sm">
+                    <Paper
+                      key={relatedTopic.id}
+                      withBorder
+                      radius="md"
+                      p="sm"
+                      style={{
+                        cursor: 'pointer',
+                        borderColor:
+                          selectedTopicId === relatedTopic.id ? '#228be6' : undefined,
+                        background:
+                          selectedTopicId === relatedTopic.id ? 'rgba(34, 139, 230, 0.06)' : undefined,
+                      }}
+                      onClick={() =>
+                        setSelectedTopicNode({
+                          kind: 'topic',
+                          title: relatedTopic.title,
+                          creatorFullName: relatedTopic.creatorFullName,
+                          payload: relatedTopic,
+                        })
+                      }
+                    >
                       <Group justify="space-between" align="flex-start" wrap="nowrap">
                         <div style={{ minWidth: 0 }}>
                           <Text fw={600} size="sm" truncate>
@@ -197,7 +226,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                           )}
                           {relatedTopic.categories.length > 0 && (
                             <Group gap={6} mt={8}>
-                              {relatedTopic.categories.slice(0, 2).map((category) => (
+                              {relatedTopic.categories.slice(0, 1).map((category) => (
                                 <Badge key={category.id} color={category.color} variant="light">
                                   {category.title}
                                 </Badge>
@@ -208,7 +237,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                         <ActionIcon
                           variant="light"
                           color="red"
-                          onClick={() => removeTopic(relatedTopic.id)}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            removeTopic(relatedTopic.id);
+                          }}
                         >
                           <IconTrash size={16} />
                         </ActionIcon>
@@ -221,15 +253,15 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
           </div>
           <div>
             <Paper withBorder radius="md" p="md" h={760}>
-              <Stack gap="sm" h="100%">
-                <Group justify="space-between" align="center" wrap="nowrap">
-                  <div>
+              <Stack gap="md" h="100%">
+                <Group justify="space-between" align="flex-start" wrap="nowrap">
+                  <div style={{ minWidth: 0 }}>
                     <Title order={2}>{t('topic.graph.workspaceTitle')}</Title>
-                    <Text size="sm" c="dimmed">
+                    <Text size="xs" c="dimmed" maw={420}>
                       {t('topic.graph.workspaceDescription')}
                     </Text>
                   </div>
-                  <Group gap={6} wrap="nowrap">
+                  <Group gap={6} wrap="wrap" justify="flex-end" maw={250}>
                     <Badge color="red">{t('topic.graph.legendRoot')}</Badge>
                     <Badge color="orange">{t('topic.graph.legendAssociated')}</Badge>
                     <Badge color="blue">{t('topic.graph.legendIsolated')}</Badge>
@@ -269,7 +301,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
           </div>
           <div>
             <Paper withBorder radius="md" p="sm" h={760}>
-              <Stack gap="sm" h="100%">
+              <Stack gap="md" h="100%">
                 <div>
                   <Title order={4}>{t('topic.graph.inspectorTitle')}</Title>
                 </div>
@@ -290,7 +322,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                         ))}
                       </Group>
                     )}
-                    <Text size="sm" c="dimmed">
+                    <Text size="xs" c="dimmed">
                       {selectedTopicNode.isRoot
                         ? t('topic.graph.currentTopic')
                         : selectedTopicNode.isIsolated
