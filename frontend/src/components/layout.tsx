@@ -97,8 +97,19 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                 key={route.path}
                 title={routeLabel}
                 aria-label={routeLabel}
-                style={{
-                  borderRadius: 12,
+                styles={{
+                  root: {
+                    borderRadius: 12,
+                    paddingInline: desktopExpanded ? undefined : 0,
+                  },
+                  body: {
+                    display: desktopExpanded ? undefined : 'none',
+                  },
+                  section: {
+                    marginInlineEnd: desktopExpanded ? undefined : 0,
+                    width: desktopExpanded ? undefined : '100%',
+                    justifyContent: 'center',
+                  },
                 }}
               />
             );
