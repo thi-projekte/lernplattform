@@ -1,6 +1,7 @@
 package de.thi.mynd.auth.rest;
 
 import de.thi.mynd.auth.service.AuthService;
+import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -17,6 +18,7 @@ public final class AuthResource {
 
   @GET
   @Path("/check-is-builder")
+  @Authenticated
   public Response checkUserIsBuilder() {
     String username = identity.getPrincipal().getName();
     if (authService.checkUserIsBuilder(username)) {
@@ -27,6 +29,7 @@ public final class AuthResource {
 
   @POST
   @Path("/register-as-builder")
+  @Authenticated
   public Response makeUserBuilder() {
     String username = identity.getPrincipal().getName();
     authService.makeUserABuilder(username);
