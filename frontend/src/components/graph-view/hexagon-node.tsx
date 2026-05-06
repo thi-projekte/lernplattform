@@ -29,7 +29,7 @@ const HexagonNode = ({
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
-      width: Math.max(120, size * 1.5),
+      width: Math.max(132, size * 1.7),
     }}
   >
     <div
@@ -70,14 +70,20 @@ const HexagonNode = ({
     <Text
       fw={labelFontWeight}
       size={labelSize ?? 'sm'}
-      mt={4}
+      mt={8}
       ta="center"
-      style={{ lineHeight: 1.2 }}
+      style={{ lineHeight: 1.2, maxWidth: 160, textWrap: 'balance' }}
     >
       {label}
     </Text>
     {subLabel && (
-      <Text size="xs" c="dimmed" ta="center" mt={2} style={{ lineHeight: 1.2 }}>
+      <Text
+        size="xs"
+        c="dimmed"
+        ta="center"
+        mt={4}
+        style={{ lineHeight: 1.2, maxWidth: 160, textWrap: 'balance' }}
+      >
         {subLabel}
       </Text>
     )}

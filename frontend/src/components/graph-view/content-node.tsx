@@ -41,9 +41,9 @@ const ContentNode = ({ data, ...props }: ContentNodeProps) => {
       Icon={getIconForType(data.payload.type)}
       label={data.title}
       color="#1c7ed6"
-      size={48}
+      size={56}
       labelSize="xs"
-      labelFontWeight={500}
+      labelFontWeight={600}
       {...props}
     />
   );
