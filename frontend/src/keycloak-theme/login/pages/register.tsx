@@ -9,7 +9,17 @@ import type { KcContext } from '../KcContext';
 import type { I18n } from '../i18n';
 
 // Mantine Imports
-import { Button, Checkbox, Text, Stack, Box, Anchor, Paper, InputWrapper, Container } from '@mantine/core';
+import {
+  Button,
+  Checkbox,
+  Text,
+  Stack,
+  Box,
+  Anchor,
+  Paper,
+  InputWrapper,
+  Container,
+} from '@mantine/core';
 
 type RegisterProps = PageProps<Extract<KcContext, { pageId: 'register.ftl' }>, I18n> & {
   UserProfileFormFields: LazyOrNot<(props: UserProfileFormFieldsProps) => JSX.Element>;

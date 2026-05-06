@@ -1,7 +1,7 @@
 import { createRoot } from 'react-dom/client';
 import App from './App.tsx';
 import keycloak from './keycloak.ts';
-import  { type KcContext, KcPage } from './keycloak-theme/kc.gen.tsx';
+import { type KcContext, KcPage } from './keycloak-theme/kc.gen.tsx';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const kcContext = (window as any).kcContext as KcContext | undefined;
