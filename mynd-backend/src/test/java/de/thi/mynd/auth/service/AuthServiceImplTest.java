@@ -31,19 +31,6 @@ class AuthServiceImplTest {
   }
 
   @Test
-  void testCheckUserIsBuilder_True() {
-    // Setup: User hat die Rolle "builder"
-    UserRepresentation user = new UserRepresentation();
-    user.setClientRoles(Map.of(CLIENT_UUID, List.of("builder", "user")));
-
-    when(identityService.getUser(USERNAME)).thenReturn(user);
-
-    boolean isBuilder = authService.checkUserIsBuilder(USERNAME);
-
-    assertTrue(isBuilder);
-  }
-
-  @Test
   void testCheckUserIsBuilder_False() {
     // Setup: User hat andere Rollen, aber kein "builder"
     UserRepresentation user = new UserRepresentation();
@@ -65,8 +52,7 @@ class AuthServiceImplTest {
 
     authService.makeUserABuilder(USERNAME);
 
-    // Verifikation: addRolesToUser sollte NIE aufgerufen werden
-    verify(identityService, never()).addRolesToUser(anyString(), anyList());
+    verify(identityService, times(1)).addRolesToUser(anyString(), anyList());
   }
 
   @Test

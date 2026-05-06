@@ -64,12 +64,15 @@ public final class KeycloakIdentityServiceImpl implements IdentityService {
   public void addRolesToUser(String username, List<String> myndRoles) throws UserNotFoundException {
     UserRepresentation user = getUser(username);
     String clientUuid = getMyndClientId();
+    List<RoleRepresentation> existingRole = getMyndRoles(username);
 
     List<RoleRepresentation> reps = new ArrayList<>();
     for (String role : myndRoles) {
       RoleRepresentation roleRepresentation =
           keycloak.realm(realm).clients().get(clientUuid).roles().get(role).toRepresentation();
-      reps.add(roleRepresentation);
+      if (!existingRole.contains(roleRepresentation)) {
+        reps.add(roleRepresentation);
+      }
     }
     keycloak.realm(realm).users().get(user.getId()).roles().clientLevel(clientUuid).add(reps);
   }
