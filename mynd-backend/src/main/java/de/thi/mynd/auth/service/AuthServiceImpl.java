@@ -15,7 +15,7 @@ public final class AuthServiceImpl implements AuthService {
   @Override
   public boolean checkUserIsBuilder(String username) {
     return identityService.getMyndRoles(username).stream()
-            .anyMatch(r -> r.getName().equals("builder"));
+        .anyMatch(r -> r.getName().equals("builder"));
   }
 
   @Override

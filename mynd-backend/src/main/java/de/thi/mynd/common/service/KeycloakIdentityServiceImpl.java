@@ -54,12 +54,8 @@ public final class KeycloakIdentityServiceImpl implements IdentityService {
     UserRepresentation user = getUser(username);
     String clientUuid = getMyndClientId();
 
-    List<RoleRepresentation> clientRoles = keycloak.realm(realm)
-            .users()
-            .get(user.getId())
-            .roles()
-            .clientLevel(clientUuid)
-            .listAll();
+    List<RoleRepresentation> clientRoles =
+        keycloak.realm(realm).users().get(user.getId()).roles().clientLevel(clientUuid).listAll();
 
     return clientRoles;
   }

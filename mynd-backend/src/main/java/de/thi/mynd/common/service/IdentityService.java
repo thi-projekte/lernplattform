@@ -3,7 +3,6 @@ package de.thi.mynd.common.service;
 import de.thi.mynd.common.exception.UserNotFoundException;
 import io.quarkus.cache.CacheResult;
 import java.util.List;
-
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
