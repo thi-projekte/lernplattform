@@ -414,6 +414,13 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                               color="gray"
                               size="xs"
                               onClick={() => hideIsolatedTopic(selectedTopicId)}
+                              fullWidth
+                              styles={{
+                                label: {
+                                  whiteSpace: 'normal',
+                                  textAlign: 'center',
+                                },
+                              }}
                             >
                               {t('topic.graph.hideIsolatedTopic')}
                             </Button>
