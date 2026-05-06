@@ -176,15 +176,12 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                   </Text>
                 </div>
                 <TopicSearchbar
-                  onAdd={(newTopic) =>
-                    setTopic({
-                      ...topic,
-                      relatedTopics: [...(topic.relatedTopics ?? []), newTopic],
-                    })
-                  }
                   existingIds={existingIds}
                   onSuggestionsChange={handleSuggestionsChange}
                 />
+                <Text size="xs" c="dimmed">
+                  {t('topic.graph.graphModeSearchHint')}
+                </Text>
                 <Stack gap="xs" style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
                   {(topic.relatedTopics ?? []).map((relatedTopic) => (
                     <Paper key={relatedTopic.id} withBorder radius="md" p="sm">
@@ -300,6 +297,25 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                           ? t('topic.graph.isolatedTopic')
                           : t('topic.graph.associatedTopic')}
                     </Text>
+                    {!selectedTopicNode.isRoot &&
+                      !selectedTopicNode.isIsolated &&
+                      (() => {
+                        const selectedTopicId = selectedTopicNode.payload.id;
+                        if (typeof selectedTopicId !== 'string') {
+                          return null;
+                        }
+
+                        return (
+                          <Button
+                            variant="light"
+                            color="red"
+                            size="xs"
+                            onClick={() => removeTopic(selectedTopicId)}
+                          >
+                            {t('topic.graph.removeAssociation')}
+                          </Button>
+                        );
+                      })()}
                     {selectedTopicNode.isIsolated &&
                       (() => {
                         const selectedTopicId = selectedTopicNode.payload.id;
