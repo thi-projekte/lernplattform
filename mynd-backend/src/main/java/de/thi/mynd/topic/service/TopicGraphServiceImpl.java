@@ -4,7 +4,6 @@ import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicGraphRepository;
-import de.thi.mynd.topic.repository.TopicRepository;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
