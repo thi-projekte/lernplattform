@@ -80,10 +80,14 @@
       "IMAGE": "Bild"
     },
     "graph": {
+      "modeList": "Liste",
+      "modeGraph": "Graph",
       "workspaceTitle": "Themengraph",
       "workspaceDescription": "Verschiebe die Knoten, um den Graphen anzuordnen, klicke auf verbundene Linien zum Entfernen von Verknuepfungen und auf isolierte Themen zum Erstellen neuer Verknuepfungen.",
       "inspectorTitle": "Inspector",
       "inspectorDescription": "Pruefe das ausgewaehlte Thema und steuere Graph-Aktionen von hier aus.",
+      "graphModeRailTitle": "Ausgewaehlte Themen",
+      "graphModeRailDescription": "Suche nach Themen, um sie dem Graphen hinzuzufuegen, und verwalte die aktuell ausgewaehlten Verknuepfungen.",
       "legendRoot": "Aktuelles Thema",
       "legendAssociated": "Verknuepftes Thema",
       "legendIsolated": "Isoliertes Thema",
