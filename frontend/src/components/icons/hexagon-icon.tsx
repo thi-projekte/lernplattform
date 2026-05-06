@@ -28,11 +28,7 @@ const HexagonIcon = ({ color, children, size = 100, selected }: HexagonIconProps
             <feDropShadow dx="0" dy="6" stdDeviation="6" floodColor="#0f172a" floodOpacity="0.12" />
           </filter>
         </defs>
-        <polygon
-          points="50,5 95,31 95,84 50,110 5,84 5,31"
-          fill={color}
-          filter="url(#shadow)"
-        />
+        <polygon points="50,5 95,31 95,84 50,110 5,84 5,31" fill={color} filter="url(#shadow)" />
         <polygon
           points="50,10 90,33 90,82 50,105 10,82 10,33"
           fill="none"
