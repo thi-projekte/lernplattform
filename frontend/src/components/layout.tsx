@@ -1,4 +1,4 @@
-import { ActionIcon, AppShell, Burger, Group, Image, NavLink } from '@mantine/core';
+import { ActionIcon, AppShell, Box, Burger, Group, Image, NavLink } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconUser } from '@tabler/icons-react';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
@@ -105,7 +105,11 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           })}
       </AppShell.Navbar>
 
-      <AppShell.Main>{isCurrentRouteGranted ? children : <AccessDenied />}</AppShell.Main>
+      <AppShell.Main>
+        <Box px="md" py="md">
+          {isCurrentRouteGranted ? children : <AccessDenied />}
+        </Box>
+      </AppShell.Main>
     </AppShell>
   );
 };
