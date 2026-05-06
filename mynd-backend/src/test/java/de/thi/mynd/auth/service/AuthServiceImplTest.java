@@ -75,7 +75,7 @@ class AuthServiceImplTest {
     user.setClientRoles(Map.of(CLIENT_UUID, List.of("viewer")));
     when(identityService.getUser(USERNAME)).thenReturn(user);
 
-    authService.makeUserABuilder(USERNAME);
+    authService.makeUserALearner(USERNAME);
 
     // Verifikation: addRolesToUser wurde mit der korrekten Liste aufgerufen
     verify(identityService, times(1)).addRolesToUser(USERNAME, List.of("learner"));
