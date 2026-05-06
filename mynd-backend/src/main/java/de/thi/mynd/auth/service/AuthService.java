@@ -1,11 +1,10 @@
 package de.thi.mynd.auth.service;
 
-import de.thi.mynd.auth.dto.RegisterUserRequestDto;
-import de.thi.mynd.auth.exception.UserAlreadyExistsException;
+import de.thi.mynd.common.exception.UserNotFoundException;
 
 public interface AuthService {
 
-  boolean checkUsernameExists(String username);
+  boolean checkUserIsBuilder(String username) throws UserNotFoundException;
 
-  void registerUser(RegisterUserRequestDto requestDto) throws UserAlreadyExistsException;
+  void makeUserABuilder(String username) throws UserNotFoundException;
 }

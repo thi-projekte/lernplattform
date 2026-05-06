@@ -1,81 +1,96 @@
 package de.thi.mynd.auth.service;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import de.thi.mynd.auth.RegisterRole;
-import de.thi.mynd.auth.dto.RegisterUserRequestDto;
-import de.thi.mynd.auth.exception.UserAlreadyExistsException;
+import de.thi.mynd.common.exception.UserNotFoundException;
 import de.thi.mynd.common.service.IdentityService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import java.util.List;
+import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.keycloak.representations.idm.UserRepresentation;
-import org.mockito.ArgumentCaptor;
-
-import java.util.List;
 
 @QuarkusTest
 class AuthServiceImplTest {
 
-  @Inject AuthService authService;
+  @Inject AuthServiceImpl authService;
 
-  @InjectMock IdentityService identityService;
+  @InjectMock IdentityService identityService; // Wir mocken das Interface/Service
 
-  @Test
-  void testCheckUsernameExists_ReturnsTrue() {
-    when(identityService.userExists("tester")).thenReturn(true);
+  private static final String USERNAME = "test.user";
+  private static final String CLIENT_UUID = "uuid-12345";
 
-    boolean exists = authService.checkUsernameExists("tester");
-
-    assertTrue(exists);
-    verify(identityService).userExists("tester");
+  @BeforeEach
+  void setup() {
+    // Standard-Verhalten für die Client-ID
+    when(identityService.getMyndClientId()).thenReturn(CLIENT_UUID);
   }
 
   @Test
-  void testRegisterUser_Success() throws UserAlreadyExistsException {
-    // Arrange
-    RegisterUserRequestDto dto = new RegisterUserRequestDto();
-    dto.username = "newuser";
-    dto.password = "password123";
-    dto.email = "test@example.com";
-    dto.firstName = "John";
-    dto.lastName = "Doe";
-    dto.role = RegisterRole.Builder;
+  void testCheckUserIsBuilder_True() {
+    // Setup: User hat die Rolle "builder"
+    UserRepresentation user = new UserRepresentation();
+    user.setClientRoles(Map.of(CLIENT_UUID, List.of("builder", "user")));
 
-    // Logic check: service checks if user exists. We return FALSE so it continues.
-    when(identityService.userExists("newuser")).thenReturn(false);
+    when(identityService.getUser(USERNAME)).thenReturn(user);
 
-    // Act
-    authService.registerUser(dto);
+    boolean isBuilder = authService.checkUserIsBuilder(USERNAME);
 
-    // Assert
-    ArgumentCaptor<List<String>> captor = ArgumentCaptor.forClass(List.class);
-    ArgumentCaptor<UserRepresentation> captor2 = ArgumentCaptor.forClass(UserRepresentation.class);
-    verify(identityService).createUser(captor2.capture(), captor.capture());
-
-    UserRepresentation capturedUser = captor2.getValue();
-    assertEquals("test@example.com", capturedUser.getEmail());
-    List<String> roles = captor.getValue();
-    assertTrue(roles.contains("builder"));
+    assertTrue(isBuilder);
   }
 
   @Test
-  void testRegisterUser_ThrowsExceptionWhenExists() {
-    RegisterUserRequestDto dto = new RegisterUserRequestDto();
-    dto.username = "existingUser";
+  void testCheckUserIsBuilder_False() {
+    // Setup: User hat andere Rollen, aber kein "builder"
+    UserRepresentation user = new UserRepresentation();
+    user.setClientRoles(Map.of(CLIENT_UUID, List.of("viewer")));
 
-    // Logic check: return TRUE to trigger the exception
-    when(identityService.userExists("existingUser")).thenReturn(true);
+    when(identityService.getUser(USERNAME)).thenReturn(user);
+
+    boolean isBuilder = authService.checkUserIsBuilder(USERNAME);
+
+    assertFalse(isBuilder);
+  }
+
+  @Test
+  void testMakeUserABuilder_AlreadyIsBuilder() throws UserNotFoundException {
+    // Setup: User ist bereits Builder
+    UserRepresentation user = new UserRepresentation();
+    user.setClientRoles(Map.of(CLIENT_UUID, List.of("builder")));
+    when(identityService.getUser(USERNAME)).thenReturn(user);
+
+    authService.makeUserABuilder(USERNAME);
+
+    // Verifikation: addRolesToUser sollte NIE aufgerufen werden
+    verify(identityService, never()).addRolesToUser(anyString(), anyList());
+  }
+
+  @Test
+  void testMakeUserABuilder_Success() throws UserNotFoundException {
+    // Setup: User ist noch KEIN Builder
+    UserRepresentation user = new UserRepresentation();
+    user.setClientRoles(Map.of(CLIENT_UUID, List.of("viewer")));
+    when(identityService.getUser(USERNAME)).thenReturn(user);
+
+    authService.makeUserABuilder(USERNAME);
+
+    // Verifikation: addRolesToUser wurde mit der korrekten Liste aufgerufen
+    verify(identityService, times(1)).addRolesToUser(USERNAME, List.of("builder"));
+  }
+
+  @Test
+  void testMakeUserABuilder_UserNotFound() {
+    // Setup: IdentityService wirft Exception
+    when(identityService.getUser(USERNAME)).thenThrow(new UserNotFoundException("Not found"));
 
     assertThrows(
-        UserAlreadyExistsException.class,
+        UserNotFoundException.class,
         () -> {
-          authService.registerUser(dto);
+          authService.makeUserABuilder(USERNAME);
         });
-
-    verify(identityService, never()).createUser(any(), any());
   }
 }

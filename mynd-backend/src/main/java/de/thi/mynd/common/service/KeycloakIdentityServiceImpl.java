@@ -1,17 +1,14 @@
 package de.thi.mynd.common.service;
 
+import de.thi.mynd.common.exception.UserNotFoundException;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.core.Response;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
-import org.keycloak.admin.client.resource.RealmResource;
-import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
@@ -22,6 +19,11 @@ public final class KeycloakIdentityServiceImpl implements IdentityService {
 
   @ConfigProperty(name = "quarkus.keycloak.admin-client.realm")
   String realm;
+
+  @Override
+  public String getMyndClientId() {
+    return keycloak.realm(realm).clients().findByClientId("mynd").get(0).getId();
+  }
 
   @Override
   public String getFullNameByUsername(String username) {
@@ -39,28 +41,25 @@ public final class KeycloakIdentityServiceImpl implements IdentityService {
   }
 
   @Override
-  public boolean userExists(String username) {
-    return !keycloak.realm(realm).users().search(username).isEmpty();
+  public UserRepresentation getUser(String username) {
+    try {
+      return keycloak.realm(realm).users().search(username).getFirst();
+    } catch (NoSuchElementException e) {
+      throw new UserNotFoundException("This user does not exist");
+    }
   }
 
   @Override
-  public void createUser(UserRepresentation userRepresentation, List<String> myndRoles) {
-    RealmResource realmResource = keycloak.realm(realm);
-    UsersResource usersRessource = realmResource.users();
-
-    // TODO: Handle case with already existing email
-    // TODO: Do better error handling
-
-    Response response = usersRessource.create(userRepresentation);;
-    String userId = CreatedResponseUtil.getCreatedId(response);
-    String clientUuid = keycloak.realm(realm).clients().findByClientId("mynd").get(0).getId();
+  public void addRolesToUser(String username, List<String> myndRoles) throws UserNotFoundException {
+    UserRepresentation user = getUser(username);
+    String clientUuid = getMyndClientId();
 
     List<RoleRepresentation> reps = new ArrayList<>();
     for (String role : myndRoles) {
-      RoleRepresentation roleRepresentation = keycloak.realm(realm).clients().get(clientUuid).roles().get(role).toRepresentation();
+      RoleRepresentation roleRepresentation =
+          keycloak.realm(realm).clients().get(clientUuid).roles().get(role).toRepresentation();
       reps.add(roleRepresentation);
     }
-
-      keycloak.realm(realm).users().get(userId).roles().clientLevel(clientUuid).add(reps);
+    keycloak.realm(realm).users().get(user.getId()).roles().clientLevel(clientUuid).add(reps);
   }
 }
