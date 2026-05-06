@@ -12,6 +12,7 @@ import '@mantine/tiptap/styles.css';
 import '@mantine/notifications/styles.css';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
+import RegistrationProvider from './provider/registration-provider.tsx';
 
 const queryClient = new QueryClient();
 
@@ -22,7 +23,9 @@ function App() {
         <QueryClientProvider client={queryClient}>
           <UserProvider>
             <Notifications />
-            <RouterProvider router={router} />
+            <RegistrationProvider>
+              <RouterProvider router={router} />
+            </RegistrationProvider>
           </UserProvider>
         </QueryClientProvider>
       </ModalsProvider>
