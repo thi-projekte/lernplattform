@@ -82,6 +82,14 @@
   },
   "auth": {
     "accessDenied": "Access Denied",
-    "noAccessPageText": "It looks like you don't have the necessary permissions to view this page. If you think this is a mistake, please contact your administrator."
+    "noAccessPageText": "It looks like you don't have the necessary permissions to view this page. If you think this is a mistake, please contact your administrator.",
+    "role_builder": "Builder",
+    "role_learner": "Learner"
+  },
+  "onboarding": {
+    "title": "Onboarding",
+    "role_selection_label": "Select role",
+    "role_selection_placeholder": "Select your role",
+    "submit": "Submit"
   }
 }

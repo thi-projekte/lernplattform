@@ -27,6 +27,8 @@ services:
       - KC_DB_PASSWORD=db_password
       - KC_BOOTSTRAP_ADMIN_USERNAME=admin
       - KC_BOOTSTRAP_ADMIN_PASSWORD=admin
+    volumes:
+      - ./frontend/dist_keycloak/keycloak-theme-for-kc-all-other-versions.jar:/opt/keycloak/providers/theme.jar
   minio:
     image: minio/minio:latest
     container_name: minio
