@@ -56,7 +56,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         breakpoint: 'sm',
         collapsed: { mobile: !opened },
       }}
-      padding="xs"
+      padding={0}
     >
       <AppShell.Header>
         <Group h="100%" px="md" justify="space-between">

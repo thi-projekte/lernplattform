@@ -116,7 +116,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
         style={{
           display: 'grid',
           gap: '1rem',
-          gridTemplateColumns: '260px minmax(0, 1fr) 220px',
+          gridTemplateColumns: '320px minmax(0, 1fr) 220px',
           alignItems: 'start',
         }}
       >
