@@ -106,7 +106,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <Box px="md" py="md">{isCurrentRouteGranted ? children : <AccessDenied />}</Box>
+        <Box px="md" py="md">
+          {isCurrentRouteGranted ? children : <AccessDenied />}
+        </Box>
       </AppShell.Main>
     </AppShell>
   );
