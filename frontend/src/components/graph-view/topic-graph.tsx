@@ -1,6 +1,5 @@
 import {
   Background,
-  Controls,
   Panel,
   ReactFlow,
   PanOnScrollMode,
@@ -18,7 +17,7 @@ import {
 import '@xyflow/react/dist/style.css';
 import { useEffect } from 'react';
 import { ActionIcon, Paper, Stack, Tooltip } from '@mantine/core';
-import { IconLock, IconLockOpen2, IconMinus, IconPlus, IconZoomReset } from '@tabler/icons-react';
+import { IconLock, IconLockOpen2, IconMaximize, IconMinus, IconPlus } from '@tabler/icons-react';
 
 interface TopicGraphViewProps {
   nodes: Node[];
@@ -57,7 +56,7 @@ const ViewportToolbar = ({
   const { zoomIn, zoomOut, fitView } = useReactFlow();
 
   return (
-    <Panel position="top-left" style={{ marginTop: 18, marginLeft: 18 }}>
+    <Panel position="bottom-left" style={{ marginBottom: 18, marginLeft: 18 }}>
       <Paper
         withBorder
         radius="md"
@@ -70,11 +69,11 @@ const ViewportToolbar = ({
               variant="subtle"
               color="gray"
               radius={0}
-              size={44}
+              size={36}
               aria-label="Zoom in"
               onClick={() => zoomIn({ duration: 180 })}
             >
-              <IconPlus size={22} stroke={2} />
+              <IconPlus size={20} stroke={2} />
             </ActionIcon>
           </Tooltip>
 
@@ -83,11 +82,11 @@ const ViewportToolbar = ({
               variant="subtle"
               color="gray"
               radius={0}
-              size={44}
+              size={36}
               aria-label="Zoom out"
               onClick={() => zoomOut({ duration: 180 })}
             >
-              <IconMinus size={22} stroke={2} />
+              <IconMinus size={20} stroke={2} />
             </ActionIcon>
           </Tooltip>
 
@@ -96,11 +95,11 @@ const ViewportToolbar = ({
               variant="subtle"
               color="gray"
               radius={0}
-              size={44}
+              size={36}
               aria-label="Fit view"
               onClick={() => fitView({ padding: fitViewPadding, duration: 220 })}
             >
-              <IconZoomReset size={20} stroke={2} />
+              <IconMaximize size={18} stroke={2} />
             </ActionIcon>
           </Tooltip>
 
@@ -109,11 +108,15 @@ const ViewportToolbar = ({
               variant={viewportLocked ? 'filled' : 'subtle'}
               color={viewportLocked ? 'dark' : 'gray'}
               radius={0}
-              size={44}
+              size={36}
               aria-label={viewportLocked ? 'Unlock graph' : 'Lock graph'}
               onClick={onToggleViewportLock}
             >
-              {viewportLocked ? <IconLock size={18} stroke={2} /> : <IconLockOpen2 size={18} stroke={2} />}
+              {viewportLocked ? (
+                <IconLock size={16} stroke={2} />
+              ) : (
+                <IconLockOpen2 size={16} stroke={2} />
+              )}
             </ActionIcon>
           </Tooltip>
         </Stack>
@@ -135,7 +138,6 @@ const TopicGraphView = ({
   allowNodeDragging = false,
   allowCanvasPanning = true,
   allowPanOnScroll = false,
-  showControls = true,
   showViewportToolbar = false,
   viewportLocked = false,
   onToggleViewportLock,
@@ -179,7 +181,6 @@ const TopicGraphView = ({
       selectionOnDrag={false}
       elementsSelectable
     >
-      {showControls && <Controls showInteractive={canEditAssociations} />}
       {showViewportToolbar && (
         <ViewportToolbar
           fitViewPadding={fitViewPadding}

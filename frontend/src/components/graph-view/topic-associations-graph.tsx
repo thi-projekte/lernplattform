@@ -32,7 +32,11 @@ interface TopicAssociationsGraphProps {
   canDeleteAssociations?: boolean;
   allowNodeDragging?: boolean;
   allowCanvasPanning?: boolean;
+  allowPanOnScroll?: boolean;
   showControls?: boolean;
+  showViewportToolbar?: boolean;
+  viewportLocked?: boolean;
+  onToggleViewportLock?: () => void;
   fitView?: boolean;
   fitViewPadding?: number;
   backgroundColor?: string;
@@ -51,7 +55,11 @@ const TopicAssociationsGraph = ({
   canDeleteAssociations = false,
   allowNodeDragging = false,
   allowCanvasPanning = true,
+  allowPanOnScroll = false,
   showControls = true,
+  showViewportToolbar = false,
+  viewportLocked = false,
+  onToggleViewportLock,
   fitView = true,
   fitViewPadding = 0.2,
   backgroundColor = '#dee2e6',
@@ -96,7 +104,11 @@ const TopicAssociationsGraph = ({
       canEditAssociations={canEditAssociations}
       allowNodeDragging={allowNodeDragging}
       allowCanvasPanning={allowCanvasPanning}
+      allowPanOnScroll={allowPanOnScroll}
       showControls={showControls}
+      showViewportToolbar={showViewportToolbar}
+      viewportLocked={viewportLocked}
+      onToggleViewportLock={onToggleViewportLock}
       fitView={fitView}
       fitViewPadding={fitViewPadding}
       backgroundColor={backgroundColor}
