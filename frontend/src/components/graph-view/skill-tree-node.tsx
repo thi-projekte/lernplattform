@@ -5,8 +5,14 @@ import type { SkillTreeNode } from './skill-tree.types.ts';
 type SkillTreeNodeProps = NodeProps<SkillTreeNode>;
 
 const SkillTreeNodeComponent = ({ data, selected }: SkillTreeNodeProps) => {
-  const palette =
-    data.role === 'root'
+  const palette = data.isOwned
+    ? {
+        accent: '#8b5cf6',
+        ring: 'rgba(139, 92, 246, 0.20)',
+        background: 'rgba(139, 92, 246, 0.12)',
+        border: 'rgba(139, 92, 246, 0.28)',
+      }
+    : data.role === 'root'
       ? {
           accent: '#2563eb',
           ring: 'rgba(37, 99, 235, 0.16)',
@@ -46,9 +52,7 @@ const SkillTreeNodeComponent = ({ data, selected }: SkillTreeNodeProps) => {
           borderRadius: '50%',
           background: palette.background,
           border: `1px solid ${palette.border}`,
-          boxShadow: selected
-            ? `0 0 0 10px ${palette.ring}`
-            : '0 10px 24px rgba(15, 23, 42, 0.08)',
+          boxShadow: selected ? `0 0 0 10px ${palette.ring}` : '0 10px 24px rgba(15, 23, 42, 0.08)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

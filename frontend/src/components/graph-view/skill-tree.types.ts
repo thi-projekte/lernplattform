@@ -8,7 +8,9 @@ export interface SkillTreeNodeData extends Record<string, unknown> {
   kind: 'skill-topic';
   title: string;
   categories: GraphTopicDto['categories'];
+  creatorId: string;
   creatorFullName?: string;
+  isOwned: boolean;
   role: SkillTreeNodeRole;
   payload: GraphTopicDto;
 }

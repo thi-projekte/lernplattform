@@ -68,8 +68,8 @@ const HomePage = () => {
   );
 
   const { nodes: layoutNodes, edges } = useMemo(
-    () => buildSkillTreeGraph(graphTopics, orientation),
-    [graphTopics, orientation]
+    () => buildSkillTreeGraph(graphTopics, orientation, userProfile.account.username),
+    [graphTopics, orientation, userProfile.account.username]
   );
 
   useEffect(() => {
@@ -78,16 +78,16 @@ const HomePage = () => {
 
   useEffect(() => {
     setNodePositions((current) => {
-      const nextEntries = layoutNodes.map((node) => [
-        node.id,
-        current[node.id] ?? node.position,
-      ] as const);
+      const nextEntries = layoutNodes.map(
+        (node) => [node.id, current[node.id] ?? node.position] as const
+      );
 
       const next = Object.fromEntries(nextEntries);
 
       const sameLength = Object.keys(current).length === nextEntries.length;
-      const sameValues = sameLength
-        && nextEntries.every(([id, position]) => {
+      const sameValues =
+        sameLength &&
+        nextEntries.every(([id, position]) => {
           const previous = current[id];
           return previous && previous.x === position.x && previous.y === position.y;
         });

@@ -273,7 +273,8 @@ const getSkillTreeLevels = (
 
 export const buildSkillTreeGraph = (
   topics: GraphTopicDto[] = [],
-  orientation: SkillTreeOrientation = 'vertical'
+  orientation: SkillTreeOrientation = 'vertical',
+  currentUsername?: string
 ): { nodes: SkillTreeNode[]; edges: Edge[] } => {
   if (topics.length === 0) {
     return { nodes: [], edges: [] };
@@ -341,7 +342,12 @@ export const buildSkillTreeGraph = (
           kind: 'skill-topic',
           title: topic.title,
           categories: topic.categories,
+          creatorId: topic.creatorId,
           creatorFullName: topic.creatorFullName,
+          isOwned:
+            currentUsername !== undefined &&
+            currentUsername.trim().length > 0 &&
+            topic.creatorId.toLowerCase() === currentUsername.toLowerCase(),
           role:
             topic.id === rootId
               ? 'root'
