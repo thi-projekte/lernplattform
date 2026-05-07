@@ -54,7 +54,12 @@ const HomePage = () => {
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const [loadedTopics, setLoadedTopics] = useState<GraphTopicDto[]>([]);
   const [isExpandingNode, setIsExpandingNode] = useState(false);
-  const [nodePositions, setNodePositions] = useState<TopicGraphNodePositions>({});
+  const [nodePositionsByOrientation, setNodePositionsByOrientation] = useState<
+    Record<SkillTreeOrientation, TopicGraphNodePositions>
+  >({
+    vertical: {},
+    horizontal: {},
+  });
   const [isViewportLocked, setIsViewportLocked] = useState(false);
 
   const graphTopics = useMemo(
@@ -72,37 +77,46 @@ const HomePage = () => {
     [graphTopics, orientation, userProfile.account.username]
   );
 
-  useEffect(() => {
-    setNodePositions({});
-  }, [orientation]);
+  const currentNodePositions = useMemo(
+    () => nodePositionsByOrientation[orientation] ?? {},
+    [nodePositionsByOrientation, orientation]
+  );
 
   useEffect(() => {
-    setNodePositions((current) => {
+    setNodePositionsByOrientation((current) => {
+      const currentOrientationPositions = current[orientation] ?? {};
       const nextEntries = layoutNodes.map(
-        (node) => [node.id, current[node.id] ?? node.position] as const
+        (node) => [node.id, currentOrientationPositions[node.id] ?? node.position] as const
       );
 
-      const next = Object.fromEntries(nextEntries);
+      const nextPositions = Object.fromEntries(nextEntries);
 
-      const sameLength = Object.keys(current).length === nextEntries.length;
+      const sameLength = Object.keys(currentOrientationPositions).length === nextEntries.length;
       const sameValues =
         sameLength &&
         nextEntries.every(([id, position]) => {
-          const previous = current[id];
+          const previous = currentOrientationPositions[id];
           return previous && previous.x === position.x && previous.y === position.y;
         });
 
-      return sameValues ? current : next;
+      if (sameValues) {
+        return current;
+      }
+
+      return {
+        ...current,
+        [orientation]: nextPositions,
+      };
     });
-  }, [layoutNodes]);
+  }, [layoutNodes, orientation]);
 
   const nodes = useMemo(
     () =>
       layoutNodes.map((node) => ({
         ...node,
-        position: nodePositions[node.id] ?? node.position,
+        position: currentNodePositions[node.id] ?? node.position,
       })),
-    [layoutNodes, nodePositions]
+    [currentNodePositions, layoutNodes]
   );
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
@@ -124,19 +138,23 @@ const HomePage = () => {
 
   const handleNodePositionChange = useCallback(
     (nodeId: string, position: { x: number; y: number }) => {
-      setNodePositions((current) => {
-        const previous = current[nodeId];
+      setNodePositionsByOrientation((current) => {
+        const currentOrientationPositions = current[orientation] ?? {};
+        const previous = currentOrientationPositions[nodeId];
         if (previous && previous.x === position.x && previous.y === position.y) {
           return current;
         }
 
         return {
           ...current,
-          [nodeId]: position,
+          [orientation]: {
+            ...currentOrientationPositions,
+            [nodeId]: position,
+          },
         };
       });
     },
-    []
+    [orientation]
   );
 
   if (isLoading) {
