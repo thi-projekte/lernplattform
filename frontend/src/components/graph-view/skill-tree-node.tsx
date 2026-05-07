@@ -5,34 +5,17 @@ import type { SkillTreeNode } from './skill-tree.types.ts';
 type SkillTreeNodeProps = NodeProps<SkillTreeNode>;
 
 const SkillTreeNodeComponent = ({ data, selected }: SkillTreeNodeProps) => {
-  const palette = data.isOwned
-    ? {
-        accent: '#8b5cf6',
-        ring: 'rgba(139, 92, 246, 0.20)',
-        background: 'rgba(139, 92, 246, 0.12)',
-        border: 'rgba(139, 92, 246, 0.28)',
-      }
-    : data.role === 'root'
-      ? {
-          accent: '#2563eb',
-          ring: 'rgba(37, 99, 235, 0.16)',
-          background: 'rgba(37, 99, 235, 0.12)',
-          border: 'rgba(37, 99, 235, 0.22)',
-        }
-      : data.role === 'disconnected'
-        ? {
-            accent: '#94a3b8',
-            ring: 'rgba(148, 163, 184, 0.16)',
-            background: 'rgba(148, 163, 184, 0.10)',
-            border: 'rgba(148, 163, 184, 0.24)',
-          }
-        : {
-            accent: '#0f766e',
-            ring: 'rgba(15, 118, 110, 0.16)',
-            background: 'rgba(15, 118, 110, 0.10)',
-            border: 'rgba(15, 118, 110, 0.22)',
-          };
-  const accentColor = palette.accent;
+  const hasSingleCategory = data.categories.length === 1;
+  const singleCategoryColor = hasSingleCategory ? `#${data.categories[0].color}` : undefined;
+  const accentColor = hasSingleCategory
+    ? `color-mix(in srgb, ${singleCategoryColor} 82%, #111827)`
+    : '#8b5cf6';
+  const palette = {
+    accent: accentColor,
+    ring: `color-mix(in srgb, ${accentColor} 20%, transparent)`,
+    background: `color-mix(in srgb, ${accentColor} 10%, white)`,
+    border: `color-mix(in srgb, ${accentColor} 24%, white)`,
+  };
   const categoryLabels = data.categories.slice(0, 3);
 
   return (
