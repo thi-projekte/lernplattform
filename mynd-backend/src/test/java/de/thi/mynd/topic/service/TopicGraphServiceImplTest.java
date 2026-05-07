@@ -9,11 +9,13 @@ import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicGraphRepository;
+import de.thi.mynd.topic.repository.TopicRepository;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -23,7 +25,9 @@ class TopicGraphServiceImplTest {
 
   @Inject TopicGraphServiceImpl topicGraphService;
 
-  @InjectMock TopicGraphRepository topicRepository;
+  @InjectMock TopicGraphRepository topicGraphRepository;
+
+  @Inject TopicRepository topicRepository;
 
   @InjectMock MappingRegistry mappingRegistry;
 
@@ -35,6 +39,7 @@ class TopicGraphServiceImplTest {
   void setup() {
     topicId = UUID.randomUUID();
     testTopic = new Topic(); // Assume setters exist or use a constructor
+    testTopic.id = topicId;
     testTopic.foreignAssociations = new ArrayList<>();
     testTopic.ownedAssociations = new ArrayList<>();
     testDto = GraphTopicDto.builder().build();
@@ -45,7 +50,8 @@ class TopicGraphServiceImplTest {
     // Arrange
     int n = 5;
     List<Topic> mockTopics = List.of(testTopic);
-    when(topicRepository.findNMostPopular(n)).thenReturn(mockTopics);
+    when(topicGraphRepository.findNMostPopular(n)).thenReturn(mockTopics);
+    when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.ofNullable(testTopic));
     when(mappingRegistry.mapList(mockTopics, GraphTopicDto.class)).thenReturn(List.of(testDto));
 
     // Act
@@ -55,7 +61,7 @@ class TopicGraphServiceImplTest {
     // Assert
     assertNotNull(result);
     assertEquals(1, result.size());
-    verify(topicRepository, times(1)).findNMostPopular(n);
+    verify(topicGraphRepository, times(1)).findNMostPopular(n);
     verify(mappingRegistry, times(1)).mapList(anyList(), eq(GraphTopicDto.class));
   }
 
@@ -66,8 +72,9 @@ class TopicGraphServiceImplTest {
     List<UUID> categoryIds = List.of(UUID.randomUUID());
     List<Topic> mockTopics = List.of(testTopic);
 
-    when(topicRepository.findNMostPopularFilterByCategoryIds(n, categoryIds))
+    when(topicGraphRepository.findNMostPopularFilterByCategoryIds(n, categoryIds))
         .thenReturn(mockTopics);
+    when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.ofNullable(testTopic));
     when(mappingRegistry.mapList(mockTopics, GraphTopicDto.class)).thenReturn(List.of(testDto));
 
     // Act
@@ -76,6 +83,6 @@ class TopicGraphServiceImplTest {
 
     // Assert
     assertEquals(1, result.size());
-    verify(topicRepository).findNMostPopularFilterByCategoryIds(n, categoryIds);
+    verify(topicGraphRepository).findNMostPopularFilterByCategoryIds(n, categoryIds);
   }
 }

@@ -8,6 +8,7 @@ import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.service.TopicGraphService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import java.util.List;
 import java.util.UUID;
@@ -22,6 +23,7 @@ public class TopicGraphResourceTest {
 
   @Test
   @DisplayName("GET /topics/most-popular - Without categories should return top 10")
+  @TestSecurity(user = "alice", roles = "builder")
   public void testGetMostPopularNoCategories() {
     UUID topicId = UUID.randomUUID();
     GraphTopicDto dto = GraphTopicDto.builder().id(topicId).build();
@@ -41,6 +43,7 @@ public class TopicGraphResourceTest {
 
   @Test
   @DisplayName("GET /topics/most-popular - With categories should filter results")
+  @TestSecurity(user = "alice", roles = "builder")
   public void testGetMostPopularWithCategories() {
     UUID categoryId = UUID.randomUUID();
     List<UUID> categories = List.of(categoryId);
@@ -61,6 +64,7 @@ public class TopicGraphResourceTest {
 
   @Test
   @DisplayName("GET /topics/{id}/graph-neighbors - Should return neighbor list")
+  @TestSecurity(user = "alice", roles = "builder")
   public void testGetNeighbors() {
     UUID topicId = UUID.randomUUID();
 
