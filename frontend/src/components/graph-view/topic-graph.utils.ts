@@ -6,10 +6,7 @@ import type {
   TopicGraphNode,
   TopicGraphNodePositions,
 } from './topic-graph.types';
-import type {
-  SkillTreeNode,
-  SkillTreeOrientation,
-} from './skill-tree.types.ts';
+import type { SkillTreeNode, SkillTreeOrientation } from './skill-tree.types.ts';
 
 // The edge handles are derived from node angles so arrows stay attached to the
 // most natural side of each node. Be careful when changing this mapping,

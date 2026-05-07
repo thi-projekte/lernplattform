@@ -1,21 +1,19 @@
-import {
-  Badge,
-  Group,
-  Paper,
-  SegmentedControl,
-  Stack,
-  Text,
-  Title,
-} from '@mantine/core';
+import { Badge, Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
 import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo, useState } from 'react';
 import { useUserService } from '../provider/user-provider.tsx';
-import { fetchDirectNeighbors, useFetchMostPopularTopicsWithNeighbors } from '../api/topic-graph.ts';
+import {
+  fetchDirectNeighbors,
+  useFetchMostPopularTopicsWithNeighbors,
+} from '../api/topic-graph.ts';
 import LayoutLoader from '../components/layout-loader.tsx';
 import TopicGraphView from '../components/graph-view/topic-graph.tsx';
 import SkillTreeNodeComponent from '../components/graph-view/skill-tree-node.tsx';
-import type { SkillTreeNodeData, SkillTreeOrientation } from '../components/graph-view/skill-tree.types.ts';
+import type {
+  SkillTreeNodeData,
+  SkillTreeOrientation,
+} from '../components/graph-view/skill-tree.types.ts';
 import { buildSkillTreeGraph } from '../components/graph-view/topic-graph.utils.ts';
 import type { GraphTopicDto } from '../schemas/topic-graph.ts';
 import type { Node, NodeMouseHandler } from '@xyflow/react';
@@ -59,7 +57,7 @@ const HomePage = () => {
   const [nodePositions, setNodePositions] = useState<TopicGraphNodePositions>({});
 
   const graphTopics = useMemo(
-    () => (loadedTopics.length > 0 ? loadedTopics : data ?? []),
+    () => (loadedTopics.length > 0 ? loadedTopics : (data ?? [])),
     [data, loadedTopics]
   );
 
@@ -91,25 +89,30 @@ const HomePage = () => {
 
     try {
       const neighbors = await fetchDirectNeighbors(topic.id);
-      setLoadedTopics((current) => mergeGraphTopics(mergeGraphTopics(current, graphTopics), neighbors));
+      setLoadedTopics((current) =>
+        mergeGraphTopics(mergeGraphTopics(current, graphTopics), neighbors)
+      );
     } finally {
       setIsExpandingNode(false);
     }
   };
 
-  const handleNodePositionChange = useCallback((nodeId: string, position: { x: number; y: number }) => {
-    setNodePositions((current) => {
-      const previous = current[nodeId];
-      if (previous && previous.x === position.x && previous.y === position.y) {
-        return current;
-      }
+  const handleNodePositionChange = useCallback(
+    (nodeId: string, position: { x: number; y: number }) => {
+      setNodePositions((current) => {
+        const previous = current[nodeId];
+        if (previous && previous.x === position.x && previous.y === position.y) {
+          return current;
+        }
 
-      return {
-        ...current,
-        [nodeId]: position,
-      };
-    });
-  }, []);
+        return {
+          ...current,
+          [nodeId]: position,
+        };
+      });
+    },
+    []
+  );
 
   if (isLoading) {
     return <LayoutLoader />;
@@ -121,7 +124,9 @@ const HomePage = () => {
         <Stack gap={4}>
           <Title order={1}>{t('journey.title')}</Title>
           <Text c="dimmed">
-            {t('journey.subtitle', { name: userProfile.account.username ?? t('journey.genericUser') })}
+            {t('journey.subtitle', {
+              name: userProfile.account.username ?? t('journey.genericUser'),
+            })}
           </Text>
         </Stack>
 
@@ -164,7 +169,9 @@ const HomePage = () => {
                   edges={edges}
                   nodeTypes={nodeTypes}
                   onNodeClick={onNodeClick}
-                  onNodeDragStop={(_event, node) => handleNodePositionChange(node.id, node.position)}
+                  onNodeDragStop={(_event, node) =>
+                    handleNodePositionChange(node.id, node.position)
+                  }
                   allowCanvasPanning
                   allowNodeDragging
                   showControls={false}
