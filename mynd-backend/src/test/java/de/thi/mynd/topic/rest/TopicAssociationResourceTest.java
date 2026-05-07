@@ -9,6 +9,7 @@ import de.thi.mynd.topic.service.TopicAssociationService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
+import io.restassured.http.ContentType;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +35,13 @@ public class TopicAssociationResourceTest {
 
     when(associationService.createAssociation(owningId, foreignId)).thenReturn(mockAssoc);
 
-    given().when().body(request).post("/topic-associations").then().statusCode(200);
+    given()
+        .when()
+        .body(request)
+        .post("/topic-associations")
+        .then()
+        .statusCode(200)
+        .contentType(ContentType.JSON);
 
     verify(associationService).createAssociation(owningId, foreignId);
   }
@@ -45,7 +52,7 @@ public class TopicAssociationResourceTest {
       roles = {"builder"})
   void testCreateAssociationValidationError() {
     // Missing query parameters should trigger a 400 due to @NotNull
-    given().when().post("/topic-associations/create").then().statusCode(400);
+    given().when().post("/topic-associations").then().statusCode(400);
   }
 
   @Test
