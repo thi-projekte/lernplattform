@@ -8,7 +8,6 @@ import de.thi.mynd.topic.service.TopicAssociationService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
-import io.restassured.http.ContentType;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
 
