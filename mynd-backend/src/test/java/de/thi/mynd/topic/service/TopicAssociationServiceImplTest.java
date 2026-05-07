@@ -1,20 +1,29 @@
 package de.thi.mynd.topic.service;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
+import de.thi.mynd.common.security.SecurityService;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.entity.TopicAssociation;
+import de.thi.mynd.topic.exception.AssociationAlreadyExistsException;
 import de.thi.mynd.topic.repository.TopicAssociationRepository;
+import de.thi.mynd.topic.repository.TopicRepository;
+import de.thi.mynd.topic.security.TopicAssociationVoter;
+import de.thi.mynd.topic.security.TopicVoter;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
@@ -23,6 +32,25 @@ class TopicAssociationServiceImplTest {
   @Inject TopicAssociationServiceImpl topicAssociationService;
 
   @InjectMock TopicAssociationRepository topicAssociationRepository;
+
+  @InjectMock
+  TopicRepository topicRepository;
+
+  @InjectMock
+  SecurityService securityService;
+
+  private UUID ownerId;
+  private UUID foreignId;
+  private Topic owner;
+  private Topic foreign;
+
+  @BeforeEach
+  void setup() {
+    ownerId = UUID.randomUUID();
+    foreignId = UUID.randomUUID();
+    owner = new Topic();
+    foreign = new Topic();
+  }
 
   @Test
   void testFindOrCreateOwningTopicAssociations_MixedExistingAndNew() {
@@ -67,7 +95,7 @@ class TopicAssociationServiceImplTest {
 
     // Assert
     // Ergebnis sollte 2 Assoziationen enthalten (1 alte, 1 neue)
-    Assertions.assertEquals(2, result.size());
+    assertEquals(2, result.size());
 
     // Verifiziere, dass nur für die NEUE ID persist aufgerufen wurde
     verify(topicAssociationRepository, times(1)).persist(any(TopicAssociation.class));
@@ -79,8 +107,8 @@ class TopicAssociationServiceImplTest {
             .findFirst()
             .orElseThrow();
 
-    Assertions.assertEquals(owningTopic, newAssoc.owningTopic);
-    Assertions.assertEquals(username, newAssoc.creatorId);
+    assertEquals(owningTopic, newAssoc.owningTopic);
+    assertEquals(username, newAssoc.creatorId);
   }
 
   @Test
@@ -109,7 +137,80 @@ class TopicAssociationServiceImplTest {
             owningTopic, List.of(req), username);
 
     // Assert
-    Assertions.assertEquals(1, result.size());
+    assertEquals(1, result.size());
     verify(topicAssociationRepository, never()).persist(any(TopicAssociation.class));
+  }
+
+  @Test
+  void createAssociation_Success() {
+    // Arrange
+    when(topicRepository.findByIdOptional(ownerId)).thenReturn(Optional.of(owner));
+    when(topicRepository.findByIdOptional(foreignId)).thenReturn(Optional.of(foreign));
+    when(topicAssociationRepository.associationExists(owner, foreign)).thenReturn(false);
+
+    // Act
+    TopicAssociation result = topicAssociationService.createAssociation(ownerId, foreignId);
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(owner.id, result.owningTopic.id);
+    assertEquals(foreign.id, result.foreignTopic.id);
+
+    verify(securityService).denyUnlessGranted(owner, TopicVoter.AssignForeignTopics);
+    verify(topicAssociationRepository).persistAndFlush(any(TopicAssociation.class));
+  }
+
+  @Test
+  void createAssociation_ThrowsException_WhenAlreadyExists() {
+    // Arrange
+    when(topicRepository.findByIdOptional(ownerId)).thenReturn(Optional.of(owner));
+    when(topicRepository.findByIdOptional(foreignId)).thenReturn(Optional.of(foreign));
+    when(topicAssociationRepository.associationExists(owner, foreign)).thenReturn(true);
+
+    // Act & Assert
+    assertThrows(AssociationAlreadyExistsException.class, () -> {
+      topicAssociationService.createAssociation(ownerId, foreignId);
+    });
+  }
+
+  @Test
+  void createAssociation_ThrowsException_WhenTopicNotFound() {
+    // Arrange
+    when(topicRepository.findByIdOptional(ownerId)).thenReturn(Optional.empty());
+
+    // Act & Assert
+    assertThrows(EntityInstanceNotFoundException.class, () -> {
+      topicAssociationService.createAssociation(ownerId, foreignId);
+    });
+  }
+
+  // --- Tests for deleteAssociation ---
+
+  @Test
+  void deleteAssociation_Success() {
+    // Arrange
+    UUID assocId = UUID.randomUUID();
+    TopicAssociation association = new TopicAssociation();
+    when(topicAssociationRepository.findByIdOptional(assocId)).thenReturn(Optional.of(association));
+
+    // Act
+    topicAssociationService.deleteAssociation(assocId);
+
+    // Assert
+    verify(securityService).denyUnlessGranted(association, TopicAssociationVoter.Delete);
+    verify(topicAssociationRepository).delete(association);
+    verify(topicAssociationRepository).flush();
+  }
+
+  @Test
+  void deleteAssociation_ThrowsException_WhenNotFound() {
+    // Arrange
+    UUID assocId = UUID.randomUUID();
+    when(topicAssociationRepository.findByIdOptional(assocId)).thenReturn(Optional.empty());
+
+    // Act & Assert
+    assertThrows(EntityInstanceNotFoundException.class, () -> {
+      topicAssociationService.deleteAssociation(assocId);
+    });
   }
 }

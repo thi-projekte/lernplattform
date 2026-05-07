@@ -5,12 +5,11 @@ import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.common.security.SecurityService;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.entity.TopicAssociation;
-import de.thi.mynd.topic.exception.AssociationAlreadyExists;
+import de.thi.mynd.topic.exception.AssociationAlreadyExistsException;
 import de.thi.mynd.topic.repository.TopicAssociationRepository;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.security.TopicAssociationVoter;
 import de.thi.mynd.topic.security.TopicVoter;
-import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.List;
@@ -66,7 +65,7 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
     securityService.denyUnlessGranted(owner, TopicVoter.AssignForeignTopics);
 
     if (topicAssociationRepository.associationExists(owner, foreign)) {
-      throw new AssociationAlreadyExists("This association already exists");
+      throw new AssociationAlreadyExistsException("This association already exists");
     }
 
     TopicAssociation newAssociation = new TopicAssociation();
