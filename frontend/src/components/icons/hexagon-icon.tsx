@@ -25,19 +25,25 @@ const HexagonIcon = ({ color, children, size = 100, selected }: HexagonIconProps
       >
         <defs>
           <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="4" stdDeviation="4" floodColor="#000" floodOpacity="0.2" />
+            <feDropShadow dx="0" dy="6" stdDeviation="6" floodColor="#0f172a" floodOpacity="0.12" />
           </filter>
         </defs>
         <polygon points="50,5 95,31 95,84 50,110 5,84 5,31" fill={color} filter="url(#shadow)" />
+        <polygon
+          points="50,10 90,33 90,82 50,105 10,82 10,33"
+          fill="none"
+          stroke="rgba(255,255,255,0.7)"
+          strokeWidth="1.5"
+        />
         {selected && (
           <polygon
             points="50,5 95,31 95,84 50,110 5,84 5,31"
             fill="none"
-            stroke={color}
-            strokeWidth="3"
+            stroke="rgba(31, 41, 55, 0.18)"
+            strokeWidth="2.5"
             style={{
               transformOrigin: '50px 57.5px',
-              transform: 'scale(1.2)',
+              transform: 'scale(1.08)',
               transition: 'transform 0.2s ease',
             }}
           />
