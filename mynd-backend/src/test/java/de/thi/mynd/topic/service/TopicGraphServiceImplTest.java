@@ -1,8 +1,6 @@
 package de.thi.mynd.topic.service;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyList;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import de.thi.mynd.common.processor.MappingRegistry;
