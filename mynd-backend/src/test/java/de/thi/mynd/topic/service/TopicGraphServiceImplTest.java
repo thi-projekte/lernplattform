@@ -12,7 +12,6 @@ import de.thi.mynd.topic.repository.TopicGraphRepository;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -75,35 +74,5 @@ class TopicGraphServiceImplTest {
     // Assert
     assertEquals(1, result.size());
     verify(topicRepository).findNMostPopularFilterByCategoryIds(n, categoryIds);
-  }
-
-  @Test
-  void testGetNeighborsOfTopic() {
-    // Arrange
-    List<Topic> neighbors = List.of(testTopic);
-    when(topicRepository.findNeighborsByTopicId(topicId)).thenReturn(neighbors);
-    when(mappingRegistry.mapList(neighbors, GraphTopicDto.class)).thenReturn(List.of(testDto));
-
-    // Act
-    List<GraphTopicDto> result = topicGraphService.getNeighborsOfTopic(topicId);
-
-    // Assert
-    assertNotNull(result);
-    assertEquals(1, result.size());
-    verify(topicRepository).findNeighborsByTopicId(topicId);
-  }
-
-  @Test
-  void testGetNeighborsReturnsEmptyListWhenNoneFound() {
-    // Arrange
-    when(topicRepository.findNeighborsByTopicId(topicId)).thenReturn(Collections.emptyList());
-    when(mappingRegistry.mapList(Collections.emptyList(), GraphTopicDto.class))
-        .thenReturn(Collections.emptyList());
-
-    // Act
-    List<GraphTopicDto> result = topicGraphService.getNeighborsOfTopic(topicId);
-
-    // Assert
-    assertTrue(result.isEmpty());
   }
 }

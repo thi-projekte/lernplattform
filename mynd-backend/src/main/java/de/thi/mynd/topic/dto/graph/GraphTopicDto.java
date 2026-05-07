@@ -21,4 +21,12 @@ public final class GraphTopicDto {
   public String creatorFullName;
 
   public List<UUID> associatedTopics;
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof GraphTopicDto dto) {
+      return dto.id.equals(this.id);
+    }
+    return false;
+  }
 }

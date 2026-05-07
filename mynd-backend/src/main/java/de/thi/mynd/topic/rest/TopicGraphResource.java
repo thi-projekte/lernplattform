@@ -18,7 +18,7 @@ public final class TopicGraphResource {
   @GET
   public List<GraphTopicDto> getMostPopular(@RestQuery List<UUID> categories) {
     int n = 10;
-    if (categories == null) {
+    if (categories.isEmpty()) {
       return topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(n);
     }
     return topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(n, categories);
