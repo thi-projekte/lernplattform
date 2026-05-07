@@ -1,4 +1,4 @@
-import { MarkerType, type Edge } from '@xyflow/react';
+import type { Edge } from '@xyflow/react';
 import type { ListTopicDto, Topic } from '../../schemas/topic';
 import type {
   TopicAssociationsGraphInput,
@@ -103,19 +103,6 @@ export const buildTopicDetailsGraph = (
       },
     });
 
-    const sourceHandle = getHandleForAngle(angle);
-    const targetHandle = getOppositeHandle(sourceHandle);
-
-    edges.push({
-      id: `edge-root-${id}`,
-      source: 'topic-root',
-      target: id,
-      sourceHandle,
-      targetHandle,
-      animated: true,
-      style: { stroke: '#adb5bd', strokeWidth: 2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#adb5bd' },
-    });
   });
 
   return { nodes, edges };
@@ -185,7 +172,6 @@ export const buildTopicAssociationsGraph = (
       targetHandle,
       animated: true,
       style: { stroke: '#adb5bd', strokeWidth: 2 },
-      markerEnd: { type: MarkerType.ArrowClosed, color: '#adb5bd' },
     });
   });
 
