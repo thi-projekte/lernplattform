@@ -1,7 +1,7 @@
 import { Badge, Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
 import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useUserService } from '../provider/user-provider.tsx';
 import {
   fetchDirectNeighbors,
@@ -55,6 +55,7 @@ const HomePage = () => {
   const [loadedTopics, setLoadedTopics] = useState<GraphTopicDto[]>([]);
   const [isExpandingNode, setIsExpandingNode] = useState(false);
   const [nodePositions, setNodePositions] = useState<TopicGraphNodePositions>({});
+  const [isViewportLocked, setIsViewportLocked] = useState(false);
 
   const graphTopics = useMemo(
     () => (loadedTopics.length > 0 ? loadedTopics : (data ?? [])),
@@ -70,6 +71,30 @@ const HomePage = () => {
     () => buildSkillTreeGraph(graphTopics, orientation),
     [graphTopics, orientation]
   );
+
+  useEffect(() => {
+    setNodePositions({});
+  }, [orientation]);
+
+  useEffect(() => {
+    setNodePositions((current) => {
+      const nextEntries = layoutNodes.map((node) => [
+        node.id,
+        current[node.id] ?? node.position,
+      ] as const);
+
+      const next = Object.fromEntries(nextEntries);
+
+      const sameLength = Object.keys(current).length === nextEntries.length;
+      const sameValues = sameLength
+        && nextEntries.every(([id, position]) => {
+          const previous = current[id];
+          return previous && previous.x === position.x && previous.y === position.y;
+        });
+
+      return sameValues ? current : next;
+    });
+  }, [layoutNodes]);
 
   const nodes = useMemo(
     () =>
@@ -165,6 +190,7 @@ const HomePage = () => {
                 }}
               >
                 <TopicGraphView
+                  key={orientation}
                   nodes={nodes}
                   edges={edges}
                   nodeTypes={nodeTypes}
@@ -172,11 +198,15 @@ const HomePage = () => {
                   onNodeDragStop={(_event, node) =>
                     handleNodePositionChange(node.id, node.position)
                   }
-                  allowCanvasPanning
-                  allowNodeDragging
+                  allowCanvasPanning={!isViewportLocked}
+                  allowPanOnScroll={!isViewportLocked}
+                  allowNodeDragging={!isViewportLocked}
                   showControls={false}
+                  showViewportToolbar
+                  viewportLocked={isViewportLocked}
+                  onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
                   fitView
-                  fitViewPadding={0.35}
+                  fitViewPadding={orientation === 'horizontal' ? 0.22 : 0.3}
                   backgroundColor="#e5e7eb"
                   backgroundGap={20}
                 />
