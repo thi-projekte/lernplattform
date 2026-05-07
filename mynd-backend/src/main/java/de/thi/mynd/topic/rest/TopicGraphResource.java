@@ -2,6 +2,7 @@ package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.service.TopicGraphService;
+import io.quarkus.security.Authenticated;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -10,6 +11,7 @@ import java.util.UUID;
 import org.jboss.resteasy.reactive.RestQuery;
 
 @Path("/topics")
+@Authenticated
 public final class TopicGraphResource {
 
   @Inject TopicGraphService topicGraphService;
