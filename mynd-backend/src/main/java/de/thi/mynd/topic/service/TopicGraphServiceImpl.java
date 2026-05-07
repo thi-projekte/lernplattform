@@ -36,8 +36,7 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
 
     return getGraphTopicDtosWithNeighbors(topics);
   }
-
-  @NonNull
+  
   private List<GraphTopicDto> getGraphTopicDtosWithNeighbors(List<Topic> topics) {
     List<GraphTopicDto> mapped = mappingRegistry.mapList(topics, GraphTopicDto.class);
     Set<GraphTopicDto> uniqueMapped = new HashSet<>(mapped);
