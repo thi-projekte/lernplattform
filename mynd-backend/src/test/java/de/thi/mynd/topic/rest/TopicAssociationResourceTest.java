@@ -3,6 +3,7 @@ package de.thi.mynd.topic.rest;
 import static io.restassured.RestAssured.given;
 import static org.mockito.Mockito.*;
 
+import de.thi.mynd.topic.dto.CreateTopicAssociationRequest;
 import de.thi.mynd.topic.entity.TopicAssociation;
 import de.thi.mynd.topic.service.TopicAssociationService;
 import io.quarkus.test.InjectMock;
@@ -24,18 +25,16 @@ public class TopicAssociationResourceTest {
     UUID owningId = UUID.randomUUID();
     UUID foreignId = UUID.randomUUID();
 
+    CreateTopicAssociationRequest request = new CreateTopicAssociationRequest();
+    request.owningTopicId = owningId;
+    request.foreignTopicId = foreignId;
+
     TopicAssociation mockAssoc = new TopicAssociation();
     // Set fields on mockAssoc if necessary for the JSON check
 
     when(associationService.createAssociation(owningId, foreignId)).thenReturn(mockAssoc);
 
-    given()
-        .queryParam("owningId", owningId.toString())
-        .queryParam("foreignId", foreignId.toString())
-        .when()
-        .post("/topic-associations/create")
-        .then()
-        .statusCode(200);
+    given().when().body(request).post("/topic-associations").then().statusCode(200);
 
     verify(associationService).createAssociation(owningId, foreignId);
   }
