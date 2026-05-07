@@ -9,6 +9,8 @@ import jakarta.validation.Valid;
 import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.UUID;
 
@@ -20,6 +22,7 @@ public final class TopicAssociationResource {
 
   @POST
   @RolesAllowed("builder")
+  @Produces(MediaType.APPLICATION_JSON)
   public UUID createAssociation(@Valid CreateTopicAssociationRequest request) {
     return associationService.createAssociation(request.owningTopicId, request.foreignTopicId).id;
   }
