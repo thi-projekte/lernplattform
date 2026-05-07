@@ -10,7 +10,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.*;
 import java.util.stream.Stream;
-import org.jspecify.annotations.NonNull;
 
 @ApplicationScoped
 public final class TopicGraphServiceImpl implements TopicGraphService {
