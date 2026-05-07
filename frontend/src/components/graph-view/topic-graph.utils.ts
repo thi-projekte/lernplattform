@@ -102,7 +102,6 @@ export const buildTopicDetailsGraph = (
         payload: content,
       },
     });
-
   });
 
   return { nodes, edges };

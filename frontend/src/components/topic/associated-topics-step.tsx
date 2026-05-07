@@ -245,10 +245,11 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       p="sm"
                       style={{
                         cursor: 'pointer',
-                        borderColor:
-                          selectedTopicId === relatedTopic.id ? '#228be6' : undefined,
+                        borderColor: selectedTopicId === relatedTopic.id ? '#228be6' : undefined,
                         background:
-                          selectedTopicId === relatedTopic.id ? 'rgba(34, 139, 230, 0.06)' : undefined,
+                          selectedTopicId === relatedTopic.id
+                            ? 'rgba(34, 139, 230, 0.06)'
+                            : undefined,
                       }}
                       onClick={() =>
                         setSelectedTopicNode({
