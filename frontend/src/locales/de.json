@@ -18,7 +18,7 @@
       "horizontal": "Horizontal"
     },
     "tipBadge": "Tipp",
-    "tipText": "Klicke eine Node für Details. Myna hilft dir, Inhalte zu finden und sinnvoll zu verknüpfen.",
+    "tipText": "Klicke auf eine Node, um Details zu sehen und verbundene Themen zu laden.",
     "focusMode": "Fokusmodus",
     "actions": {
       "focus": "Fokusmodus",

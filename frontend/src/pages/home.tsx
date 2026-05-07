@@ -9,7 +9,7 @@ import {
 } from '@mantine/core';
 import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useUserService } from '../provider/user-provider.tsx';
 import { fetchDirectNeighbors, useFetchMostPopularTopicsWithNeighbors } from '../api/topic-graph.ts';
 import LayoutLoader from '../components/layout-loader.tsx';
@@ -19,6 +19,7 @@ import type { SkillTreeNodeData, SkillTreeOrientation } from '../components/grap
 import { buildSkillTreeGraph } from '../components/graph-view/topic-graph.utils.ts';
 import type { GraphTopicDto } from '../schemas/topic-graph.ts';
 import type { Node, NodeMouseHandler } from '@xyflow/react';
+import type { TopicGraphNodePositions } from '../components/graph-view/topic-graph.types.ts';
 
 const nodeTypes = {
   skillTreeTopic: SkillTreeNodeComponent,
@@ -55,6 +56,7 @@ const HomePage = () => {
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const [loadedTopics, setLoadedTopics] = useState<GraphTopicDto[]>([]);
   const [isExpandingNode, setIsExpandingNode] = useState(false);
+  const [nodePositions, setNodePositions] = useState<TopicGraphNodePositions>({});
 
   const graphTopics = useMemo(
     () => (loadedTopics.length > 0 ? loadedTopics : data ?? []),
@@ -66,9 +68,18 @@ const HomePage = () => {
     [graphTopics, selectedTopicId]
   );
 
-  const { nodes, edges } = useMemo(
+  const { nodes: layoutNodes, edges } = useMemo(
     () => buildSkillTreeGraph(graphTopics, orientation),
     [graphTopics, orientation]
+  );
+
+  const nodes = useMemo(
+    () =>
+      layoutNodes.map((node) => ({
+        ...node,
+        position: nodePositions[node.id] ?? node.position,
+      })),
+    [layoutNodes, nodePositions]
   );
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
@@ -85,6 +96,20 @@ const HomePage = () => {
       setIsExpandingNode(false);
     }
   };
+
+  const handleNodePositionChange = useCallback((nodeId: string, position: { x: number; y: number }) => {
+    setNodePositions((current) => {
+      const previous = current[nodeId];
+      if (previous && previous.x === position.x && previous.y === position.y) {
+        return current;
+      }
+
+      return {
+        ...current,
+        [nodeId]: position,
+      };
+    });
+  }, []);
 
   if (isLoading) {
     return <LayoutLoader />;
@@ -139,8 +164,9 @@ const HomePage = () => {
                   edges={edges}
                   nodeTypes={nodeTypes}
                   onNodeClick={onNodeClick}
+                  onNodeDragStop={(_event, node) => handleNodePositionChange(node.id, node.position)}
                   allowCanvasPanning
-                  allowNodeDragging={false}
+                  allowNodeDragging
                   showControls={false}
                   fitView
                   fitViewPadding={0.35}
