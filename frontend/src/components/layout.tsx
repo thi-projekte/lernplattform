@@ -45,7 +45,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     [matchingRoute]
   );
 
-  const desktopNavbarWidth = desktopExpanded ? 280 : 76;
+  const desktopNavbarWidth = desktopExpanded ? 280: 76;
 
   return (
     <AppShell
@@ -62,18 +62,20 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           <Box
             visibleFrom="sm"
             style={{
-              width: desktopNavbarWidth,
-              minWidth: desktopNavbarWidth,
+              //width: desktopNavbarWidth,
+              //minWidth: desktopNavbarWidth,
+              width: 80,
+              minWidth: 80,
               height: '100%',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              paddingLeft: 35,
+              paddingLeft: 83,
               overflow: 'visible',
               transition: 'width 150ms ease',
             }}
           >
-            <Image src="/mynd-logo.png" alt="MYnd Logo" w={180} h="auto" fit="contain" />
+            <Image src="/mynd-logo.png" alt="MYnd Logo" w={250} h="auto" fit="contain" />
           </Box>
 
           <Group hiddenFrom="sm" gap="sm" h="100%" px="md">
