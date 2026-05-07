@@ -1,10 +1,15 @@
 import type { Edge } from '@xyflow/react';
 import type { ListTopicDto, Topic } from '../../schemas/topic';
+import type { GraphTopicDto } from '../../schemas/topic-graph.ts';
 import type {
   TopicAssociationsGraphInput,
   TopicGraphNode,
   TopicGraphNodePositions,
 } from './topic-graph.types';
+import type {
+  SkillTreeNode,
+  SkillTreeOrientation,
+} from './skill-tree.types.ts';
 
 // The edge handles are derived from node angles so arrows stay attached to the
 // most natural side of each node. Be careful when changing this mapping,
@@ -195,6 +200,164 @@ export const buildTopicAssociationsGraph = (
         isIsolated: true,
         payload: isolatedTopic,
       },
+    });
+  });
+
+  return { nodes, edges };
+};
+
+const buildGraphAdjacency = (topics: GraphTopicDto[]) => {
+  const topicIds = new Set(topics.map((topic) => topic.id));
+  const adjacency = new Map<string, Set<string>>();
+
+  topics.forEach((topic) => {
+    if (!adjacency.has(topic.id)) {
+      adjacency.set(topic.id, new Set());
+    }
+
+    topic.associatedTopics.forEach((associatedTopicId) => {
+      if (!topicIds.has(associatedTopicId)) return;
+
+      if (!adjacency.has(associatedTopicId)) {
+        adjacency.set(associatedTopicId, new Set());
+      }
+
+      adjacency.get(topic.id)?.add(associatedTopicId);
+      adjacency.get(associatedTopicId)?.add(topic.id);
+    });
+  });
+
+  return adjacency;
+};
+
+const determineSkillTreeRootId = (topics: GraphTopicDto[], adjacency: Map<string, Set<string>>) => {
+  return [...topics]
+    .sort((a, b) => {
+      const degreeDiff = (adjacency.get(b.id)?.size ?? 0) - (adjacency.get(a.id)?.size ?? 0);
+      if (degreeDiff !== 0) return degreeDiff;
+
+      return a.title.localeCompare(b.title);
+    })
+    .at(0)?.id;
+};
+
+const getSkillTreeLevels = (
+  rootId: string,
+  topics: GraphTopicDto[],
+  adjacency: Map<string, Set<string>>
+) => {
+  const queue: Array<{ id: string; level: number }> = [{ id: rootId, level: 0 }];
+  const levels = new Map<string, number>();
+  const visited = new Set<string>([rootId]);
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (!current) continue;
+
+    levels.set(current.id, current.level);
+
+    const neighbors = [...(adjacency.get(current.id) ?? [])].sort();
+    neighbors.forEach((neighborId) => {
+      if (visited.has(neighborId)) return;
+      visited.add(neighborId);
+      queue.push({ id: neighborId, level: current.level + 1 });
+    });
+  }
+
+  const fallbackLevel = (Math.max(...levels.values(), 0) || 0) + 1;
+  topics.forEach((topic) => {
+    if (!levels.has(topic.id)) {
+      levels.set(topic.id, fallbackLevel);
+    }
+  });
+
+  return levels;
+};
+
+export const buildSkillTreeGraph = (
+  topics: GraphTopicDto[] = [],
+  orientation: SkillTreeOrientation = 'vertical'
+): { nodes: SkillTreeNode[]; edges: Edge[] } => {
+  if (topics.length === 0) {
+    return { nodes: [], edges: [] };
+  }
+
+  const adjacency = buildGraphAdjacency(topics);
+  const rootId = determineSkillTreeRootId(topics, adjacency);
+
+  if (!rootId) {
+    return { nodes: [], edges: [] };
+  }
+
+  const levels = getSkillTreeLevels(rootId, topics, adjacency);
+  const groupedByLevel = new Map<number, GraphTopicDto[]>();
+
+  [...topics]
+    .sort((a, b) => {
+      const levelDiff = (levels.get(a.id) ?? 0) - (levels.get(b.id) ?? 0);
+      if (levelDiff !== 0) return levelDiff;
+      return a.title.localeCompare(b.title);
+    })
+    .forEach((topic) => {
+      const level = levels.get(topic.id) ?? 0;
+      const current = groupedByLevel.get(level) ?? [];
+      current.push(topic);
+      groupedByLevel.set(level, current);
+    });
+
+  const levelDistance = 190;
+  const siblingDistance = 240;
+  const origin = { x: 520, y: 140 };
+
+  const nodes: SkillTreeNode[] = [];
+  groupedByLevel.forEach((levelTopics, level) => {
+    const totalWidth = (levelTopics.length - 1) * siblingDistance;
+
+    levelTopics.forEach((topic, index) => {
+      const inlineOffset = index * siblingDistance - totalWidth / 2;
+      const stackOffset = level * levelDistance;
+      const position =
+        orientation === 'vertical'
+          ? { x: origin.x + inlineOffset, y: origin.y + stackOffset }
+          : { x: origin.x + stackOffset, y: origin.y + inlineOffset };
+
+      nodes.push({
+        id: topic.id,
+        type: 'skillTreeTopic',
+        position,
+        data: {
+          kind: 'skill-topic',
+          title: topic.title,
+          categories: topic.categories,
+          creatorFullName: topic.creatorFullName,
+          payload: topic,
+        },
+      });
+    });
+  });
+
+  const edges: Edge[] = [];
+  const seenEdges = new Set<string>();
+
+  topics.forEach((topic) => {
+    topic.associatedTopics.forEach((associatedTopicId) => {
+      if (!topics.some((candidate) => candidate.id === associatedTopicId)) return;
+
+      const edgeKey = [topic.id, associatedTopicId].sort().join(':');
+      if (seenEdges.has(edgeKey)) return;
+      seenEdges.add(edgeKey);
+
+      edges.push({
+        id: `skill-edge-${edgeKey}`,
+        source: topic.id,
+        target: associatedTopicId,
+        type: 'straight',
+        style: {
+          stroke: '#94a3b8',
+          strokeWidth: 2.25,
+          strokeDasharray: '8 6',
+        },
+      });
     });
   });
 

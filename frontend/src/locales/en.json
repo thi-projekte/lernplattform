@@ -5,6 +5,54 @@
     "createTopic": "Create topic",
     "editTopic": "Edit topic"
   },
+  "journey": {
+    "title": "Your journey map",
+    "subtitle": "Hi {{name}}, here you can see your current learning progress and the next steps.",
+    "genericUser": "User",
+    "badges": {
+      "skillTree": "Skilltree",
+      "mynaActive": "Myna active"
+    },
+    "orientation": {
+      "vertical": "Vertical",
+      "horizontal": "Horizontal"
+    },
+    "tipBadge": "Tip",
+    "tipText": "Click on a node for details. Myna helps you find content and connect it meaningfully.",
+    "focusMode": "Focus mode",
+    "actions": {
+      "focus": "Focus mode",
+      "assistant": "Assistant settings",
+      "zoomIn": "Zoom in"
+    },
+    "stats": {
+      "completed": "Completed",
+      "inProgress": "In progress",
+      "xpCollected": "XP collected",
+      "streakDays": "Streak days"
+    },
+    "legend": {
+      "completed": "Completed",
+      "inProgress": "In progress",
+      "open": "Open",
+      "recommended": "Recommended in focus mode"
+    },
+    "assistant": {
+      "title": "Myna",
+      "subtitle": "AI assistant for content",
+      "searchPlaceholder": "Search content...",
+      "suggestionTitle": "Suggestion",
+      "suggestionText": "If you want to improve faster in your skill tree, connect your PDF notes with a short video first.",
+      "actions": {
+        "showPdfs": "Show matching PDFs",
+        "linkYoutube": "Link YouTube video",
+        "findPodcast": "Find podcast as source"
+      }
+    },
+    "selectedTopic": "Selected topic",
+    "unknownCreator": "Unknown creator",
+    "loadingNeighbors": "Loading connected topics..."
+  },
   "common": {
     "rowsPerPage": "Rows per page",
     "noEntriesFound": "No entries found",

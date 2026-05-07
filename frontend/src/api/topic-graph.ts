@@ -3,7 +3,9 @@ import { useQuery } from '@tanstack/react-query';
 import { type GraphTopicDto, GraphTopicDtoSchema } from '../schemas/topic-graph.ts';
 import { z } from 'zod';
 
-const fetchMostPopularWithNeighbors = async (categoryIds?: string[]): Promise<GraphTopicDto[]> => {
+export const fetchMostPopularWithNeighbors = async (
+  categoryIds?: string[]
+): Promise<GraphTopicDto[]> => {
   const result = await apiClient.get(
     `/topics/most-popular${categoryIds ? `?categoryFilter=${categoryIds.join(',')}` : ''}`,
     {
@@ -20,7 +22,7 @@ export const useFetchMostPopularTopicsWithNeighbors = (categoryIds?: string[]) =
   });
 };
 
-const fetchDirectNeighbors = async (topicId: string): Promise<GraphTopicDto[]> => {
+export const fetchDirectNeighbors = async (topicId: string): Promise<GraphTopicDto[]> => {
   const result = await apiClient.get(`/topics/${topicId}/graph-neighbors`, {
     validateStatus: (status) => status <= 204,
   });
