@@ -6,7 +6,7 @@ import type { ListTopicDto } from '../../schemas/topic.ts';
 import { useTranslation } from 'react-i18next';
 
 interface TopicSearchbarProps {
-  onAdd: (topic: ListTopicDto) => void;
+  onAdd?: (topic: ListTopicDto) => void;
   existingIds?: string[];
   onSuggestionsChange?: (topics: ListTopicDto[], searchTerm: string) => void;
 }
@@ -35,7 +35,7 @@ const TopicSearchbar = ({ onAdd, existingIds = [], onSuggestionsChange }: TopicS
   const handleOptionSubmit = (val: string) => {
     const selectedTopic = suggestions?.find((t) => t.title === val);
 
-    if (selectedTopic) {
+    if (selectedTopic && onAdd) {
       onAdd(selectedTopic);
       setValue('');
     }

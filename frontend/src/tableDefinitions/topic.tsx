@@ -57,9 +57,9 @@ export const useTopicColumns = ({
   if (editAction || deleteActionHandler || viewAction) {
     columns.push({
       id: 'actions',
-      header: t('common.actions'),
+      header: () => <Flex justify="center">{t('common.actions')}</Flex>,
       cell: ({ row }) => (
-        <Flex direction="row" gap={4}>
+        <Flex direction="row" gap={4} justify="center" w="100%">
           {viewAction && (
             <ActionIcon
               variant="default"
