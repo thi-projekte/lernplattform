@@ -21,7 +21,7 @@ public class TopicGraphResourceTest {
   @InjectMock TopicGraphService topicGraphService;
 
   @Test
-  @DisplayName("GET /topic/most-popular - Without categories should return top 10")
+  @DisplayName("GET /topics/most-popular - Without categories should return top 10")
   public void testGetMostPopularNoCategories() {
     UUID topicId = UUID.randomUUID();
     GraphTopicDto dto = GraphTopicDto.builder().id(topicId).build();
@@ -31,7 +31,7 @@ public class TopicGraphResourceTest {
 
     given()
         .when()
-        .get("/topic/most-popular")
+        .get("/topics/most-popular")
         .then()
         .statusCode(200)
         .contentType(ContentType.JSON)
@@ -40,7 +40,7 @@ public class TopicGraphResourceTest {
   }
 
   @Test
-  @DisplayName("GET /topic/most-popular - With categories should filter results")
+  @DisplayName("GET /topics/most-popular - With categories should filter results")
   public void testGetMostPopularWithCategories() {
     UUID categoryId = UUID.randomUUID();
     List<UUID> categories = List.of(categoryId);
@@ -53,14 +53,14 @@ public class TopicGraphResourceTest {
     given()
         .queryParam("categories", categoryId.toString())
         .when()
-        .get("/topic/most-popular")
+        .get("/topics/most-popular")
         .then()
         .statusCode(200)
         .body("size()", is(1));
   }
 
   @Test
-  @DisplayName("GET /topic/{id}/graph-neighbors - Should return neighbor list")
+  @DisplayName("GET /topics/{id}/graph-neighbors - Should return neighbor list")
   public void testGetNeighbors() {
     UUID topicId = UUID.randomUUID();
 
@@ -70,7 +70,7 @@ public class TopicGraphResourceTest {
     given()
         .pathParam("topicId", topicId.toString())
         .when()
-        .get("/topic/{topicId}/graph-neighbors")
+        .get("/topics/{topicId}/graph-neighbors")
         .then()
         .statusCode(200)
         .body("size()", is(2));

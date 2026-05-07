@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.UUID;
 import org.jboss.resteasy.reactive.RestQuery;
 
-@Path("/topic")
+@Path("/topics")
 public final class TopicGraphResource {
 
   @Inject TopicGraphService topicGraphService;
