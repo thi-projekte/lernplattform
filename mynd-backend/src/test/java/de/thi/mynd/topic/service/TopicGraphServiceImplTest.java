@@ -12,6 +12,7 @@ import de.thi.mynd.topic.repository.TopicGraphRepository;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,6 +35,8 @@ class TopicGraphServiceImplTest {
   void setup() {
     topicId = UUID.randomUUID();
     testTopic = new Topic(); // Assume setters exist or use a constructor
+    testTopic.foreignAssociations = new ArrayList<>();
+    testTopic.ownedAssociations = new ArrayList<>();
     testDto = GraphTopicDto.builder().build();
   }
 
