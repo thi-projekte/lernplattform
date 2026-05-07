@@ -22,11 +22,9 @@ import java.util.stream.Collectors;
 public final class TopicAssociationServiceImpl implements TopicAssociationService {
 
   @Inject TopicAssociationRepository topicAssociationRepository;
-  @Inject
-  TopicRepository topicRepository;
+  @Inject TopicRepository topicRepository;
 
-  @Inject
-  SecurityService securityService;
+  @Inject SecurityService securityService;
 
   @Override
   public List<TopicAssociation> findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
@@ -77,7 +75,8 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
 
   @Override
   public void deleteAssociation(UUID associationId) {
-    Optional<TopicAssociation> associationOptional = topicAssociationRepository.findByIdOptional(associationId);
+    Optional<TopicAssociation> associationOptional =
+        topicAssociationRepository.findByIdOptional(associationId);
     if (associationOptional.isEmpty()) {
       throw new EntityInstanceNotFoundException("This association does not exist");
     }

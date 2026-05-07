@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,11 +32,9 @@ class TopicAssociationServiceImplTest {
 
   @InjectMock TopicAssociationRepository topicAssociationRepository;
 
-  @InjectMock
-  TopicRepository topicRepository;
+  @InjectMock TopicRepository topicRepository;
 
-  @InjectMock
-  SecurityService securityService;
+  @InjectMock SecurityService securityService;
 
   private UUID ownerId;
   private UUID foreignId;
@@ -168,9 +165,11 @@ class TopicAssociationServiceImplTest {
     when(topicAssociationRepository.associationExists(owner, foreign)).thenReturn(true);
 
     // Act & Assert
-    assertThrows(AssociationAlreadyExistsException.class, () -> {
-      topicAssociationService.createAssociation(ownerId, foreignId);
-    });
+    assertThrows(
+        AssociationAlreadyExistsException.class,
+        () -> {
+          topicAssociationService.createAssociation(ownerId, foreignId);
+        });
   }
 
   @Test
@@ -179,9 +178,11 @@ class TopicAssociationServiceImplTest {
     when(topicRepository.findByIdOptional(ownerId)).thenReturn(Optional.empty());
 
     // Act & Assert
-    assertThrows(EntityInstanceNotFoundException.class, () -> {
-      topicAssociationService.createAssociation(ownerId, foreignId);
-    });
+    assertThrows(
+        EntityInstanceNotFoundException.class,
+        () -> {
+          topicAssociationService.createAssociation(ownerId, foreignId);
+        });
   }
 
   // --- Tests for deleteAssociation ---
@@ -209,8 +210,10 @@ class TopicAssociationServiceImplTest {
     when(topicAssociationRepository.findByIdOptional(assocId)).thenReturn(Optional.empty());
 
     // Act & Assert
-    assertThrows(EntityInstanceNotFoundException.class, () -> {
-      topicAssociationService.deleteAssociation(assocId);
-    });
+    assertThrows(
+        EntityInstanceNotFoundException.class,
+        () -> {
+          topicAssociationService.deleteAssociation(assocId);
+        });
   }
 }
