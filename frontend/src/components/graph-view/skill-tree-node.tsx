@@ -5,8 +5,29 @@ import type { SkillTreeNode } from './skill-tree.types.ts';
 type SkillTreeNodeProps = NodeProps<SkillTreeNode>;
 
 const SkillTreeNodeComponent = ({ data, selected }: SkillTreeNodeProps) => {
-  const accentColor = data.categories[0] ? `#${data.categories[0].color}` : '#4a90e2';
-  const categoryTitle = data.categories[0]?.title;
+  const palette =
+    data.role === 'root'
+      ? {
+          accent: '#2563eb',
+          ring: 'rgba(37, 99, 235, 0.16)',
+          background: 'rgba(37, 99, 235, 0.12)',
+          border: 'rgba(37, 99, 235, 0.22)',
+        }
+      : data.role === 'disconnected'
+        ? {
+            accent: '#94a3b8',
+            ring: 'rgba(148, 163, 184, 0.16)',
+            background: 'rgba(148, 163, 184, 0.10)',
+            border: 'rgba(148, 163, 184, 0.24)',
+          }
+        : {
+            accent: '#0f766e',
+            ring: 'rgba(15, 118, 110, 0.16)',
+            background: 'rgba(15, 118, 110, 0.10)',
+            border: 'rgba(15, 118, 110, 0.22)',
+          };
+  const accentColor = palette.accent;
+  const categoryLabels = data.categories.slice(0, 3);
 
   return (
     <div
@@ -23,10 +44,10 @@ const SkillTreeNodeComponent = ({ data, selected }: SkillTreeNodeProps) => {
           width: 82,
           height: 82,
           borderRadius: '50%',
-          background: `color-mix(in srgb, ${accentColor} 14%, white)`,
-          border: `1px solid color-mix(in srgb, ${accentColor} 28%, white)`,
+          background: palette.background,
+          border: `1px solid ${palette.border}`,
           boxShadow: selected
-            ? `0 0 0 10px color-mix(in srgb, ${accentColor} 18%, transparent)`
+            ? `0 0 0 10px ${palette.ring}`
             : '0 10px 24px rgba(15, 23, 42, 0.08)',
           display: 'flex',
           alignItems: 'center',
@@ -87,21 +108,38 @@ const SkillTreeNodeComponent = ({ data, selected }: SkillTreeNodeProps) => {
         {data.title}
       </Text>
 
-      {categoryTitle && (
-        <Badge
-          mt={8}
-          radius="xl"
-          variant="light"
+      {categoryLabels.length > 0 && (
+        <div
           style={{
-            color: accentColor,
-            background: `color-mix(in srgb, ${accentColor} 14%, white)`,
-            border: `1px solid color-mix(in srgb, ${accentColor} 20%, white)`,
-            textTransform: 'none',
-            fontWeight: 600,
+            marginTop: 8,
+            display: 'flex',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            gap: 6,
+            maxWidth: 210,
           }}
         >
-          {categoryTitle}
-        </Badge>
+          {categoryLabels.map((category) => {
+            const categoryColor = `#${category.color}`;
+
+            return (
+              <Badge
+                key={category.id}
+                radius="xl"
+                variant="light"
+                style={{
+                  color: categoryColor,
+                  background: `color-mix(in srgb, ${categoryColor} 14%, white)`,
+                  border: `1px solid color-mix(in srgb, ${categoryColor} 20%, white)`,
+                  textTransform: 'none',
+                  fontWeight: 600,
+                }}
+              >
+                {category.title}
+              </Badge>
+            );
+          })}
+        </div>
       )}
     </div>
   );

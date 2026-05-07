@@ -327,6 +327,12 @@ export const buildSkillTreeGraph = (
           title: topic.title,
           categories: topic.categories,
           creatorFullName: topic.creatorFullName,
+          role:
+            topic.id === rootId
+              ? 'root'
+              : (adjacency.get(topic.id)?.size ?? 0) > 0
+                ? 'connected'
+                : 'disconnected',
           payload: topic,
         },
       });
