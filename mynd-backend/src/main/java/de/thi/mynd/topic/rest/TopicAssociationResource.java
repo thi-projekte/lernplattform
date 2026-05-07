@@ -1,6 +1,5 @@
 package de.thi.mynd.topic.rest;
 
-import de.thi.mynd.topic.entity.TopicAssociation;
 import de.thi.mynd.topic.service.TopicAssociationService;
 import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
@@ -14,6 +13,8 @@ import java.util.UUID;
 import org.jboss.resteasy.reactive.RestQuery;
 
 @Path("/topic-associations")
+@Authenticated
+@RolesAllowed("builder")
 public final class TopicAssociationResource {
 
   @Inject TopicAssociationService associationService;
