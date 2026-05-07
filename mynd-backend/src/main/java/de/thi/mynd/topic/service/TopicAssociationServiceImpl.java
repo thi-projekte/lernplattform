@@ -12,6 +12,8 @@ import de.thi.mynd.topic.security.TopicAssociationVoter;
 import de.thi.mynd.topic.security.TopicVoter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -56,6 +58,7 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
   }
 
   @Override
+  @Transactional
   public TopicAssociation createAssociation(UUID owningTopicId, UUID foreignTopicId) {
     Topic owner = findTopic(owningTopicId);
     Topic foreign = findTopic(foreignTopicId);
@@ -74,6 +77,7 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
   }
 
   @Override
+  @Transactional
   public void deleteAssociation(UUID associationId) {
     Optional<TopicAssociation> associationOptional =
         topicAssociationRepository.findByIdOptional(associationId);
