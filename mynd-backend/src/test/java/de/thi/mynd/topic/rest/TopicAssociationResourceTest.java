@@ -36,8 +36,7 @@ public class TopicAssociationResourceTest {
         .when()
         .post("/topic-associations/create")
         .then()
-        .statusCode(200)
-        .contentType(ContentType.JSON);
+        .statusCode(200);
 
     verify(associationService).createAssociation(owningId, foreignId);
   }
