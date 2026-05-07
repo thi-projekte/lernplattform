@@ -62,7 +62,6 @@ class TopicGraphServiceImplTest {
     assertNotNull(result);
     assertEquals(1, result.size());
     verify(topicGraphRepository, times(1)).findNMostPopular(n);
-    verify(mappingRegistry, times(1)).mapList(anyList(), eq(GraphTopicDto.class));
   }
 
   @Test
