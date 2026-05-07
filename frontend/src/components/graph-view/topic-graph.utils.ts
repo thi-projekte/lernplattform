@@ -302,21 +302,36 @@ export const buildSkillTreeGraph = (
       groupedByLevel.set(level, current);
     });
 
-  const levelDistance = 190;
-  const siblingDistance = 240;
-  const origin = { x: 520, y: 140 };
+  const layoutConfig =
+    orientation === 'vertical'
+      ? {
+          levelDistance: 240,
+          siblingDistance: 220,
+          origin: { x: 520, y: 140 },
+        }
+      : {
+          levelDistance: 320,
+          siblingDistance: 170,
+          origin: { x: 180, y: 320 },
+        };
 
   const nodes: SkillTreeNode[] = [];
   groupedByLevel.forEach((levelTopics, level) => {
-    const totalWidth = (levelTopics.length - 1) * siblingDistance;
+    const totalWidth = (levelTopics.length - 1) * layoutConfig.siblingDistance;
 
     levelTopics.forEach((topic, index) => {
-      const inlineOffset = index * siblingDistance - totalWidth / 2;
-      const stackOffset = level * levelDistance;
+      const inlineOffset = index * layoutConfig.siblingDistance - totalWidth / 2;
+      const stackOffset = level * layoutConfig.levelDistance;
       const position =
         orientation === 'vertical'
-          ? { x: origin.x + inlineOffset, y: origin.y + stackOffset }
-          : { x: origin.x + stackOffset, y: origin.y + inlineOffset };
+          ? {
+              x: layoutConfig.origin.x + inlineOffset,
+              y: layoutConfig.origin.y + stackOffset,
+            }
+          : {
+              x: layoutConfig.origin.x + stackOffset,
+              y: layoutConfig.origin.y + inlineOffset,
+            };
 
       nodes.push({
         id: topic.id,
