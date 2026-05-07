@@ -14,17 +14,15 @@ import java.util.UUID;
 import org.jboss.resteasy.reactive.RestQuery;
 
 @Path("/topic-associations")
-@Authenticated
-@RolesAllowed("builder")
 public final class TopicAssociationResource {
 
   @Inject TopicAssociationService associationService;
 
   @POST
   @Path("/create")
-  public TopicAssociation createAssociation(
+  public UUID createAssociation(
       @RestQuery @NotNull UUID owningId, @RestQuery @NotNull UUID foreignId) {
-    return associationService.createAssociation(owningId, foreignId);
+    return associationService.createAssociation(owningId, foreignId).id;
   }
 
   @DELETE
