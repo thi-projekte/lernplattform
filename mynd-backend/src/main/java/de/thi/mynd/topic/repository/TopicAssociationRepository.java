@@ -22,7 +22,7 @@ public final class TopicAssociationRepository extends MyndBaseRepository<TopicAs
 
   public boolean associationExists(Topic owner, Topic foreign) {
     return find(
-                "(owningTopic.id = ?1 OR foreignTopic.id = ?1) AND (owningTopic.id = ?2 OR foreignTopic.id = ?2)",
+            "(owningTopic.id = ?1 AND foreignTopic.id = ?2) OR (owningTopic.id = ?2 AND foreignTopic.id = ?1)",
                 owner.id,
                 foreign.id)
             .count()
