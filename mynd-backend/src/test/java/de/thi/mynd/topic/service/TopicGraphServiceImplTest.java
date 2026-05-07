@@ -27,7 +27,7 @@ class TopicGraphServiceImplTest {
 
   @InjectMock TopicGraphRepository topicGraphRepository;
 
-  @Inject TopicRepository topicRepository;
+  @InjectMock TopicRepository topicRepository;
 
   @InjectMock MappingRegistry mappingRegistry;
 
