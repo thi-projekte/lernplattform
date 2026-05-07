@@ -9,9 +9,6 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "topic_association")
 public class TopicAssociation extends BaseEntity {
 
-  @Column(nullable = false)
-  public String creatorId;
-
   @ManyToOne(cascade = CascadeType.PERSIST)
   @JoinColumn(name = "owning_topic_id")
   @OnDelete(action = OnDeleteAction.CASCADE)

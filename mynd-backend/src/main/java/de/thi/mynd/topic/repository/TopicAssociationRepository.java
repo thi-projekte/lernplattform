@@ -1,6 +1,7 @@
 package de.thi.mynd.topic.repository;
 
 import de.thi.mynd.common.repository.MyndBaseRepository;
+import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.entity.TopicAssociation;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
@@ -17,5 +18,14 @@ public final class TopicAssociationRepository extends MyndBaseRepository<TopicAs
             username,
             ids)
         .list();
+  }
+
+  public boolean associationExists(Topic owner, Topic foreign) {
+    return find(
+                "(owningTopic.id = ?1 AND foreignTopic.id = ?2) OR (owningTopic.id = ?2 AND foreignTopic.id = ?1)",
+                owner.id,
+                foreign.id)
+            .count()
+        > 0;
   }
 }
