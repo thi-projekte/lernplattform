@@ -41,7 +41,7 @@ public class TopicAssociationResourceTest {
         .body(request)
         .post("/topic-associations")
         .then()
-        .statusCode(200);
+        .statusCode(204);
 
     verify(associationService).createAssociation(owningId, foreignId);
   }
@@ -52,7 +52,13 @@ public class TopicAssociationResourceTest {
       roles = {"builder"})
   void testCreateAssociationValidationError() {
     // Missing query parameters should trigger a 400 due to @NotNull
-    given().contentType(ContentType.JSON).when().post("/topic-associations").then().statusCode(400);
+    given()
+        .contentType(ContentType.JSON)
+        .body(new CreateTopicAssociationRequest())
+        .when()
+        .post("/topic-associations")
+        .then()
+        .statusCode(400);
   }
 
   @Test
