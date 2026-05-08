@@ -48,6 +48,17 @@ const maxFileSizes: Partial<Record<ContentElementType, number>> = {
   VIDEO_FILE: 100 * MB,
 };
 
+const iconByType: Record<ContentElementType, string> = {
+  PDF: 'PDF',
+  VIDEO_FILE: 'VIDEO_FILE',
+  AUDIO_FILE: 'AUDIO_FILE',
+  YOUTUBE_LINK: 'YOUTUBE_LINK',
+  SPOTIFY_LINK: 'SPOTIFY_LINK',
+  RTF: 'RTF',
+  URI: 'URI',
+  IMAGE: 'IMAGE',
+};
+
 const requestValidatorMapping: Record<ContentElementType, ZodObject> = {
   PDF: PdfElementRequestSchema,
   VIDEO_FILE: VideoFileElementRequestSchema,
@@ -72,6 +83,7 @@ const CreateContentElementModal = ({
     initialValues: {
       title: '',
       type: null as ContentElementType | null,
+      icon: '',
       file: null as FileWithPath | null,
       originalFileName: '',
       uri: '',
@@ -114,6 +126,7 @@ const CreateContentElementModal = ({
             {...form.getInputProps('type')}
             onChange={(val) => {
               form.setFieldValue('type', val);
+              form.setFieldValue('icon', val ? iconByType[val] : '');
               form.setFieldValue('file', null);
               form.setFieldValue('uri', '');
               form.setFieldValue('rtfText', '');

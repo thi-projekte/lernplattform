@@ -48,7 +48,7 @@ function EntityTable<T extends RowData>({
           highlightOnHover
           withTableBorder
           style={{
-            opacity: isFetching ? 0.7 : 1,
+            opacity: isFetching ? 0.1 : 1,
             transition: 'opacity 0.2s ease',
           }}
         >

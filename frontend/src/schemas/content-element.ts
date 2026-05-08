@@ -19,6 +19,7 @@ export type ContentElementType = z.infer<typeof ContentElementTypeSchema>;
 const ContentElementRequestSchema = z.object({
   title: z.string(),
   type: ContentElementTypeSchema,
+  icon: z.string(),
 });
 
 export const PdfElementRequestSchema = z
