@@ -1,7 +1,7 @@
 import { Badge, Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
 import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useUserService } from '../provider/user-provider.tsx';
 import {
   useFetchDirectNeighborQueries,
@@ -59,12 +59,6 @@ const HomePage = () => {
     vertical: {},
     horizontal: {},
   });
-  const [positionSignatureByOrientation, setPositionSignatureByOrientation] = useState<
-    Record<SkillTreeOrientation, string>
-  >({
-    vertical: '',
-    horizontal: '',
-  });
   const [isViewportLocked, setIsViewportLocked] = useState(false);
   const directNeighborQueries = useFetchDirectNeighborQueries(expandedTopicIds);
   const isExpandingNode = directNeighborQueries.some((query) => query.isFetching);
@@ -85,51 +79,50 @@ const HomePage = () => {
     () => buildSkillTreeGraph(graphTopics, orientation, userProfile.account.username),
     [graphTopics, orientation, userProfile.account.username]
   );
-  const layoutSignature = useMemo(
-    () =>
-      layoutNodes
-        .map((node) => node.id)
-        .sort()
-        .join(':'),
-    [layoutNodes]
-  );
 
   const currentNodePositions = useMemo(
     () => nodePositionsByOrientation[orientation] ?? {},
     [nodePositionsByOrientation, orientation]
   );
 
-  const canReuseSavedPositions = useMemo(() => {
-    if (positionSignatureByOrientation[orientation] !== layoutSignature) {
-      return false;
-    }
+  useEffect(() => {
+    setNodePositionsByOrientation((current) => {
+      const currentOrientationPositions = current[orientation] ?? {};
+      const layoutNodeIds = new Set(layoutNodes.map((node) => node.id));
+      let changed = false;
+      const nextPositions: TopicGraphNodePositions = {};
 
-    const savedEntries = Object.entries(currentNodePositions);
-    if (savedEntries.length === 0) return false;
+      layoutNodes.forEach((node) => {
+        const savedPosition = currentOrientationPositions[node.id];
+        nextPositions[node.id] = savedPosition ?? node.position;
 
-    const layoutNodeIds = new Set(layoutNodes.map((node) => node.id));
-    if (savedEntries.some(([nodeId]) => !layoutNodeIds.has(nodeId))) {
-      return false;
-    }
+        if (!savedPosition) {
+          changed = true;
+        }
+      });
 
-    return true;
-  }, [
-    currentNodePositions,
-    layoutNodes,
-    layoutSignature,
-    orientation,
-    positionSignatureByOrientation,
-  ]);
+      if (Object.keys(currentOrientationPositions).some((nodeId) => !layoutNodeIds.has(nodeId))) {
+        changed = true;
+      }
+
+      if (!changed) {
+        return current;
+      }
+
+      return {
+        ...current,
+        [orientation]: nextPositions,
+      };
+    });
+  }, [layoutNodes, orientation]);
 
   const nodes = useMemo(
     () =>
       layoutNodes.map((node) => ({
         ...node,
-        position: canReuseSavedPositions
-          ? (currentNodePositions[node.id] ?? node.position)
-          : node.position,
+        position: currentNodePositions[node.id] ?? node.position,
       })),
-    [canReuseSavedPositions, currentNodePositions, layoutNodes]
+    [currentNodePositions, layoutNodes]
   );
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
@@ -159,12 +152,8 @@ const HomePage = () => {
           },
         };
       });
-      setPositionSignatureByOrientation((current) => ({
-        ...current,
-        [orientation]: layoutSignature,
-      }));
     },
-    [layoutSignature, orientation]
+    [orientation]
   );
 
   if (isLoading) {

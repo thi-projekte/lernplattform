@@ -545,13 +545,42 @@ export const buildSkillTreeGraph = (
 
       const sourcePosition = nodePositions.get(topic.id);
       const targetPosition = nodePositions.get(associatedTopicId);
+      const sourceLevel = levels.get(topic.id) ?? 0;
+      const targetLevel = levels.get(associatedTopicId) ?? 0;
 
-      const angle =
-        sourcePosition && targetPosition
-          ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
-          : 0;
-      const sourceHandle = getHandleForAngle(angle);
-      const targetHandle = getOppositeHandle(sourceHandle);
+      let sourceHandle: string;
+      let targetHandle: string;
+
+      if (orientation === 'vertical') {
+        if (sourceLevel < targetLevel) {
+          sourceHandle = 'bottom';
+          targetHandle = 'top';
+        } else if (sourceLevel > targetLevel) {
+          sourceHandle = 'top';
+          targetHandle = 'bottom';
+        } else {
+          const angle =
+            sourcePosition && targetPosition
+              ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
+              : 0;
+          sourceHandle = getHandleForAngle(angle);
+          targetHandle = getOppositeHandle(sourceHandle);
+        }
+      } else if (sourceLevel < targetLevel) {
+        sourceHandle = 'right';
+        targetHandle = 'left';
+      } else if (sourceLevel > targetLevel) {
+        sourceHandle = 'left';
+        targetHandle = 'right';
+      } else {
+        const angle =
+          sourcePosition && targetPosition
+            ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
+            : 0;
+        sourceHandle = getHandleForAngle(angle);
+        targetHandle = getOppositeHandle(sourceHandle);
+      }
+
       edges.push({
         id: `skill-edge-${edgeKey}`,
         source: topic.id,
