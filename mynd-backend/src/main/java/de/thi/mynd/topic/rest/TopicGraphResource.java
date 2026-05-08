@@ -5,6 +5,7 @@ import de.thi.mynd.topic.service.TopicGraphService;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.inject.Inject;
+import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import java.util.List;
@@ -21,7 +22,7 @@ public final class TopicGraphResource {
   @Path("/most-popular")
   @GET
   public List<GraphTopicDto> getMostPopular(
-      @RestQuery List<UUID> categories, @RestQuery Boolean personal) {
+      @RestQuery List<UUID> categories, @RestQuery @DefaultValue("false") boolean personal) {
     if (categories.isEmpty()) {
       return personal
           ? topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
@@ -36,7 +37,8 @@ public final class TopicGraphResource {
 
   @Path("/{topicId}/neighbors")
   @GET
-  public List<GraphTopicDto> getNeighbors(UUID topicId, @RestQuery Boolean personal) {
+  public List<GraphTopicDto> getNeighbors(
+      UUID topicId, @RestQuery @DefaultValue("false") boolean personal) {
     return personal
         ? topicGraphService.getOwnedNeighborsOfTopic(topicId)
         : topicGraphService.getNeighborsOfTopic(topicId);
