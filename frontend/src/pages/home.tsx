@@ -45,9 +45,6 @@ const mergeGraphTopics = (current: GraphTopicDto[], incoming: GraphTopicDto[]) =
   return [...merged.values()];
 };
 
-const NODE_OVERLAP_X_THRESHOLD = 170;
-const NODE_OVERLAP_Y_THRESHOLD = 150;
-
 const HomePage = () => {
   const { t } = useTranslation();
   const userProfile = useUserService();
@@ -111,25 +108,8 @@ const HomePage = () => {
     if (savedEntries.length === 0) return false;
 
     const layoutNodeIds = new Set(layoutNodes.map((node) => node.id));
-    if (
-      savedEntries.some(([nodeId]) => !layoutNodeIds.has(nodeId)) ||
-      layoutNodes.some((node) => !currentNodePositions[node.id])
-    ) {
+    if (savedEntries.some(([nodeId]) => !layoutNodeIds.has(nodeId))) {
       return false;
-    }
-
-    for (let index = 0; index < savedEntries.length; index += 1) {
-      const [, current] = savedEntries[index];
-
-      for (let compareIndex = index + 1; compareIndex < savedEntries.length; compareIndex += 1) {
-        const [, next] = savedEntries[compareIndex];
-        const deltaX = Math.abs(current.x - next.x);
-        const deltaY = Math.abs(current.y - next.y);
-
-        if (deltaX < NODE_OVERLAP_X_THRESHOLD && deltaY < NODE_OVERLAP_Y_THRESHOLD) {
-          return false;
-        }
-      }
     }
 
     return true;
@@ -145,10 +125,9 @@ const HomePage = () => {
     () =>
       layoutNodes.map((node) => ({
         ...node,
-        position:
-          canReuseSavedPositions && currentNodePositions[node.id]
-            ? currentNodePositions[node.id]
-            : node.position,
+        position: canReuseSavedPositions
+          ? currentNodePositions[node.id] ?? node.position
+          : node.position,
       })),
     [canReuseSavedPositions, currentNodePositions, layoutNodes]
   );
