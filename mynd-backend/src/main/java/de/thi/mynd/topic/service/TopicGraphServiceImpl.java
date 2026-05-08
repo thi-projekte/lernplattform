@@ -36,16 +36,6 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
     return getGraphTopicDtosWithNeighbors(topics);
   }
 
-  private List<GraphTopicDto> getGraphTopicDtosWithNeighbors(List<Topic> topics) {
-    List<GraphTopicDto> mapped = mappingRegistry.mapList(topics, GraphTopicDto.class);
-    Set<GraphTopicDto> uniqueMapped = new HashSet<>(mapped);
-    for (Topic topic : topics) {
-      uniqueMapped.addAll(getNeighborsOfTopic(topic.id));
-    }
-
-    return uniqueMapped.stream().toList();
-  }
-
   @Override
   public List<GraphTopicDto> getNeighborsOfTopic(UUID topicId)
       throws EntityInstanceNotFoundException {
@@ -64,5 +54,65 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
             .toList();
 
     return mappingRegistry.mapList(topics, GraphTopicDto.class);
+  }
+
+  @Override
+  public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
+      int n, String creatorId) {
+    List<Topic> topics = topicGraphRepository.findNMostPopular(n, creatorId);
+
+    return getGraphTopicDtosWithOwnedNeighbors(topics);
+  }
+
+  @Override
+  public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
+      int n, List<UUID> categoryFilter, String creatorId) {
+    List<Topic> topics =
+        topicGraphRepository.findNMostPopularFilterByCategoryIds(n, categoryFilter, creatorId);
+
+    return getGraphTopicDtosWithOwnedNeighbors(topics);
+  }
+
+  @Override
+  public List<GraphTopicDto> getOwnedNeighborsOfTopic(UUID topicId)
+      throws EntityInstanceNotFoundException {
+    Optional<Topic> topicOptional = topicRepository.findByIdOptional(topicId);
+
+    if (topicOptional.isEmpty()) {
+      throw new EntityInstanceNotFoundException("Topic does not exist");
+    }
+
+    Topic topic = topicOptional.get();
+
+    List<Topic> topics = topic.ownedAssociations.stream().map(a -> a.foreignTopic).toList();
+
+    return mappingRegistry.mapList(topics, GraphTopicDto.class);
+  }
+
+  @Override
+  public List<GraphTopicDto> searchTopicNodes(String search, int limit) {
+    List<Topic> topics = topicRepository.findBySearch(search, limit);
+
+    return mappingRegistry.mapList(topics, GraphTopicDto.class);
+  }
+
+  private List<GraphTopicDto> getGraphTopicDtosWithNeighbors(List<Topic> topics) {
+    List<GraphTopicDto> mapped = mappingRegistry.mapList(topics, GraphTopicDto.class);
+    Set<GraphTopicDto> uniqueMapped = new HashSet<>(mapped);
+    for (Topic topic : topics) {
+      uniqueMapped.addAll(getNeighborsOfTopic(topic.id));
+    }
+
+    return uniqueMapped.stream().toList();
+  }
+
+  private List<GraphTopicDto> getGraphTopicDtosWithOwnedNeighbors(List<Topic> topics) {
+    List<GraphTopicDto> mapped = mappingRegistry.mapList(topics, GraphTopicDto.class);
+    Set<GraphTopicDto> uniqueMapped = new HashSet<>(mapped);
+    for (Topic topic : topics) {
+      uniqueMapped.addAll(getOwnedNeighborsOfTopic(topic.id));
+    }
+
+    return uniqueMapped.stream().toList();
   }
 }
