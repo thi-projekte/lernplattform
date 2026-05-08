@@ -1,5 +1,10 @@
 import { Layout } from '../../components/layout.tsx';
-import { useDeleteTopicMutation, useQueryPersonalTopicsPaginated } from '../../api/topic.ts';
+import {
+  useDeleteTopicMutation,
+  useEditTopicMutation,
+  useQueryPersonalTopicsPaginated,
+  useQueryTopic,
+} from '../../api/topic.ts';
 import { useCallback, useMemo, useState } from 'react';
 import type { PaginationState } from '@tanstack/react-table';
 import EntityTable from '../../components/entity-table.tsx';
@@ -29,7 +34,7 @@ import { useUserService } from '../../provider/user-provider.tsx';
 import type { GraphTopicDto } from '../../schemas/topic-graph.ts';
 import { useCreateAssociation } from '../../api/association.ts';
 import TopicSearchbar from '../../components/topic/topic-searchbar.tsx';
-import type { ListTopicDto } from '../../schemas/topic.ts';
+import type { ListTopicDto, Topic } from '../../schemas/topic.ts';
 
 const BuilderModeListPage = () => {
   const [pagination, setPagination] = useState<PaginationState>({ pageSize: 20, pageIndex: 0 });
@@ -92,6 +97,15 @@ const BuilderModeListPage = () => {
     !!selectedGraphTopic &&
     !!currentUsername &&
     selectedGraphTopic.creatorId.toLowerCase() === currentUsername;
+  const { mutateAsync: editTopic, isPending: isDeletingAssociation } = useEditTopicMutation(
+    selectedGraphTopic?.id ?? ''
+  );
+  const { data: selectedOwnedTopicData } = useQueryTopic(
+    selectedGraphTopic?.id ?? '',
+    true,
+    selectedGraphTopicIsOwned
+  );
+  const selectedOwnedTopicDetails = selectedOwnedTopicData as Topic | undefined;
   const existingTopicIds = useMemo(
     () => personalGraphTopics.map((topic) => topic.id),
     [personalGraphTopics]
@@ -162,6 +176,35 @@ const BuilderModeListPage = () => {
       }
     },
     [handleAssociationCreate, selectedGraphTopic, selectedGraphTopicIsOwned]
+  );
+
+  const handleAssociationDelete = useCallback(
+    async (relatedTopicId: string) => {
+      if (!selectedGraphTopic || !selectedGraphTopicIsOwned || !selectedOwnedTopicDetails) {
+        return;
+      }
+
+      const nextRelatedTopics = selectedOwnedTopicDetails.relatedTopics.filter(
+        (relatedTopic: ListTopicDto) => relatedTopic.id !== relatedTopicId
+      );
+
+      if (nextRelatedTopics.length === 0) {
+        return;
+      }
+
+      await editTopic({
+        ...selectedOwnedTopicDetails,
+        relatedTopics: nextRelatedTopics,
+      });
+      await refetchGraphTopics();
+    },
+    [
+      editTopic,
+      refetchGraphTopics,
+      selectedGraphTopic,
+      selectedGraphTopicIsOwned,
+      selectedOwnedTopicDetails,
+    ]
   );
 
   if (isLoading || (viewMode === 'graph' && isGraphLoading)) {
@@ -335,6 +378,48 @@ const BuilderModeListPage = () => {
                       </Badge>
 
                       <Text c="dimmed">{selectedGraphTopic.creatorFullName}</Text>
+
+                      {selectedGraphTopicIsOwned && selectedOwnedTopicDetails ? (
+                        <Stack gap="xs">
+                          <Text fw={600} size="sm">
+                            {t('topic.graph.relatedTopicsTableTitle')}
+                          </Text>
+                          {selectedOwnedTopicDetails.relatedTopics.map((relatedTopic: ListTopicDto) => {
+                            const isLastAssociation =
+                              selectedOwnedTopicDetails.relatedTopics.length <= 1;
+
+                            return (
+                              <Paper key={relatedTopic.id} withBorder radius="md" p="xs">
+                                <Group justify="space-between" align="center" wrap="nowrap">
+                                  <div style={{ minWidth: 0 }}>
+                                    <Text fw={500} size="sm" truncate>
+                                      {relatedTopic.title}
+                                    </Text>
+                                    {relatedTopic.creatorFullName && (
+                                      <Text size="xs" c="dimmed" truncate>
+                                        {relatedTopic.creatorFullName}
+                                      </Text>
+                                    )}
+                                  </div>
+                                  <ActionIcon
+                                    variant="light"
+                                    color="red"
+                                    disabled={isDeletingAssociation || isLastAssociation}
+                                    onClick={() => void handleAssociationDelete(relatedTopic.id)}
+                                  >
+                                    <IconTrash size={16} />
+                                  </ActionIcon>
+                                </Group>
+                              </Paper>
+                            );
+                          })}
+                          {selectedOwnedTopicDetails.relatedTopics.length <= 1 ? (
+                            <Text size="xs" c="dimmed">
+                              {t('topic.personalGraph.keepAtLeastOneAssociation')}
+                            </Text>
+                          ) : null}
+                        </Stack>
+                      ) : null}
                     </Stack>
                   </Card>
                 ) : null}

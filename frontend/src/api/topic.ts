@@ -155,9 +155,14 @@ const fetchTopic = async (topicId: string, withOwnedRelatedTopics: boolean) => {
   return TopicSchema.parse(result.data);
 };
 
-export const useQueryTopic = (topicId: string, withOwnedRelatedTopics: boolean) => {
+export const useQueryTopic = (
+  topicId: string,
+  withOwnedRelatedTopics: boolean,
+  enabled = true
+) => {
   return useQuery({
     queryKey: ['topic', topicId, withOwnedRelatedTopics],
+    enabled: enabled && topicId.length > 0,
     queryFn: () => fetchTopic(topicId, withOwnedRelatedTopics),
   });
 };
