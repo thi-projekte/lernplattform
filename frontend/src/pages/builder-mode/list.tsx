@@ -107,8 +107,8 @@ const BuilderModeListPage = () => {
   );
   const selectedOwnedTopicDetails = selectedOwnedTopicData as Topic | undefined;
   const existingTopicIds = useMemo(
-    () => personalGraphTopics.map((topic) => topic.id),
-    [personalGraphTopics]
+    () => graphTopics?.map((topic) => topic.id) ?? [],
+    [graphTopics]
   );
   const areTopicsAlreadyAssociated = useCallback(
     (owningTopicId: string, foreignTopicId: string) => {

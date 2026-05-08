@@ -33,7 +33,7 @@ const TopicSearchbar = ({ onAdd, existingIds = [], onSuggestionsChange }: TopicS
   }, [debouncedSearch, filteredSuggestions, onSuggestionsChange]);
 
   const handleOptionSubmit = (val: string) => {
-    const selectedTopic = suggestions?.find((t) => t.title === val);
+    const selectedTopic = filteredSuggestions.find((topic) => topic.title === val);
 
     if (selectedTopic && onAdd) {
       onAdd(selectedTopic);
