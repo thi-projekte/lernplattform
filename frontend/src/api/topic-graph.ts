@@ -26,11 +26,13 @@ const fetchMostPopularWithNeighbors = async (
 
 export const useFetchMostPopularTopicsWithNeighbors = (
   categoryIds?: string[],
-  personal?: boolean
+  personal?: boolean,
+  enabled = true
 ) => {
   return useQuery({
     queryKey: ['mostPopularTopics', categoryIds, personal],
     queryFn: () => fetchMostPopularWithNeighbors(categoryIds, personal),
+    enabled,
   });
 };
 

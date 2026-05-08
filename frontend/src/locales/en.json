@@ -154,6 +154,13 @@
       "clickAssociationToRemove": "Click on an association line to remove the related topic.",
       "clickIsolatedTopicToAssociate": "Click on an isolated topic node to create an association.",
       "viewportStatus": "Viewport x: {{x}}, y: {{y}}, zoom: {{zoom}}"
+    },
+    "personalGraph": {
+      "selectedTopic": "Selected topic",
+      "emptySelection": "Click on a node to inspect the topic.",
+      "graphDescription": "Switch between the list and a graph view of your personal topics.",
+      "ownedTopic": "Own topic",
+      "foreignTopic": "Foreign topic"
     }
   },
   "auth": {

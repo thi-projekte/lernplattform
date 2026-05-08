@@ -203,6 +203,170 @@ export const buildTopicAssociationsGraph = (
   return { nodes, edges };
 };
 
+export const buildPersonalTopicsGraph = (
+  topics: GraphTopicDto[],
+  currentUsername?: string
+): { nodes: TopicGraphNode[]; edges: Edge[] } => {
+  const nodes: TopicGraphNode[] = [];
+  const edges: Edge[] = [];
+
+  if (topics.length === 0) {
+    return { nodes, edges };
+  }
+
+  const topicsById = new Map(topics.map((topic) => [topic.id, topic]));
+  const adjacency = new Map<string, Set<string>>();
+
+  topics.forEach((topic) => {
+    adjacency.set(topic.id, new Set());
+  });
+
+  topics.forEach((topic) => {
+    topic.associatedTopics.forEach((associatedTopicId) => {
+      if (!topicsById.has(associatedTopicId)) return;
+      adjacency.get(topic.id)?.add(associatedTopicId);
+      adjacency.get(associatedTopicId)?.add(topic.id);
+    });
+  });
+
+  const visited = new Set<string>();
+  const components: GraphTopicDto[][] = [];
+
+  topics.forEach((topic) => {
+    if (visited.has(topic.id)) return;
+
+    const component: GraphTopicDto[] = [];
+    const queue = [topic.id];
+    visited.add(topic.id);
+
+    while (queue.length > 0) {
+      const currentId = queue.shift()!;
+      const currentTopic = topicsById.get(currentId);
+      if (!currentTopic) continue;
+
+      component.push(currentTopic);
+
+      (adjacency.get(currentId) ?? new Set()).forEach((neighborId) => {
+        if (visited.has(neighborId)) return;
+        visited.add(neighborId);
+        queue.push(neighborId);
+      });
+    }
+
+    components.push(component);
+  });
+
+  const currentUsernameNormalized = currentUsername?.trim().toLowerCase();
+  let componentOffsetX = 240;
+
+  components.forEach((component) => {
+    const componentById = new Map(component.map((topic) => [topic.id, topic]));
+    const rootTopic =
+      component.find(
+        (topic) =>
+          currentUsernameNormalized &&
+          topic.creatorId.toLowerCase() === currentUsernameNormalized
+      ) ?? component[0];
+
+    const levels = new Map<string, number>([[rootTopic.id, 0]]);
+    const bfsVisited = new Set<string>([rootTopic.id]);
+    const queue = [rootTopic.id];
+
+    while (queue.length > 0) {
+      const currentId = queue.shift()!;
+      const currentLevel = levels.get(currentId) ?? 0;
+
+      (adjacency.get(currentId) ?? new Set()).forEach((neighborId) => {
+        if (!componentById.has(neighborId) || bfsVisited.has(neighborId)) return;
+        bfsVisited.add(neighborId);
+        levels.set(neighborId, currentLevel + 1);
+        queue.push(neighborId);
+      });
+    }
+
+    component
+      .filter((topic) => !levels.has(topic.id))
+      .forEach((topic) => levels.set(topic.id, 0));
+
+    const topicsByLevel = new Map<number, GraphTopicDto[]>();
+    component.forEach((topic) => {
+      const level = levels.get(topic.id) ?? 0;
+      const existing = topicsByLevel.get(level) ?? [];
+      existing.push(topic);
+      topicsByLevel.set(level, existing);
+    });
+
+    const sortedLevels = [...topicsByLevel.keys()].sort((a, b) => a - b);
+    const widestLevel = Math.max(...sortedLevels.map((level) => topicsByLevel.get(level)?.length ?? 0));
+    const componentWidth = Math.max(widestLevel, 1) * 250;
+    const centerX = componentOffsetX + componentWidth / 2;
+
+    sortedLevels.forEach((level) => {
+      const levelTopics = (topicsByLevel.get(level) ?? []).sort((a, b) => a.title.localeCompare(b.title));
+
+      levelTopics.forEach((topic, index) => {
+        const x = centerX + (index - (levelTopics.length - 1) / 2) * 250;
+        const y = 140 + level * 220;
+
+        nodes.push({
+          id: topic.id,
+          type: 'topic',
+          position: { x, y },
+          data: {
+            kind: 'topic',
+            title: topic.title,
+            creatorFullName: topic.creatorFullName,
+            isOwned:
+              currentUsernameNormalized !== undefined &&
+              topic.creatorId.toLowerCase() === currentUsernameNormalized,
+            payload: topic,
+          },
+        });
+      });
+    });
+
+    componentOffsetX += componentWidth + 220;
+  });
+
+  const seenEdges = new Set<string>();
+  const nodePositions = new Map(nodes.map((node) => [node.id, node.position]));
+
+  topics.forEach((topic) => {
+    topic.associatedTopics.forEach((associatedTopicId) => {
+      if (!topicsById.has(associatedTopicId)) return;
+
+      const edgeKey = [topic.id, associatedTopicId].sort().join(':');
+      if (seenEdges.has(edgeKey)) return;
+      seenEdges.add(edgeKey);
+
+      const sourcePosition = nodePositions.get(topic.id);
+      const targetPosition = nodePositions.get(associatedTopicId);
+      const angle =
+        sourcePosition && targetPosition
+          ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
+          : 0;
+      const sourceHandle = getHandleForAngle(angle);
+      const targetHandle = getOppositeHandle(sourceHandle);
+
+      edges.push({
+        id: `personal-topic-edge-${edgeKey}`,
+        source: topic.id,
+        target: associatedTopicId,
+        sourceHandle,
+        targetHandle,
+        type: 'straight',
+        style: {
+          stroke: '#94a3b8',
+          strokeWidth: 2,
+          strokeDasharray: '8 6',
+        },
+      });
+    });
+  });
+
+  return { nodes, edges };
+};
+
 const buildGraphAdjacency = (topics: GraphTopicDto[]) => {
   const topicIds = new Set(topics.map((topic) => topic.id));
   const adjacency = new Map<string, Set<string>>();
