@@ -71,3 +71,23 @@ jobs:
             VITE_MYND_BACKEND_URI=http://127.0.0.1:8080
       - name: Verify Image
         run: docker images local-test-image:latest
+
+  build-keycloak:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          load: true
+          tags: local-test-image:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          file: ./keycloak/Dockerfile
+      - name: Verify Image
+        run: docker images local-test-image:latest
