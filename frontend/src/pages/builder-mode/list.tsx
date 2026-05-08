@@ -110,6 +110,20 @@ const BuilderModeListPage = () => {
     () => personalGraphTopics.map((topic) => topic.id),
     [personalGraphTopics]
   );
+  const areTopicsAlreadyAssociated = useCallback(
+    (owningTopicId: string, foreignTopicId: string) => {
+      const owningTopic = personalGraphTopics.find((topic) => topic.id === owningTopicId);
+
+      return (
+        owningTopic?.associatedTopics.includes(foreignTopicId) ||
+        personalGraphTopics.some(
+          (topic) => topic.id === foreignTopicId && topic.associatedTopics.includes(owningTopicId)
+        ) ||
+        false
+      );
+    },
+    [personalGraphTopics]
+  );
 
   const handleSuggestionsChange = useCallback((topics: ListTopicDto[], searchTerm: string) => {
     const nextSuggestions = searchTerm.trim() ? topics.slice(0, 6) : [];
@@ -127,10 +141,19 @@ const BuilderModeListPage = () => {
 
   const handleAssociationCreate = useCallback(
     async (owningTopicId: string, foreignTopicId: string) => {
+      if (owningTopicId === foreignTopicId) {
+        return;
+      }
+
+      if (areTopicsAlreadyAssociated(owningTopicId, foreignTopicId)) {
+        return;
+      }
+
       await createAssociation({ owningTopicId, foreignTopicId });
+      setSearchSuggestions((current) => current.filter((topic) => topic.id !== foreignTopicId));
       await refetchGraphTopics();
     },
-    [createAssociation, refetchGraphTopics]
+    [areTopicsAlreadyAssociated, createAssociation, refetchGraphTopics]
   );
 
   const handleConnect: OnConnect = useCallback(
@@ -172,10 +195,19 @@ const BuilderModeListPage = () => {
       });
 
       if (selectedGraphTopic && selectedGraphTopicIsOwned) {
+        if (areTopicsAlreadyAssociated(selectedGraphTopic.id, newTopic.id)) {
+          return;
+        }
+
         await handleAssociationCreate(selectedGraphTopic.id, newTopic.id);
       }
     },
-    [handleAssociationCreate, selectedGraphTopic, selectedGraphTopicIsOwned]
+    [
+      areTopicsAlreadyAssociated,
+      handleAssociationCreate,
+      selectedGraphTopic,
+      selectedGraphTopicIsOwned,
+    ]
   );
 
   const handleAssociationDelete = useCallback(
