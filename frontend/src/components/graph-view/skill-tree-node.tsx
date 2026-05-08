@@ -8,7 +8,7 @@ const SkillTreeNodeComponent = ({ data, selected }: SkillTreeNodeProps) => {
   const hasSingleCategory = data.categories.length === 1;
   const singleCategoryColor = hasSingleCategory ? `#${data.categories[0].color}` : undefined;
   const accentColor = hasSingleCategory
-    ? `color-mix(in srgb, ${singleCategoryColor} 82%, #111827)`
+    ? `color-mix(in srgb, ${singleCategoryColor} 100%, #111827)`
     : '#8b5cf6';
   const palette = {
     accent: accentColor,
