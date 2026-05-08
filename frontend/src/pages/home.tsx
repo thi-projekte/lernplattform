@@ -169,12 +169,7 @@ const HomePage = () => {
           </Text>
         </Stack>
 
-        <Paper
-          withBorder
-          radius="lg"
-          p="lg"
-          style={{ background: 'rgba(248, 252, 255, 0.92)' }}
-        >
+        <Paper withBorder radius="lg" p="lg" style={{ background: 'rgba(248, 252, 255, 0.92)' }}>
           <Stack gap="md">
             <Group justify="space-between" align="center">
               <Text size="sm" c="dimmed">
