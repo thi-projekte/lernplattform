@@ -5,7 +5,7 @@ import { z } from 'zod';
 
 const fetchMostPopularWithNeighbors = async (categoryIds?: string[]): Promise<GraphTopicDto[]> => {
   const result = await apiClient.get(
-    `/topics/most-popular${categoryIds ? `?categoryFilter=${categoryIds.join(',')}` : ''}`,
+    `/topics/graph/most-popular${categoryIds ? `?categoryFilter=${categoryIds.join(',')}` : ''}`,
     {
       validateStatus: (status) => status <= 204,
     }
@@ -21,7 +21,7 @@ export const useFetchMostPopularTopicsWithNeighbors = (categoryIds?: string[]) =
 };
 
 const fetchDirectNeighbors = async (topicId: string): Promise<GraphTopicDto[]> => {
-  const result = await apiClient.get(`/topics/${topicId}/graph-neighbors`, {
+  const result = await apiClient.get(`/topics/graph/${topicId}/graph-neighbors`, {
     validateStatus: (status) => status <= 204,
   });
   return z.array(GraphTopicDtoSchema).parse(result.data);
