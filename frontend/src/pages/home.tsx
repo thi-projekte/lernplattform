@@ -1,7 +1,7 @@
 import { Badge, Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
 import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useRef, useState } from 'react';
 import { useUserService } from '../provider/user-provider.tsx';
 import {
   useFetchDirectNeighborQueries,
@@ -59,6 +59,10 @@ const HomePage = () => {
     vertical: {},
     horizontal: {},
   });
+  const seededNodePositionsRef = useRef<Record<SkillTreeOrientation, TopicGraphNodePositions>>({
+    vertical: {},
+    horizontal: {},
+  });
   const [isViewportLocked, setIsViewportLocked] = useState(false);
   const directNeighborQueries = useFetchDirectNeighborQueries(expandedTopicIds);
   const isExpandingNode = directNeighborQueries.some((query) => query.isFetching);
@@ -85,44 +89,29 @@ const HomePage = () => {
     [nodePositionsByOrientation, orientation]
   );
 
-  useEffect(() => {
-    setNodePositionsByOrientation((current) => {
-      const currentOrientationPositions = current[orientation] ?? {};
-      const layoutNodeIds = new Set(layoutNodes.map((node) => node.id));
-      let changed = false;
-      const nextPositions: TopicGraphNodePositions = {};
+  const seededNodePositions = useMemo(() => {
+    const currentSeededPositions = seededNodePositionsRef.current[orientation] ?? {};
+    const nextSeededPositions: TopicGraphNodePositions = {};
 
-      layoutNodes.forEach((node) => {
-        const savedPosition = currentOrientationPositions[node.id];
-        nextPositions[node.id] = savedPosition ?? node.position;
-
-        if (!savedPosition) {
-          changed = true;
-        }
-      });
-
-      if (Object.keys(currentOrientationPositions).some((nodeId) => !layoutNodeIds.has(nodeId))) {
-        changed = true;
-      }
-
-      if (!changed) {
-        return current;
-      }
-
-      return {
-        ...current,
-        [orientation]: nextPositions,
-      };
+    layoutNodes.forEach((node) => {
+      nextSeededPositions[node.id] = currentSeededPositions[node.id] ?? node.position;
     });
+
+    seededNodePositionsRef.current = {
+      ...seededNodePositionsRef.current,
+      [orientation]: nextSeededPositions,
+    };
+
+    return nextSeededPositions;
   }, [layoutNodes, orientation]);
 
   const nodes = useMemo(
     () =>
       layoutNodes.map((node) => ({
         ...node,
-        position: currentNodePositions[node.id] ?? node.position,
+        position: currentNodePositions[node.id] ?? seededNodePositions[node.id] ?? node.position,
       })),
-    [currentNodePositions, layoutNodes]
+    [currentNodePositions, layoutNodes, seededNodePositions]
   );
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
