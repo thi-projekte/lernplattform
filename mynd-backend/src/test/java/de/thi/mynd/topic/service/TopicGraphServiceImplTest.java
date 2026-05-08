@@ -89,6 +89,7 @@ class TopicGraphServiceImplTest {
     // Arrange
     List<Topic> mockTopics = List.of(new Topic());
     when(topicGraphRepository.findNMostPopular(5, creatorId)).thenReturn(mockTopics);
+    when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.ofNullable(testTopic));
 
     // Act
     // This assumes getGraphTopicDtosWithNeighbors is an internal method
@@ -107,6 +108,7 @@ class TopicGraphServiceImplTest {
     List<UUID> categories = List.of(UUID.randomUUID());
     when(topicGraphRepository.findNMostPopularFilterByCategoryIds(anyInt(), anyList(), anyString()))
         .thenReturn(Collections.emptyList());
+    when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.ofNullable(testTopic));
 
     // Act
     topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(5, categories, creatorId);
