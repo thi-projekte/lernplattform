@@ -45,7 +45,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     [matchingRoute]
   );
 
-  const desktopNavbarWidth = desktopExpanded ? 280: 76;
+  const desktopNavbarWidth = desktopExpanded ? 280 : 76;
 
   return (
     <AppShell
