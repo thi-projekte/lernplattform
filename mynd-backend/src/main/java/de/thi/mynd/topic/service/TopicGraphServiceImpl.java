@@ -60,7 +60,7 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
   public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(int n, String creatorId) {
     List<Topic> topics = topicGraphRepository.findNMostPopular(n, creatorId);
 
-    return getGraphTopicDtosWithNeighbors(topics, creatorId);
+    return getGraphTopicDtosWithOwnedNeighbors(topics);
   }
 
   @Override
@@ -68,7 +68,7 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
     List<Topic> topics =
             topicGraphRepository.findNMostPopularFilterByCategoryIds(n, categoryFilter, creatorId);
 
-    return getGraphTopicDtosWithNeighbors(topics, creatorId);
+    return getGraphTopicDtosWithOwnedNeighbors(topics);
   }
 
   @Override
@@ -103,7 +103,7 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
     return uniqueMapped.stream().toList();
   }
 
-  private List<GraphTopicDto> getGraphTopicDtosWithNeighbors(List<Topic> topics, String creatorId) {
+  private List<GraphTopicDto> getGraphTopicDtosWithOwnedNeighbors(List<Topic> topics) {
     List<GraphTopicDto> mapped = mappingRegistry.mapList(topics, GraphTopicDto.class);
     Set<GraphTopicDto> uniqueMapped = new HashSet<>(mapped);
     for (Topic topic : topics) {
