@@ -214,8 +214,34 @@ export const buildPersonalTopicsGraph = (
     return { nodes, edges };
   }
 
-  const topicsById = new Map(topics.map((topic) => [topic.id, topic]));
+  const currentUsernameNormalized = currentUsername?.trim().toLowerCase();
   const adjacency = new Map<string, Set<string>>();
+  const topicsById = new Map(topics.map((topic) => [topic.id, topic]));
+
+  const compareTopics = (a: GraphTopicDto, b: GraphTopicDto) => {
+    const aIsOwned =
+      currentUsernameNormalized !== undefined &&
+      a.creatorId.toLowerCase() === currentUsernameNormalized;
+    const bIsOwned =
+      currentUsernameNormalized !== undefined &&
+      b.creatorId.toLowerCase() === currentUsernameNormalized;
+
+    if (aIsOwned !== bIsOwned) {
+      return aIsOwned ? -1 : 1;
+    }
+
+    const degreeDiff = (adjacency.get(b.id)?.size ?? 0) - (adjacency.get(a.id)?.size ?? 0);
+    if (degreeDiff !== 0) {
+      return degreeDiff;
+    }
+
+    const titleDiff = a.title.localeCompare(b.title);
+    if (titleDiff !== 0) {
+      return titleDiff;
+    }
+
+    return a.id.localeCompare(b.id);
+  };
 
   topics.forEach((topic) => {
     adjacency.set(topic.id, new Set());
@@ -229,10 +255,11 @@ export const buildPersonalTopicsGraph = (
     });
   });
 
+  const sortedTopics = [...topics].sort(compareTopics);
   const visited = new Set<string>();
   const components: GraphTopicDto[][] = [];
 
-  topics.forEach((topic) => {
+  sortedTopics.forEach((topic) => {
     if (visited.has(topic.id)) return;
 
     const component: GraphTopicDto[] = [];
@@ -246,26 +273,24 @@ export const buildPersonalTopicsGraph = (
 
       component.push(currentTopic);
 
-      (adjacency.get(currentId) ?? new Set()).forEach((neighborId) => {
-        if (visited.has(neighborId)) return;
-        visited.add(neighborId);
-        queue.push(neighborId);
-      });
+      [...(adjacency.get(currentId) ?? new Set())]
+        .sort((leftId, rightId) => compareTopics(topicsById.get(leftId)!, topicsById.get(rightId)!))
+        .forEach((neighborId) => {
+          if (visited.has(neighborId)) return;
+          visited.add(neighborId);
+          queue.push(neighborId);
+        });
     }
 
     components.push(component);
   });
 
-  const currentUsernameNormalized = currentUsername?.trim().toLowerCase();
+  components.sort((left, right) => compareTopics(left[0], right[0]));
   let componentOffsetX = 240;
 
   components.forEach((component) => {
     const componentById = new Map(component.map((topic) => [topic.id, topic]));
-    const rootTopic =
-      component.find(
-        (topic) =>
-          currentUsernameNormalized && topic.creatorId.toLowerCase() === currentUsernameNormalized
-      ) ?? component[0];
+    const rootTopic = [...component].sort(compareTopics)[0];
 
     const levels = new Map<string, number>([[rootTopic.id, 0]]);
     const bfsVisited = new Set<string>([rootTopic.id]);
@@ -275,12 +300,14 @@ export const buildPersonalTopicsGraph = (
       const currentId = queue.shift()!;
       const currentLevel = levels.get(currentId) ?? 0;
 
-      (adjacency.get(currentId) ?? new Set()).forEach((neighborId) => {
-        if (!componentById.has(neighborId) || bfsVisited.has(neighborId)) return;
-        bfsVisited.add(neighborId);
-        levels.set(neighborId, currentLevel + 1);
-        queue.push(neighborId);
-      });
+      [...(adjacency.get(currentId) ?? new Set())]
+        .sort((leftId, rightId) => compareTopics(topicsById.get(leftId)!, topicsById.get(rightId)!))
+        .forEach((neighborId) => {
+          if (!componentById.has(neighborId) || bfsVisited.has(neighborId)) return;
+          bfsVisited.add(neighborId);
+          levels.set(neighborId, currentLevel + 1);
+          queue.push(neighborId);
+        });
     }
 
     component.filter((topic) => !levels.has(topic.id)).forEach((topic) => levels.set(topic.id, 0));
@@ -301,9 +328,7 @@ export const buildPersonalTopicsGraph = (
     const centerX = componentOffsetX + componentWidth / 2;
 
     sortedLevels.forEach((level) => {
-      const levelTopics = (topicsByLevel.get(level) ?? []).sort((a, b) =>
-        a.title.localeCompare(b.title)
-      );
+      const levelTopics = [...(topicsByLevel.get(level) ?? [])].sort(compareTopics);
 
       levelTopics.forEach((topic, index) => {
         const x = centerX + (index - (levelTopics.length - 1) / 2) * 250;
