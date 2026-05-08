@@ -245,6 +245,7 @@ const getSkillTreeLevels = (
 ) => {
   const queue: Array<{ id: string; level: number }> = [{ id: rootId, level: 0 }];
   const levels = new Map<string, number>();
+  const parents = new Map<string, string | null>([[rootId, null]]);
   const visited = new Set<string>([rootId]);
 
   while (queue.length > 0) {
@@ -257,6 +258,7 @@ const getSkillTreeLevels = (
     neighbors.forEach((neighborId) => {
       if (visited.has(neighborId)) return;
       visited.add(neighborId);
+      parents.set(neighborId, current.id);
       queue.push({ id: neighborId, level: current.level + 1 });
     });
   }
@@ -265,10 +267,33 @@ const getSkillTreeLevels = (
   topics.forEach((topic) => {
     if (!levels.has(topic.id)) {
       levels.set(topic.id, fallbackLevel);
+      parents.set(topic.id, null);
     }
   });
 
-  return levels;
+  return { levels, parents };
+};
+
+const getRootBranchId = (
+  topicId: string,
+  rootId: string,
+  parents: Map<string, string | null>
+): string => {
+  if (topicId === rootId) return rootId;
+
+  let currentId = topicId;
+  let parentId = parents.get(currentId) ?? null;
+
+  if (!parentId) {
+    return `disconnected:${topicId}`;
+  }
+
+  while (parentId && parentId !== rootId) {
+    currentId = parentId;
+    parentId = parents.get(currentId) ?? null;
+  }
+
+  return parentId === rootId ? currentId : `disconnected:${topicId}`;
 };
 
 export const buildSkillTreeGraph = (
@@ -287,13 +312,20 @@ export const buildSkillTreeGraph = (
     return { nodes: [], edges: [] };
   }
 
-  const levels = getSkillTreeLevels(rootId, topics, adjacency);
+  const { levels, parents } = getSkillTreeLevels(rootId, topics, adjacency);
+  const rootBranchByTopicId = new Map(
+    topics.map((topic) => [topic.id, getRootBranchId(topic.id, rootId, parents)])
+  );
   const groupedByLevel = new Map<number, GraphTopicDto[]>();
 
   [...topics]
     .sort((a, b) => {
       const levelDiff = (levels.get(a.id) ?? 0) - (levels.get(b.id) ?? 0);
       if (levelDiff !== 0) return levelDiff;
+      const branchA = rootBranchByTopicId.get(a.id) ?? a.id;
+      const branchB = rootBranchByTopicId.get(b.id) ?? b.id;
+      const branchDiff = branchA.localeCompare(branchB);
+      if (branchDiff !== 0) return branchDiff;
       return a.title.localeCompare(b.title);
     })
     .forEach((topic) => {
@@ -303,36 +335,86 @@ export const buildSkillTreeGraph = (
       groupedByLevel.set(level, current);
     });
 
-  const layoutConfig =
-    orientation === 'vertical'
-      ? {
-          levelDistance: 240,
-          siblingDistance: 220,
-          origin: { x: 520, y: 140 },
-        }
-      : {
-          levelDistance: 320,
-          siblingDistance: 170,
-          origin: { x: 180, y: 320 },
-        };
+  const verticalLayoutConfig = {
+    levelDistance: 240,
+    siblingDistance: 220,
+    origin: { x: 520, y: 140 },
+  };
+  const horizontalLayoutConfig = {
+    levelDistance: 320,
+    branchDistance: 180,
+    intraBranchDistance: 90,
+    origin: { x: 180, y: 320 },
+  };
+
+  const horizontalBranchOrder = Array.from(
+    new Set(
+      [...topics]
+        .sort((a, b) => {
+          const branchA = rootBranchByTopicId.get(a.id) ?? a.id;
+          const branchB = rootBranchByTopicId.get(b.id) ?? b.id;
+          if (branchA !== branchB) return branchA.localeCompare(branchB);
+          return a.title.localeCompare(b.title);
+        })
+        .map((topic) => rootBranchByTopicId.get(topic.id) ?? topic.id)
+        .filter((branchId) => branchId !== rootId)
+    )
+  );
+  const horizontalBranchIndex = new Map(
+    horizontalBranchOrder.map((branchId, index) => [branchId, index])
+  );
 
   const nodes: SkillTreeNode[] = [];
   groupedByLevel.forEach((levelTopics, level) => {
-    const totalWidth = (levelTopics.length - 1) * layoutConfig.siblingDistance;
+    const totalWidth =
+      orientation === 'vertical'
+        ? (levelTopics.length - 1) * verticalLayoutConfig.siblingDistance
+        : 0;
 
     levelTopics.forEach((topic, index) => {
-      const inlineOffset = index * layoutConfig.siblingDistance - totalWidth / 2;
-      const stackOffset = level * layoutConfig.levelDistance;
-      const position =
-        orientation === 'vertical'
-          ? {
-              x: layoutConfig.origin.x + inlineOffset,
-              y: layoutConfig.origin.y + stackOffset,
-            }
-          : {
-              x: layoutConfig.origin.x + stackOffset,
-              y: layoutConfig.origin.y + inlineOffset,
-            };
+      const stackOffset =
+        level *
+        (orientation === 'vertical'
+          ? verticalLayoutConfig.levelDistance
+          : horizontalLayoutConfig.levelDistance);
+      let position;
+
+      if (orientation === 'vertical') {
+        const inlineOffset = index * verticalLayoutConfig.siblingDistance - totalWidth / 2;
+        position = {
+          x: verticalLayoutConfig.origin.x + inlineOffset,
+          y: verticalLayoutConfig.origin.y + stackOffset,
+        };
+      } else {
+        const branchId = rootBranchByTopicId.get(topic.id) ?? topic.id;
+
+        if (topic.id === rootId) {
+          position = {
+            x: horizontalLayoutConfig.origin.x,
+            y: horizontalLayoutConfig.origin.y,
+          };
+        } else {
+          const branchIndex = horizontalBranchIndex.get(branchId) ?? index;
+          const centeredBranchOffset =
+            (branchIndex - (horizontalBranchOrder.length - 1) / 2) *
+            horizontalLayoutConfig.branchDistance;
+
+          const levelBranchTopics = levelTopics.filter(
+            (candidate) => (rootBranchByTopicId.get(candidate.id) ?? candidate.id) === branchId
+          );
+          const branchTopicIndex = levelBranchTopics.findIndex(
+            (candidate) => candidate.id === topic.id
+          );
+          const centeredSiblingOffset =
+            (branchTopicIndex - (levelBranchTopics.length - 1) / 2) *
+            horizontalLayoutConfig.intraBranchDistance;
+
+          position = {
+            x: horizontalLayoutConfig.origin.x + stackOffset,
+            y: horizontalLayoutConfig.origin.y + centeredBranchOffset + centeredSiblingOffset,
+          };
+        }
+      }
 
       nodes.push({
         id: topic.id,
