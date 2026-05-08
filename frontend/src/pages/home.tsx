@@ -1,7 +1,7 @@
 import { Badge, Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
 import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useUserService } from '../provider/user-provider.tsx';
 import {
   useFetchDirectNeighborQueries,
@@ -59,10 +59,6 @@ const HomePage = () => {
     vertical: {},
     horizontal: {},
   });
-  const seededNodePositionsRef = useRef<Record<SkillTreeOrientation, TopicGraphNodePositions>>({
-    vertical: {},
-    horizontal: {},
-  });
   const [isViewportLocked, setIsViewportLocked] = useState(false);
   const directNeighborQueries = useFetchDirectNeighborQueries(expandedTopicIds);
   const isExpandingNode = directNeighborQueries.some((query) => query.isFetching);
@@ -89,35 +85,43 @@ const HomePage = () => {
     [nodePositionsByOrientation, orientation]
   );
 
-  const seededNodePositions = useMemo(() => {
-    const currentSeededPositions = seededNodePositionsRef.current[orientation] ?? {};
-    const nextSeededPositions: TopicGraphNodePositions = {};
-
-    layoutNodes.forEach((node) => {
-      nextSeededPositions[node.id] = currentSeededPositions[node.id] ?? node.position;
-    });
-
-    seededNodePositionsRef.current = {
-      ...seededNodePositionsRef.current,
-      [orientation]: nextSeededPositions,
-    };
-
-    return nextSeededPositions;
-  }, [layoutNodes, orientation]);
-
   const nodes = useMemo(
     () =>
       layoutNodes.map((node) => ({
         ...node,
-        position: currentNodePositions[node.id] ?? seededNodePositions[node.id] ?? node.position,
+        position: currentNodePositions[node.id] ?? node.position,
       })),
-    [currentNodePositions, layoutNodes, seededNodePositions]
+    [currentNodePositions, layoutNodes]
   );
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
     const graphNode = node as Node<SkillTreeNodeData>;
     const topic = graphNode.data.payload;
 
+    setNodePositionsByOrientation((current) => {
+      const currentOrientationPositions = current[orientation] ?? {};
+      const nextOrientationPositions: TopicGraphNodePositions = {
+        ...currentOrientationPositions,
+      };
+      let changed = false;
+
+      nodes.forEach((currentNode) => {
+        const previous = currentOrientationPositions[currentNode.id];
+        if (!previous || previous.x !== currentNode.position.x || previous.y !== currentNode.position.y) {
+          nextOrientationPositions[currentNode.id] = currentNode.position;
+          changed = true;
+        }
+      });
+
+      if (!changed) {
+        return current;
+      }
+
+      return {
+        ...current,
+        [orientation]: nextOrientationPositions,
+      };
+    });
     setSelectedTopicId(topic.id);
     setExpandedTopicIds((current) =>
       current.includes(topic.id) ? current : [...current, topic.id]
