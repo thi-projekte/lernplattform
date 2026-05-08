@@ -264,8 +264,7 @@ export const buildPersonalTopicsGraph = (
     const rootTopic =
       component.find(
         (topic) =>
-          currentUsernameNormalized &&
-          topic.creatorId.toLowerCase() === currentUsernameNormalized
+          currentUsernameNormalized && topic.creatorId.toLowerCase() === currentUsernameNormalized
       ) ?? component[0];
 
     const levels = new Map<string, number>([[rootTopic.id, 0]]);
@@ -284,9 +283,7 @@ export const buildPersonalTopicsGraph = (
       });
     }
 
-    component
-      .filter((topic) => !levels.has(topic.id))
-      .forEach((topic) => levels.set(topic.id, 0));
+    component.filter((topic) => !levels.has(topic.id)).forEach((topic) => levels.set(topic.id, 0));
 
     const topicsByLevel = new Map<number, GraphTopicDto[]>();
     component.forEach((topic) => {
@@ -297,12 +294,16 @@ export const buildPersonalTopicsGraph = (
     });
 
     const sortedLevels = [...topicsByLevel.keys()].sort((a, b) => a - b);
-    const widestLevel = Math.max(...sortedLevels.map((level) => topicsByLevel.get(level)?.length ?? 0));
+    const widestLevel = Math.max(
+      ...sortedLevels.map((level) => topicsByLevel.get(level)?.length ?? 0)
+    );
     const componentWidth = Math.max(widestLevel, 1) * 250;
     const centerX = componentOffsetX + componentWidth / 2;
 
     sortedLevels.forEach((level) => {
-      const levelTopics = (topicsByLevel.get(level) ?? []).sort((a, b) => a.title.localeCompare(b.title));
+      const levelTopics = (topicsByLevel.get(level) ?? []).sort((a, b) =>
+        a.title.localeCompare(b.title)
+      );
 
       levelTopics.forEach((topic, index) => {
         const x = centerX + (index - (levelTopics.length - 1) / 2) * 250;
