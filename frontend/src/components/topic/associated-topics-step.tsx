@@ -37,6 +37,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
   const [lastViewport, setLastViewport] = useState<Viewport | null>(null);
   const [searchSuggestions, setSearchSuggestions] = useState<ListTopicDto[]>([]);
   const [nodePositions, setNodePositions] = useState<TopicGraphNodePositions>({});
+  const [isViewportLocked, setIsViewportLocked] = useState(false);
 
   const removeTopic = (topicId: string) => {
     setTopic({
@@ -336,8 +337,14 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                     onNodePositionChange={handleNodePositionChange}
                     canEditAssociations
                     canDeleteAssociations
-                    allowNodeDragging
-                    allowCanvasPanning
+                    allowNodeDragging={!isViewportLocked}
+                    allowCanvasPanning={!isViewportLocked}
+                    allowPanOnScroll={!isViewportLocked}
+                    showControls={false}
+                    showViewportToolbar
+                    viewportLocked={isViewportLocked}
+                    onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
+                    fitViewMaxZoom={0.99}
                     nodePositions={nodePositions}
                   />
                 </Box>

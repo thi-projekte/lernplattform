@@ -1,10 +1,12 @@
 import type { Edge } from '@xyflow/react';
 import type { ListTopicDto, Topic } from '../../schemas/topic';
+import type { GraphTopicDto } from '../../schemas/topic-graph.ts';
 import type {
   TopicAssociationsGraphInput,
   TopicGraphNode,
   TopicGraphNodePositions,
 } from './topic-graph.types';
+import type { SkillTreeNode, SkillTreeOrientation } from './skill-tree.types.ts';
 
 // The edge handles are derived from node angles so arrows stay attached to the
 // most natural side of each node. Be careful when changing this mapping,
@@ -195,6 +197,403 @@ export const buildTopicAssociationsGraph = (
         isIsolated: true,
         payload: isolatedTopic,
       },
+    });
+  });
+
+  return { nodes, edges };
+};
+
+const buildGraphAdjacency = (topics: GraphTopicDto[]) => {
+  const topicIds = new Set(topics.map((topic) => topic.id));
+  const adjacency = new Map<string, Set<string>>();
+
+  topics.forEach((topic) => {
+    if (!adjacency.has(topic.id)) {
+      adjacency.set(topic.id, new Set());
+    }
+
+    topic.associatedTopics.forEach((associatedTopicId) => {
+      if (!topicIds.has(associatedTopicId)) return;
+
+      if (!adjacency.has(associatedTopicId)) {
+        adjacency.set(associatedTopicId, new Set());
+      }
+
+      adjacency.get(topic.id)?.add(associatedTopicId);
+      adjacency.get(associatedTopicId)?.add(topic.id);
+    });
+  });
+
+  return adjacency;
+};
+
+const determineSkillTreeRootId = (topics: GraphTopicDto[], adjacency: Map<string, Set<string>>) => {
+  return [...topics]
+    .sort((a, b) => {
+      const degreeDiff = (adjacency.get(b.id)?.size ?? 0) - (adjacency.get(a.id)?.size ?? 0);
+      if (degreeDiff !== 0) return degreeDiff;
+
+      return a.title.localeCompare(b.title);
+    })
+    .at(0)?.id;
+};
+
+const getSkillTreeLevels = (
+  rootId: string,
+  topics: GraphTopicDto[],
+  adjacency: Map<string, Set<string>>
+) => {
+  const queue: Array<{ id: string; level: number }> = [{ id: rootId, level: 0 }];
+  const levels = new Map<string, number>();
+  const parents = new Map<string, string | null>([[rootId, null]]);
+  const visited = new Set<string>([rootId]);
+
+  while (queue.length > 0) {
+    const current = queue.shift();
+    if (!current) continue;
+
+    levels.set(current.id, current.level);
+
+    const neighbors = [...(adjacency.get(current.id) ?? [])].sort();
+    neighbors.forEach((neighborId) => {
+      if (visited.has(neighborId)) return;
+      visited.add(neighborId);
+      parents.set(neighborId, current.id);
+      queue.push({ id: neighborId, level: current.level + 1 });
+    });
+  }
+
+  const fallbackLevel = (Math.max(...levels.values(), 0) || 0) + 1;
+  topics.forEach((topic) => {
+    if (!levels.has(topic.id)) {
+      levels.set(topic.id, fallbackLevel);
+      parents.set(topic.id, null);
+    }
+  });
+
+  return { levels, parents };
+};
+
+const getRootBranchId = (
+  topicId: string,
+  rootId: string,
+  parents: Map<string, string | null>
+): string => {
+  if (topicId === rootId) return rootId;
+
+  let currentId = topicId;
+  let parentId = parents.get(currentId) ?? null;
+
+  if (!parentId) {
+    return `disconnected:${topicId}`;
+  }
+
+  while (parentId && parentId !== rootId) {
+    currentId = parentId;
+    parentId = parents.get(currentId) ?? null;
+  }
+
+  return parentId === rootId ? currentId : `disconnected:${topicId}`;
+};
+
+export const buildSkillTreeGraph = (
+  topics: GraphTopicDto[] = [],
+  orientation: SkillTreeOrientation = 'vertical',
+  currentUsername?: string
+): { nodes: SkillTreeNode[]; edges: Edge[] } => {
+  if (topics.length === 0) {
+    return { nodes: [], edges: [] };
+  }
+
+  const adjacency = buildGraphAdjacency(topics);
+  const rootId = determineSkillTreeRootId(topics, adjacency);
+
+  if (!rootId) {
+    return { nodes: [], edges: [] };
+  }
+
+  const { levels, parents } = getSkillTreeLevels(rootId, topics, adjacency);
+  const rootBranchByTopicId = new Map(
+    topics.map((topic) => [topic.id, getRootBranchId(topic.id, rootId, parents)])
+  );
+  const connectedTopics = topics.filter(
+    (topic) => topic.id === rootId || (parents.get(topic.id) ?? null) !== null
+  );
+  const disconnectedTopics = topics
+    .filter((topic) => !connectedTopics.some((connectedTopic) => connectedTopic.id === topic.id))
+    .sort((a, b) => a.title.localeCompare(b.title));
+  const groupedByLevel = new Map<number, GraphTopicDto[]>();
+
+  [...connectedTopics]
+    .sort((a, b) => {
+      const levelDiff = (levels.get(a.id) ?? 0) - (levels.get(b.id) ?? 0);
+      if (levelDiff !== 0) return levelDiff;
+      const branchA = rootBranchByTopicId.get(a.id) ?? a.id;
+      const branchB = rootBranchByTopicId.get(b.id) ?? b.id;
+      const branchDiff = branchA.localeCompare(branchB);
+      if (branchDiff !== 0) return branchDiff;
+      return a.title.localeCompare(b.title);
+    })
+    .forEach((topic) => {
+      const level = levels.get(topic.id) ?? 0;
+      const current = groupedByLevel.get(level) ?? [];
+      current.push(topic);
+      groupedByLevel.set(level, current);
+    });
+
+  const verticalLayoutConfig = {
+    levelDistance: 240,
+    branchDistance: 320,
+    siblingDistance: 180,
+    origin: { x: 520, y: 140 },
+    disconnectedColumnOffset: 320,
+    disconnectedRowDistance: 180,
+  };
+  const horizontalLayoutConfig = {
+    levelDistance: 320,
+    branchDistance: 180,
+    intraBranchDistance: 90,
+    origin: { x: 180, y: 320 },
+    disconnectedLevelOffset: 260,
+    disconnectedNodeDistance: 180,
+  };
+
+  const horizontalBranchOrder = Array.from(
+    new Set(
+      [...topics]
+        .sort((a, b) => {
+          const branchA = rootBranchByTopicId.get(a.id) ?? a.id;
+          const branchB = rootBranchByTopicId.get(b.id) ?? b.id;
+          if (branchA !== branchB) return branchA.localeCompare(branchB);
+          return a.title.localeCompare(b.title);
+        })
+        .map((topic) => rootBranchByTopicId.get(topic.id) ?? topic.id)
+        .filter((branchId) => branchId !== rootId)
+    )
+  );
+  const horizontalBranchIndex = new Map(
+    horizontalBranchOrder.map((branchId, index) => [branchId, index])
+  );
+  const verticalBranchOrder = Array.from(
+    new Set(
+      [...connectedTopics]
+        .sort((a, b) => {
+          const branchA = rootBranchByTopicId.get(a.id) ?? a.id;
+          const branchB = rootBranchByTopicId.get(b.id) ?? b.id;
+          if (branchA !== branchB) return branchA.localeCompare(branchB);
+          return a.title.localeCompare(b.title);
+        })
+        .map((topic) => rootBranchByTopicId.get(topic.id) ?? topic.id)
+        .filter((branchId) => branchId !== rootId)
+    )
+  );
+  const verticalBranchIndex = new Map(
+    verticalBranchOrder.map((branchId, index) => [branchId, index])
+  );
+
+  const nodes: SkillTreeNode[] = [];
+  groupedByLevel.forEach((levelTopics, level) => {
+    levelTopics.forEach((topic, index) => {
+      const stackOffset =
+        level *
+        (orientation === 'vertical'
+          ? verticalLayoutConfig.levelDistance
+          : horizontalLayoutConfig.levelDistance);
+      let position;
+
+      if (orientation === 'vertical') {
+        const branchId = rootBranchByTopicId.get(topic.id) ?? topic.id;
+
+        if (topic.id === rootId) {
+          position = {
+            x: verticalLayoutConfig.origin.x,
+            y: verticalLayoutConfig.origin.y,
+          };
+        } else {
+          const branchIndex = verticalBranchIndex.get(branchId) ?? index;
+          const centeredBranchOffset =
+            (branchIndex - (verticalBranchOrder.length - 1) / 2) *
+            verticalLayoutConfig.branchDistance;
+          const levelBranchTopics = levelTopics.filter(
+            (candidate) => (rootBranchByTopicId.get(candidate.id) ?? candidate.id) === branchId
+          );
+          const branchTopicIndex = levelBranchTopics.findIndex(
+            (candidate) => candidate.id === topic.id
+          );
+          const centeredSiblingOffset =
+            (branchTopicIndex - (levelBranchTopics.length - 1) / 2) *
+            verticalLayoutConfig.siblingDistance;
+
+          position = {
+            x: verticalLayoutConfig.origin.x + centeredBranchOffset + centeredSiblingOffset,
+            y: verticalLayoutConfig.origin.y + stackOffset,
+          };
+        }
+      } else {
+        const branchId = rootBranchByTopicId.get(topic.id) ?? topic.id;
+
+        if (topic.id === rootId) {
+          position = {
+            x: horizontalLayoutConfig.origin.x,
+            y: horizontalLayoutConfig.origin.y,
+          };
+        } else {
+          const branchIndex = horizontalBranchIndex.get(branchId) ?? index;
+          const centeredBranchOffset =
+            (branchIndex - (horizontalBranchOrder.length - 1) / 2) *
+            horizontalLayoutConfig.branchDistance;
+
+          const levelBranchTopics = levelTopics.filter(
+            (candidate) => (rootBranchByTopicId.get(candidate.id) ?? candidate.id) === branchId
+          );
+          const branchTopicIndex = levelBranchTopics.findIndex(
+            (candidate) => candidate.id === topic.id
+          );
+          const centeredSiblingOffset =
+            (branchTopicIndex - (levelBranchTopics.length - 1) / 2) *
+            horizontalLayoutConfig.intraBranchDistance;
+
+          position = {
+            x: horizontalLayoutConfig.origin.x + stackOffset,
+            y: horizontalLayoutConfig.origin.y + centeredBranchOffset + centeredSiblingOffset,
+          };
+        }
+      }
+
+      if (!position) {
+        position = {
+          x: verticalLayoutConfig.origin.x,
+          y: verticalLayoutConfig.origin.y,
+        };
+      }
+
+      nodes.push({
+        id: topic.id,
+        type: 'skillTreeTopic',
+        position,
+        data: {
+          kind: 'skill-topic',
+          title: topic.title,
+          categories: topic.categories,
+          creatorId: topic.creatorId,
+          creatorFullName: topic.creatorFullName,
+          isOwned:
+            currentUsername !== undefined &&
+            currentUsername.trim().length > 0 &&
+            topic.creatorId.toLowerCase() === currentUsername.toLowerCase(),
+          role:
+            topic.id === rootId
+              ? 'root'
+              : (adjacency.get(topic.id)?.size ?? 0) > 0
+                ? 'connected'
+                : 'disconnected',
+          payload: topic,
+        },
+      });
+    });
+  });
+
+  if (disconnectedTopics.length > 0) {
+    disconnectedTopics.forEach((topic, index) => {
+      const position =
+        orientation === 'vertical'
+          ? {
+              x: verticalLayoutConfig.origin.x + verticalLayoutConfig.disconnectedColumnOffset,
+              y:
+                verticalLayoutConfig.origin.y +
+                index * verticalLayoutConfig.disconnectedRowDistance,
+            }
+          : {
+              x:
+                horizontalLayoutConfig.origin.x +
+                index * horizontalLayoutConfig.disconnectedNodeDistance,
+              y: horizontalLayoutConfig.origin.y + horizontalLayoutConfig.disconnectedLevelOffset,
+            };
+
+      nodes.push({
+        id: topic.id,
+        type: 'skillTreeTopic',
+        position,
+        data: {
+          kind: 'skill-topic',
+          title: topic.title,
+          categories: topic.categories,
+          creatorId: topic.creatorId,
+          creatorFullName: topic.creatorFullName,
+          isOwned:
+            currentUsername !== undefined &&
+            currentUsername.trim().length > 0 &&
+            topic.creatorId.toLowerCase() === currentUsername.toLowerCase(),
+          role: 'disconnected',
+          payload: topic,
+        },
+      });
+    });
+  }
+
+  const edges: Edge[] = [];
+  const seenEdges = new Set<string>();
+  const nodePositions = new Map(nodes.map((node) => [node.id, node.position]));
+
+  topics.forEach((topic) => {
+    topic.associatedTopics.forEach((associatedTopicId) => {
+      if (!topics.some((candidate) => candidate.id === associatedTopicId)) return;
+
+      const edgeKey = [topic.id, associatedTopicId].sort().join(':');
+      if (seenEdges.has(edgeKey)) return;
+      seenEdges.add(edgeKey);
+
+      const sourcePosition = nodePositions.get(topic.id);
+      const targetPosition = nodePositions.get(associatedTopicId);
+      const sourceLevel = levels.get(topic.id) ?? 0;
+      const targetLevel = levels.get(associatedTopicId) ?? 0;
+
+      let sourceHandle: string;
+      let targetHandle: string;
+
+      if (orientation === 'vertical') {
+        if (sourceLevel < targetLevel) {
+          sourceHandle = 'bottom';
+          targetHandle = 'top';
+        } else if (sourceLevel > targetLevel) {
+          sourceHandle = 'top';
+          targetHandle = 'bottom';
+        } else {
+          const angle =
+            sourcePosition && targetPosition
+              ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
+              : 0;
+          sourceHandle = getHandleForAngle(angle);
+          targetHandle = getOppositeHandle(sourceHandle);
+        }
+      } else if (sourceLevel < targetLevel) {
+        sourceHandle = 'right';
+        targetHandle = 'left';
+      } else if (sourceLevel > targetLevel) {
+        sourceHandle = 'left';
+        targetHandle = 'right';
+      } else {
+        const angle =
+          sourcePosition && targetPosition
+            ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
+            : 0;
+        sourceHandle = getHandleForAngle(angle);
+        targetHandle = getOppositeHandle(sourceHandle);
+      }
+
+      edges.push({
+        id: `skill-edge-${edgeKey}`,
+        source: topic.id,
+        target: associatedTopicId,
+        sourceHandle,
+        targetHandle,
+        type: 'straight',
+        style: {
+          stroke: '#94a3b8',
+          strokeWidth: 2.15,
+          strokeDasharray: '10 7',
+        },
+      });
     });
   });
 

@@ -31,10 +31,12 @@ const BuilderModeListPage = () => {
     <Layout>
       <Title>{t('topic.headings.personalTopics')}</Title>
       <Flex justify="flex-end" w="100%" mt={12}>
-        <Button variant="filled" onClick={() => navigate('/builder-mode/topics/create')}>
-          <IconPlusFilled />
-          &nbsp;{t('topic.actions.create')}
-        </Button>
+        <Flex justify="center" w={190}>
+          <Button variant="filled" onClick={() => navigate('/builder-mode/topics/create')}>
+            <IconPlusFilled />
+            &nbsp;{t('topic.actions.create')}
+          </Button>
+        </Flex>
       </Flex>
       {data && (
         <EntityTable

@@ -5,7 +5,6 @@ import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import { useTranslation } from 'react-i18next';
 
-import logo from '../assets/logo.png';
 import keycloak from '../keycloak.ts';
 import { routes, type TypedMyndRoute } from '../routing.ts';
 import { useLocation, useMatches, useNavigate } from 'react-router';
@@ -50,7 +49,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
   return (
     <AppShell
-      header={{ height: 60 }}
+      header={{ height: 104 }}
       navbar={{
         width: desktopNavbarWidth,
         breakpoint: 'sm',
@@ -59,13 +58,32 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       padding={0}
     >
       <AppShell.Header>
-        <Group h="100%" px="md" justify="space-between">
-          <Group>
-            <Burger opened={opened} onClick={toggle} hiddenFrom="sm" size="sm" />
-            <Image src={logo} alt="MYnd Logo" h={45} w="auto" fit="contain" />
+        <Group h="100%" justify="space-between" wrap="nowrap">
+          <Box
+            visibleFrom="sm"
+            style={{
+              //width: desktopNavbarWidth,
+              //minWidth: desktopNavbarWidth,
+              width: 80,
+              minWidth: 80,
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingLeft: 83,
+              overflow: 'visible',
+              transition: 'width 150ms ease',
+            }}
+          >
+            <Image src="/mynd-logo.png" alt="MYnd Logo" w={250} h="auto" fit="contain" />
+          </Box>
+
+          <Group hiddenFrom="sm" gap="sm" h="100%" px="md">
+            <Burger opened={opened} onClick={toggle} size="sm" />
+            <Image src="/mynd-logo.png" alt="MYnd Logo" h={58} w="auto" fit="contain" />
           </Group>
 
-          <Group>
+          <Group px="md">
             <LanguagePicker />
             <ActionIcon variant="default" size="xl" onClick={() => keycloak.accountManagement()}>
               <IconUser size={32} stroke={1.5} />

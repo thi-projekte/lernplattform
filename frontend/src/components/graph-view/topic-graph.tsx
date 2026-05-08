@@ -1,7 +1,7 @@
 import {
   Background,
-  Controls,
   ReactFlow,
+  PanOnScrollMode,
   useEdgesState,
   useNodesState,
   type Edge,
@@ -14,6 +14,7 @@ import {
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useEffect } from 'react';
+import ViewportToolbar from './viewport-toolbar.tsx';
 
 interface TopicGraphViewProps {
   nodes: Node[];
@@ -27,9 +28,14 @@ interface TopicGraphViewProps {
   canEditAssociations?: boolean;
   allowNodeDragging?: boolean;
   allowCanvasPanning?: boolean;
+  allowPanOnScroll?: boolean;
   showControls?: boolean;
+  showViewportToolbar?: boolean;
+  viewportLocked?: boolean;
+  onToggleViewportLock?: () => void;
   fitView?: boolean;
   fitViewPadding?: number;
+  fitViewMaxZoom?: number;
   backgroundColor?: string;
   backgroundGap?: number;
 }
@@ -46,9 +52,13 @@ const TopicGraphView = ({
   canEditAssociations = false,
   allowNodeDragging = false,
   allowCanvasPanning = true,
-  showControls = true,
+  allowPanOnScroll = false,
+  showViewportToolbar = false,
+  viewportLocked = false,
+  onToggleViewportLock,
   fitView = true,
   fitViewPadding = 0.2,
+  fitViewMaxZoom,
   backgroundColor = '#dee2e6',
   backgroundGap = 16,
 }: TopicGraphViewProps) => {
@@ -76,15 +86,25 @@ const TopicGraphView = ({
       onEdgesChange={onEdgesChange}
       onConnect={canEditAssociations ? onConnect : undefined}
       fitView={fitView}
-      fitViewOptions={{ padding: fitViewPadding }}
+      fitViewOptions={{ padding: fitViewPadding, maxZoom: fitViewMaxZoom }}
       nodesDraggable={canEditAssociations || allowNodeDragging}
       nodesConnectable={canEditAssociations}
       connectOnClick={false}
       panOnDrag={allowCanvasPanning ? (allowNodeDragging ? [1, 2] : true) : false}
+      panOnScroll={allowPanOnScroll}
+      panOnScrollMode={PanOnScrollMode.Free}
+      zoomOnScroll={!allowPanOnScroll}
       selectionOnDrag={false}
       elementsSelectable
     >
-      {showControls && <Controls showInteractive={canEditAssociations} />}
+      {showViewportToolbar && (
+        <ViewportToolbar
+          fitViewPadding={fitViewPadding}
+          fitViewMaxZoom={fitViewMaxZoom}
+          viewportLocked={viewportLocked}
+          onToggleViewportLock={onToggleViewportLock}
+        />
+      )}
       <Background color={backgroundColor} gap={backgroundGap} />
     </ReactFlow>
   );
