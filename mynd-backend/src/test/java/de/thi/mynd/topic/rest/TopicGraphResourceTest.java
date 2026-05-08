@@ -3,6 +3,7 @@ package de.thi.mynd.topic.rest;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
 import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.service.TopicGraphService;
@@ -13,7 +14,6 @@ import io.restassured.http.ContentType;
 import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 @QuarkusTest
 public class TopicGraphResourceTest {
@@ -26,7 +26,7 @@ public class TopicGraphResourceTest {
     UUID topicId = UUID.randomUUID();
     GraphTopicDto dto = GraphTopicDto.builder().id(topicId).build();
 
-    Mockito.when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10))
+    when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10))
         .thenReturn(List.of(dto));
 
     given()
@@ -45,9 +45,8 @@ public class TopicGraphResourceTest {
     UUID categoryId = UUID.randomUUID();
     List<UUID> categories = List.of(categoryId);
 
-    Mockito.when(
-            topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
-                eq(10), eq(categories)))
+    when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
+            eq(10), eq(categories)))
         .thenReturn(List.of(GraphTopicDto.builder().build()));
 
     given()
@@ -64,7 +63,7 @@ public class TopicGraphResourceTest {
   public void testGetNeighbors() {
     UUID topicId = UUID.randomUUID();
 
-    Mockito.when(topicGraphService.getNeighborsOfTopic(topicId))
+    when(topicGraphService.getNeighborsOfTopic(topicId))
         .thenReturn(List.of(GraphTopicDto.builder().build(), GraphTopicDto.builder().build()));
 
     given()
@@ -81,7 +80,7 @@ public class TopicGraphResourceTest {
   public void testGetMostPopularNoCategoriesPersonalFails() {
     UUID topicId = UUID.randomUUID();
 
-    Mockito.when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10, "alice"))
+    when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10, "alice"))
         .thenReturn(List.of());
 
     given()
@@ -100,7 +99,8 @@ public class TopicGraphResourceTest {
     UUID topicId = UUID.randomUUID();
     GraphTopicDto dto = GraphTopicDto.builder().id(topicId).build();
 
-    Mockito.when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10, "alice"))
+    when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
+            eq(100), eq("alice")))
         .thenReturn(List.of(dto));
 
     given()
@@ -120,9 +120,8 @@ public class TopicGraphResourceTest {
     UUID categoryId = UUID.randomUUID();
     List<UUID> categories = List.of(categoryId);
 
-    Mockito.when(
-            topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
-                eq(10), eq(categories), eq("alice")))
+    when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
+            eq(10), eq(categories), eq("alice")))
         .thenReturn(List.of());
 
     given()
@@ -141,9 +140,8 @@ public class TopicGraphResourceTest {
     UUID categoryId = UUID.randomUUID();
     List<UUID> categories = List.of(categoryId);
 
-    Mockito.when(
-            topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
-                eq(10), eq(categories), eq("alice")))
+    when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
+            eq(100), eq(categories), eq("alice")))
         .thenReturn(List.of(GraphTopicDto.builder().build()));
 
     given()
@@ -161,7 +159,7 @@ public class TopicGraphResourceTest {
   public void testGetNeighborsPersonalFails() {
     UUID topicId = UUID.randomUUID();
 
-    Mockito.when(topicGraphService.getOwnedNeighborsOfTopic(topicId))
+    when(topicGraphService.getOwnedNeighborsOfTopic(topicId))
         .thenReturn(List.of(GraphTopicDto.builder().build()));
 
     given()
@@ -179,7 +177,7 @@ public class TopicGraphResourceTest {
   public void testGetNeighborsPersonalSuccess() {
     UUID topicId = UUID.randomUUID();
 
-    Mockito.when(topicGraphService.getOwnedNeighborsOfTopic(topicId))
+    when(topicGraphService.getOwnedNeighborsOfTopic(topicId))
         .thenReturn(List.of(GraphTopicDto.builder().build(), GraphTopicDto.builder().build()));
 
     given()
