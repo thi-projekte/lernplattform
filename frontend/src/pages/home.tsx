@@ -3,10 +3,7 @@ import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useUserService } from '../provider/user-provider.tsx';
-import {
-  fetchDirectNeighbors,
-  useFetchMostPopularTopicsWithNeighbors,
-} from '../api/topic-graph.ts';
+import { useFetchDirectNeighbors, useFetchMostPopularTopicsWithNeighbors } from '../api/topic-graph.ts';
 import LayoutLoader from '../components/layout-loader.tsx';
 import TopicGraphView from '../components/graph-view/topic-graph.tsx';
 import SkillTreeNodeComponent from '../components/graph-view/skill-tree-node.tsx';
@@ -52,8 +49,8 @@ const HomePage = () => {
 
   const [orientation, setOrientation] = useState<SkillTreeOrientation>('vertical');
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
+  const [expandingTopicId, setExpandingTopicId] = useState<string | null>(null);
   const [loadedTopics, setLoadedTopics] = useState<GraphTopicDto[]>([]);
-  const [isExpandingNode, setIsExpandingNode] = useState(false);
   const [nodePositionsByOrientation, setNodePositionsByOrientation] = useState<
     Record<SkillTreeOrientation, TopicGraphNodePositions>
   >({
@@ -61,6 +58,10 @@ const HomePage = () => {
     horizontal: {},
   });
   const [isViewportLocked, setIsViewportLocked] = useState(false);
+  const { data: directNeighbors, isFetching: isExpandingNode } = useFetchDirectNeighbors(
+    expandingTopicId,
+    Boolean(expandingTopicId)
+  );
 
   const graphTopics = useMemo(
     () => (loadedTopics.length > 0 ? loadedTopics : (data ?? [])),
@@ -110,6 +111,15 @@ const HomePage = () => {
     });
   }, [layoutNodes, orientation]);
 
+  useEffect(() => {
+    if (!expandingTopicId || !directNeighbors) {
+      return;
+    }
+
+    setLoadedTopics((current) => mergeGraphTopics(mergeGraphTopics(current, graphTopics), directNeighbors));
+    setExpandingTopicId(null);
+  }, [directNeighbors, expandingTopicId, graphTopics]);
+
   const nodes = useMemo(
     () =>
       layoutNodes.map((node) => ({
@@ -124,16 +134,7 @@ const HomePage = () => {
     const topic = graphNode.data.payload;
 
     setSelectedTopicId(topic.id);
-    setIsExpandingNode(true);
-
-    try {
-      const neighbors = await fetchDirectNeighbors(topic.id);
-      setLoadedTopics((current) =>
-        mergeGraphTopics(mergeGraphTopics(current, graphTopics), neighbors)
-      );
-    } finally {
-      setIsExpandingNode(false);
-    }
+    setExpandingTopicId(topic.id);
   };
 
   const handleNodePositionChange = useCallback(
