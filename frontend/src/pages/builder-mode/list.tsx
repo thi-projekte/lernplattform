@@ -262,8 +262,8 @@ const BuilderModeListPage = () => {
         </Flex>
       </Flex>
       <Stack gap="md" mt={12}>
-        <Group justify="space-between" align="center">
-          <Text c="dimmed" size="sm">
+        <Stack gap="xs" align="center">
+          <Text c="dimmed" size="sm" ta="center">
             {t('topic.personalGraph.graphDescription')}
           </Text>
           <SegmentedControl
@@ -274,7 +274,7 @@ const BuilderModeListPage = () => {
               { label: t('topic.graph.modeGraph'), value: 'graph' },
             ]}
           />
-        </Group>
+        </Stack>
 
         {viewMode === 'list' ? (
           data && (

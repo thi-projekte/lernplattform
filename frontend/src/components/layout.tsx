@@ -57,7 +57,12 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       }}
       padding={0}
     >
-      <AppShell.Header>
+      <AppShell.Header
+        style={{
+          background: 'linear-gradient(180deg, #eef9ff 0%, #e7f5ff 100%)',
+          borderBottom: '1px solid rgba(176, 210, 232, 0.65)',
+        }}
+      >
         <Group h="100%" justify="space-between" wrap="nowrap">
           <Box
             visibleFrom="sm"
@@ -97,6 +102,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         onMouseEnter={() => setDesktopExpanded(true)}
         onMouseLeave={() => setDesktopExpanded(false)}
         style={{
+          background: 'linear-gradient(180deg, #eef9ff 0%, #e4f3ff 100%)',
+          borderRight: '1px solid rgba(176, 210, 232, 0.65)',
           transition: 'width 150ms ease',
           overflowX: 'hidden',
         }}
@@ -135,7 +142,15 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <Box px="md" py="md">
+        <Box
+          px="md"
+          py="md"
+          style={{
+            minHeight: 'calc(100vh - 104px)',
+            background:
+              'linear-gradient(180deg, rgba(240, 249, 255, 0.96) 0%, rgba(236, 246, 255, 0.92) 100%)',
+          }}
+        >
           {isCurrentRouteGranted ? children : <AccessDenied />}
         </Box>
       </AppShell.Main>

@@ -169,7 +169,12 @@ const HomePage = () => {
           </Text>
         </Stack>
 
-        <Paper withBorder radius="lg" p="lg">
+        <Paper
+          withBorder
+          radius="lg"
+          p="lg"
+          style={{ background: 'rgba(248, 252, 255, 0.92)' }}
+        >
           <Stack gap="md">
             <Group justify="space-between" align="center">
               <Text size="sm" c="dimmed">
@@ -199,8 +204,8 @@ const HomePage = () => {
                   minHeight: 640,
                   borderRadius: 16,
                   overflow: 'hidden',
-                  background: '#fcfcfd',
-                  border: '1px solid #e9ecef',
+                  background: 'rgba(244, 250, 255, 0.95)',
+                  border: '1px solid rgba(176, 210, 232, 0.5)',
                 }}
               >
                 <TopicGraphView
@@ -226,7 +231,12 @@ const HomePage = () => {
                 />
               </div>
 
-              <Paper withBorder radius="lg" p="md" style={{ alignSelf: 'start' }}>
+              <Paper
+                withBorder
+                radius="lg"
+                p="md"
+                style={{ alignSelf: 'start', background: 'rgba(248, 252, 255, 0.94)' }}
+              >
                 <Stack gap="md">
                   <div>
                     <Title order={3}>{t('journey.selectedTopic')}</Title>
@@ -236,7 +246,12 @@ const HomePage = () => {
                   </div>
 
                   {selectedTopic && (
-                    <Paper withBorder radius="md" p="md">
+                    <Paper
+                      withBorder
+                      radius="md"
+                      p="md"
+                      style={{ background: 'rgba(255, 255, 255, 0.88)' }}
+                    >
                       <Stack gap="xs">
                         <Title order={4}>{selectedTopic.title}</Title>
                         {selectedTopic.categories.length > 0 && (
