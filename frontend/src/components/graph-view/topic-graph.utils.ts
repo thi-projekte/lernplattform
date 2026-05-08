@@ -362,6 +362,7 @@ export const buildSkillTreeGraph = (
 
   const edges: Edge[] = [];
   const seenEdges = new Set<string>();
+  const nodePositions = new Map(nodes.map((node) => [node.id, node.position]));
 
   topics.forEach((topic) => {
     topic.associatedTopics.forEach((associatedTopicId) => {
@@ -371,10 +372,25 @@ export const buildSkillTreeGraph = (
       if (seenEdges.has(edgeKey)) return;
       seenEdges.add(edgeKey);
 
+      const sourcePosition = nodePositions.get(topic.id);
+      const targetPosition = nodePositions.get(associatedTopicId);
+
+      const angle =
+        sourcePosition && targetPosition
+          ? Math.atan2(
+              targetPosition.y - sourcePosition.y,
+              targetPosition.x - sourcePosition.x
+            )
+          : 0;
+      const sourceHandle = getHandleForAngle(angle);
+      const targetHandle = getOppositeHandle(sourceHandle);
+
       edges.push({
         id: `skill-edge-${edgeKey}`,
         source: topic.id,
         target: associatedTopicId,
+        sourceHandle,
+        targetHandle,
         type: 'straight',
         style: {
           stroke: '#94a3b8',
