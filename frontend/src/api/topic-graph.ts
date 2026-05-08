@@ -3,11 +3,20 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { type GraphTopicDto, GraphTopicDtoSchema } from '../schemas/topic-graph.ts';
 import { z } from 'zod';
 
-export const fetchMostPopularWithNeighbors = async (
-  categoryIds?: string[]
+const fetchMostPopularWithNeighbors = async (
+  categoryIds?: string[],
+  personal?: boolean
 ): Promise<GraphTopicDto[]> => {
+  const search = new URLSearchParams();
+  if (categoryIds) {
+    search.set('categoryFiltter', categoryIds.join(','));
+  }
+  if (personal) {
+    search.set('personal', 'true');
+  }
+
   const result = await apiClient.get(
-    `/topics/most-popular${categoryIds ? `?categoryFilter=${categoryIds.join(',')}` : ''}`,
+    `/topics/graph/most-popular${search.size > 0 ? `?${search.toString()}` : ''}`,
     {
       validateStatus: (status) => status <= 204,
     }
@@ -15,15 +24,18 @@ export const fetchMostPopularWithNeighbors = async (
   return z.array(GraphTopicDtoSchema).parse(result.data);
 };
 
-export const useFetchMostPopularTopicsWithNeighbors = (categoryIds?: string[]) => {
+export const useFetchMostPopularTopicsWithNeighbors = (
+  categoryIds?: string[],
+  personal?: boolean
+) => {
   return useQuery({
-    queryKey: ['mostPopularTopics', categoryIds],
-    queryFn: () => fetchMostPopularWithNeighbors(categoryIds),
+    queryKey: ['mostPopularTopics', categoryIds, personal],
+    queryFn: () => fetchMostPopularWithNeighbors(categoryIds, personal),
   });
 };
 
 const fetchDirectNeighbors = async (topicId: string): Promise<GraphTopicDto[]> => {
-  const result = await apiClient.get(`/topics/${topicId}/graph-neighbors`, {
+  const result = await apiClient.get(`/topics/graph/${topicId}/graph-neighbors`, {
     validateStatus: (status) => status <= 204,
   });
   return z.array(GraphTopicDtoSchema).parse(result.data);
@@ -44,5 +56,19 @@ export const useFetchDirectNeighborQueries = (topicIds: string[]) => {
       queryFn: () => fetchDirectNeighbors(topicId),
       enabled: Boolean(topicId),
     })),
+  });
+};
+
+const searchTopicsInGraph = async (search: string): Promise<GraphTopicDto[]> => {
+  const result = await apiClient.get(`/topics/graph?search=${search}`, {
+    validateStatus: (status) => status <= 204,
+  });
+  return z.array(GraphTopicDtoSchema).parse(result.data);
+};
+
+export const useSearchTopicsInGraph = (search: string) => {
+  return useQuery({
+    queryKey: ['searchTopicGraph', search],
+    queryFn: () => searchTopicsInGraph(search),
   });
 };

@@ -19,9 +19,9 @@ services:
 
   keycloak:
     container_name: mynd-lernplattform-keycloak
-    image: quay.io/keycloak/keycloak:26.6
+    image: ghcr.io/thi-projekte/lernplattform-mynd-keycloak:${MYND_IMAGE_TAG}
     command:
-      - start
+      - start --optimized
     depends_on:
       - keycloak-database
     environment:

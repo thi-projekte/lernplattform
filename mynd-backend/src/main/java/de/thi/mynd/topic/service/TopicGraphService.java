@@ -13,4 +13,13 @@ public interface TopicGraphService {
       int n, List<UUID> categoryFilter);
 
   List<GraphTopicDto> getNeighborsOfTopic(UUID topicId) throws EntityInstanceNotFoundException;
+
+  List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(int n, String creatorId);
+
+  List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
+      int n, List<UUID> categoryFilter, String creatorId);
+
+  List<GraphTopicDto> getOwnedNeighborsOfTopic(UUID topicId) throws EntityInstanceNotFoundException;
+
+  List<GraphTopicDto> searchTopicNodes(String search, int limit);
 }
