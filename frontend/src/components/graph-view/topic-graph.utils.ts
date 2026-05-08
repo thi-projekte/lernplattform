@@ -377,10 +377,7 @@ export const buildSkillTreeGraph = (
 
       const angle =
         sourcePosition && targetPosition
-          ? Math.atan2(
-              targetPosition.y - sourcePosition.y,
-              targetPosition.x - sourcePosition.x
-            )
+          ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
           : 0;
       const sourceHandle = getHandleForAngle(angle);
       const targetHandle = getOppositeHandle(sourceHandle);
