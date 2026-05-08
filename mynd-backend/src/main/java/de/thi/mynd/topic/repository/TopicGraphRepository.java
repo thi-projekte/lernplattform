@@ -17,6 +17,15 @@ public final class TopicGraphRepository extends MyndBaseRepository<Topic> {
         .getResultList();
   }
 
+  public List<Topic> findNMostPopular(int n, String creatorId) {
+
+    return getSession()
+            .createQuery("SELECT t FROM Topic t WHERE creatorId = :creator ORDER BY t.popularityScore DESC", Topic.class)
+            .setParameter("creator", creatorId)
+            .setMaxResults(n)
+            .getResultList();
+  }
+
   public List<Topic> findNMostPopularFilterByCategoryIds(int n, List<UUID> categoryIds) {
     return getSession()
         .createQuery(
@@ -25,5 +34,16 @@ public final class TopicGraphRepository extends MyndBaseRepository<Topic> {
         .setParameter("ids", categoryIds)
         .setMaxResults(n)
         .getResultList();
+  }
+
+  public List<Topic> findNMostPopularFilterByCategoryIds(int n, List<UUID> categoryIds, String creatorId) {
+    return getSession()
+            .createQuery(
+                    "SELECT t FROM Topic t LEFT JOIN t.categories c WHERE c.id IN :ids AND t.creatorId = :creator ORDER BY t.popularityScore DESC",
+                    Topic.class)
+            .setParameter("ids", categoryIds)
+            .setParameter("creator", creatorId)
+            .setMaxResults(n)
+            .getResultList();
   }
 }
