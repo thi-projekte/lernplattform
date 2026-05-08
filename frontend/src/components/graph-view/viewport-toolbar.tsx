@@ -4,12 +4,14 @@ import { Panel, useReactFlow } from '@xyflow/react';
 
 interface ViewportToolbarProps {
   fitViewPadding: number;
+  fitViewMaxZoom?: number;
   viewportLocked: boolean;
   onToggleViewportLock?: () => void;
 }
 
 const ViewportToolbar = ({
   fitViewPadding,
+  fitViewMaxZoom,
   viewportLocked,
   onToggleViewportLock,
 }: ViewportToolbarProps) => {
@@ -57,7 +59,9 @@ const ViewportToolbar = ({
               radius={0}
               size={36}
               aria-label="Fit view"
-              onClick={() => fitView({ padding: fitViewPadding, duration: 220 })}
+              onClick={() =>
+                fitView({ padding: fitViewPadding, maxZoom: fitViewMaxZoom, duration: 220 })
+              }
             >
               <IconMaximize size={18} stroke={2} />
             </ActionIcon>

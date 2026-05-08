@@ -35,6 +35,7 @@ interface TopicGraphViewProps {
   onToggleViewportLock?: () => void;
   fitView?: boolean;
   fitViewPadding?: number;
+  fitViewMaxZoom?: number;
   backgroundColor?: string;
   backgroundGap?: number;
 }
@@ -57,6 +58,7 @@ const TopicGraphView = ({
   onToggleViewportLock,
   fitView = true,
   fitViewPadding = 0.2,
+  fitViewMaxZoom,
   backgroundColor = '#dee2e6',
   backgroundGap = 16,
 }: TopicGraphViewProps) => {
@@ -84,7 +86,7 @@ const TopicGraphView = ({
       onEdgesChange={onEdgesChange}
       onConnect={canEditAssociations ? onConnect : undefined}
       fitView={fitView}
-      fitViewOptions={{ padding: fitViewPadding }}
+      fitViewOptions={{ padding: fitViewPadding, maxZoom: fitViewMaxZoom }}
       nodesDraggable={canEditAssociations || allowNodeDragging}
       nodesConnectable={canEditAssociations}
       connectOnClick={false}
@@ -98,6 +100,7 @@ const TopicGraphView = ({
       {showViewportToolbar && (
         <ViewportToolbar
           fitViewPadding={fitViewPadding}
+          fitViewMaxZoom={fitViewMaxZoom}
           viewportLocked={viewportLocked}
           onToggleViewportLock={onToggleViewportLock}
         />

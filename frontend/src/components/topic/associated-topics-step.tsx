@@ -344,6 +344,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                     showViewportToolbar
                     viewportLocked={isViewportLocked}
                     onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
+                    fitViewMaxZoom={0.99}
                     nodePositions={nodePositions}
                   />
                 </Box>

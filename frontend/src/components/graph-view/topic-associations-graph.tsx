@@ -39,6 +39,7 @@ interface TopicAssociationsGraphProps {
   onToggleViewportLock?: () => void;
   fitView?: boolean;
   fitViewPadding?: number;
+  fitViewMaxZoom?: number;
   backgroundColor?: string;
   backgroundGap?: number;
   nodePositions?: TopicGraphNodePositions;
@@ -62,6 +63,7 @@ const TopicAssociationsGraph = ({
   onToggleViewportLock,
   fitView = true,
   fitViewPadding = 0.2,
+  fitViewMaxZoom,
   backgroundColor = '#dee2e6',
   backgroundGap = 16,
   nodePositions,
@@ -111,6 +113,7 @@ const TopicAssociationsGraph = ({
       onToggleViewportLock={onToggleViewportLock}
       fitView={fitView}
       fitViewPadding={fitViewPadding}
+      fitViewMaxZoom={fitViewMaxZoom}
       backgroundColor={backgroundColor}
       backgroundGap={backgroundGap}
     />
