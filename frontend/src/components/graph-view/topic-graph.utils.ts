@@ -473,8 +473,8 @@ export const buildSkillTreeGraph = (
         type: 'straight',
         style: {
           stroke: '#94a3b8',
-          strokeWidth: 2.25,
-          strokeDasharray: '8 6',
+          strokeWidth: 2.15,
+          strokeDasharray: '9 6',
         },
       });
     });
