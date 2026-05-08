@@ -45,6 +45,9 @@ const mergeGraphTopics = (current: GraphTopicDto[], incoming: GraphTopicDto[]) =
   return [...merged.values()];
 };
 
+const NODE_OVERLAP_X_THRESHOLD = 170;
+const NODE_OVERLAP_Y_THRESHOLD = 150;
+
 const HomePage = () => {
   const { t } = useTranslation();
   const userProfile = useUserService();
@@ -58,6 +61,12 @@ const HomePage = () => {
   >({
     vertical: {},
     horizontal: {},
+  });
+  const [positionSignatureByOrientation, setPositionSignatureByOrientation] = useState<
+    Record<SkillTreeOrientation, string>
+  >({
+    vertical: '',
+    horizontal: '',
   });
   const [isViewportLocked, setIsViewportLocked] = useState(false);
   const directNeighborQueries = useFetchDirectNeighborQueries(expandedTopicIds);
@@ -79,19 +88,59 @@ const HomePage = () => {
     () => buildSkillTreeGraph(graphTopics, orientation, userProfile.account.username),
     [graphTopics, orientation, userProfile.account.username]
   );
+  const layoutSignature = useMemo(
+    () => layoutNodes.map((node) => node.id).sort().join(':'),
+    [layoutNodes]
+  );
 
   const currentNodePositions = useMemo(
     () => nodePositionsByOrientation[orientation] ?? {},
     [nodePositionsByOrientation, orientation]
   );
 
+  const canReuseSavedPositions = useMemo(() => {
+    if (positionSignatureByOrientation[orientation] !== layoutSignature) {
+      return false;
+    }
+
+    const savedEntries = Object.entries(currentNodePositions);
+    if (savedEntries.length === 0) return false;
+
+    const layoutNodeIds = new Set(layoutNodes.map((node) => node.id));
+    if (
+      savedEntries.some(([nodeId]) => !layoutNodeIds.has(nodeId)) ||
+      layoutNodes.some((node) => !currentNodePositions[node.id])
+    ) {
+      return false;
+    }
+
+    for (let index = 0; index < savedEntries.length; index += 1) {
+      const [, current] = savedEntries[index];
+
+      for (let compareIndex = index + 1; compareIndex < savedEntries.length; compareIndex += 1) {
+        const [, next] = savedEntries[compareIndex];
+        const deltaX = Math.abs(current.x - next.x);
+        const deltaY = Math.abs(current.y - next.y);
+
+        if (deltaX < NODE_OVERLAP_X_THRESHOLD && deltaY < NODE_OVERLAP_Y_THRESHOLD) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  }, [currentNodePositions, layoutNodes, layoutSignature, orientation, positionSignatureByOrientation]);
+
   const nodes = useMemo(
     () =>
       layoutNodes.map((node) => ({
         ...node,
-        position: currentNodePositions[node.id] ?? node.position,
+        position:
+          canReuseSavedPositions && currentNodePositions[node.id]
+            ? currentNodePositions[node.id]
+            : node.position,
       })),
-    [currentNodePositions, layoutNodes]
+    [canReuseSavedPositions, currentNodePositions, layoutNodes]
   );
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
@@ -121,8 +170,12 @@ const HomePage = () => {
           },
         };
       });
+      setPositionSignatureByOrientation((current) => ({
+        ...current,
+        [orientation]: layoutSignature,
+      }));
     },
-    [orientation]
+    [layoutSignature, orientation]
   );
 
   if (isLoading) {
