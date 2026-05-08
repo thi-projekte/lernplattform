@@ -1,5 +1,5 @@
 import { apiClient } from './common.ts';
-import { useQuery } from '@tanstack/react-query';
+import { useQueries, useQuery } from '@tanstack/react-query';
 import { type GraphTopicDto, GraphTopicDtoSchema } from '../schemas/topic-graph.ts';
 import { z } from 'zod';
 
@@ -34,5 +34,15 @@ export const useFetchDirectNeighbors = (topicId: string | null, enabled = true) 
     queryKey: ['directNeighborTopics', topicId],
     queryFn: () => fetchDirectNeighbors(topicId!),
     enabled: Boolean(topicId) && enabled,
+  });
+};
+
+export const useFetchDirectNeighborQueries = (topicIds: string[]) => {
+  return useQueries({
+    queries: topicIds.map((topicId) => ({
+      queryKey: ['directNeighborTopics', topicId],
+      queryFn: () => fetchDirectNeighbors(topicId),
+      enabled: Boolean(topicId),
+    })),
   });
 };

@@ -1,9 +1,12 @@
 import { Badge, Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
 import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useUserService } from '../provider/user-provider.tsx';
-import { useFetchDirectNeighbors, useFetchMostPopularTopicsWithNeighbors } from '../api/topic-graph.ts';
+import {
+  useFetchDirectNeighborQueries,
+  useFetchMostPopularTopicsWithNeighbors,
+} from '../api/topic-graph.ts';
 import LayoutLoader from '../components/layout-loader.tsx';
 import TopicGraphView from '../components/graph-view/topic-graph.tsx';
 import SkillTreeNodeComponent from '../components/graph-view/skill-tree-node.tsx';
@@ -49,8 +52,7 @@ const HomePage = () => {
 
   const [orientation, setOrientation] = useState<SkillTreeOrientation>('vertical');
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
-  const [expandingTopicId, setExpandingTopicId] = useState<string | null>(null);
-  const [loadedTopics, setLoadedTopics] = useState<GraphTopicDto[]>([]);
+  const [expandedTopicIds, setExpandedTopicIds] = useState<string[]>([]);
   const [nodePositionsByOrientation, setNodePositionsByOrientation] = useState<
     Record<SkillTreeOrientation, TopicGraphNodePositions>
   >({
@@ -58,15 +60,15 @@ const HomePage = () => {
     horizontal: {},
   });
   const [isViewportLocked, setIsViewportLocked] = useState(false);
-  const { data: directNeighbors, isFetching: isExpandingNode } = useFetchDirectNeighbors(
-    expandingTopicId,
-    Boolean(expandingTopicId)
-  );
+  const directNeighborQueries = useFetchDirectNeighborQueries(expandedTopicIds);
+  const isExpandingNode = directNeighborQueries.some((query) => query.isFetching);
 
-  const graphTopics = useMemo(
-    () => (loadedTopics.length > 0 ? loadedTopics : (data ?? [])),
-    [data, loadedTopics]
-  );
+  const graphTopics = useMemo(() => {
+    return directNeighborQueries.reduce(
+      (current, query) => mergeGraphTopics(current, query.data ?? []),
+      data ?? []
+    );
+  }, [data, directNeighborQueries]);
 
   const selectedTopic = useMemo(
     () => graphTopics.find((topic) => topic.id === selectedTopicId) ?? graphTopics[0] ?? null,
@@ -83,43 +85,6 @@ const HomePage = () => {
     [nodePositionsByOrientation, orientation]
   );
 
-  useEffect(() => {
-    setNodePositionsByOrientation((current) => {
-      const currentOrientationPositions = current[orientation] ?? {};
-      const nextEntries = layoutNodes.map(
-        (node) => [node.id, currentOrientationPositions[node.id] ?? node.position] as const
-      );
-
-      const nextPositions = Object.fromEntries(nextEntries);
-
-      const sameLength = Object.keys(currentOrientationPositions).length === nextEntries.length;
-      const sameValues =
-        sameLength &&
-        nextEntries.every(([id, position]) => {
-          const previous = currentOrientationPositions[id];
-          return previous && previous.x === position.x && previous.y === position.y;
-        });
-
-      if (sameValues) {
-        return current;
-      }
-
-      return {
-        ...current,
-        [orientation]: nextPositions,
-      };
-    });
-  }, [layoutNodes, orientation]);
-
-  useEffect(() => {
-    if (!expandingTopicId || !directNeighbors) {
-      return;
-    }
-
-    setLoadedTopics((current) => mergeGraphTopics(mergeGraphTopics(current, graphTopics), directNeighbors));
-    setExpandingTopicId(null);
-  }, [directNeighbors, expandingTopicId, graphTopics]);
-
   const nodes = useMemo(
     () =>
       layoutNodes.map((node) => ({
@@ -134,7 +99,9 @@ const HomePage = () => {
     const topic = graphNode.data.payload;
 
     setSelectedTopicId(topic.id);
-    setExpandingTopicId(topic.id);
+    setExpandedTopicIds((current) =>
+      current.includes(topic.id) ? current : [...current, topic.id]
+    );
   };
 
   const handleNodePositionChange = useCallback(
