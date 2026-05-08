@@ -31,7 +31,8 @@ class ContentElementResourceTest {
         "{"
             + "\"title\": \"Test PDF\","
             + "\"originalFileName\": \"test.pdf\","
-            + "\"type\": \"PDF\""
+            + "\"type\": \"PDF\","
+            + "\"icon\": \"spotify\""
             + "}";
 
     ContentElementDto responseDto =
