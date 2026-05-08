@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.UUID;
 import org.jboss.resteasy.reactive.RestQuery;
 
-@Path("/topics")
+@Path("/topics/graph")
 @Authenticated
 public final class TopicGraphResource {
 
@@ -34,7 +34,7 @@ public final class TopicGraphResource {
         : topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10, categories);
   }
 
-  @Path("/{topicId}/graph-neighbors")
+  @Path("/{topicId}/neighbors")
   @GET
   public List<GraphTopicDto> getNeighbors(UUID topicId, @RestQuery Boolean personal) {
     return personal

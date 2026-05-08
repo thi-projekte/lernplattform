@@ -12,7 +12,6 @@ import io.quarkus.test.security.TestSecurity;
 import io.restassured.http.ContentType;
 import java.util.List;
 import java.util.UUID;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 
@@ -22,7 +21,6 @@ public class TopicGraphResourceTest {
   @InjectMock TopicGraphService topicGraphService;
 
   @Test
-  @DisplayName("GET /topics/most-popular - Without categories should return top 10")
   @TestSecurity(user = "alice", roles = "builder")
   public void testGetMostPopularNoCategories() {
     UUID topicId = UUID.randomUUID();
@@ -33,7 +31,7 @@ public class TopicGraphResourceTest {
 
     given()
         .when()
-        .get("/topics/most-popular")
+        .get("/topics/graph/most-popular")
         .then()
         .statusCode(200)
         .contentType(ContentType.JSON)
@@ -42,7 +40,6 @@ public class TopicGraphResourceTest {
   }
 
   @Test
-  @DisplayName("GET /topics/most-popular - With categories should filter results")
   @TestSecurity(user = "alice", roles = "builder")
   public void testGetMostPopularWithCategories() {
     UUID categoryId = UUID.randomUUID();
@@ -56,14 +53,13 @@ public class TopicGraphResourceTest {
     given()
         .queryParam("categories", categoryId.toString())
         .when()
-        .get("/topics/most-popular")
+        .get("/topics/graph/most-popular")
         .then()
         .statusCode(200)
         .body("size()", is(1));
   }
 
   @Test
-  @DisplayName("GET /topics/{id}/graph-neighbors - Should return neighbor list")
   @TestSecurity(user = "alice", roles = "builder")
   public void testGetNeighbors() {
     UUID topicId = UUID.randomUUID();
@@ -74,7 +70,7 @@ public class TopicGraphResourceTest {
     given()
         .pathParam("topicId", topicId.toString())
         .when()
-        .get("/topics/{topicId}/graph-neighbors")
+        .get("/topics/graph/{topicId}/neighbors")
         .then()
         .statusCode(200)
         .body("size()", is(2));
