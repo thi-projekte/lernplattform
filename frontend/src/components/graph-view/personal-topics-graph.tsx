@@ -86,6 +86,7 @@ const PersonalTopicsGraph = ({
       viewportLocked={viewportLocked}
       onToggleViewportLock={onToggleViewportLock}
       fitViewMaxZoom={0.99}
+      backgroundColor="#d9e7f3"
     />
   );
 };

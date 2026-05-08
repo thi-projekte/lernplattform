@@ -20,7 +20,7 @@ const CreateTopicPage = () => {
   const { isPending, mutateAsync } = useCreateTopicMutation();
   const navigate = useNavigate();
 
-  const [topic, setTopic] = useState<Partial<Topic>>({});
+  const [topic, setTopic] = useState<Partial<Topic>>({ contentElements: [] });
 
   const steps: StepperStep[] = [
     {

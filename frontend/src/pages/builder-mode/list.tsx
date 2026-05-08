@@ -266,14 +266,16 @@ const BuilderModeListPage = () => {
           <Text c="dimmed" size="sm" ta="center">
             {t('topic.personalGraph.graphDescription')}
           </Text>
-          <SegmentedControl
-            value={viewMode}
-            onChange={(value) => setViewMode(value as 'list' | 'graph')}
-            data={[
-              { label: t('topic.graph.modeList'), value: 'list' },
-              { label: t('topic.graph.modeGraph'), value: 'graph' },
-            ]}
-          />
+          <Group justify="center" w="100%">
+            <SegmentedControl
+              value={viewMode}
+              onChange={(value) => setViewMode(value as 'list' | 'graph')}
+              data={[
+                { label: t('topic.graph.modeList'), value: 'list' },
+                { label: t('topic.graph.modeGraph'), value: 'graph' },
+              ]}
+            />
+          </Group>
         </Stack>
 
         {viewMode === 'list' ? (
@@ -296,7 +298,13 @@ const BuilderModeListPage = () => {
               alignItems: 'start',
             }}
           >
-            <Paper withBorder radius="md" p="sm" h={760}>
+            <Paper
+              withBorder
+              radius="md"
+              p="sm"
+              h={760}
+              style={{ background: 'rgba(248, 252, 255, 0.92)' }}
+            >
               <Stack gap="md" h="100%">
                 <div>
                   <Group justify="space-between" align="center" wrap="nowrap">
@@ -326,7 +334,7 @@ const BuilderModeListPage = () => {
                       withBorder
                       radius="md"
                       p="sm"
-                      style={{ background: 'rgba(255, 255, 255, 0.85)' }}
+                      style={{ background: 'rgba(255, 255, 255, 0.88)' }}
                     >
                       <Group justify="space-between" align="flex-start" wrap="nowrap">
                         <div style={{ minWidth: 0 }}>
@@ -385,7 +393,13 @@ const BuilderModeListPage = () => {
               </Stack>
             </Paper>
 
-            <Paper withBorder radius="md" p="md" h={760}>
+            <Paper
+              withBorder
+              radius="md"
+              p="md"
+              h={760}
+              style={{ background: 'rgba(244, 250, 255, 0.95)' }}
+            >
               <PersonalTopicsGraph
                 topics={personalGraphTopics}
                 currentUsername={userService.account.username}
@@ -401,7 +415,7 @@ const BuilderModeListPage = () => {
               />
             </Paper>
 
-            <Card withBorder radius="md" p="md">
+            <Card withBorder radius="md" p="md" style={{ background: 'rgba(248, 252, 255, 0.94)' }}>
               <Stack gap="md">
                 <div>
                   <Title order={2}>{t('topic.personalGraph.selectedTopic')}</Title>
@@ -411,7 +425,12 @@ const BuilderModeListPage = () => {
                 </div>
 
                 {selectedGraphTopic ? (
-                  <Card withBorder radius="md" p="md">
+                  <Card
+                    withBorder
+                    radius="md"
+                    p="md"
+                    style={{ background: 'rgba(255, 255, 255, 0.88)' }}
+                  >
                     <Stack gap="md">
                       <div>
                         <Title order={3}>{selectedGraphTopic.title}</Title>
@@ -448,7 +467,13 @@ const BuilderModeListPage = () => {
                                 selectedOwnedTopicDetails.relatedTopics.length <= 1;
 
                               return (
-                                <Paper key={relatedTopic.id} withBorder radius="md" p="xs">
+                                <Paper
+                                  key={relatedTopic.id}
+                                  withBorder
+                                  radius="md"
+                                  p="xs"
+                                  style={{ background: 'rgba(255, 255, 255, 0.88)' }}
+                                >
                                   <Group justify="space-between" align="center" wrap="nowrap">
                                     <div style={{ minWidth: 0 }}>
                                       <Text fw={500} size="sm" truncate>
