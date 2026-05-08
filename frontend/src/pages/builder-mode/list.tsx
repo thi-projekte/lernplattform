@@ -7,6 +7,7 @@ import {
 } from '../../api/topic.ts';
 import { useCallback, useMemo, useState } from 'react';
 import type { PaginationState } from '@tanstack/react-table';
+import { useQueryClient } from '@tanstack/react-query';
 import EntityTable from '../../components/entity-table.tsx';
 import {
   ActionIcon,
@@ -42,6 +43,7 @@ const BuilderModeListPage = () => {
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
   const [searchSuggestions, setSearchSuggestions] = useState<ListTopicDto[]>([]);
   const [isViewportLocked, setIsViewportLocked] = useState(false);
+  const queryClient = useQueryClient();
   const { data, isLoading } = useQueryPersonalTopicsPaginated(pagination);
   const userService = useUserService();
   const {
@@ -61,25 +63,6 @@ const BuilderModeListPage = () => {
     viewAction: true,
   });
   const currentUsername = userService.account.username?.toLowerCase();
-  const personalGraphTopics = useMemo<GraphTopicDto[]>(
-    () =>
-      graphTopics
-        ? [
-            ...graphTopics,
-            ...searchSuggestions
-              .filter((suggestion) => !graphTopics.some((topic) => topic.id === suggestion.id))
-              .map((suggestion) => ({
-                id: suggestion.id,
-                title: suggestion.title,
-                categories: suggestion.categories,
-                creatorId: suggestion.creatorId,
-                creatorFullName: suggestion.creatorFullName,
-                associatedTopics: [],
-              })),
-          ]
-        : [],
-    [graphTopics, searchSuggestions]
-  );
   const selectedGraphTopic = useMemo<GraphTopicDto | null>(() => {
     const payload = selectedTopicNode?.payload;
     if (
@@ -97,6 +80,27 @@ const BuilderModeListPage = () => {
     !!selectedGraphTopic &&
     !!currentUsername &&
     selectedGraphTopic.creatorId.toLowerCase() === currentUsername;
+  const personalGraphTopics = useMemo<GraphTopicDto[]>(
+    () =>
+      graphTopics
+        ? [
+            ...graphTopics,
+            ...(selectedGraphTopicIsOwned
+              ? searchSuggestions
+                  .filter((suggestion) => !graphTopics.some((topic) => topic.id === suggestion.id))
+                  .map((suggestion) => ({
+                    id: suggestion.id,
+                    title: suggestion.title,
+                    categories: suggestion.categories,
+                    creatorId: suggestion.creatorId,
+                    creatorFullName: suggestion.creatorFullName,
+                    associatedTopics: [],
+                  }))
+              : []),
+          ]
+        : [],
+    [graphTopics, searchSuggestions, selectedGraphTopicIsOwned]
+  );
   const { mutateAsync: editTopic, isPending: isDeletingAssociation } = useEditTopicMutation(
     selectedGraphTopic?.id ?? ''
   );
@@ -106,9 +110,9 @@ const BuilderModeListPage = () => {
     selectedGraphTopicIsOwned
   );
   const selectedOwnedTopicDetails = selectedOwnedTopicData as Topic | undefined;
-  const existingTopicIds = useMemo(
-    () => graphTopics?.map((topic) => topic.id) ?? [],
-    [graphTopics]
+  const blockedSearchTopicIds = useMemo(
+    () => (selectedGraphTopic ? [selectedGraphTopic.id] : []),
+    [selectedGraphTopic]
   );
   const areTopicsAlreadyAssociated = useCallback(
     (owningTopicId: string, foreignTopicId: string) => {
@@ -151,9 +155,10 @@ const BuilderModeListPage = () => {
 
       await createAssociation({ owningTopicId, foreignTopicId });
       setSearchSuggestions((current) => current.filter((topic) => topic.id !== foreignTopicId));
+      await queryClient.invalidateQueries({ queryKey: ['personalTopics'] });
       await refetchGraphTopics();
     },
-    [areTopicsAlreadyAssociated, createAssociation, refetchGraphTopics]
+    [areTopicsAlreadyAssociated, createAssociation, queryClient, refetchGraphTopics]
   );
 
   const handleConnect: OnConnect = useCallback(
@@ -228,10 +233,12 @@ const BuilderModeListPage = () => {
         ...selectedOwnedTopicDetails,
         relatedTopics: nextRelatedTopics,
       });
+      await queryClient.invalidateQueries({ queryKey: ['personalTopics'] });
       await refetchGraphTopics();
     },
     [
       editTopic,
+      queryClient,
       refetchGraphTopics,
       selectedGraphTopic,
       selectedGraphTopicIsOwned,
@@ -303,7 +310,7 @@ const BuilderModeListPage = () => {
                   </Text>
                 </div>
                 <TopicSearchbar
-                  existingIds={existingTopicIds}
+                  existingIds={blockedSearchTopicIds}
                   onAdd={handleSuggestionAdd}
                   onSuggestionsChange={handleSuggestionsChange}
                 />
@@ -353,6 +360,25 @@ const BuilderModeListPage = () => {
                           <IconTrash size={16} />
                         </ActionIcon>
                       </Group>
+                      {selectedGraphTopicIsOwned ? (
+                        <Button
+                          mt="sm"
+                          size="xs"
+                          fullWidth
+                          variant="light"
+                          disabled={
+                            isCreatingAssociation ||
+                            areTopicsAlreadyAssociated(selectedGraphTopic!.id, suggestion.id)
+                          }
+                          onClick={() =>
+                            void handleAssociationCreate(selectedGraphTopic!.id, suggestion.id)
+                          }
+                        >
+                          {areTopicsAlreadyAssociated(selectedGraphTopic!.id, suggestion.id)
+                            ? t('topic.personalGraph.alreadyLinked')
+                            : t('topic.personalGraph.linkToSelectedTopic')}
+                        </Button>
+                      ) : null}
                     </Paper>
                   ))}
                 </Stack>
