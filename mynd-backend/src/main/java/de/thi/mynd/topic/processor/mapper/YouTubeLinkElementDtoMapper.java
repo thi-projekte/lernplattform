@@ -13,7 +13,7 @@ public final class YouTubeLinkElementDtoMapper
     return YouTubeLinkElementDto.builder()
         .id(entity.id)
         .title(entity.title)
-            .icon(entity.icon)
+        .icon(entity.icon)
         .createdAt(entity.createdAt)
         .updatedAt(entity.updatedAt)
         .uri(entity.uri)

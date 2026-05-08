@@ -18,7 +18,7 @@ public final class AudioFileElementDtoMapper
     return AudioFileElementDto.builder()
         .id(entity.id)
         .title(entity.title)
-            .icon(entity.icon)
+        .icon(entity.icon)
         .createdAt(entity.createdAt)
         .updatedAt(entity.updatedAt)
         .originalFileName(entity.originalFileName)
