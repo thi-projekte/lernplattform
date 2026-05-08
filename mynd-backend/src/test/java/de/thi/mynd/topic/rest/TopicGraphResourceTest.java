@@ -75,4 +75,120 @@ public class TopicGraphResourceTest {
         .statusCode(200)
         .body("size()", is(2));
   }
+
+  @Test
+  @TestSecurity(user = "alice", roles = "builder")
+  public void testGetMostPopularNoCategoriesPersonalFails() {
+    UUID topicId = UUID.randomUUID();
+
+    Mockito.when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10, "alice"))
+        .thenReturn(List.of());
+
+    given()
+        .when()
+        .pathParam("personal", "true")
+        .get("/topics/graph/most-popular")
+        .then()
+        .statusCode(200)
+        .contentType(ContentType.JSON)
+        .body("size()", is(0));
+  }
+
+  @Test
+  @TestSecurity(user = "alice", roles = "builder")
+  public void testGetMostPopularNoCategoriesPersonalSuccess() {
+    UUID topicId = UUID.randomUUID();
+    GraphTopicDto dto = GraphTopicDto.builder().id(topicId).build();
+
+    Mockito.when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10, "alice"))
+        .thenReturn(List.of(dto));
+
+    given()
+        .when()
+        .pathParam("personal", "true")
+        .get("/topics/graph/most-popular")
+        .then()
+        .statusCode(200)
+        .contentType(ContentType.JSON)
+        .body("size()", is(1))
+        .body("[0].id", is(topicId.toString()));
+  }
+
+  @Test
+  @TestSecurity(user = "alice", roles = "builder")
+  public void testGetMostPopularWithCategoriesPersonalFails() {
+    UUID categoryId = UUID.randomUUID();
+    List<UUID> categories = List.of(categoryId);
+
+    Mockito.when(
+            topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
+                eq(10), eq(categories), eq("alice")))
+        .thenReturn(List.of());
+
+    given()
+        .queryParam("categories", categoryId.toString())
+        .when()
+        .pathParam("personal", "true")
+        .get("/topics/graph/most-popular")
+        .then()
+        .statusCode(200)
+        .body("size()", is(0));
+  }
+
+  @Test
+  @TestSecurity(user = "alice", roles = "builder")
+  public void testGetMostPopularWithCategoriesPersonalSuccess() {
+    UUID categoryId = UUID.randomUUID();
+    List<UUID> categories = List.of(categoryId);
+
+    Mockito.when(
+            topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
+                eq(10), eq(categories), eq("alice")))
+        .thenReturn(List.of(GraphTopicDto.builder().build()));
+
+    given()
+        .queryParam("categories", categoryId.toString())
+        .when()
+        .pathParam("personal", "true")
+        .get("/topics/graph/most-popular")
+        .then()
+        .statusCode(200)
+        .body("size()", is(1));
+  }
+
+  @Test
+  @TestSecurity(user = "alice", roles = "builder")
+  public void testGetNeighborsPersonalFails() {
+    UUID topicId = UUID.randomUUID();
+
+    Mockito.when(topicGraphService.getOwnedNeighborsOfTopic(topicId))
+        .thenReturn(List.of(GraphTopicDto.builder().build()));
+
+    given()
+        .pathParam("topicId", topicId.toString())
+        .when()
+        .pathParam("personal", "true")
+        .get("/topics/graph/{topicId}/neighbors")
+        .then()
+        .statusCode(200)
+        .body("size()", is(1));
+  }
+
+  @Test
+  @TestSecurity(user = "alice", roles = "builder")
+  public void testGetNeighborsPersonalSuccess() {
+    UUID topicId = UUID.randomUUID();
+
+    Mockito.when(topicGraphService.getOwnedNeighborsOfTopic(topicId))
+        .thenReturn(List.of(GraphTopicDto.builder().build(), GraphTopicDto.builder().build()));
+
+    given()
+        .pathParam("topicId", topicId.toString())
+        .when()
+        .pathParam("personal", "true")
+        .get("/topics/graph/{topicId}/neighbors")
+        .then()
+        .statusCode(200)
+        .body("size()", is(2));
+  }
 }
