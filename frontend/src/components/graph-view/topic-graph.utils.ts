@@ -387,7 +387,9 @@ export const buildSkillTreeGraph = (
         .filter((branchId) => branchId !== rootId)
     )
   );
-  const verticalBranchIndex = new Map(verticalBranchOrder.map((branchId, index) => [branchId, index]));
+  const verticalBranchIndex = new Map(
+    verticalBranchOrder.map((branchId, index) => [branchId, index])
+  );
 
   const nodes: SkillTreeNode[] = [];
   groupedByLevel.forEach((levelTopics, level) => {
@@ -423,8 +425,7 @@ export const buildSkillTreeGraph = (
             verticalLayoutConfig.siblingDistance;
 
           position = {
-            x:
-              verticalLayoutConfig.origin.x + centeredBranchOffset + centeredSiblingOffset,
+            x: verticalLayoutConfig.origin.x + centeredBranchOffset + centeredSiblingOffset,
             y: verticalLayoutConfig.origin.y + stackOffset,
           };
         }
@@ -498,15 +499,15 @@ export const buildSkillTreeGraph = (
         orientation === 'vertical'
           ? {
               x: verticalLayoutConfig.origin.x + verticalLayoutConfig.disconnectedColumnOffset,
-              y: verticalLayoutConfig.origin.y + index * verticalLayoutConfig.disconnectedRowDistance,
+              y:
+                verticalLayoutConfig.origin.y +
+                index * verticalLayoutConfig.disconnectedRowDistance,
             }
           : {
               x:
                 horizontalLayoutConfig.origin.x +
                 index * horizontalLayoutConfig.disconnectedNodeDistance,
-              y:
-                horizontalLayoutConfig.origin.y +
-                horizontalLayoutConfig.disconnectedLevelOffset,
+              y: horizontalLayoutConfig.origin.y + horizontalLayoutConfig.disconnectedLevelOffset,
             };
 
       nodes.push({

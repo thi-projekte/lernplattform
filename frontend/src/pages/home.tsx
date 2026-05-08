@@ -89,7 +89,11 @@ const HomePage = () => {
     [graphTopics, orientation, userProfile.account.username]
   );
   const layoutSignature = useMemo(
-    () => layoutNodes.map((node) => node.id).sort().join(':'),
+    () =>
+      layoutNodes
+        .map((node) => node.id)
+        .sort()
+        .join(':'),
     [layoutNodes]
   );
 
@@ -129,7 +133,13 @@ const HomePage = () => {
     }
 
     return true;
-  }, [currentNodePositions, layoutNodes, layoutSignature, orientation, positionSignatureByOrientation]);
+  }, [
+    currentNodePositions,
+    layoutNodes,
+    layoutSignature,
+    orientation,
+    positionSignatureByOrientation,
+  ]);
 
   const nodes = useMemo(
     () =>
