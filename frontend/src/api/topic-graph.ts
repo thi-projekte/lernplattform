@@ -35,7 +35,7 @@ export const useFetchMostPopularTopicsWithNeighbors = (
 };
 
 const fetchDirectNeighbors = async (topicId: string): Promise<GraphTopicDto[]> => {
-  const result = await apiClient.get(`/topics/graph/${topicId}/graph-neighbors`, {
+  const result = await apiClient.get(`/topics/graph/${topicId}/neighbors`, {
     validateStatus: (status) => status <= 204,
   });
   return z.array(GraphTopicDtoSchema).parse(result.data);
