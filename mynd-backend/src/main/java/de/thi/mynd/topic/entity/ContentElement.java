@@ -18,6 +18,9 @@ public abstract class ContentElement extends BaseEntity {
   @Enumerated(EnumType.STRING)
   public ContentType type;
 
+  @Column(length = 64)
+  public String icon = "";
+
   @Column(name = "rank", nullable = true)
   public Integer rank;
 
