@@ -48,7 +48,8 @@ const BuilderModeListPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { mutate } = useDeleteTopicMutation();
-  const { mutateAsync: createAssociation, isPending: isCreatingAssociation } = useCreateAssociation();
+  const { mutateAsync: createAssociation, isPending: isCreatingAssociation } =
+    useCreateAssociation();
   const columns = useTopicColumns({
     editAction: true,
     deleteActionHandler: mutate,
@@ -91,7 +92,10 @@ const BuilderModeListPage = () => {
     !!selectedGraphTopic &&
     !!currentUsername &&
     selectedGraphTopic.creatorId.toLowerCase() === currentUsername;
-  const existingTopicIds = useMemo(() => personalGraphTopics.map((topic) => topic.id), [personalGraphTopics]);
+  const existingTopicIds = useMemo(
+    () => personalGraphTopics.map((topic) => topic.id),
+    [personalGraphTopics]
+  );
 
   const handleSuggestionsChange = useCallback((topics: ListTopicDto[], searchTerm: string) => {
     const nextSuggestions = searchTerm.trim() ? topics.slice(0, 6) : [];
@@ -322,11 +326,7 @@ const BuilderModeListPage = () => {
 
                       <Badge
                         w="fit-content"
-                        color={
-                          selectedGraphTopicIsOwned
-                            ? 'orange'
-                            : 'blue'
-                        }
+                        color={selectedGraphTopicIsOwned ? 'orange' : 'blue'}
                         variant="light"
                       >
                         {selectedGraphTopicIsOwned
