@@ -126,7 +126,7 @@ const HomePage = () => {
       layoutNodes.map((node) => ({
         ...node,
         position: canReuseSavedPositions
-          ? currentNodePositions[node.id] ?? node.position
+          ? (currentNodePositions[node.id] ?? node.position)
           : node.position,
       })),
     [canReuseSavedPositions, currentNodePositions, layoutNodes]
