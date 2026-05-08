@@ -384,35 +384,37 @@ const BuilderModeListPage = () => {
                           <Text fw={600} size="sm">
                             {t('topic.graph.relatedTopicsTableTitle')}
                           </Text>
-                          {selectedOwnedTopicDetails.relatedTopics.map((relatedTopic: ListTopicDto) => {
-                            const isLastAssociation =
-                              selectedOwnedTopicDetails.relatedTopics.length <= 1;
+                          {selectedOwnedTopicDetails.relatedTopics.map(
+                            (relatedTopic: ListTopicDto) => {
+                              const isLastAssociation =
+                                selectedOwnedTopicDetails.relatedTopics.length <= 1;
 
-                            return (
-                              <Paper key={relatedTopic.id} withBorder radius="md" p="xs">
-                                <Group justify="space-between" align="center" wrap="nowrap">
-                                  <div style={{ minWidth: 0 }}>
-                                    <Text fw={500} size="sm" truncate>
-                                      {relatedTopic.title}
-                                    </Text>
-                                    {relatedTopic.creatorFullName && (
-                                      <Text size="xs" c="dimmed" truncate>
-                                        {relatedTopic.creatorFullName}
+                              return (
+                                <Paper key={relatedTopic.id} withBorder radius="md" p="xs">
+                                  <Group justify="space-between" align="center" wrap="nowrap">
+                                    <div style={{ minWidth: 0 }}>
+                                      <Text fw={500} size="sm" truncate>
+                                        {relatedTopic.title}
                                       </Text>
-                                    )}
-                                  </div>
-                                  <ActionIcon
-                                    variant="light"
-                                    color="red"
-                                    disabled={isDeletingAssociation || isLastAssociation}
-                                    onClick={() => void handleAssociationDelete(relatedTopic.id)}
-                                  >
-                                    <IconTrash size={16} />
-                                  </ActionIcon>
-                                </Group>
-                              </Paper>
-                            );
-                          })}
+                                      {relatedTopic.creatorFullName && (
+                                        <Text size="xs" c="dimmed" truncate>
+                                          {relatedTopic.creatorFullName}
+                                        </Text>
+                                      )}
+                                    </div>
+                                    <ActionIcon
+                                      variant="light"
+                                      color="red"
+                                      disabled={isDeletingAssociation || isLastAssociation}
+                                      onClick={() => void handleAssociationDelete(relatedTopic.id)}
+                                    >
+                                      <IconTrash size={16} />
+                                    </ActionIcon>
+                                  </Group>
+                                </Paper>
+                              );
+                            }
+                          )}
                           {selectedOwnedTopicDetails.relatedTopics.length <= 1 ? (
                             <Text size="xs" c="dimmed">
                               {t('topic.personalGraph.keepAtLeastOneAssociation')}
