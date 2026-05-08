@@ -57,22 +57,25 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
   }
 
   @Override
-  public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(int n, String creatorId) {
+  public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
+      int n, String creatorId) {
     List<Topic> topics = topicGraphRepository.findNMostPopular(n, creatorId);
 
     return getGraphTopicDtosWithOwnedNeighbors(topics);
   }
 
   @Override
-  public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(int n, List<UUID> categoryFilter, String creatorId) {
+  public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
+      int n, List<UUID> categoryFilter, String creatorId) {
     List<Topic> topics =
-            topicGraphRepository.findNMostPopularFilterByCategoryIds(n, categoryFilter, creatorId);
+        topicGraphRepository.findNMostPopularFilterByCategoryIds(n, categoryFilter, creatorId);
 
     return getGraphTopicDtosWithOwnedNeighbors(topics);
   }
 
   @Override
-  public List<GraphTopicDto> getOwnedNeighborsOfTopic(UUID topicId) throws EntityInstanceNotFoundException {
+  public List<GraphTopicDto> getOwnedNeighborsOfTopic(UUID topicId)
+      throws EntityInstanceNotFoundException {
     Optional<Topic> topicOptional = topicRepository.findByIdOptional(topicId);
 
     if (topicOptional.isEmpty()) {

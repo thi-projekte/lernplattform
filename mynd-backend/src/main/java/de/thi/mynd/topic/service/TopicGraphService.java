@@ -17,7 +17,7 @@ public interface TopicGraphService {
   List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(int n, String creatorId);
 
   List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
-          int n, List<UUID> categoryFilter, String creatorId);
+      int n, List<UUID> categoryFilter, String creatorId);
 
   List<GraphTopicDto> getOwnedNeighborsOfTopic(UUID topicId) throws EntityInstanceNotFoundException;
 

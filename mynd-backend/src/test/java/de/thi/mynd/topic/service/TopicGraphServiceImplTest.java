@@ -13,9 +13,7 @@ import de.thi.mynd.topic.repository.TopicRepository;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-
 import java.util.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -95,7 +93,8 @@ class TopicGraphServiceImplTest {
     // Act
     // This assumes getGraphTopicDtosWithNeighbors is an internal method
     // that likely calls mappingRegistry or other repo methods.
-    var result = topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(5, creatorId);
+    var result =
+        topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(5, creatorId);
 
     // Assert
     verify(topicGraphRepository).findNMostPopular(5, creatorId);
@@ -107,7 +106,7 @@ class TopicGraphServiceImplTest {
     // Arrange
     List<UUID> categories = List.of(UUID.randomUUID());
     when(topicGraphRepository.findNMostPopularFilterByCategoryIds(anyInt(), anyList(), anyString()))
-            .thenReturn(Collections.emptyList());
+        .thenReturn(Collections.emptyList());
 
     // Act
     topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(5, categories, creatorId);
@@ -126,14 +125,16 @@ class TopicGraphServiceImplTest {
     mainTopic.ownedAssociations = List.of(association);
 
     when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.of(mainTopic));
-    when(mappingRegistry.mapList(anyList(), eq(GraphTopicDto.class))).thenReturn(List.of(GraphTopicDto.builder().build()));
+    when(mappingRegistry.mapList(anyList(), eq(GraphTopicDto.class)))
+        .thenReturn(List.of(GraphTopicDto.builder().build()));
 
     // Act
     List<GraphTopicDto> result = topicGraphService.getOwnedNeighborsOfTopic(topicId);
 
     // Assert
     assertFalse(result.isEmpty());
-    verify(mappingRegistry).mapList(argThat(list -> list.contains(neighborTopic)), eq(GraphTopicDto.class));
+    verify(mappingRegistry)
+        .mapList(argThat(list -> list.contains(neighborTopic)), eq(GraphTopicDto.class));
   }
 
   @Test
@@ -142,9 +143,11 @@ class TopicGraphServiceImplTest {
     when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.empty());
 
     // Act & Assert
-    assertThrows(EntityInstanceNotFoundException.class, () -> {
-      topicGraphService.getOwnedNeighborsOfTopic(topicId);
-    });
+    assertThrows(
+        EntityInstanceNotFoundException.class,
+        () -> {
+          topicGraphService.getOwnedNeighborsOfTopic(topicId);
+        });
   }
 
   @Test
