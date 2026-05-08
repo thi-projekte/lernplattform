@@ -87,7 +87,7 @@ class TopicGraphServiceImplTest {
   @Test
   void testGetNMostPopularTopics() {
     // Arrange
-    List<Topic> mockTopics = List.of(new Topic());
+    List<Topic> mockTopics = List.of(testTopic);
     when(topicGraphRepository.findNMostPopular(5, creatorId)).thenReturn(mockTopics);
     when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.ofNullable(testTopic));
 
