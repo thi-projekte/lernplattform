@@ -316,9 +316,15 @@ export const buildSkillTreeGraph = (
   const rootBranchByTopicId = new Map(
     topics.map((topic) => [topic.id, getRootBranchId(topic.id, rootId, parents)])
   );
+  const connectedTopics = topics.filter(
+    (topic) => topic.id === rootId || (parents.get(topic.id) ?? null) !== null
+  );
+  const disconnectedTopics = topics
+    .filter((topic) => !connectedTopics.some((connectedTopic) => connectedTopic.id === topic.id))
+    .sort((a, b) => a.title.localeCompare(b.title));
   const groupedByLevel = new Map<number, GraphTopicDto[]>();
 
-  [...topics]
+  [...connectedTopics]
     .sort((a, b) => {
       const levelDiff = (levels.get(a.id) ?? 0) - (levels.get(b.id) ?? 0);
       if (levelDiff !== 0) return levelDiff;
@@ -337,14 +343,19 @@ export const buildSkillTreeGraph = (
 
   const verticalLayoutConfig = {
     levelDistance: 240,
-    siblingDistance: 220,
+    branchDistance: 320,
+    siblingDistance: 180,
     origin: { x: 520, y: 140 },
+    disconnectedColumnOffset: 320,
+    disconnectedRowDistance: 180,
   };
   const horizontalLayoutConfig = {
     levelDistance: 320,
     branchDistance: 180,
     intraBranchDistance: 90,
     origin: { x: 180, y: 320 },
+    disconnectedLevelOffset: 260,
+    disconnectedNodeDistance: 180,
   };
 
   const horizontalBranchOrder = Array.from(
@@ -363,14 +374,23 @@ export const buildSkillTreeGraph = (
   const horizontalBranchIndex = new Map(
     horizontalBranchOrder.map((branchId, index) => [branchId, index])
   );
+  const verticalBranchOrder = Array.from(
+    new Set(
+      [...connectedTopics]
+        .sort((a, b) => {
+          const branchA = rootBranchByTopicId.get(a.id) ?? a.id;
+          const branchB = rootBranchByTopicId.get(b.id) ?? b.id;
+          if (branchA !== branchB) return branchA.localeCompare(branchB);
+          return a.title.localeCompare(b.title);
+        })
+        .map((topic) => rootBranchByTopicId.get(topic.id) ?? topic.id)
+        .filter((branchId) => branchId !== rootId)
+    )
+  );
+  const verticalBranchIndex = new Map(verticalBranchOrder.map((branchId, index) => [branchId, index]));
 
   const nodes: SkillTreeNode[] = [];
   groupedByLevel.forEach((levelTopics, level) => {
-    const totalWidth =
-      orientation === 'vertical'
-        ? (levelTopics.length - 1) * verticalLayoutConfig.siblingDistance
-        : 0;
-
     levelTopics.forEach((topic, index) => {
       const stackOffset =
         level *
@@ -380,11 +400,34 @@ export const buildSkillTreeGraph = (
       let position;
 
       if (orientation === 'vertical') {
-        const inlineOffset = index * verticalLayoutConfig.siblingDistance - totalWidth / 2;
-        position = {
-          x: verticalLayoutConfig.origin.x + inlineOffset,
-          y: verticalLayoutConfig.origin.y + stackOffset,
-        };
+        const branchId = rootBranchByTopicId.get(topic.id) ?? topic.id;
+
+        if (topic.id === rootId) {
+          position = {
+            x: verticalLayoutConfig.origin.x,
+            y: verticalLayoutConfig.origin.y,
+          };
+        } else {
+          const branchIndex = verticalBranchIndex.get(branchId) ?? index;
+          const centeredBranchOffset =
+            (branchIndex - (verticalBranchOrder.length - 1) / 2) *
+            verticalLayoutConfig.branchDistance;
+          const levelBranchTopics = levelTopics.filter(
+            (candidate) => (rootBranchByTopicId.get(candidate.id) ?? candidate.id) === branchId
+          );
+          const branchTopicIndex = levelBranchTopics.findIndex(
+            (candidate) => candidate.id === topic.id
+          );
+          const centeredSiblingOffset =
+            (branchTopicIndex - (levelBranchTopics.length - 1) / 2) *
+            verticalLayoutConfig.siblingDistance;
+
+          position = {
+            x:
+              verticalLayoutConfig.origin.x + centeredBranchOffset + centeredSiblingOffset,
+            y: verticalLayoutConfig.origin.y + stackOffset,
+          };
+        }
       } else {
         const branchId = rootBranchByTopicId.get(topic.id) ?? topic.id;
 
@@ -416,6 +459,13 @@ export const buildSkillTreeGraph = (
         }
       }
 
+      if (!position) {
+        position = {
+          x: verticalLayoutConfig.origin.x,
+          y: verticalLayoutConfig.origin.y,
+        };
+      }
+
       nodes.push({
         id: topic.id,
         type: 'skillTreeTopic',
@@ -442,6 +492,44 @@ export const buildSkillTreeGraph = (
     });
   });
 
+  if (disconnectedTopics.length > 0) {
+    disconnectedTopics.forEach((topic, index) => {
+      const position =
+        orientation === 'vertical'
+          ? {
+              x: verticalLayoutConfig.origin.x + verticalLayoutConfig.disconnectedColumnOffset,
+              y: verticalLayoutConfig.origin.y + index * verticalLayoutConfig.disconnectedRowDistance,
+            }
+          : {
+              x:
+                horizontalLayoutConfig.origin.x +
+                index * horizontalLayoutConfig.disconnectedNodeDistance,
+              y:
+                horizontalLayoutConfig.origin.y +
+                horizontalLayoutConfig.disconnectedLevelOffset,
+            };
+
+      nodes.push({
+        id: topic.id,
+        type: 'skillTreeTopic',
+        position,
+        data: {
+          kind: 'skill-topic',
+          title: topic.title,
+          categories: topic.categories,
+          creatorId: topic.creatorId,
+          creatorFullName: topic.creatorFullName,
+          isOwned:
+            currentUsername !== undefined &&
+            currentUsername.trim().length > 0 &&
+            topic.creatorId.toLowerCase() === currentUsername.toLowerCase(),
+          role: 'disconnected',
+          payload: topic,
+        },
+      });
+    });
+  }
+
   const edges: Edge[] = [];
   const seenEdges = new Set<string>();
   const nodePositions = new Map(nodes.map((node) => [node.id, node.position]));
@@ -463,7 +551,6 @@ export const buildSkillTreeGraph = (
           : 0;
       const sourceHandle = getHandleForAngle(angle);
       const targetHandle = getOppositeHandle(sourceHandle);
-
       edges.push({
         id: `skill-edge-${edgeKey}`,
         source: topic.id,
