@@ -107,7 +107,11 @@ const HomePage = () => {
 
       nodes.forEach((currentNode) => {
         const previous = currentOrientationPositions[currentNode.id];
-        if (!previous || previous.x !== currentNode.position.x || previous.y !== currentNode.position.y) {
+        if (
+          !previous ||
+          previous.x !== currentNode.position.x ||
+          previous.y !== currentNode.position.y
+        ) {
           nextOrientationPositions[currentNode.id] = currentNode.position;
           changed = true;
         }
