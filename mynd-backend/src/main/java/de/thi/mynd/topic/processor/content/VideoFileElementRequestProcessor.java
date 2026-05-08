@@ -37,6 +37,7 @@ public final class VideoFileElementRequestProcessor
     VideoFileElement contentElement = new VideoFileElement();
     contentElement.title = request.title;
     contentElement.type = ContentType.VIDEO_FILE;
+    contentElement.icon = request.icon;
     contentElement.s3Key = "";
     contentElement.originalFileName = request.originalFileName;
 
