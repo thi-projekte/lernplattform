@@ -19,6 +19,7 @@ export type ContentElementType = z.infer<typeof ContentElementTypeSchema>;
 const ContentElementRequestSchema = z.object({
   title: z.string(),
   type: ContentElementTypeSchema,
+  icon: z.string().min(1),
 });
 
 export const PdfElementRequestSchema = z
@@ -101,6 +102,7 @@ const ContentElementDtoSchema = z
   .object({
     title: z.string(),
     type: ContentElementTypeSchema,
+    icon: z.string().nullish(),
     rank: z.number().optional(),
   })
   .extend(BaseEntitySchema.shape);
