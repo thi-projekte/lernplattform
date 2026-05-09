@@ -6,7 +6,7 @@ import {
   type TableOptions,
   flexRender,
 } from '@tanstack/react-table';
-import { Alert, Box, Group, Pagination, ScrollArea, Select, Table, Text } from '@mantine/core';
+import { Alert, Group, Pagination, Select, Table, Text } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 
 export interface EntityTableProps<T> {
@@ -42,40 +42,38 @@ function EntityTable<T extends RowData>({
   const { t } = useTranslation();
 
   return (
-    <Box p="md">
-      <ScrollArea>
-        <Table
-          highlightOnHover
-          withTableBorder
-          style={{
-            opacity: isFetching ? 0.1 : 1,
-            transition: 'opacity 0.2s ease',
-          }}
-        >
-          <Table.Thead>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <Table.Tr key={headerGroup.id}>
-                {headerGroup.headers.map((header) => (
-                  <Table.Th key={header.id}>
-                    {flexRender(header.column.columnDef.header, header.getContext())}
-                  </Table.Th>
-                ))}
-              </Table.Tr>
-            ))}
-          </Table.Thead>
-          <Table.Tbody>
-            {table.getRowModel().rows.map((row) => (
-              <Table.Tr key={row.id}>
-                {row.getVisibleCells().map((cell) => (
-                  <Table.Td key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </Table.Td>
-                ))}
-              </Table.Tr>
-            ))}
-          </Table.Tbody>
-        </Table>
-      </ScrollArea>
+    <>
+      <Table
+        highlightOnHover
+        withTableBorder
+        style={{
+          opacity: isFetching ? 0.1 : 1,
+          transition: 'opacity 0.2s ease',
+        }}
+      >
+        <Table.Thead>
+          {table.getHeaderGroups().map((headerGroup) => (
+            <Table.Tr key={headerGroup.id}>
+              {headerGroup.headers.map((header) => (
+                <Table.Th key={header.id}>
+                  {flexRender(header.column.columnDef.header, header.getContext())}
+                </Table.Th>
+              ))}
+            </Table.Tr>
+          ))}
+        </Table.Thead>
+        <Table.Tbody>
+          {table.getRowModel().rows.map((row) => (
+            <Table.Tr key={row.id}>
+              {row.getVisibleCells().map((cell) => (
+                <Table.Td key={cell.id}>
+                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                </Table.Td>
+              ))}
+            </Table.Tr>
+          ))}
+        </Table.Tbody>
+      </Table>
 
       {data.length === 0 && !isFetching && (
         <Alert color="yellow" mt={12}>
@@ -107,7 +105,7 @@ function EntityTable<T extends RowData>({
           />
         </Group>
       )}
-    </Box>
+    </>
   );
 }
 
