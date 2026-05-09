@@ -4,4 +4,4 @@ import de.thi.mynd.topic.entity.Category;
 
 import java.util.Map;
 
-public final record LoadedCategoriesEvent(Map<String, Category> mapping) {}
+public record LoadedCategoriesEvent(Map<String, Category> mapping) {}

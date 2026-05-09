@@ -3,7 +3,7 @@ package de.thi.mynd.demoContent.loader;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.thi.mynd.demoContent.event.LoadedCategoriesEvent;
-import de.thi.mynd.demoContent.models.CategoryModel;
+import de.thi.mynd.demoContent.event.LoadedTopicsEvent;
 import de.thi.mynd.demoContent.models.TopicModel;
 import de.thi.mynd.topic.entity.*;
 import de.thi.mynd.topic.repository.ContentElementRepository;
@@ -11,18 +11,23 @@ import de.thi.mynd.topic.repository.TopicRepository;
 import io.quarkus.arc.lookup.LookupIfProperty;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.enterprise.event.Event;
 import jakarta.enterprise.event.Observes;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @ApplicationScoped
 @LookupIfProperty(name = "mynd.loadDemoContent", stringValue = "true")
 public final class TopicLoader {
+
+    @Inject
+    Event<LoadedTopicsEvent> topicsEventEvent;
 
     @Inject
     TopicRepository topicRepository;
@@ -41,6 +46,7 @@ public final class TopicLoader {
         }
 
         List<TopicModel> topics = loadJson();
+        Map<String, Topic> mapping = new HashMap<>();
 
         for (TopicModel model : topics) {
             Topic topic = new Topic();
@@ -51,6 +57,8 @@ public final class TopicLoader {
             topic.categories = model.getCategories().stream().map(c -> event.mapping().get(c)).toList();
             topicRepository.persist(topic);
 
+            mapping.put(model.getIdentifier(), topic);
+
             List<ContentElement> contentElements = model.getContentElements().stream().map(ce -> mapToContentElement(ce)).toList();
             for (ContentElement ce : contentElements) {
                 ce.topic = topic;
@@ -60,7 +68,8 @@ public final class TopicLoader {
 
         topicRepository.flush();
 
-        Log.info("Successfully initialized topic");
+        Log.info("Successfully initialized topics");
+        topicsEventEvent.fire(new LoadedTopicsEvent(mapping));
     }
 
     private List<TopicModel> loadJson() throws IOException {

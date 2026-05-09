@@ -1,5 +1,6 @@
 [
   {
+    "identifier": "whatIsAi",
     "title": "Was ist Künstliche Intelligenz?",
     "teaser": "Ein Einstieg in die Grundidee von KI und warum sie heute relevant ist.",
     "creatorId": "admin",
@@ -24,6 +25,7 @@
     ]
   },
   {
+    "identifier": "aiMlAndDl",
     "title": "KI, Machine Learning und Deep Learning",
     "teaser": "Abgrenzung der wichtigsten Begriffe im KI-Umfeld.",
     "creatorId": "admin",
@@ -48,6 +50,7 @@
     ]
   },
   {
+    "identifier": "supervisedLearning",
     "title": "Supervised Learning",
     "teaser": "Wie Maschinen mit Beispieldaten und bekannten Zielwerten lernen.",
     "creatorId": "admin",
@@ -72,6 +75,7 @@
     ]
   },
   {
+    "identifier": "decTrees",
     "title": "Entscheidungsbäume",
     "teaser": "Ein einfach verständliches ML-Modell mit Wenn-Dann-Logik.",
     "creatorId": "admin",
@@ -96,6 +100,7 @@
     ]
   },
   {
+    "identifier": "neuralNetworks",
     "title": "Neuronale Netze",
     "teaser": "Grundidee künstlicher neuronaler Netze.",
     "creatorId": "admin",
@@ -120,6 +125,7 @@
     ]
   },
   {
+    "identifier": "genAi",
     "title": "Generative KI",
     "teaser": "KI-Systeme, die neue Inhalte wie Text, Bilder oder Code erzeugen.",
     "creatorId": "admin",
@@ -144,6 +150,7 @@
     ]
   },
   {
+    "identifier": "prompting",
     "title": "Prompting-Grundlagen",
     "teaser": "Wie man bessere Eingaben für generative KI formuliert.",
     "creatorId": "admin",
@@ -168,6 +175,7 @@
     ]
   },
   {
+    "identifier": "risksAndChances",
     "title": "Chancen und Risiken von KI",
     "teaser": "Einordnung von Nutzen, Grenzen und Risiken künstlicher Intelligenz.",
     "creatorId": "admin",
