@@ -14,8 +14,7 @@ const ContentSidebarContent = ({ selectedElement }: ContentSidebarContentProps) 
   const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
   const Icon =
-    resolveIcon(selectedElement.icon) ??
-    resolveIcon(DEFAULT_ICON_BY_TYPE[selectedElement.type]);
+    resolveIcon(selectedElement.icon) ?? resolveIcon(DEFAULT_ICON_BY_TYPE[selectedElement.type]);
 
   return (
     <>
