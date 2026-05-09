@@ -1,0 +1,202 @@
+[
+  {
+    "identifier": "whatIsAi",
+    "title": "Was ist Künstliche Intelligenz?",
+    "teaser": "Ein Einstieg in die Grundidee von KI und warum sie heute relevant ist.",
+    "creatorId": "admin",
+    "categories": ["technology", "ki", "digitalTechnlogies"],
+    "duration": 20,
+    "contentElements": [
+      {
+        "title": "Kurzüberlick",
+        "type": "RTF",
+        "rtfText": "<p>Künstliche Intelligenz beschreibt Systeme, die Aufgaben übernehmen, für die normalerweise <b>menschliche Intelligenz</b> nötig wäre.<p>KI ist dabei kein einzelnes Programm, sondern ein <b>Sammelbegriff</b> für unterschiedliche Verfahren und Anwendungen.<p>Dazu gehören zum Beispiel:<ul><li><b>Sprache verstehen:</b> Verarbeitung natürlicher Sprache.<li><b>Bilder erkennen:</b> Analyse visueller Informationen.<li><b>Texte erzeugen:</b> Generierung von Inhalten.<li><b>Entscheidungen unterstützen:</b> Hilfe bei komplexen Problemen.</ul>"
+      },
+      {
+        "title": "Externer Einstieg",
+        "type": "URI",
+        "uri": "https://www.europarl.europa.eu/topics/de/article/20200827STO85804/was-ist-kunstliche-intelligenz-und-wie-wird-sie-genutzt"
+      },
+      {
+        "title": "KI einfach erklärt",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=fT69SLK2m9I"
+      }
+    ]
+  },
+  {
+    "identifier": "aiMlAndDl",
+    "title": "KI, Machine Learning und Deep Learning",
+    "teaser": "Abgrenzung der wichtigsten Begriffe im KI-Umfeld.",
+    "creatorId": "admin",
+    "categories": ["technology", "ki", "digitalTechnlogies"],
+    "duration": 20,
+    "contentElements": [
+      {
+        "title": "Begriffserklärung",
+        "type": "RTF",
+        "rtfText": "KI ist der Oberbegriff. Machine Learning ist ein Teilbereich davon, bei dem Systeme aus Daten lernen. Deep Learning ist wiederum ein Teilbereich von Machine Learning und nutzt künstliche neuronale Netze mit vielen Schichten. Für die Demo ist diese Abgrenzung wichtig, weil sie eine saubere Lernreihenfolge erzeugt."
+      },
+      {
+        "title": "Glossar",
+        "type": "URI",
+        "uri": "https://www.kiberatung.de/ki-glossar?utm_medium=organic&utm_source=kiberatung.de%2Fki-glossar&utm_content=google"
+      },
+      {
+        "title": "Begriffe visuell erklärt",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=Ip1a2JHdt3E"
+      }
+    ]
+  },
+  {
+    "identifier": "supervisedLearning",
+    "title": "Supervised Learning",
+    "teaser": "Wie Maschinen mit Beispieldaten und bekannten Zielwerten lernen.",
+    "creatorId": "admin",
+    "categories": ["ki"],
+    "duration": 80,
+    "contentElements": [
+      {
+        "title": "Grundprinzip",
+        "type": "RTF",
+        "rtfText": "Beim Supervised Learning lernt ein Modell anhand von Beispielen, bei denen die richtige Antwort bereits bekannt ist. Beispiel: Ein Modell bekommt Kundendaten und die Information, ob ein Kunde gekündigt hat. Daraus lernt es Muster, um neue Fälle vorherzusagen. Wichtig sind Eingabedaten, Zielvariable, Training und anschließende Vorhersage."
+      },
+      {
+        "title": "Externe Lernresource",
+        "type": "URI",
+        "uri": "https://datasolut.com/wiki/supervised-learning/"
+      },
+      {
+        "title": "Podcast zu dem Thema",
+        "type": "SPOTIFY_LINK",
+        "uri": "https://open.spotify.com/episode/1VGDN47ZK6Mw018blILihn?si=qsMaqLeNTcKo75_DhiBL_w"
+      }
+    ]
+  },
+  {
+    "identifier": "decTrees",
+    "title": "Entscheidungsbäume",
+    "teaser": "Ein einfach verständliches ML-Modell mit Wenn-Dann-Logik.",
+    "creatorId": "admin",
+    "categories": ["ki"],
+    "duration": 60,
+    "contentElements": [
+      {
+        "title": "Kurzbeschreibung",
+        "type": "RTF",
+        "rtfText": "Ein Entscheidungsbaum teilt Daten Schritt für Schritt anhand von Merkmalen auf. Jede Verzweigung entspricht einer Regel. Am Ende steht eine Entscheidung oder Vorhersage, zum Beispiel ob ein Kunde kauft oder nicht. Entscheidungsbäume sind für eine Demo stark, weil man die Logik gut visualisieren kann."
+      },
+      {
+        "title": "Entscheidungsbaum erklärt",
+        "type": "URI",
+        "uri": "https://www.taralino.de/courses/decisiontree"
+      },
+      {
+        "title": "Praxisbeispiel",
+        "type": "URI",
+        "uri": "https://miro.com/de/diagramm/was-ist-ein-entscheidungsbaum/"
+      }
+    ]
+  },
+  {
+    "identifier": "neuralNetworks",
+    "title": "Neuronale Netze",
+    "teaser": "Grundidee künstlicher neuronaler Netze.",
+    "creatorId": "admin",
+    "categories": ["ki"],
+    "duration": 60,
+    "contentElements": [
+      {
+        "title": "Grundidee",
+        "type": "RTF",
+        "rtfText": "Neuronale Netze bestehen aus verbundenen künstlichen Neuronen. Eingabedaten werden durch mehrere Schichten verarbeitet. Jede Verbindung hat ein Gewicht. Durch Training werden diese Gewichte angepasst, damit das Netz bessere Vorhersagen macht. Für die Demo ist dieser Node eine Vertiefung nach den ML-Grundlagen."
+      },
+      {
+        "title": "Interaktive Erklärung",
+        "type": "URI",
+        "uri": "https://www.hartundtrocken.de/my-product/interaktiv-neuronales-netz/"
+      },
+      {
+        "title": "Neuronale Netze animiert",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=1fQrOek4buQ"
+      }
+    ]
+  },
+  {
+    "identifier": "genAi",
+    "title": "Generative KI",
+    "teaser": "KI-Systeme, die neue Inhalte wie Text, Bilder oder Code erzeugen.",
+    "creatorId": "admin",
+    "categories": ["ki"],
+    "duration": 45,
+    "contentElements": [
+      {
+        "title": "Was ist generative KI?",
+        "type": "RTF",
+        "rtfText": "Generative KI erzeugt neue Inhalte. Beispiele sind Chatbots, Bildgeneratoren oder Systeme, die Code schreiben. Sie erkennt nicht nur Muster, sondern nutzt gelernte Muster, um neue Ausgaben zu erstellen. Dadurch wird KI für viele Nutzer direkt sichtbar und praktisch nutzbar."
+      },
+      {
+        "title": "Info-Seite",
+        "type": "URI",
+        "uri": "https://www.elastic.co/de/what-is/generative-ai"
+      },
+      {
+        "title": "Generative KI erklärt",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=oLphBadhqWk"
+      }
+    ]
+  },
+  {
+    "identifier": "prompting",
+    "title": "Prompting-Grundlagen",
+    "teaser": "Wie man bessere Eingaben für generative KI formuliert.",
+    "creatorId": "admin",
+    "categories": ["ki"],
+    "duration": 60,
+    "contentElements": [
+      {
+        "title": "Prompting-Regel",
+        "type": "RTF",
+        "rtfText": "Ein guter Prompt enthält Ziel, Kontext, gewünschtes Format und Einschränkungen. Statt „Erklär mir KI“ wäre besser: „Erkläre KI für einen Studienanfänger in fünf Stichpunkten mit einfachem Beispiel.“ Dieser Node eignet sich für eine interaktive Demo, weil Nutzer sofort einen praktischen Nutzen erkennen."
+      },
+      {
+        "title": "Guide",
+        "type": "URI",
+        "uri": "https://bernhardgmeiner.com/wp-content/uploads/2025/03/prompting-guide_03_25.pdf"
+      },
+      {
+        "title": "Kurzer Audio Input",
+        "type": "URI",
+        "uri": "https://www.deutschlandfunk.de/crashkurs-prompting-wie-nutze-ich-ki-chatbots-effizient-dlf-55833e09-100.html"
+      }
+    ]
+  },
+  {
+    "identifier": "risksAndChances",
+    "title": "Chancen und Risiken von KI",
+    "teaser": "Einordnung von Nutzen, Grenzen und Risiken künstlicher Intelligenz.",
+    "creatorId": "admin",
+    "categories": ["ki"],
+    "duration": 20,
+    "contentElements": [
+      {
+        "title": "Einordnung",
+        "type": "RTF",
+        "rtfText": "KI kann Arbeit erleichtern, Wissen zugänglicher machen und Prozesse automatisieren. Gleichzeitig gibt es Risiken wie falsche Ergebnisse, Bias, Datenschutzprobleme, Abhängigkeit von Systemen und fehlende Nachvollziehbarkeit. Dieser Node beendet den Lernpfad mit einer kritischen Reflexion."
+      },
+      {
+        "title": "Ethik und Risiken",
+        "type": "URI",
+        "uri": "https://www.europarl.europa.eu/topics/de/article/20200918STO87404/kunstliche-intelligenz-chancen-und-risiken"
+      },
+      {
+        "title": "Chancen und Risiken",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://youtu.be/0TAQwTWcW_Q?si=9P8zCTtXJG5C67fK"
+      }
+    ]
+  }
+]

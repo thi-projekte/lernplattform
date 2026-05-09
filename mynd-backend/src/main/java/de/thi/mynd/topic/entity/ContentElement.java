@@ -24,7 +24,7 @@ public abstract class ContentElement extends BaseEntity {
   @Column(name = "rank", nullable = true)
   public Integer rank;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "topic_id")
   @OnDelete(action = OnDeleteAction.CASCADE)
   public Topic topic;
