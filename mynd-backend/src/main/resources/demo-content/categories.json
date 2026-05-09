@@ -16,5 +16,17 @@
     "creatorId": "admin",
     "title": "Languages",
     "color": "00CEC8"
+  },
+  {
+    "identifier": "ki",
+    "creatorId": "admin",
+    "title": "Künstliche Intelligenz",
+    "color": "bd34eb"
+  },
+  {
+    "identifier": "digitalTechnlogies",
+    "creatorId": "admin",
+    "title": "Digitale Technologien",
+    "color": "34eb6b"
   }
 ]

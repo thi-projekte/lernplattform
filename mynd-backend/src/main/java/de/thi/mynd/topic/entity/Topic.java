@@ -20,7 +20,7 @@ public class Topic extends BaseEntity {
 
   @Column public Integer popularityScore = 0;
 
-  @ManyToMany
+  @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(
       name = "join_topic_category",
       joinColumns = @JoinColumn(name = "topic_id"),
