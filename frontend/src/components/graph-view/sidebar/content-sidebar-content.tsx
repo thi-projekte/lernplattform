@@ -1,10 +1,11 @@
 import { ActionIcon, Badge, Group, Modal, ThemeIcon, Title } from '@mantine/core';
+import { createElement } from 'react';
 import type { AnyContentElementDto } from '../../../schemas/content-element';
 import ContentElementDisplay from '../../topic/content-element-display';
 import { useTranslation } from 'react-i18next';
 import { useDisclosure } from '@mantine/hooks';
 import { IconMaximize } from '@tabler/icons-react';
-import { DEFAULT_ICON_BY_TYPE, resolveIcon } from '../../icon-picker/icons';
+import { CONTENT_ICONS, DEFAULT_ICON_BY_TYPE } from '../../icon-picker/icons';
 
 interface ContentSidebarContentProps {
   selectedElement: AnyContentElementDto;
@@ -13,16 +14,17 @@ interface ContentSidebarContentProps {
 const ContentSidebarContent = ({ selectedElement }: ContentSidebarContentProps) => {
   const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
-  const Icon =
-    resolveIcon(selectedElement.icon) ?? resolveIcon(DEFAULT_ICON_BY_TYPE[selectedElement.type]);
+  const iconComponent =
+    (selectedElement.icon ? CONTENT_ICONS[selectedElement.icon] : undefined) ??
+    CONTENT_ICONS[DEFAULT_ICON_BY_TYPE[selectedElement.type]];
 
   return (
     <>
       <Group justify="space-between" align="flex-start">
         <Group gap="sm" align="flex-start" wrap="nowrap">
-          {Icon && (
+          {iconComponent && (
             <ThemeIcon size={36} radius="md" variant="light" color="teal">
-              <Icon size={22} />
+              {createElement(iconComponent, { size: 22 })}
             </ThemeIcon>
           )}
           <div>
