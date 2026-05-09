@@ -6,8 +6,8 @@ import lombok.Getter;
 @RegisterForReflection
 @Getter
 public final class CategoryModel {
-    public String identifier;
-    public String creatorId;
-    public String title;
-    public String color;
+  public String identifier;
+  public String creatorId;
+  public String title;
+  public String color;
 }
