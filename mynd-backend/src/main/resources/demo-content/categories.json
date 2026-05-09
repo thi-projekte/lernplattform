@@ -1,0 +1,20 @@
+[
+  {
+    "identifier": "technology",
+    "creatorId": "admin",
+    "title": "Technology",
+    "color": "EE4B2B"
+  },
+  {
+    "identifier": "health",
+    "creatorId": "admin",
+    "title": "Health",
+    "color": "32CD32"
+  },
+  {
+    "identifier": "languages",
+    "creatorId": "admin",
+    "title": "Languages",
+    "color": "00CEC8"
+  }
+]
