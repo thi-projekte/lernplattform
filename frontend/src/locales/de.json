@@ -51,7 +51,8 @@
     },
     "selectedTopic": "Ausgewählte Node",
     "unknownCreator": "Unbekannter Ersteller",
-    "loadingNeighbors": "Verbundene Themen werden geladen..."
+    "loadingNeighbors": "Verbundene Themen werden geladen...",
+    "openDetails": "Detailansicht öffnen"
   },
   "common": {
     "rowsPerPage": "Einträge pro Seite",

@@ -51,7 +51,8 @@
     },
     "selectedTopic": "Selected topic",
     "unknownCreator": "Unknown creator",
-    "loadingNeighbors": "Loading connected topics..."
+    "loadingNeighbors": "Loading connected topics...",
+    "openDetails": "Open detail view"
   },
   "common": {
     "rowsPerPage": "Rows per page",
