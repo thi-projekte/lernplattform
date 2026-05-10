@@ -62,19 +62,30 @@ const TopicDetailsPage = () => {
           overflow: 'hidden',
         }}
       >
-        <div style={{ flex: 1, position: 'relative', backgroundColor: '#f8f9fa' }}>
+        <div
+          style={{
+            flex: 1,
+            position: 'relative',
+            borderRadius: 16,
+            overflow: 'hidden',
+          }}
+        >
           <TopicGraphView
             nodes={nodes}
             edges={edges}
             onNodeClick={onNodeClick}
             nodeTypes={nodeTypes}
+            backgroundColor="#d9e7f3"
           />
         </div>
 
         <Paper
           shadow="md"
           p="xl"
-          style={{ width: 400, borderLeft: '1px solid #e9ecef', overflowY: 'auto' }}
+          style={{
+            width: 400,
+            overflowY: 'auto',
+          }}
         >
           {selectedElement ? (
             <Stack gap="md">

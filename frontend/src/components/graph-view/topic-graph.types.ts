@@ -1,5 +1,6 @@
 import type { Node } from '@xyflow/react';
 import type { AnyContentElementDto } from '../../schemas/content-element';
+import type { GraphTopicDto } from '../../schemas/topic-graph.ts';
 import type { Category, ListTopicDto, Topic } from '../../schemas/topic';
 
 export interface TopicAssociationsGraphInput extends Record<string, unknown> {
@@ -17,7 +18,13 @@ export interface GraphTopicNodeData extends Record<string, unknown> {
   creatorFullName?: string;
   isRoot?: boolean;
   isIsolated?: boolean;
-  payload: TopicAssociationsGraphInput | Omit<Topic, 'relatedTopics'> | Topic | ListTopicDto;
+  isOwned?: boolean;
+  payload:
+    | TopicAssociationsGraphInput
+    | Omit<Topic, 'relatedTopics'>
+    | Topic
+    | ListTopicDto
+    | GraphTopicDto;
 }
 
 export interface GraphContentNodeData extends Record<string, unknown> {

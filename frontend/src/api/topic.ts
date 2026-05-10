@@ -52,7 +52,7 @@ export const useQueryPersonalTopicsPaginated = (pagination: PaginationState) => 
 };
 
 const fetchTopicsList = async (search: string): Promise<ListTopicDto[]> => {
-  const result = await apiClient.get(`/topics?search=${search}`, {
+  const result = await apiClient.get(`/topics?search=${encodeURIComponent(search)}`, {
     validateStatus: (status) => status <= 204,
   });
   return z.array(ListTopicDtoSchema).parse(result.data);
@@ -61,6 +61,7 @@ const fetchTopicsList = async (search: string): Promise<ListTopicDto[]> => {
 export const useQuerySearchTopic = (search: string) => {
   return useQuery({
     queryKey: ['topics', search],
+    enabled: search.trim().length > 0,
     queryFn: () => fetchTopicsList(search),
   });
 };
@@ -155,9 +156,10 @@ const fetchTopic = async (topicId: string, withOwnedRelatedTopics: boolean) => {
   return TopicSchema.parse(result.data);
 };
 
-export const useQueryTopic = (topicId: string, withOwnedRelatedTopics: boolean) => {
+export const useQueryTopic = (topicId: string, withOwnedRelatedTopics: boolean, enabled = true) => {
   return useQuery({
     queryKey: ['topic', topicId, withOwnedRelatedTopics],
+    enabled: enabled && topicId.length > 0,
     queryFn: () => fetchTopic(topicId, withOwnedRelatedTopics),
   });
 };

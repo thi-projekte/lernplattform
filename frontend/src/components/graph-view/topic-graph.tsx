@@ -59,7 +59,7 @@ const TopicGraphView = ({
   fitView = true,
   fitViewPadding = 0.2,
   fitViewMaxZoom,
-  backgroundColor = '#dee2e6',
+  backgroundColor = '#d9e7f3',
   backgroundGap = 16,
 }: TopicGraphViewProps) => {
   const [internalNodes, setInternalNodes, onNodesChange] = useNodesState(nodes);

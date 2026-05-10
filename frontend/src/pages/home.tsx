@@ -1,7 +1,9 @@
-import { Badge, Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
+import { Badge, Button, Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
 import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo, useState } from 'react';
+import { useNavigate } from 'react-router';
+import { IconEye } from '@tabler/icons-react';
 import { useUserService } from '../provider/user-provider.tsx';
 import {
   useFetchDirectNeighborQueries,
@@ -47,6 +49,7 @@ const mergeGraphTopics = (current: GraphTopicDto[], incoming: GraphTopicDto[]) =
 
 const HomePage = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const userProfile = useUserService();
   const { data, isLoading } = useFetchMostPopularTopicsWithNeighbors();
 
@@ -199,7 +202,6 @@ const HomePage = () => {
                   minHeight: 640,
                   borderRadius: 16,
                   overflow: 'hidden',
-                  background: '#fcfcfd',
                   border: '1px solid #e9ecef',
                 }}
               >
@@ -256,6 +258,16 @@ const HomePage = () => {
                             {t('journey.loadingNeighbors')}
                           </Text>
                         )}
+                        <Button
+                          leftSection={<IconEye size={16} />}
+                          variant="light"
+                          color="blue"
+                          fullWidth
+                          mt="sm"
+                          onClick={() => navigate(`/topics/${selectedTopic.id}/details`)}
+                        >
+                          {t('journey.openDetails')}
+                        </Button>
                       </Stack>
                     </Paper>
                   )}

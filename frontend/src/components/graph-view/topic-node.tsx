@@ -5,10 +5,14 @@ import type { GraphTopicNodeData } from './topic-graph.types';
 type TopicNodeProps = NodeProps<Node<GraphTopicNodeData>>;
 
 const TopicNode = ({ data, selected }: TopicNodeProps) => {
-  const accentColor = data.isRoot ? '#e03131' : data.isIsolated ? '#228be6' : '#f08c00';
+  const accentColor = data.isRoot
+    ? '#e03131'
+    : data.isIsolated || data.isOwned === false
+      ? '#228be6'
+      : '#f08c00';
   const backgroundColor = data.isRoot
     ? 'rgba(224, 49, 49, 0.10)'
-    : data.isIsolated
+    : data.isIsolated || data.isOwned === false
       ? 'rgba(34, 139, 230, 0.10)'
       : 'rgba(240, 140, 0, 0.10)';
 

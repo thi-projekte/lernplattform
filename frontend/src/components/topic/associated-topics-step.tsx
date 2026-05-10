@@ -194,14 +194,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                   {t('topic.graph.graphModeSearchHint')}
                 </Text>
                 {isolatedTopicCount > 0 && (
-                  <Paper
-                    radius="md"
-                    p="xs"
-                    style={{
-                      background: 'rgba(34, 139, 230, 0.06)',
-                      border: '1px solid rgba(34, 139, 230, 0.2)',
-                    }}
-                  >
+                  <Paper withBorder radius="md" p="xs">
                     <Stack gap={8}>
                       <Group justify="space-between" align="center" wrap="nowrap">
                         <Text fw={600} size="sm" c="blue.7">
@@ -216,13 +209,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       </Text>
                       <Stack gap={6}>
                         {searchSuggestions.map((suggestion) => (
-                          <Paper
-                            key={suggestion.id}
-                            withBorder
-                            radius="md"
-                            p="xs"
-                            style={{ background: 'rgba(255, 255, 255, 0.85)' }}
-                          >
+                          <Paper key={suggestion.id} withBorder radius="md" p="xs">
                             <Text fw={600} size="xs" truncate>
                               {suggestion.title}
                             </Text>

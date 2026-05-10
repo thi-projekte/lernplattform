@@ -135,7 +135,13 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <Box px="md" py="md">
+        <Box
+          px="md"
+          py="md"
+          style={{
+            minHeight: 'calc(100vh - 104px)',
+          }}
+        >
           {isCurrentRouteGranted ? children : <AccessDenied />}
         </Box>
       </AppShell.Main>

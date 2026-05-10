@@ -51,7 +51,8 @@
     },
     "selectedTopic": "Ausgewählte Node",
     "unknownCreator": "Unbekannter Ersteller",
-    "loadingNeighbors": "Verbundene Themen werden geladen..."
+    "loadingNeighbors": "Verbundene Themen werden geladen...",
+    "openDetails": "Detailansicht öffnen"
   },
   "common": {
     "rowsPerPage": "Einträge pro Seite",
@@ -158,6 +159,17 @@
       "clickAssociationToRemove": "Klicke auf eine Verbindungslinie, um das verknüpfte Thema zu entfernen.",
       "clickIsolatedTopicToAssociate": "Klicke auf einen isolierten Themenknoten, um eine Verknüpfung zu erstellen.",
       "viewportStatus": "Viewport x: {{x}}, y: {{y}}, Zoom: {{zoom}}"
+    },
+    "personalGraph": {
+      "selectedTopic": "Ausgewähltes Thema",
+      "emptySelection": "Klicke auf eine Node, um das Thema zu prüfen.",
+      "graphDescription": "Wechsle zwischen der Liste und einer Graphenansicht deiner eigenen Themen.",
+      "searchHintSelectOwned": "Wähle zuerst eines deiner eigenen Themen aus, um ein fremdes Thema zu verknüpfen.",
+      "keepAtLeastOneAssociation": "Mindestens ein verknüpftes Thema muss bestehen bleiben.",
+      "linkToSelectedTopic": "Mit ausgewähltem Thema verknüpfen",
+      "alreadyLinked": "Bereits verknüpft",
+      "ownedTopic": "Eigenes Thema",
+      "foreignTopic": "Fremdes Thema"
     }
   },
   "auth": {
