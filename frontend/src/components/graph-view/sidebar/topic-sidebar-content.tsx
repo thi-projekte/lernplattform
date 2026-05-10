@@ -24,7 +24,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
       </Group>
       <Text size="sm" c="dimmed">
         {t('topic.fields.estimatedLearningDuration')}: {selectedElement.estimatedLearningDuration}{' '}
-        Minuten
+        {t('topic.fields.estimatedLearningDurationSuffix')}
       </Text>
       <Text size="sm">{selectedElement.teaser}</Text>
 

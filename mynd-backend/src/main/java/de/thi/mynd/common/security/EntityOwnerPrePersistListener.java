@@ -16,6 +16,11 @@ public final class EntityOwnerPrePersistListener {
     if (entity instanceof BaseEntity baseEntity) {
       if (baseEntity.creatorId == null && !securityIdentity.isAnonymous()) {
         baseEntity.creatorId = securityIdentity.getPrincipal().getName();
+      } else {
+        // Dev fallback
+        if (baseEntity.creatorId == null) {
+          baseEntity.creatorId = "admin";
+        }
       }
     }
   }

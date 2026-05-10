@@ -38,6 +38,7 @@ public final class PdfElementRequestProcessor
     PdfElement contentElement = new PdfElement();
     contentElement.title = request.title;
     contentElement.type = ContentType.PDF;
+    contentElement.icon = request.icon;
     contentElement.s3Key = "";
     contentElement.originalFileName = request.originalFileName;
 

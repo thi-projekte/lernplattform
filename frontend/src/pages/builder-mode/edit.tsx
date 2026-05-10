@@ -58,7 +58,7 @@ const EditTopicPage = () => {
   return (
     <Layout>
       <Title mb={32}>{t('routes.editTopic')}</Title>
-      <Container>
+      <Container fluid px="md">
         <Tabs defaultValue="coreData">
           <Tabs.List mb={16}>
             <Tabs.Tab value="coreData">{t('topic.steps.coreDataTitle')}</Tabs.Tab>

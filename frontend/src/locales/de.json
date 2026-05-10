@@ -5,6 +5,54 @@
     "createTopic": "Thema erstellen",
     "editTopic": "Thema bearbeiten"
   },
+  "journey": {
+    "title": "Deine Journey Map",
+    "subtitle": "Hallo {{name}}, hier siehst du deinen aktuellen Lernfortschritt und die nächsten Schritte.",
+    "genericUser": "User",
+    "badges": {
+      "skillTree": "Skilltree",
+      "mynaActive": "Myna aktiv"
+    },
+    "orientation": {
+      "vertical": "Vertikal",
+      "horizontal": "Horizontal"
+    },
+    "tipBadge": "Tipp",
+    "tipText": "Klicke auf eine Node, um Details zu sehen und verbundene Themen zu laden.",
+    "focusMode": "Fokusmodus",
+    "actions": {
+      "focus": "Fokusmodus",
+      "assistant": "Assistenten-Einstellungen",
+      "zoomIn": "Vergrößern"
+    },
+    "stats": {
+      "completed": "Abgeschlossen",
+      "inProgress": "In Bearbeitung",
+      "xpCollected": "XP gesammelt",
+      "streakDays": "Streak Tage"
+    },
+    "legend": {
+      "completed": "Completed",
+      "inProgress": "In Bearbeitung",
+      "open": "Offen",
+      "recommended": "Empfohlen im Fokusmodus"
+    },
+    "assistant": {
+      "title": "Myna",
+      "subtitle": "KI-Assistent für Inhalte",
+      "searchPlaceholder": "Inhalte suchen...",
+      "suggestionTitle": "Vorschlag",
+      "suggestionText": "Wenn du bei deinem Skilltree besser werden willst, verknüpfe zuerst PDF-Notizen mit einem kurzen Video.",
+      "actions": {
+        "showPdfs": "Passende PDFs anzeigen",
+        "linkYoutube": "YouTube-Video verknüpfen",
+        "findPodcast": "Podcast als Quelle finden"
+      }
+    },
+    "selectedTopic": "Ausgewählte Node",
+    "unknownCreator": "Unbekannter Ersteller",
+    "loadingNeighbors": "Verbundene Themen werden geladen..."
+  },
   "common": {
     "rowsPerPage": "Einträge pro Seite",
     "noEntriesFound": "Keine Enträge gefunden",
@@ -45,6 +93,7 @@
       "categories": "Kategorien",
       "teaser": "Kurzbeschreibung",
       "estimatedLearningDuration": "Geschätzte Lerndauer",
+      "estimatedLearningDurationSuffix": "Minuten",
       "contentElementTitle": "Titel"
     },
     "errors": {
@@ -77,6 +126,46 @@
       "YOUTUBE_LINK": "YouTube",
       "URI": "URL",
       "IMAGE": "Bild"
+    },
+    "graph": {
+      "modeList": "Liste",
+      "modeGraph": "Graph",
+      "workspaceTitle": "Themengraph",
+      "workspaceDescription": "Verschiebe die Knoten, um den Graphen anzuordnen, klicke auf verbundene Linien zum Entfernen von Verknüpfungen und auf isolierte Themen zum Erstellen neuer Verknüpfungen.",
+      "inspectorTitle": "Inspector",
+      "inspectorDescription": "Prüfe das ausgewählte Thema und steuere Graph-Aktionen von hier aus.",
+      "graphModeRailTitle": "Ausgewählte Themen",
+      "graphModeRailDescription": "Suche nach Themen, um sie dem Graphen hinzuzufügen, und verwalte die aktuell ausgewählten Verknüpfungen.",
+      "graphModeSearchHint": "Suchergebnisse erscheinen als isolierte Knoten und können durch Klicken im Graphen hinzugefügt werden.",
+      "foundTopicsTitle": "Gefundene Themen",
+      "foundTopicsDescription": "Diese Themen sind aktuell als isolierte Knoten im Graphen sichtbar.",
+      "legendRoot": "Aktuelles Thema",
+      "legendAssociated": "Verknüpftes Thema",
+      "legendIsolated": "Isoliertes Thema",
+      "isolatedTopic": "Isoliertes Thema",
+      "addAssociation": "Verknüpfung erstellen",
+      "hideIsolatedTopic": "Aus dem Graphen ausblenden",
+      "removeAssociation": "Verknüpfung entfernen",
+      "relatedTopicsTableTitle": "Liste verknüpfter Themen",
+      "relatedTopicsTableDescription": "Die Tabelle zeigt alle aktuell verbundenen Themen und erlaubt das direkte Entfernen.",
+      "currentTopic": "Aktuelles Thema",
+      "associatedTopic": "Verknüpftes Thema",
+      "clickTopicNodeToSeeDetails": "Klicke auf einen Themenknoten, um die Details zu sehen.",
+      "clickAssociationToRemove": "Klicke auf eine Verbindungslinie, um das verknüpfte Thema zu entfernen.",
+      "clickIsolatedTopicToAssociate": "Klicke auf einen isolierten Themenknoten, um eine Verknüpfung zu erstellen.",
+      "viewportStatus": "Viewport x: {{x}}, y: {{y}}, Zoom: {{zoom}}"
     }
+  },
+  "auth": {
+    "accessDenied": "Zugriff verweigert",
+    "noAccessPageText": "Anscheinend verfügen Sie nicht über die erforderlichen Berechtigungen, um diese Seite anzuzeigen. Wenn Sie glauben, dass es sich um einen Fehler handelt, wenden Sie sich bitte an Ihren Administrator.",
+    "role_builder": "Builder",
+    "role_learner": "Learner"
+  },
+  "onboarding": {
+    "title": "Onboarding",
+    "role_selection_label": "Rolle auswählen",
+    "role_selection_placeholder": "Wähle deine Rolle",
+    "submit": "Bestätigen"
   }
 }
