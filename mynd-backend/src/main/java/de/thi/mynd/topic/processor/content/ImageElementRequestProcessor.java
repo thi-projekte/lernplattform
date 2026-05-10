@@ -19,13 +19,11 @@ import org.jboss.resteasy.reactive.multipart.FileUpload;
 @ApplicationScoped
 public final class ImageElementRequestProcessor
     implements ContentElementRequestProcessor<ImageElementRequest> {
-      
-  private static final long MAX_FILE_SIZE_BYTES = 10L * 1024 * 1024;
-  @Inject
-  ObjectStorageService storageService;
 
-  @Inject
-  ContentElementRepository contentElementRepository;
+  private static final long MAX_FILE_SIZE_BYTES = 10L * 1024 * 1024;
+  @Inject ObjectStorageService storageService;
+
+  @Inject ContentElementRepository contentElementRepository;
 
   @Override
   @Transactional
@@ -52,8 +50,9 @@ public final class ImageElementRequestProcessor
 
     contentElementRepository.persist(contentElement);
 
-    contentElement.s3Key = storageService.uploadObject(
-        contentElement, file.uploadedFile().toFile(), request.originalFileName);
+    contentElement.s3Key =
+        storageService.uploadObject(
+            contentElement, file.uploadedFile().toFile(), request.originalFileName);
 
     contentElementRepository.persistAndFlush(contentElement);
 

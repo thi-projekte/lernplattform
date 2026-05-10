@@ -24,14 +24,11 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 class AudioFileElementRequestProcessorTest {
 
-  @Inject
-  AudioFileElementRequestProcessor processor;
+  @Inject AudioFileElementRequestProcessor processor;
 
-  @InjectMock
-  ObjectStorageService storageService;
+  @InjectMock ObjectStorageService storageService;
 
-  @InjectMock
-  ContentElementRepository contentElementRepository;
+  @InjectMock ContentElementRepository contentElementRepository;
 
   @Test
   void testCreteContentElementFromRequest_Success() {
@@ -73,11 +70,12 @@ class AudioFileElementRequestProcessorTest {
     AudioFileElementRequest request = new AudioFileElementRequest();
 
     // Act & Assert
-    NoFileProvidedException ex = assertThrows(
-        NoFileProvidedException.class,
-        () -> {
-          processor.creteContentElementFromRequest(request, null);
-        });
+    NoFileProvidedException ex =
+        assertThrows(
+            NoFileProvidedException.class,
+            () -> {
+              processor.creteContentElementFromRequest(request, null);
+            });
     assertEquals("Audio file is missing", ex.getMessage());
   }
 
@@ -89,11 +87,12 @@ class AudioFileElementRequestProcessorTest {
     when(mockFile.contentType()).thenReturn("image/png"); // Wrong type
 
     // Act & Assert
-    InvalidFileTypeException ex = assertThrows(
-        InvalidFileTypeException.class,
-        () -> {
-          processor.creteContentElementFromRequest(request, mockFile);
-        });
+    InvalidFileTypeException ex =
+        assertThrows(
+            InvalidFileTypeException.class,
+            () -> {
+              processor.creteContentElementFromRequest(request, mockFile);
+            });
     assertEquals("The file is not a valid audio", ex.getMessage());
   }
 

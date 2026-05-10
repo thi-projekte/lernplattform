@@ -20,11 +20,9 @@ import org.jboss.resteasy.reactive.multipart.FileUpload;
 public final class AudioFileElementRequestProcessor
     implements ContentElementRequestProcessor<AudioFileElementRequest> {
   private static final long MAX_FILE_SIZE_BYTES = 20L * 1024 * 1024;
-  @Inject
-  ObjectStorageService storageService;
+  @Inject ObjectStorageService storageService;
 
-  @Inject
-  ContentElementRepository contentElementRepository;
+  @Inject ContentElementRepository contentElementRepository;
 
   @Override
   @Transactional
@@ -49,8 +47,9 @@ public final class AudioFileElementRequestProcessor
 
     contentElementRepository.persist(contentElement);
 
-    contentElement.s3Key = storageService.uploadObject(
-        contentElement, file.uploadedFile().toFile(), request.originalFileName);
+    contentElement.s3Key =
+        storageService.uploadObject(
+            contentElement, file.uploadedFile().toFile(), request.originalFileName);
 
     contentElementRepository.persistAndFlush(contentElement);
 
