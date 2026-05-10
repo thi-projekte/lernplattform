@@ -11,6 +11,7 @@ import type { ContentElementType } from '../../schemas/content-element';
 import HexagonNode from './hexagon-node';
 import type { NodeProps, Node } from '@xyflow/react';
 import type { GraphContentNodeData } from './topic-graph.types';
+import { CONTENT_ICONS } from '../icon-picker/icons';
 
 type ContentNodeProps = NodeProps<Node<GraphContentNodeData>>;
 
@@ -36,9 +37,10 @@ const getIconForType = (type: ContentElementType) => {
 };
 
 const ContentNode = ({ data, ...props }: ContentNodeProps) => {
+  const userIcon = data.payload.icon ? CONTENT_ICONS[data.payload.icon] : undefined;
   return (
     <HexagonNode
-      Icon={getIconForType(data.payload.type)}
+      Icon={userIcon ?? getIconForType(data.payload.type)}
       label={data.title}
       color="#1c7ed6"
       size={56}
