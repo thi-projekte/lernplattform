@@ -1,5 +1,6 @@
 package de.thi.mynd.topic.processor.content;
 
+import de.thi.mynd.common.exception.FileTooLargeException;
 import de.thi.mynd.common.exception.InvalidFileTypeException;
 import de.thi.mynd.common.exception.NoFileProvidedException;
 import de.thi.mynd.common.service.ObjectStorageService;
@@ -17,10 +18,12 @@ import org.jboss.resteasy.reactive.multipart.FileUpload;
 @ApplicationScoped
 public final class AudioFileElementRequestProcessor
     implements ContentElementRequestProcessor<AudioFileElementRequest> {
+  private static final long MAX_FILE_SIZE_BYTES = 20L * 1024 * 1024;
+  @Inject
+  ObjectStorageService storageService;
 
-  @Inject ObjectStorageService storageService;
-
-  @Inject ContentElementRepository contentElementRepository;
+  @Inject
+  ContentElementRepository contentElementRepository;
 
   @Override
   @Transactional
@@ -28,13 +31,15 @@ public final class AudioFileElementRequestProcessor
       AudioFileElementRequest request, FileUpload file) {
 
     if (file == null) {
-      throw new NoFileProvidedException("Image file is missing");
+      throw new NoFileProvidedException("Audio file is missing");
     }
 
     if (!isFileTypeValid(file)) {
-      throw new InvalidFileTypeException("The file is not a valid image");
+      throw new InvalidFileTypeException("The file is not a valid audio");
     }
-
+    if (file.size() > MAX_FILE_SIZE_BYTES) {
+      throw new FileTooLargeException("Audio file must not exceed 20 MB");
+    }
     AudioFileElement contentElement = new AudioFileElement();
     contentElement.title = request.title;
     contentElement.type = ContentType.AUDIO_FILE;
@@ -43,9 +48,8 @@ public final class AudioFileElementRequestProcessor
 
     contentElementRepository.persist(contentElement);
 
-    contentElement.s3Key =
-        storageService.uploadObject(
-            contentElement, file.uploadedFile().toFile(), request.originalFileName);
+    contentElement.s3Key = storageService.uploadObject(
+        contentElement, file.uploadedFile().toFile(), request.originalFileName);
 
     contentElementRepository.persistAndFlush(contentElement);
 

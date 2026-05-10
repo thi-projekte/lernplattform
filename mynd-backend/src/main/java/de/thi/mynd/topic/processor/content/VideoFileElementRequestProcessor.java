@@ -1,5 +1,6 @@
 package de.thi.mynd.topic.processor.content;
 
+import de.thi.mynd.common.exception.FileTooLargeException;
 import de.thi.mynd.common.exception.InvalidFileTypeException;
 import de.thi.mynd.common.exception.NoFileProvidedException;
 import de.thi.mynd.common.service.ObjectStorageService;
@@ -16,9 +17,13 @@ import org.jboss.resteasy.reactive.multipart.FileUpload;
 public final class VideoFileElementRequestProcessor
     implements ContentElementRequestProcessor<VideoFileElementRequest> {
 
-  @Inject ObjectStorageService storageService;
+  private static final long MAX_FILE_SIZE_BYTES = 100L * 1024 * 1024;
 
-  @Inject ContentElementRepository contentElementRepository;
+  @Inject
+  ObjectStorageService storageService;
+
+  @Inject
+  ContentElementRepository contentElementRepository;
 
   @Override
   @Transactional
@@ -33,6 +38,10 @@ public final class VideoFileElementRequestProcessor
       throw new InvalidFileTypeException("The file is not a valid video file");
     }
 
+    if (file.size() > MAX_FILE_SIZE_BYTES) {
+      throw new FileTooLargeException("Video file must not exceed 100 MB");
+    }
+
     VideoFileElement contentElement = new VideoFileElement();
     contentElement.title = request.title;
     contentElement.type = ContentType.VIDEO_FILE;
@@ -41,9 +50,8 @@ public final class VideoFileElementRequestProcessor
 
     contentElementRepository.persist(contentElement);
 
-    contentElement.s3Key =
-        storageService.uploadObject(
-            contentElement, file.uploadedFile().toFile(), request.originalFileName);
+    contentElement.s3Key = storageService.uploadObject(
+        contentElement, file.uploadedFile().toFile(), request.originalFileName);
 
     contentElementRepository.persistAndFlush(contentElement);
 

@@ -1,5 +1,6 @@
 package de.thi.mynd.topic.processor.content;
 
+import de.thi.mynd.common.exception.FileTooLargeException;
 import de.thi.mynd.common.exception.InvalidFileTypeException;
 import de.thi.mynd.common.exception.NoFileProvidedException;
 import de.thi.mynd.common.service.ObjectStorageService;
@@ -17,10 +18,13 @@ import org.jboss.resteasy.reactive.multipart.FileUpload;
 @ApplicationScoped
 public final class ImageElementRequestProcessor
     implements ContentElementRequestProcessor<ImageElementRequest> {
+      
+  private static final long MAX_FILE_SIZE_BYTES = 10L * 1024 * 1024;
+  @Inject
+  ObjectStorageService storageService;
 
-  @Inject ObjectStorageService storageService;
-
-  @Inject ContentElementRepository contentElementRepository;
+  @Inject
+  ContentElementRepository contentElementRepository;
 
   @Override
   @Transactional
@@ -35,6 +39,10 @@ public final class ImageElementRequestProcessor
       throw new InvalidFileTypeException("The file is not a valid image");
     }
 
+    if (file.size() > MAX_FILE_SIZE_BYTES) {
+      throw new FileTooLargeException("Image file must not exceed 10 MB");
+    }
+
     ImageElement contentElement = new ImageElement();
     contentElement.title = request.title;
     contentElement.type = ContentType.IMAGE;
@@ -43,9 +51,8 @@ public final class ImageElementRequestProcessor
 
     contentElementRepository.persist(contentElement);
 
-    contentElement.s3Key =
-        storageService.uploadObject(
-            contentElement, file.uploadedFile().toFile(), request.originalFileName);
+    contentElement.s3Key = storageService.uploadObject(
+        contentElement, file.uploadedFile().toFile(), request.originalFileName);
 
     contentElementRepository.persistAndFlush(contentElement);
 
