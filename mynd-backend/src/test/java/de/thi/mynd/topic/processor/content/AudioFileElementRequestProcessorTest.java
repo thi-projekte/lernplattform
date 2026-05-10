@@ -76,7 +76,7 @@ class AudioFileElementRequestProcessorTest {
             () -> {
               processor.creteContentElementFromRequest(request, null);
             });
-    assertEquals("Image file is missing", ex.getMessage());
+    assertEquals("Audio file is missing", ex.getMessage());
   }
 
   @Test
@@ -93,7 +93,7 @@ class AudioFileElementRequestProcessorTest {
             () -> {
               processor.creteContentElementFromRequest(request, mockFile);
             });
-    assertEquals("The file is not a valid image", ex.getMessage());
+    assertEquals("The file is not a valid audio", ex.getMessage());
   }
 
   @Test

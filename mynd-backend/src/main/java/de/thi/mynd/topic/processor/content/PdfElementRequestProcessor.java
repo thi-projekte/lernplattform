@@ -1,5 +1,6 @@
 package de.thi.mynd.topic.processor.content;
 
+import de.thi.mynd.common.exception.FileTooLargeException;
 import de.thi.mynd.common.exception.InvalidFileTypeException;
 import de.thi.mynd.common.exception.NoFileProvidedException;
 import de.thi.mynd.common.service.ObjectStorageService;
@@ -19,6 +20,7 @@ import org.jboss.resteasy.reactive.multipart.FileUpload;
 public final class PdfElementRequestProcessor
     implements ContentElementRequestProcessor<PdfElementRequest> {
 
+  private static final long MAX_FILE_SIZE_BYTES = 10L * 1024 * 1024;
   @Inject ObjectStorageService storageService;
 
   @Inject ContentElementRepository contentElementRepository;
@@ -33,6 +35,10 @@ public final class PdfElementRequestProcessor
 
     if (!isFileTypeValid(file)) {
       throw new InvalidFileTypeException("The file is not a valid pdf");
+    }
+
+    if (file.size() > MAX_FILE_SIZE_BYTES) {
+      throw new FileTooLargeException("PDF file must not exceed 10 MB");
     }
 
     PdfElement contentElement = new PdfElement();
