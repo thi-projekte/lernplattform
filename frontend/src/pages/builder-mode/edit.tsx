@@ -23,7 +23,7 @@ const EditTopicPage = () => {
 
   const { data, isLoading } = useQueryTopic(topicId ?? '', true);
 
-  const isOwner = !!data && !!currentUsername && data.creatorId.toLowerCase() === currentUsername;
+  const isOwner = !!data && !!currentUsername && data.creatorId?.toLowerCase() === currentUsername;
 
   const { mutateAsync, isPending } = useEditTopicMutation(topicId ?? '');
 
