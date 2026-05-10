@@ -85,9 +85,17 @@
       "personalTopics": "Eigene Themen",
       "createContentElement": "Inhalt anlegen"
     },
+
+    "tabs": {
+      "visual": "Visuell",
+      "notes": "Notizen",
+      "notesPlaceholder": "Noch keine Notizen vorhanden."
+    },
+
     "actions": {
       "create": "Thema erstellen",
-      "createContentElement": "Inhalt anlegen"
+      "createContentElement": "Inhalt anlegen",
+      "start": "Thema starten"
     },
     "fields": {
       "title": "Titel",
@@ -96,7 +104,8 @@
       "estimatedLearningDuration": "Geschätzte Lerndauer",
       "estimatedLearningDurationSuffix": "Minuten",
       "contentElementTitle": "Titel",
-      "icon": "Icon"
+      "icon": "Icon",
+      "author": "Autor"
     },
     "contentElementForm": {
       "incompleteFormError": "Bitte fülle alle Pflichtfelder aus, bevor du fortfährst."

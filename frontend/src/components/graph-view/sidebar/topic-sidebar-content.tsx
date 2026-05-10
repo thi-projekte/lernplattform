@@ -1,7 +1,7 @@
-import { Badge, Button, Group, Text, Title } from '@mantine/core';
+import { Badge, Button, Group, Text, Title, Divider, Stack, ThemeIcon } from '@mantine/core';
 import type { Topic } from '../../../schemas/topic';
 import { useTranslation } from 'react-i18next';
-import { IconEdit } from '@tabler/icons-react';
+import { IconEdit, IconRobot } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
 
@@ -22,6 +22,9 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
   return (
     <>
       <Title order={3}>{selectedElement.title}</Title>
+      <Text size="sm" c="dimmed">
+        {t('topic.fields.author')}: {selectedElement.creatorFullName}
+      </Text>
       <Group>
         {selectedElement.categories?.map((cat, i) => (
           <Badge key={i} color={`#${cat.color}`}>
@@ -47,6 +50,29 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           {t('common.edit')}
         </Button>
       )}
+      <Button color="blue" fullWidth mt="xl">
+        {t('topic.actions.start')}
+      </Button>
+      <Divider mt="xl" />
+
+      <Stack gap="sm" mt="md">
+        <Group>
+          <ThemeIcon color="blue" radius="xl">
+            <IconRobot size={16} />
+          </ThemeIcon>
+          <Text fw={500}>Myna</Text>
+          <Text size="xs" c="dimmed">
+            KI-Assistent
+          </Text>
+        </Group>
+        <Text size="sm" c="dimmed">
+          Myna kann die gespeicherten Inhalte zusammenfassen und passende nächste Quellen
+          vorschlagen.
+        </Text>
+        <Button variant="outline" color="blue" fullWidth>
+          Myna fragen
+        </Button>
+      </Stack>
     </>
   );
 };

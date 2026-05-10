@@ -85,9 +85,17 @@
       "personalTopics": "Personal topics",
       "createContentElement": "Create content element"
     },
+
+    "tabs": {
+      "visual": "Visual",
+      "notes": "Notes",
+      "notesPlaceholder": "No notes yet."
+    },
+
     "actions": {
       "create": "Create topic",
-      "createContentElement": "Create content element"
+      "createContentElement": "Create content element",
+      "start": "Start Topic"
     },
     "fields": {
       "title": "Title",
@@ -96,7 +104,8 @@
       "estimatedLearningDuration": "Estimated learning duration",
       "estimatedLearningDurationSuffix": "minutes",
       "contentElementTitle": "Title",
-      "icon": "Icon"
+      "icon": "Icon",
+      "author": "Author"
     },
     "contentElementForm": {
       "incompleteFormError": "Please fill in all required fields before continuing."
