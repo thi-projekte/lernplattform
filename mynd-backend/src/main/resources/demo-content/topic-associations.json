@@ -1,0 +1,7 @@
+{
+  "whatIsAi": ["aiMlAndDl"],
+  "aiMlAndDl": ["supervisedLearning", "neuralNetworks"],
+  "supervisedLearning": ["decTrees"],
+  "neuralNetworks": ["genAi"],
+  "genAi": ["prompting", "risksAndChances"]
+}

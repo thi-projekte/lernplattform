@@ -1,4 +1,6 @@
-import { Button, Group, Modal, Stack, TextInput } from '@mantine/core';
+import { Alert, Button, Group, Modal, Stack, TextInput } from '@mantine/core';
+import { IconAlertCircle } from '@tabler/icons-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   type AnyContentElementDto,
@@ -21,6 +23,8 @@ import RtfEditor from '../../rtf-editor.tsx';
 import type { ZodObject } from 'zod';
 import { useForm } from '@mantine/form';
 import { useCreateContentElementMutation } from '../../../api/topic.ts';
+import IconPicker from '../../icon-picker/icon-picker.tsx';
+import { DEFAULT_ICON_BY_TYPE } from '../../icon-picker/icons.ts';
 
 interface CreateContentElementModalProps {
   opened: boolean;
@@ -48,17 +52,6 @@ const maxFileSizes: Partial<Record<ContentElementType, number>> = {
   VIDEO_FILE: 100 * MB,
 };
 
-const iconByType: Record<ContentElementType, string> = {
-  PDF: 'PDF',
-  VIDEO_FILE: 'VIDEO_FILE',
-  AUDIO_FILE: 'AUDIO_FILE',
-  YOUTUBE_LINK: 'YOUTUBE_LINK',
-  SPOTIFY_LINK: 'SPOTIFY_LINK',
-  RTF: 'RTF',
-  URI: 'URI',
-  IMAGE: 'IMAGE',
-};
-
 const requestValidatorMapping: Record<ContentElementType, ZodObject> = {
   PDF: PdfElementRequestSchema,
   VIDEO_FILE: VideoFileElementRequestSchema,
@@ -76,6 +69,7 @@ const CreateContentElementModal = ({
   onAddContentElement,
 }: CreateContentElementModalProps) => {
   const { t } = useTranslation();
+  const [hasSubmitAttempted, setHasSubmitAttempted] = useState(false);
 
   const { isPending, mutateAsync } = useCreateContentElementMutation();
 
@@ -97,26 +91,40 @@ const CreateContentElementModal = ({
     },
   });
 
-  const submit = form.onSubmit(async (values) => {
-    const contentElement = await mutateAsync({
-      request: values as AnyContentElementRequest,
-      file: values.file as unknown as File,
-    });
+  const submit = form.onSubmit(
+    async (values) => {
+      const contentElement = await mutateAsync({
+        request: values as AnyContentElementRequest,
+        file: values.file as unknown as File,
+      });
 
-    onAddContentElement(contentElement);
-    form.reset();
+      onAddContentElement(contentElement);
+      form.reset();
+      setHasSubmitAttempted(false);
+      onClose();
+    },
+    () => setHasSubmitAttempted(true)
+  );
+
+  const handleClose = () => {
+    setHasSubmitAttempted(false);
     onClose();
-  });
+  };
 
   return (
     <Modal
       opened={opened}
-      onClose={onClose}
+      onClose={handleClose}
       title={t('topic.headings.createContentElement')}
       size="xl"
     >
       <form onSubmit={submit}>
         <Stack>
+          {hasSubmitAttempted && Object.keys(form.errors).length > 0 && (
+            <Alert color="red" variant="light" icon={<IconAlertCircle size={18} />}>
+              {t('topic.contentElementForm.incompleteFormError')}
+            </Alert>
+          )}
           <TextInput
             label={t('topic.fields.contentElementTitle')}
             withAsterisk
@@ -126,7 +134,7 @@ const CreateContentElementModal = ({
             {...form.getInputProps('type')}
             onChange={(val) => {
               form.setFieldValue('type', val);
-              form.setFieldValue('icon', val ? iconByType[val] : '');
+              form.setFieldValue('icon', val ? DEFAULT_ICON_BY_TYPE[val] : '');
               form.setFieldValue('file', null);
               form.setFieldValue('uri', '');
               form.setFieldValue('rtfText', '');
@@ -134,6 +142,15 @@ const CreateContentElementModal = ({
             }}
             required
           />
+          {form.values.type && (
+            <IconPicker
+              label={t('topic.fields.icon')}
+              value={form.values.icon || null}
+              onChange={(name) => form.setFieldValue('icon', name)}
+              error={form.errors.icon}
+              required
+            />
+          )}
           {form.values.type && typesWithFile.includes(form.values.type) && (
             <SingleFileDropzone
               acceptedTypes={allowedFileTypes[form.values.type] ?? []}
@@ -159,7 +176,7 @@ const CreateContentElementModal = ({
           )}
 
           <Group justify="flex-end" mt="xl">
-            <Button variant="outline" onClick={onClose} disabled={isPending}>
+            <Button variant="outline" onClick={handleClose} disabled={isPending}>
               {t('common.cancel')}
             </Button>
             <Button type="submit" loading={isPending}>

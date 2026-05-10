@@ -95,7 +95,11 @@
       "teaser": "Kurzbeschreibung",
       "estimatedLearningDuration": "Geschätzte Lerndauer",
       "estimatedLearningDurationSuffix": "Minuten",
-      "contentElementTitle": "Titel"
+      "contentElementTitle": "Titel",
+      "icon": "Icon"
+    },
+    "contentElementForm": {
+      "incompleteFormError": "Bitte fülle alle Pflichtfelder aus, bevor du fortfährst."
     },
     "errors": {
       "titleMissing": "Titel fehlt",

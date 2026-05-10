@@ -95,7 +95,11 @@
       "teaser": "Teaser",
       "estimatedLearningDuration": "Estimated learning duration",
       "estimatedLearningDurationSuffix": "minutes",
-      "contentElementTitle": "Title"
+      "contentElementTitle": "Title",
+      "icon": "Icon"
+    },
+    "contentElementForm": {
+      "incompleteFormError": "Please fill in all required fields before continuing."
     },
     "errors": {
       "titleMissing": "Title missing",
