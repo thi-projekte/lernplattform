@@ -1,5 +1,5 @@
 import { useParams } from 'react-router';
-import {useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useQueryTopic } from '../../api/topic.ts';
 import { type Node, type NodeMouseHandler } from '@xyflow/react';
 import { Layout } from '../../components/layout.tsx';
@@ -16,7 +16,6 @@ import TopicGraphView from '../../components/graph-view/topic-graph.tsx';
 import { buildTopicDetailsGraph } from '../../components/graph-view/topic-graph.utils.ts';
 import type { TopicGraphNodeData } from '../../components/graph-view/topic-graph.types.ts';
 
-
 const nodeTypes = {
   topic: TopicNode,
   content: ContentNode,
@@ -30,7 +29,7 @@ const TopicDetailsPage = () => {
 
   const [selectedElement, setSelectedElement] = useState<
     AnyContentElementDto | Omit<Topic, 'relatedTopics'> | null
-      >(null);
+  >(null);
 
   const displayedElement = selectedElement ?? topic ?? null;
 
