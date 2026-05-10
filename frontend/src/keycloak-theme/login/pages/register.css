@@ -1,0 +1,257 @@
+html,
+body,
+#root,
+#storybook-root {
+  min-height: 100vh !important;
+  margin: 0 !important;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(124, 198, 232, 0.46) 0%,
+      rgba(124, 198, 232, 0.22) 32%,
+      rgba(255, 255, 255, 0) 62%
+    ),
+    linear-gradient(180deg, #f4fbff 0%, #ffffff 56%, #f8fafc 100%) !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+.mynd-register-page {
+  position: relative;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(124, 198, 232, 0.46) 0%,
+      rgba(124, 198, 232, 0.22) 32%,
+      rgba(255, 255, 255, 0) 62%
+    ),
+    linear-gradient(180deg, #f4fbff 0%, #ffffff 56%, #f8fafc 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-bottom: 56px;
+}
+
+.mynd-register-header {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 24px 32px 0;
+  box-sizing: border-box;
+}
+
+.mynd-language-button {
+  min-height: 40px;
+  border: 1.5px solid #d6dce2;
+  border-radius: 999px;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.84);
+  color: #1f2a44;
+  box-shadow: 0 12px 28px rgba(31, 42, 68, 0.08);
+}
+
+.mynd-language-button:hover {
+  background: #ffffff;
+  border-color: #7cc6e8;
+}
+
+.mynd-register-card {
+  max-width: 100%;
+}
+
+.mynd-register-card .mantine-InputWrapper-root,
+.mynd-register-card .mantine-TextInput-root,
+.mynd-register-card .mantine-PasswordInput-root,
+.mynd-register-card .mantine-Input-wrapper,
+.mynd-register-card .mantine-PasswordInput-wrapper,
+.mynd-register-card .mantine-Input-input,
+.mynd-register-card .mantine-TextInput-input,
+.mynd-register-card .mantine-PasswordInput-input,
+.mynd-register-card .mantine-PasswordInput-innerInput,
+.mynd-register-card .kcInputGroup,
+.mynd-register-card .pf-c-input-group,
+.mynd-register-card input:not([type='checkbox']),
+.mynd-register-card textarea,
+.mynd-register-card select {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.mynd-register-card input:not([type='checkbox']),
+.mynd-register-card textarea,
+.mynd-register-card select {
+  background: #ffffff !important;
+  border: 2px solid #d6dce2 !important;
+  border-radius: 10px !important;
+  color: #1f2a44 !important;
+  font-weight: 500 !important;
+  min-height: 46px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+.mynd-register-card .kcInputGroup,
+.mynd-register-card .pf-c-input-group {
+  position: relative !important;
+  display: flex !important;
+  align-items: stretch !important;
+}
+
+.mynd-register-card .kcInputGroup input:not([type='checkbox']),
+.mynd-register-card .pf-c-input-group input:not([type='checkbox']) {
+  padding-right: 48px !important;
+}
+
+.mynd-register-card .kcFormPasswordVisibilityButtonClass,
+.mynd-register-card .pf-c-input-group > .pf-c-button.pf-m-control {
+  position: absolute !important;
+  top: 50% !important;
+  right: 8px !important;
+  z-index: 2 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 34px !important;
+  min-width: 34px !important;
+  height: 34px !important;
+  min-height: 34px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transform: translateY(-50%) !important;
+  border: 0 !important;
+  border-radius: 999px !important;
+  background: transparent !important;
+  color: #1f2a44 !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+}
+
+.mynd-register-card .kcFormPasswordVisibilityButtonClass:hover,
+.mynd-register-card .pf-c-input-group > .pf-c-button.pf-m-control:hover {
+  background: #f7fcff !important;
+  color: #1b9ed6 !important;
+}
+
+.mynd-register-card .kcFormPasswordVisibilityIconShow,
+.mynd-register-card .kcFormPasswordVisibilityIconHide,
+.mynd-register-card .pf-c-input-group > .pf-c-button.pf-m-control i {
+  display: block !important;
+  width: 18px !important;
+  height: 18px !important;
+  background-color: currentColor !important;
+  font-size: 0 !important;
+  line-height: 1 !important;
+}
+
+.mynd-register-card .kcFormPasswordVisibilityIconShow {
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/g%3E%3C/svg%3E")
+    center / contain no-repeat !important;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3C/g%3E%3C/svg%3E")
+    center / contain no-repeat !important;
+}
+
+.mynd-register-card .kcFormPasswordVisibilityIconHide {
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='m3 3 18 18'/%3E%3C/g%3E%3C/svg%3E")
+    center / contain no-repeat !important;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg fill='none' stroke='black' stroke-linecap='round' stroke-linejoin='round' stroke-width='2'%3E%3Cpath d='M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0'/%3E%3Ccircle cx='12' cy='12' r='3'/%3E%3Cpath d='m3 3 18 18'/%3E%3C/g%3E%3C/svg%3E")
+    center / contain no-repeat !important;
+}
+
+.mynd-register-card input:not([type='checkbox']):focus,
+.mynd-register-card textarea:focus,
+.mynd-register-card select:focus {
+  border-color: #7cc6e8 !important;
+  box-shadow: 0 0 0 3px rgba(124, 198, 232, 0.28) !important;
+  background: #f7fcff !important;
+  outline: none !important;
+}
+
+.mynd-register-card label {
+  color: #1f2a44 !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  margin-bottom: 7px !important;
+}
+
+.mynd-register-card .kcLabelWrapperClass,
+.mynd-register-card .col-xs-12.col-sm-12.col-md-12.col-lg-12:has(> label),
+.mynd-register-card .required,
+.mynd-register-card .mantine-InputWrapper-required {
+  color: #e86a6a !important;
+}
+
+.mynd-register-card .kcLabelWrapperClass label,
+.mynd-register-card .kcLabelWrapperClass .kcLabelClass {
+  color: #1f2a44 !important;
+}
+
+.mynd-register-card a {
+  color: #1b9ed6 !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+
+.mynd-register-card a:hover {
+  text-decoration: underline !important;
+}
+
+.mynd-register-card .mantine-Checkbox-input {
+  background-color: #ffffff !important;
+  border-color: #7cc6e8 !important;
+}
+
+.mynd-register-card .mantine-Checkbox-input:checked {
+  background-color: #7dd49b !important;
+  border-color: #7dd49b !important;
+}
+
+.mynd-register-card .mantine-Checkbox-label {
+  color: #1f2a44 !important;
+  font-weight: 500 !important;
+}
+
+.mynd-register-card button:disabled {
+  background-color: #d6dce2 !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}
+
+.mynd-register-card ul,
+.mynd-register-card li,
+.mynd-register-card p {
+  color: #1f2a44 !important;
+}
+
+.mynd-register-card .kcInputErrorMessageClass,
+.mynd-register-card span[id^='input-error-'],
+.mynd-register-card [data-kc-msg='error-user-attribute-required'],
+.mynd-register-card .pf-v5-c-helper-text,
+.mynd-register-card .pf-c-helper-text,
+.mynd-register-card .pf-v5-c-form__helper-text,
+.mynd-register-card .pf-c-form__helper-text,
+.mynd-register-card .kcInputHelperTextClass,
+.mynd-register-card [id$='-helper'],
+.mynd-register-card [class*='helper'],
+.mynd-register-card [class*='Helper'] {
+  display: none !important;
+  visibility: hidden !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.mynd-register-card .mantine-InputWrapper-error,
+.mynd-register-card .pf-m-error,
+.mynd-register-card .kc-feedback-text {
+  color: #e86a6a !important;
+  font-weight: 600 !important;
+}
