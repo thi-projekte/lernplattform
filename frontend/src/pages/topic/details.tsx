@@ -66,9 +66,7 @@ const TopicDetailsPage = () => {
           style={{
             flex: 1,
             position: 'relative',
-            background: 'rgba(244, 250, 255, 0.95)',
             borderRadius: 16,
-            border: '1px solid rgba(176, 210, 232, 0.5)',
             overflow: 'hidden',
           }}
         >
@@ -86,9 +84,7 @@ const TopicDetailsPage = () => {
           p="xl"
           style={{
             width: 400,
-            borderLeft: '1px solid rgba(176, 210, 232, 0.65)',
             overflowY: 'auto',
-            background: 'rgba(248, 252, 255, 0.94)',
           }}
         >
           {selectedElement ? (

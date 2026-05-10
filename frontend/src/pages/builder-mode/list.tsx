@@ -298,13 +298,7 @@ const BuilderModeListPage = () => {
               alignItems: 'start',
             }}
           >
-            <Paper
-              withBorder
-              radius="md"
-              p="sm"
-              h={760}
-              style={{ background: 'rgba(248, 252, 255, 0.92)' }}
-            >
+            <Paper withBorder radius="md" p="sm" h={760}>
               <Stack gap="md" h="100%">
                 <div>
                   <Group justify="space-between" align="center" wrap="nowrap">
@@ -329,13 +323,7 @@ const BuilderModeListPage = () => {
                 </Text>
                 <Stack gap="xs" style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
                   {searchSuggestions.map((suggestion) => (
-                    <Paper
-                      key={suggestion.id}
-                      withBorder
-                      radius="md"
-                      p="sm"
-                      style={{ background: 'rgba(255, 255, 255, 0.88)' }}
-                    >
+                    <Paper key={suggestion.id} withBorder radius="md" p="sm">
                       <Group justify="space-between" align="flex-start" wrap="nowrap">
                         <div style={{ minWidth: 0 }}>
                           <Text fw={600} size="sm" truncate>
@@ -393,13 +381,7 @@ const BuilderModeListPage = () => {
               </Stack>
             </Paper>
 
-            <Paper
-              withBorder
-              radius="md"
-              p="md"
-              h={760}
-              style={{ background: 'rgba(244, 250, 255, 0.95)' }}
-            >
+            <Paper withBorder radius="md" p="md" h={760}>
               <PersonalTopicsGraph
                 topics={personalGraphTopics}
                 currentUsername={userService.account.username}
@@ -415,7 +397,7 @@ const BuilderModeListPage = () => {
               />
             </Paper>
 
-            <Card withBorder radius="md" p="md" style={{ background: 'rgba(248, 252, 255, 0.94)' }}>
+            <Card withBorder radius="md" p="md">
               <Stack gap="md">
                 <div>
                   <Title order={2}>{t('topic.personalGraph.selectedTopic')}</Title>
@@ -425,12 +407,7 @@ const BuilderModeListPage = () => {
                 </div>
 
                 {selectedGraphTopic ? (
-                  <Card
-                    withBorder
-                    radius="md"
-                    p="md"
-                    style={{ background: 'rgba(255, 255, 255, 0.88)' }}
-                  >
+                  <Card withBorder radius="md" p="md">
                     <Stack gap="md">
                       <div>
                         <Title order={3}>{selectedGraphTopic.title}</Title>
@@ -467,13 +444,7 @@ const BuilderModeListPage = () => {
                                 selectedOwnedTopicDetails.relatedTopics.length <= 1;
 
                               return (
-                                <Paper
-                                  key={relatedTopic.id}
-                                  withBorder
-                                  radius="md"
-                                  p="xs"
-                                  style={{ background: 'rgba(255, 255, 255, 0.88)' }}
-                                >
+                                <Paper key={relatedTopic.id} withBorder radius="md" p="xs">
                                   <Group justify="space-between" align="center" wrap="nowrap">
                                     <div style={{ minWidth: 0 }}>
                                       <Text fw={500} size="sm" truncate>

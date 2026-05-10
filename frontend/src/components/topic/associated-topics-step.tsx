@@ -143,13 +143,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
       </Group>
 
       {editorMode === 'list' ? (
-        <Paper
-          withBorder
-          radius="md"
-          p="sm"
-          mih={760}
-          style={{ background: 'rgba(248, 252, 255, 0.92)' }}
-        >
+        <Paper withBorder radius="md" p="sm" mih={760}>
           <Stack gap="sm" h="100%">
             <div>
               <Title order={4}>{t('topic.graph.relatedTopicsTableTitle')}</Title>
@@ -179,13 +173,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
           }}
         >
           <div>
-            <Paper
-              withBorder
-              radius="md"
-              p="sm"
-              h={760}
-              style={{ background: 'rgba(248, 252, 255, 0.92)' }}
-            >
+            <Paper withBorder radius="md" p="sm" h={760}>
               <Stack gap="md" h="100%">
                 <div>
                   <Group justify="space-between" align="center" wrap="nowrap">
@@ -206,14 +194,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                   {t('topic.graph.graphModeSearchHint')}
                 </Text>
                 {isolatedTopicCount > 0 && (
-                  <Paper
-                    radius="md"
-                    p="xs"
-                    style={{
-                      background: 'rgba(238, 248, 255, 0.9)',
-                      border: '1px solid rgba(176, 210, 232, 0.55)',
-                    }}
-                  >
+                  <Paper withBorder radius="md" p="xs">
                     <Stack gap={8}>
                       <Group justify="space-between" align="center" wrap="nowrap">
                         <Text fw={600} size="sm" c="blue.7">
@@ -228,13 +209,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       </Text>
                       <Stack gap={6}>
                         {searchSuggestions.map((suggestion) => (
-                          <Paper
-                            key={suggestion.id}
-                            withBorder
-                            radius="md"
-                            p="xs"
-                            style={{ background: 'rgba(255, 255, 255, 0.88)' }}
-                          >
+                          <Paper key={suggestion.id} withBorder radius="md" p="xs">
                             <Text fw={600} size="xs" truncate>
                               {suggestion.title}
                             </Text>
@@ -331,9 +306,8 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                     flex: 1,
                     minHeight: 0,
                     overflow: 'hidden',
-                    border: '1px dashed rgba(176, 210, 232, 0.8)',
+                    border: '1px dashed #ced4da',
                     borderRadius: 12,
-                    background: 'rgba(244, 250, 255, 0.95)',
                   }}
                 >
                   <TopicAssociationsGraph
@@ -365,13 +339,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
             </Paper>
           </div>
           <div>
-            <Paper
-              withBorder
-              radius="md"
-              p="sm"
-              h={760}
-              style={{ background: 'rgba(248, 252, 255, 0.94)' }}
-            >
+            <Paper withBorder radius="md" p="sm" h={760}>
               <Stack gap="md" h="100%">
                 <div>
                   <Title order={4}>{t('topic.graph.inspectorTitle')}</Title>
