@@ -17,6 +17,7 @@ public final class PdfElementDtoMapper extends AbstractMappingProcessor<PdfEleme
     return PdfElementDto.builder()
         .id(entity.id)
         .title(entity.title)
+        .icon(entity.icon)
         .createdAt(entity.createdAt)
         .updatedAt(entity.updatedAt)
         .originalFileName(entity.originalFileName)

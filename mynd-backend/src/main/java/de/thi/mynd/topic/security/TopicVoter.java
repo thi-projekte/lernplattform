@@ -11,8 +11,10 @@ public final class TopicVoter implements Voter<Topic> {
 
   public static final String Update = "UPDATE";
   public static final String Delete = "DELETE";
+  public static final String AssignForeignTopics = "ASSIGN_FOREIGN_TOPICS";
 
-  private static final String[] allowedAttributes = new String[] {Update, Delete};
+  private static final String[] allowedAttributes =
+      new String[] {Update, Delete, AssignForeignTopics};
 
   @Override
   public boolean supports(String attribute, Object subject) {
@@ -24,8 +26,7 @@ public final class TopicVoter implements Voter<Topic> {
     String creatorId = identity.getPrincipal().getName();
 
     return switch (attribute) {
-      case Update -> creatorId.equals(subject.creatorId);
-      case Delete -> creatorId.equals(subject.creatorId);
+      case Update, AssignForeignTopics, Delete -> creatorId.equals(subject.creatorId);
       default -> false;
     };
   }

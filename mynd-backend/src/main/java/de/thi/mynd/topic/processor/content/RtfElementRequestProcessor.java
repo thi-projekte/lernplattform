@@ -25,6 +25,7 @@ public final class RtfElementRequestProcessor
     RtfElement contentElement = new RtfElement();
     contentElement.title = request.title;
     contentElement.type = ContentType.RTF;
+    contentElement.icon = request.icon;
     contentElement.rtfText = request.rtfText;
     contentElementRepository.persistAndFlush(contentElement);
 
