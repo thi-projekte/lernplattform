@@ -47,6 +47,8 @@ export const TopicContentElementsSchema = z.object({
 export const TopicSchema = z
   .object({
     id: z.uuid().optional(),
+    creatorId: z.string().optional(),
+    creatorFullName: z.string().optional(),
   })
   .extend(TopicCoreDataSchema.shape)
   .extend(TopicAssociatedTopicsSchema.shape)
