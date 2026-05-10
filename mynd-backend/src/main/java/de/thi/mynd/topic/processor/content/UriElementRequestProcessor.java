@@ -6,6 +6,7 @@ import de.thi.mynd.topic.entity.UriElement;
 import de.thi.mynd.topic.repository.ContentElementRepository;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import de.thi.mynd.topic.requests.content.UriElementRequest;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -25,6 +26,8 @@ public final class UriElementRequestProcessor
     contentElement.type = ContentType.URI;
     contentElement.uri = request.uri;
     contentElementRepository.persistAndFlush(contentElement);
+
+    Log.infof("Successfully created Uri content element with id: %s", contentElement.id);
 
     return contentElement;
   }

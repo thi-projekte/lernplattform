@@ -92,6 +92,17 @@ export const useCreateContentElementMutation = () =>
       createContentElement(request, file),
   });
 
+const deleteContentElement = async (elementId: string) =>
+  await apiClient.delete(`/content-elements/${elementId}`, {
+    validateStatus: (status) => status === 200 || status === 204,
+  });
+
+export const useDeleteContentElementMutation = () =>
+  useMutation({
+    mutationKey: ['deleteContentElement'],
+    mutationFn: deleteContentElement,
+  });
+
 const createTopic = async (createTopic: Partial<Topic>) => {
   const result = await apiClient.post('/topics', createTopic, {
     validateStatus: (status) => status <= 204,

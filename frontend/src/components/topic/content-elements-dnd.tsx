@@ -1,5 +1,5 @@
-import { Button, Flex, Paper, Stack, ThemeIcon, Title } from '@mantine/core';
-import { IconGripVertical, IconPlusFilled } from '@tabler/icons-react';
+import { ActionIcon, Button, Flex, Paper, Stack, ThemeIcon, Title } from '@mantine/core';
+import { IconGripVertical, IconPlusFilled, IconTrash } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { Topic } from '../../schemas/topic.ts';
 import { useDisclosure } from '@mantine/hooks';
@@ -8,6 +8,8 @@ import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import { DragDropContext, Draggable, Droppable, type OnDragEndResponder } from '@hello-pangea/dnd';
 import { useMemo } from 'react';
 import ContentElementDisplay from './content-element-display.tsx';
+import { notifications } from '@mantine/notifications';
+import { useDeleteContentElementMutation } from '../../api/topic.ts';
 
 interface ContentElementsDndProps {
   topic: Partial<Topic>;
@@ -18,6 +20,8 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
   const { t } = useTranslation();
 
   const [opened, { close, open }] = useDisclosure(false);
+  const { mutateAsync: deleteContentElement, isPending: isDeletingContentElement } =
+    useDeleteContentElementMutation();
 
   const addContentElement = (contentElement: AnyContentElementDto) => {
     setTopic({
@@ -29,6 +33,29 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
   const sortedContentElements = useMemo<AnyContentElementDto[]>(() => {
     return (topic.contentElements ?? []).sort((a, b) => (a.rank ?? 0) - (b.rank ?? 0));
   }, [topic.contentElements]);
+
+  const removeContentElement = async (contentElementId: string) => {
+    try {
+      await deleteContentElement(contentElementId);
+
+      const updatedItems = sortedContentElements
+        .filter((item) => item.id !== contentElementId)
+        .map((item, index) => ({
+          ...item,
+          rank: index,
+        }));
+
+      setTopic({
+        ...topic,
+        contentElements: updatedItems,
+      });
+    } catch {
+      notifications.show({
+        message: t('common.serverError'),
+        color: 'red',
+      });
+    }
+  };
 
   const onDragEnd: OnDragEndResponder<string> = (result) => {
     if (!result.destination) return;
@@ -78,7 +105,7 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
                       style={{
                         ...provided.draggableProps.style,
                         display: 'flex',
-                        alignItems: 'center',
+                        alignItems: 'stretch',
                         width: '100%',
                       }}
                     >
@@ -91,6 +118,16 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
                         <Title order={3}>{item.title}</Title>
                         <ContentElementDisplay contentElement={item} />
                       </Stack>
+                      <Flex align="flex-end" style={{ marginLeft: '12px', paddingBottom: '4px' }}>
+                        <ActionIcon
+                          variant="default"
+                          aria-label={t('common.delete')}
+                          onClick={() => removeContentElement(item.id)}
+                          disabled={isDeletingContentElement}
+                        >
+                          <IconTrash size={18} />
+                        </ActionIcon>
+                      </Flex>
                     </Paper>
                   )}
                 </Draggable>
