@@ -43,6 +43,7 @@ const TopicCoreDataStep = ({ topic, setTopic }: TopicCoreDataStepProps) => {
       <CategorySelect key={form.key('categories')} {...form.getInputProps('categories')} />
       <NumberInput
         label={t('topic.fields.estimatedLearningDuration')}
+        suffix={` ${t('topic.fields.estimatedLearningDurationSuffix')}`}
         withAsterisk
         key={form.key('estimatedLearningDuration')}
         {...form.getInputProps('estimatedLearningDuration')}

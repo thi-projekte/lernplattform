@@ -1,12 +1,20 @@
 package de.thi.mynd.topic.service;
 
+import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
+import de.thi.mynd.common.security.SecurityService;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.entity.TopicAssociation;
+import de.thi.mynd.topic.exception.AssociationAlreadyExistsException;
 import de.thi.mynd.topic.repository.TopicAssociationRepository;
+import de.thi.mynd.topic.repository.TopicRepository;
+import de.thi.mynd.topic.security.TopicAssociationVoter;
+import de.thi.mynd.topic.security.TopicVoter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -15,6 +23,9 @@ import java.util.stream.Collectors;
 public final class TopicAssociationServiceImpl implements TopicAssociationService {
 
   @Inject TopicAssociationRepository topicAssociationRepository;
+  @Inject TopicRepository topicRepository;
+
+  @Inject SecurityService securityService;
 
   @Override
   public List<TopicAssociation> findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
@@ -43,6 +54,50 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
     }
 
     return existingAssociations;
+  }
+
+  @Override
+  @Transactional
+  public TopicAssociation createAssociation(UUID owningTopicId, UUID foreignTopicId) {
+    Topic owner = findTopic(owningTopicId);
+    Topic foreign = findTopic(foreignTopicId);
+
+    securityService.denyUnlessGranted(owner, TopicVoter.AssignForeignTopics);
+
+    if (topicAssociationRepository.associationExists(owner, foreign)) {
+      throw new AssociationAlreadyExistsException("This association already exists");
+    }
+
+    TopicAssociation newAssociation = new TopicAssociation();
+    newAssociation.owningTopic = owner;
+    newAssociation.foreignTopic = foreign;
+    topicAssociationRepository.persistAndFlush(newAssociation);
+    return newAssociation;
+  }
+
+  @Override
+  @Transactional
+  public void deleteAssociation(UUID associationId) {
+    Optional<TopicAssociation> associationOptional =
+        topicAssociationRepository.findByIdOptional(associationId);
+    if (associationOptional.isEmpty()) {
+      throw new EntityInstanceNotFoundException("This association does not exist");
+    }
+
+    TopicAssociation association = associationOptional.get();
+    securityService.denyUnlessGranted(association, TopicAssociationVoter.Delete);
+
+    topicAssociationRepository.delete(association);
+    topicAssociationRepository.flush();
+  }
+
+  private Topic findTopic(UUID topicId) {
+    Optional<Topic> topicOptional = topicRepository.findByIdOptional(topicId);
+    if (topicOptional.isEmpty()) {
+      throw new EntityInstanceNotFoundException("Topic does not exist");
+    }
+
+    return topicOptional.get();
   }
 
   private List<UUID> getIdsFromAssociatedEntities(List<AssociatedEntityRequest> entities) {

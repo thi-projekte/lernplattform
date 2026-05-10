@@ -42,6 +42,7 @@ public final class AudioFileElementRequestProcessor
     AudioFileElement contentElement = new AudioFileElement();
     contentElement.title = request.title;
     contentElement.type = ContentType.AUDIO_FILE;
+    contentElement.icon = request.icon;
     contentElement.s3Key = "";
     contentElement.originalFileName = request.originalFileName;
 

@@ -10,15 +10,20 @@ import AssociatedTopicsStep from '../../components/topic/associated-topics-step.
 import ContentElementsDnd from '../../components/topic/content-elements-dnd.tsx';
 import { notifications } from '@mantine/notifications';
 import LayoutLoader from '../../components/layout-loader.tsx';
+import { useUserService } from '../../provider/user-provider.tsx';
 
 const EditTopicPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { topicId } = useParams<{ topicId: string }>();
+  const userService = useUserService();
+  const currentUsername = userService.account.username?.toLowerCase();
 
   const [topic, setTopic] = useState<Partial<Topic>>({});
 
   const { data, isLoading } = useQueryTopic(topicId ?? '', true);
+
+  const isOwner = !!data && !!currentUsername && data.creatorId.toLowerCase() === currentUsername;
 
   const { mutateAsync, isPending } = useEditTopicMutation(topicId ?? '');
 
@@ -30,6 +35,12 @@ const EditTopicPage = () => {
       setTopic(data);
     }
   }, [data, topic]);
+
+  useEffect(() => {
+    if (data && currentUsername && !isOwner) {
+      navigate(`/topics/${topicId}/details`, { replace: true });
+    }
+  }, [data, currentUsername, isOwner, navigate, topicId]);
 
   const saveChanges = async (saveAndView: boolean) => {
     if (!canSave) return;
@@ -58,7 +69,7 @@ const EditTopicPage = () => {
   return (
     <Layout>
       <Title mb={32}>{t('routes.editTopic')}</Title>
-      <Container>
+      <Container fluid px="md">
         <Tabs defaultValue="coreData">
           <Tabs.List mb={16}>
             <Tabs.Tab value="coreData">{t('topic.steps.coreDataTitle')}</Tabs.Tab>
