@@ -16,6 +16,8 @@ Our client_id should be `mynd`.
 
 Now you should be ready to start developing!
 
+For the full setup instructions, see [SETUP.md](./SETUP.md).
+
 ## Contributing
 
 Take a look at the [Contribution guide](./CONTRIBUTING.md)
