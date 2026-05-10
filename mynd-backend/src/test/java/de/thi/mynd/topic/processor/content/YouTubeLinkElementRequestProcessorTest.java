@@ -39,8 +39,7 @@ class YouTubeLinkElementRequestProcessorTest {
     YouTubeLinkElement youtubeResult = (YouTubeLinkElement) result;
 
     assertEquals("Educational Video", youtubeResult.title);
-    // Note: Checking against RTF because that is what's currently in your code
-    assertEquals(ContentType.RTF, youtubeResult.type);
+    assertEquals(ContentType.YOUTUBE_LINK, youtubeResult.type);
     assertEquals(request.uri, youtubeResult.uri);
 
     // Verify repository interaction

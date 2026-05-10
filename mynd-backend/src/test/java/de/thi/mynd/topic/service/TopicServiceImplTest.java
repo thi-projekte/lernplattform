@@ -17,17 +17,15 @@ import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
 import de.thi.mynd.topic.requests.TopicRequest;
-import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
@@ -36,8 +34,6 @@ public class TopicServiceImplTest {
   @Inject TopicServiceImpl topicService;
 
   @InjectMock TopicRepository topicRepository;
-
-  @InjectMock SecurityIdentity securityIdentity;
 
   @InjectMock CategoryService categoryService;
 
@@ -49,14 +45,8 @@ public class TopicServiceImplTest {
 
   private static final String USERNAME = "test-user";
 
-  @BeforeEach
-  void setup() {
-    Principal mockPrincipal = mock(Principal.class);
-    when(mockPrincipal.getName()).thenReturn(USERNAME);
-    when(securityIdentity.getPrincipal()).thenReturn(mockPrincipal);
-  }
-
   @Test
+  @TestSecurity(user = USERNAME)
   void testFindPersonalTopicsPaginated() {
     Topic topic = new Topic();
     topic.title = "My Topic";
@@ -132,18 +122,21 @@ public class TopicServiceImplTest {
   }
 
   @Test
+  @TestSecurity(user = "creator")
   void testDeleteTopicWithValidId() {
 
     UUID contentElementId = UUID.randomUUID();
     ContentElement contentElement = new PdfElement();
     contentElement.id = contentElementId;
     contentElement.title = "Content";
+    contentElement.creatorId = "creator";
     contentElement.type = ContentType.PDF;
 
     UUID topicId = UUID.randomUUID();
 
     Topic topic = new Topic();
     topic.id = topicId;
+    topic.creatorId = "creator";
     topic.contentElements = new ArrayList<>();
     topic.contentElements.add(contentElement);
 
@@ -189,6 +182,7 @@ public class TopicServiceImplTest {
   }
 
   @Test
+  @TestSecurity(user = "creator")
   void testUpdateTopic_WithFullOrchestration() {
     // Arrange
 
@@ -205,12 +199,15 @@ public class TopicServiceImplTest {
     stayReq.id = stayId;
     request.contentElements = List.of(stayReq);
 
+    Topic topic = new Topic();
+    topic.creatorId = "creator";
+
     when(categoryService.findByAssociatedEntities(any())).thenReturn(new ArrayList<>());
     when(topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
             any(), any(), anyString()))
         .thenReturn(new ArrayList<>());
     when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
-    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(topic));
 
     UUID topicId = UUID.randomUUID();
 

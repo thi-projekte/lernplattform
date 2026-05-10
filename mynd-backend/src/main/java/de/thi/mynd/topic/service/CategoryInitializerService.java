@@ -4,6 +4,7 @@ import de.thi.mynd.topic.entity.Category;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.CategoryRepository;
 import de.thi.mynd.topic.repository.TopicRepository;
+import io.quarkus.logging.Log;
 import io.quarkus.runtime.StartupEvent;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.Observes;
@@ -19,10 +20,12 @@ public final class CategoryInitializerService {
   @Transactional
   public void initializeCategories(@Observes StartupEvent e) {
     if (categoryRepository.count() > 0) {
+      Log.info("Categories are already initialized");
       return;
     }
 
     Category technology = new Category();
+    technology.creatorId = "admin";
     technology.title = "Technology";
     technology.color = "EE4B2B";
     categoryRepository.persist(technology);
@@ -36,6 +39,7 @@ public final class CategoryInitializerService {
     topicRepository.persist(technologyTopic);
 
     Category health = new Category();
+    health.creatorId = "admin";
     health.title = "Health";
     health.color = "32CD32";
     categoryRepository.persist(health);
@@ -49,6 +53,7 @@ public final class CategoryInitializerService {
     topicRepository.persist(healthTopic);
 
     Category languages = new Category();
+    languages.creatorId = "admin";
     languages.title = "Languages";
     languages.color = "00CEC8";
     categoryRepository.persist(languages);
@@ -62,5 +67,7 @@ public final class CategoryInitializerService {
     topicRepository.persist(languagesTopic);
 
     topicRepository.flush();
+
+    Log.info("Successfully initialized categories");
   }
 }
