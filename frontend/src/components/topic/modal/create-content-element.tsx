@@ -93,10 +93,12 @@ const CreateContentElementModal = ({
   });
 
   const isFormValid = useMemo(() => {
-    const { type, file, rtfText } = form.values;
+    const { type, title, file, uri, rtfText } = form.values;
     if (!type) return false;
+    if (!title.trim()) return false;
     if (!requestValidatorMapping[type].safeParse(form.values).success) return false;
     if (typesWithFile.includes(type) && !file) return false;
+    if (typesWithUri.includes(type) && !uri.trim()) return false;
     if (type === 'RTF' && !rtfText.trim()) return false;
     return true;
   }, [form.values]);
