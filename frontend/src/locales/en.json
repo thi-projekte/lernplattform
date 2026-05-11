@@ -5,6 +5,55 @@
     "createTopic": "Create topic",
     "editTopic": "Edit topic"
   },
+  "journey": {
+    "title": "Your journey map",
+    "subtitle": "Hi {{name}}, here you can see your current learning progress and the next steps.",
+    "genericUser": "User",
+    "badges": {
+      "skillTree": "Skilltree",
+      "mynaActive": "Myna active"
+    },
+    "orientation": {
+      "vertical": "Vertical",
+      "horizontal": "Horizontal"
+    },
+    "tipBadge": "Tip",
+    "tipText": "Click on a node to view details and load connected topics.",
+    "focusMode": "Focus mode",
+    "actions": {
+      "focus": "Focus mode",
+      "assistant": "Assistant settings",
+      "zoomIn": "Zoom in"
+    },
+    "stats": {
+      "completed": "Completed",
+      "inProgress": "In progress",
+      "xpCollected": "XP collected",
+      "streakDays": "Streak days"
+    },
+    "legend": {
+      "completed": "Completed",
+      "inProgress": "In progress",
+      "open": "Open",
+      "recommended": "Recommended in focus mode"
+    },
+    "assistant": {
+      "title": "Myna",
+      "subtitle": "AI assistant for content",
+      "searchPlaceholder": "Search content...",
+      "suggestionTitle": "Suggestion",
+      "suggestionText": "If you want to improve faster in your skill tree, connect your PDF notes with a short video first.",
+      "actions": {
+        "showPdfs": "Show matching PDFs",
+        "linkYoutube": "Link YouTube video",
+        "findPodcast": "Find podcast as source"
+      }
+    },
+    "selectedTopic": "Selected topic",
+    "unknownCreator": "Unknown creator",
+    "loadingNeighbors": "Loading connected topics...",
+    "openDetails": "Open detail view"
+  },
   "common": {
     "rowsPerPage": "Rows per page",
     "noEntriesFound": "No entries found",
@@ -36,16 +85,36 @@
       "personalTopics": "Personal topics",
       "createContentElement": "Create content element"
     },
+
+    "myna": {
+      "subtitle": "AI Assistant",
+      "description": "Myna can summarize the saved content and suggest suitable next sources.",
+      "askButton": "Ask Myna"
+    },
+
+    "tabs": {
+      "visual": "Visual",
+      "notes": "Notes",
+      "notesPlaceholder": "No notes yet."
+    },
+
     "actions": {
       "create": "Create topic",
-      "createContentElement": "Create content element"
+      "createContentElement": "Create content element",
+      "start": "Start Topic"
     },
     "fields": {
       "title": "Title",
       "categories": "Categories",
       "teaser": "Teaser",
       "estimatedLearningDuration": "Estimated learning duration",
-      "contentElementTitle": "Title"
+      "estimatedLearningDurationSuffix": "minutes",
+      "contentElementTitle": "Title",
+      "icon": "Icon",
+      "author": "Author"
+    },
+    "contentElementForm": {
+      "incompleteFormError": "Please fill in all required fields before continuing."
     },
     "errors": {
       "titleMissing": "Title missing",
@@ -77,6 +146,57 @@
       "YOUTUBE_LINK": "YouTube",
       "URI": "URL",
       "IMAGE": "Image"
+    },
+    "graph": {
+      "modeList": "List",
+      "modeGraph": "Graph",
+      "workspaceTitle": "Topic graph",
+      "workspaceDescription": "Drag nodes to arrange the graph, click connected lines to remove associations, and click isolated topics to create new associations.",
+      "inspectorTitle": "Inspector",
+      "inspectorDescription": "Review the selected topic and manage graph actions from here.",
+      "graphModeRailTitle": "Selected topics",
+      "graphModeRailDescription": "Search for topics to add them to the graph and manage the currently selected associations.",
+      "graphModeSearchHint": "Search results appear as isolated nodes and can be added by clicking them in the graph.",
+      "foundTopicsTitle": "Found topics",
+      "foundTopicsDescription": "These topics are currently visible in the graph as isolated nodes.",
+      "legendRoot": "Current topic",
+      "legendAssociated": "Associated topic",
+      "legendIsolated": "Isolated topic",
+      "isolatedTopic": "Isolated topic",
+      "addAssociation": "Add association",
+      "hideIsolatedTopic": "Hide from graph",
+      "removeAssociation": "Remove association",
+      "relatedTopicsTableTitle": "Associated topics list",
+      "relatedTopicsTableDescription": "The table below shows all currently connected topics and lets you remove them directly.",
+      "currentTopic": "Current topic",
+      "associatedTopic": "Associated topic",
+      "clickTopicNodeToSeeDetails": "Click on a topic node to see its details.",
+      "clickAssociationToRemove": "Click on an association line to remove the related topic.",
+      "clickIsolatedTopicToAssociate": "Click on an isolated topic node to create an association.",
+      "viewportStatus": "Viewport x: {{x}}, y: {{y}}, zoom: {{zoom}}"
+    },
+    "personalGraph": {
+      "selectedTopic": "Selected topic",
+      "emptySelection": "Click on a node to inspect the topic.",
+      "graphDescription": "Switch between the list and a graph view of your personal topics.",
+      "searchHintSelectOwned": "Select one of your own topics first before linking a foreign topic.",
+      "keepAtLeastOneAssociation": "At least one associated topic must remain linked.",
+      "linkToSelectedTopic": "Link to selected topic",
+      "alreadyLinked": "Already linked",
+      "ownedTopic": "Own topic",
+      "foreignTopic": "Foreign topic"
     }
+  },
+  "auth": {
+    "accessDenied": "Access Denied",
+    "noAccessPageText": "It looks like you don't have the necessary permissions to view this page. If you think this is a mistake, please contact your administrator.",
+    "role_builder": "Builder",
+    "role_learner": "Learner"
+  },
+  "onboarding": {
+    "title": "Onboarding",
+    "role_selection_label": "Select role",
+    "role_selection_placeholder": "Select your role",
+    "submit": "Submit"
   }
 }

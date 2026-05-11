@@ -24,6 +24,7 @@ public final class UriElementRequestProcessor
     UriElement contentElement = new UriElement();
     contentElement.title = request.title;
     contentElement.type = ContentType.URI;
+    contentElement.icon = request.icon;
     contentElement.uri = request.uri;
     contentElementRepository.persistAndFlush(contentElement);
 

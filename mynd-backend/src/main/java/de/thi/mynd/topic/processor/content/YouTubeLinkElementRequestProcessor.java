@@ -25,6 +25,7 @@ public final class YouTubeLinkElementRequestProcessor
     YouTubeLinkElement contentElement = new YouTubeLinkElement();
     contentElement.title = request.title;
     contentElement.type = ContentType.YOUTUBE_LINK;
+    contentElement.icon = request.icon;
     contentElement.uri = request.uri;
     contentElementRepository.persistAndFlush(contentElement);
 

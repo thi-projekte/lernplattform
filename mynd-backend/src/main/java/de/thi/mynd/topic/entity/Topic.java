@@ -4,6 +4,7 @@ import de.thi.mynd.common.entity.BaseEntity;
 import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.BatchSize;
 
 @Entity
 @Table(name = "topic")
@@ -17,7 +18,9 @@ public class Topic extends BaseEntity {
 
   @Column public int estimatedLearningDuration;
 
-  @ManyToMany
+  @Column public Integer popularityScore = 0;
+
+  @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(
       name = "join_topic_category",
       joinColumns = @JoinColumn(name = "topic_id"),
@@ -25,9 +28,11 @@ public class Topic extends BaseEntity {
   public List<Category> categories = new ArrayList<>();
 
   @OneToMany(mappedBy = "owningTopic", cascade = CascadeType.ALL, orphanRemoval = true)
+  @BatchSize(size = 20)
   public List<TopicAssociation> ownedAssociations = new ArrayList<>();
 
   @OneToMany(mappedBy = "foreignTopic", cascade = CascadeType.ALL)
+  @BatchSize(size = 20)
   public List<TopicAssociation> foreignAssociations = new ArrayList<>();
 
   @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)

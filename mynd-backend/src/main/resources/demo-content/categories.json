@@ -1,0 +1,32 @@
+[
+  {
+    "identifier": "technology",
+    "creatorId": "admin",
+    "title": "Technology",
+    "color": "EE4B2B"
+  },
+  {
+    "identifier": "health",
+    "creatorId": "admin",
+    "title": "Health",
+    "color": "32CD32"
+  },
+  {
+    "identifier": "languages",
+    "creatorId": "admin",
+    "title": "Languages",
+    "color": "00CEC8"
+  },
+  {
+    "identifier": "ki",
+    "creatorId": "admin",
+    "title": "Künstliche Intelligenz",
+    "color": "bd34eb"
+  },
+  {
+    "identifier": "digitalTechnlogies",
+    "creatorId": "admin",
+    "title": "Digitale Technologien",
+    "color": "34eb6b"
+  }
+]

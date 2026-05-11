@@ -3,6 +3,7 @@ import { RouterProvider } from 'react-router/dom';
 import { router } from './routing.ts';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { MantineProvider } from '@mantine/core';
+import { theme } from './theme.ts';
 
 import './i18n.ts';
 
@@ -12,17 +13,20 @@ import '@mantine/tiptap/styles.css';
 import '@mantine/notifications/styles.css';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
+import RegistrationProvider from './provider/registration-provider.tsx';
 
 const queryClient = new QueryClient();
 
 function App() {
   return (
-    <MantineProvider>
+    <MantineProvider theme={theme}>
       <ModalsProvider>
         <QueryClientProvider client={queryClient}>
           <UserProvider>
             <Notifications />
-            <RouterProvider router={router} />
+            <RegistrationProvider>
+              <RouterProvider router={router} />
+            </RegistrationProvider>
           </UserProvider>
         </QueryClientProvider>
       </ModalsProvider>

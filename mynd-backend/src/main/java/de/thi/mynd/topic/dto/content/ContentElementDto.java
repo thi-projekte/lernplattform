@@ -31,4 +31,6 @@ public abstract class ContentElementDto {
   public LocalDateTime updatedAt;
 
   public String title;
+
+  public String icon;
 }

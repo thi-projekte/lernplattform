@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "format:check": "prettier --check .",
-    "format:fix": "prettier --write ."
+    "format:fix": "prettier --write .",
+    "keycloak": "npm run build && keycloakify build"
   },
   "dependencies": {
     "@hello-pangea/dnd": "^18.0.1",
@@ -32,6 +33,7 @@
     "i18next": "^26.0.4",
     "i18next-browser-languagedetector": "^8.2.1",
     "keycloak-js": "^26.2.3",
+    "keycloakify": "^11.15.3",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-i18next": "^17.0.3",

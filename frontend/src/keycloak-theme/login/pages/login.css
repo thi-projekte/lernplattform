@@ -1,0 +1,159 @@
+html,
+body,
+#root,
+#storybook-root {
+  min-height: 100vh !important;
+  margin: 0 !important;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(124, 198, 232, 0.46) 0%,
+      rgba(124, 198, 232, 0.22) 32%,
+      rgba(255, 255, 255, 0) 62%
+    ),
+    linear-gradient(180deg, #f4fbff 0%, #ffffff 56%, #f8fafc 100%) !important;
+  background-attachment: fixed !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+}
+
+.mynd-login-page {
+  position: relative;
+  min-height: 100vh;
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(124, 198, 232, 0.46) 0%,
+      rgba(124, 198, 232, 0.22) 32%,
+      rgba(255, 255, 255, 0) 62%
+    ),
+    linear-gradient(180deg, #f4fbff 0%, #ffffff 56%, #f8fafc 100%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-bottom: 56px;
+}
+
+.mynd-login-header {
+  display: flex;
+  justify-content: flex-end;
+  width: 100%;
+  padding: 24px 32px 0;
+  box-sizing: border-box;
+}
+
+.mynd-language-button {
+  min-height: 40px;
+  border: 1.5px solid #d6dce2;
+  border-radius: 999px;
+  padding: 0 14px;
+  background: rgba(255, 255, 255, 0.84);
+  color: #1f2a44;
+  box-shadow: 0 12px 28px rgba(31, 42, 68, 0.08);
+}
+
+.mynd-language-button:hover {
+  background: #ffffff;
+  border-color: #7cc6e8;
+}
+
+.mynd-login-card {
+  max-width: 100%;
+  width: 100%;
+  min-height: 560px;
+}
+
+.mynd-login-title-block {
+  min-height: 148px;
+  justify-content: center;
+}
+
+.mynd-login-form {
+  width: 100%;
+}
+
+.mynd-login-form-fields {
+  width: 100%;
+}
+
+.mynd-login-field {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.mynd-login-card .mantine-InputWrapper-root,
+.mynd-login-card .mantine-TextInput-root,
+.mynd-login-card .mantine-Input-wrapper,
+.mynd-login-card .mantine-Input-input,
+.mynd-login-card .mantine-TextInput-input {
+  width: 100% !important;
+  max-width: 100% !important;
+  box-sizing: border-box !important;
+}
+
+.mynd-login-card input:not([type='checkbox']) {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  background: #ffffff !important;
+  border: 2px solid #d6dce2 !important;
+  border-radius: 10px !important;
+  color: #1f2a44 !important;
+  font-weight: 500 !important;
+  min-height: 46px !important;
+  padding-left: 15px !important;
+  padding-right: 15px !important;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background 160ms ease;
+}
+
+.mynd-login-card input:not([type='checkbox']):focus {
+  border-color: #7cc6e8 !important;
+  box-shadow: 0 0 0 3px rgba(124, 198, 232, 0.28) !important;
+  background: #f7fcff !important;
+  outline: none !important;
+}
+
+.mynd-login-card label {
+  color: #1f2a44 !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  margin-bottom: 7px !important;
+}
+
+.mynd-login-card a {
+  color: #1b9ed6 !important;
+  font-weight: 700 !important;
+  text-decoration: none !important;
+}
+
+.mynd-login-card a:hover {
+  text-decoration: underline !important;
+}
+
+.mynd-login-card .mantine-InputWrapper-error {
+  color: #e86a6a !important;
+  font-weight: 600 !important;
+}
+
+.mynd-login-card .mantine-Checkbox-input {
+  background-color: #ffffff !important;
+  border-color: #7cc6e8 !important;
+}
+
+.mynd-login-card .mantine-Checkbox-input:checked {
+  background-color: #7dd49b !important;
+  border-color: #7dd49b !important;
+}
+
+.mynd-login-card .mantine-Checkbox-label {
+  color: #1f2a44 !important;
+  font-weight: 500 !important;
+}
+
+.mynd-login-card button:disabled {
+  background-color: #d6dce2 !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+}

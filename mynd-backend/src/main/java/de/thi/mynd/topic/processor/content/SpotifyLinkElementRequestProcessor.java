@@ -25,6 +25,7 @@ public final class SpotifyLinkElementRequestProcessor
     SpotifyLinkElement contentElement = new SpotifyLinkElement();
     contentElement.title = request.title;
     contentElement.type = ContentType.SPOTIFY_LINK;
+    contentElement.icon = request.icon;
     contentElement.uri = request.uri;
     contentElementRepository.persistAndFlush(contentElement);
 
