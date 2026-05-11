@@ -1,9 +1,9 @@
 import { useParams } from 'react-router';
+import { useMemo, useState } from 'react';
 import { useQueryTopic } from '../../api/topic.ts';
 import { type Node, type NodeMouseHandler } from '@xyflow/react';
 import { Layout } from '../../components/layout.tsx';
-import { Paper, Text, Stack } from '@mantine/core';
-import { useMemo, useState } from 'react';
+import { Paper, Text, Stack, Breadcrumbs, Anchor, Tabs } from '@mantine/core';
 import type { Topic } from '../../schemas/topic.ts';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import TopicNode from '../../components/graph-view/topic-node.tsx';
@@ -31,6 +31,8 @@ const TopicDetailsPage = () => {
     AnyContentElementDto | Omit<Topic, 'relatedTopics'> | null
   >(null);
 
+  const displayedElement = selectedElement ?? topic ?? null;
+
   const { nodes, edges } = useMemo(() => {
     return buildTopicDetailsGraph(topic);
   }, [topic]);
@@ -50,10 +52,18 @@ const TopicDetailsPage = () => {
     return <LayoutLoader />;
   }
 
-  const isTopic = selectedElement && 'teaser' in selectedElement;
+  const isTopic = displayedElement && 'teaser' in displayedElement;
 
   return (
     <Layout>
+      <Breadcrumbs mb="md">
+        <Anchor href="/">Startseite</Anchor>
+        <Anchor>{topic?.title}</Anchor>
+        {displayedElement && !('teaser' in displayedElement) && (
+          <Anchor>{(displayedElement as AnyContentElementDto).title}</Anchor>
+        )}
+      </Breadcrumbs>
+
       <div
         style={{
           display: 'flex',
@@ -62,22 +72,29 @@ const TopicDetailsPage = () => {
           overflow: 'hidden',
         }}
       >
-        <div
-          style={{
-            flex: 1,
-            position: 'relative',
-            borderRadius: 16,
-            overflow: 'hidden',
-          }}
-        >
-          <TopicGraphView
-            nodes={nodes}
-            edges={edges}
-            onNodeClick={onNodeClick}
-            nodeTypes={nodeTypes}
-            backgroundColor="#d9e7f3"
-          />
-        </div>
+        <Tabs defaultValue="visual" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <Tabs.List>
+            <Tabs.Tab value="visual">{t('topic.tabs.visual')}</Tabs.Tab>
+            <Tabs.Tab value="notes">{t('topic.tabs.notes')}</Tabs.Tab>
+          </Tabs.List>
+
+          <Tabs.Panel
+            value="visual"
+            style={{ flex: 1, position: 'relative', borderRadius: 16, overflow: 'hidden' }}
+          >
+            <TopicGraphView
+              nodes={nodes}
+              edges={edges}
+              onNodeClick={onNodeClick}
+              nodeTypes={nodeTypes}
+              backgroundColor="#d9e7f3"
+            />
+          </Tabs.Panel>
+
+          <Tabs.Panel value="notes" p="md">
+            <Text c="dimmed">{t('topic.tabs.notesPlaceholder')}</Text>
+          </Tabs.Panel>
+        </Tabs>
 
         <Paper
           shadow="md"
@@ -87,12 +104,12 @@ const TopicDetailsPage = () => {
             overflowY: 'auto',
           }}
         >
-          {selectedElement ? (
+          {displayedElement ? (
             <Stack gap="md">
               {isTopic ? (
-                <TopicSidebarContent selectedElement={selectedElement as Topic} />
+                <TopicSidebarContent selectedElement={displayedElement as Topic} />
               ) : (
-                <ContentSidebarContent selectedElement={selectedElement as AnyContentElementDto} />
+                <ContentSidebarContent selectedElement={displayedElement as AnyContentElementDto} />
               )}
             </Stack>
           ) : (
