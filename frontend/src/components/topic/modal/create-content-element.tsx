@@ -1,6 +1,6 @@
 import { Alert, Button, Group, Modal, Stack, TextInput } from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   type AnyContentElementDto,
@@ -74,6 +74,7 @@ const CreateContentElementModal = ({
   const { isPending, mutateAsync } = useCreateContentElementMutation();
 
   const form = useForm({
+    mode: 'controlled',
     initialValues: {
       title: '',
       type: null as ContentElementType | null,
@@ -90,6 +91,15 @@ const CreateContentElementModal = ({
       return result.success ? {} : result.error.flatten().fieldErrors;
     },
   });
+
+  const isFormValid = useMemo(() => {
+    const { type, file, rtfText } = form.values;
+    if (!type) return false;
+    if (!requestValidatorMapping[type].safeParse(form.values).success) return false;
+    if (typesWithFile.includes(type) && !file) return false;
+    if (type === 'RTF' && !rtfText.trim()) return false;
+    return true;
+  }, [form.values]);
 
   const submit = form.onSubmit(
     async (values) => {
@@ -179,7 +189,7 @@ const CreateContentElementModal = ({
             <Button variant="outline" onClick={handleClose} disabled={isPending}>
               {t('common.cancel')}
             </Button>
-            <Button type="submit" loading={isPending}>
+            <Button type="submit" loading={isPending} disabled={!isFormValid}>
               {t('common.create')}
             </Button>
           </Group>
