@@ -62,15 +62,14 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           </ThemeIcon>
           <Text fw={500}>Myna</Text>
           <Text size="xs" c="dimmed">
-            KI-Assistent
+            {t('topic.myna.subtitle')}
           </Text>
         </Group>
         <Text size="sm" c="dimmed">
-          Myna kann die gespeicherten Inhalte zusammenfassen und passende nächste Quellen
-          vorschlagen.
+          {t('topic.myna.description')}
         </Text>
         <Button variant="outline" color="blue" fullWidth>
-          Myna fragen
+          {t('topic.myna.askButton')}
         </Button>
       </Stack>
     </>

@@ -86,6 +86,12 @@
       "createContentElement": "Create content element"
     },
 
+    "myna": {
+      "subtitle": "AI Assistant",
+      "description": "Myna can summarize the saved content and suggest suitable next sources.",
+      "askButton": "Ask Myna"
+    },
+
     "tabs": {
       "visual": "Visual",
       "notes": "Notes",

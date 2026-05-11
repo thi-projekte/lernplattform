@@ -86,6 +86,12 @@
       "createContentElement": "Inhalt anlegen"
     },
 
+    "myna": {
+      "subtitle": "KI-Assistent",
+      "description": "Myna kann die gespeicherten Inhalte zusammenfassen und passende nächste Quellen vorschlagen.",
+      "askButton": "Myna fragen"
+    },
+
     "tabs": {
       "visual": "Visuell",
       "notes": "Notizen",
