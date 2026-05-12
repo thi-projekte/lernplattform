@@ -171,8 +171,7 @@ export const buildTopicAssociationsGraph = (
       target: nodeId,
       sourceHandle,
       targetHandle,
-      animated: true,
-      style: { stroke: '#adb5bd', strokeWidth: 2 },
+      style: { stroke: '#adb5bd', strokeWidth: 0.8 },
     });
   });
 
