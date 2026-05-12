@@ -11,3 +11,9 @@ export const isGranted = (roles: Role[]) => {
     ?.resource_access as KeycloakResourceAccess;
   return roles.some((role) => resourceAccess['mynd']?.roles.indexOf(role) > -1);
 };
+
+export const logout = () => {
+  keycloak.logout({
+    redirectUri: window.location.origin
+  })
+}
