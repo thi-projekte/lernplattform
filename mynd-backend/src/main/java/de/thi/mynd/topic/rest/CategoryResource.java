@@ -12,6 +12,7 @@ import java.util.List;
 
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestQuery;
 
@@ -19,6 +20,7 @@ import org.jboss.resteasy.reactive.RestQuery;
 @Produces(MediaType.APPLICATION_JSON)
 @Authenticated
 @Tag(name = "Categories")
+@SecurityRequirement(name = "keycloak")
 public final class CategoryResource {
 
   @Inject CategoryService categoryService;
