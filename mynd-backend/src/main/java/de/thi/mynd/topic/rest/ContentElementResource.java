@@ -58,10 +58,11 @@ public final class ContentElementResource {
       summary = "Deletes an content element",
       description =
           "Deletes the content element associated with the given ID and detaches it from the topic.")
+  @Parameter(name = "elementId", description = "The unique ID of the content element", required = true)
   @APIResponse(responseCode = "200", description = "Successfully deleted content element")
   @APIResponse(responseCode = "404", description = "No topic found associated with that ID")
   public Response deleteContentElement(
-      @Parameter(description = "The unique ID of the content element", required = true)
+
           UUID elementId) {
     contentElementService.deleteContentElement(elementId);
     return Response.ok().build();

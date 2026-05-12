@@ -47,8 +47,9 @@ public final class TopicResource {
   @Operation(
           summary = "Finds a topic by topicId",
           description = "Finds a topic that is associated with the given topicId")
+  @Parameter(name = "withOwnedRelatedTopics", description = "Indicates whether all the related topics that the topic owns should be provided too")
   @APIResponse(responseCode = "404", description = "The topic does not exist")
-  public TopicDto getTopic(UUID topicId, @Parameter(description = "Indicates whether all the related topics that the topic owns should be provided too") @RestQuery boolean withOwnedRelatedTopics) {
+  public TopicDto getTopic(UUID topicId, @RestQuery boolean withOwnedRelatedTopics) {
       return topicService.getTopic(topicId, withOwnedRelatedTopics);
   }
 
@@ -56,10 +57,12 @@ public final class TopicResource {
   @Operation(
           summary = "Searches for topics",
           description = "Searches a maximum of five topics based on the search string.")
-  public List<ListTopicDto> search(@Parameter(
+  @Parameter(
+          name = "search",
           description = "The search string that is used to find specific topics",
           required = true,
-          example = "KI")@RestQuery String search) {
+          example = "KI")
+  public List<ListTopicDto> search(@RestQuery String search) {
     return topicService.findTopicsBySearchMax5(search);
   }
 
