@@ -44,7 +44,7 @@ public final class TopicAssociationResource {
   @Operation(
           summary = "Deletes an association",
           description = "Deletes the association with the given ID")
-  @APIResponse(responseCode = "404", description = "Thew topic association does not exist")
+  @APIResponse(responseCode = "404", description = "The topic association does not exist")
   public Response deleteAssociation(UUID associationId) {
     associationService.deleteAssociation(associationId);
     return Response.ok().build();
