@@ -12,11 +12,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
@@ -80,7 +80,8 @@ class S3ObjectStorageImplTest {
 
     CompletableFuture<PutObjectResponse> future =
         CompletableFuture.completedFuture(PutObjectResponse.builder().build());
-    when(s3Client.putObject(any(PutObjectRequest.class), any(Path.class))).thenReturn(future);
+    when(s3Client.putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class)))
+        .thenReturn(future);
 
     // Act
     String resultKey = s3ObjectStorage.uploadObject(entity, tempFile);
@@ -89,7 +90,7 @@ class S3ObjectStorageImplTest {
     assertNotNull(resultKey);
     assertTrue(resultKey.contains(entityId.toString()));
     assertTrue(resultKey.contains("test-upload"));
-    verify(s3Client).putObject(any(PutObjectRequest.class), any(Path.class));
+    verify(s3Client).putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class));
   }
 
   @Test
@@ -102,7 +103,8 @@ class S3ObjectStorageImplTest {
 
     CompletableFuture<PutObjectResponse> future =
         CompletableFuture.completedFuture(PutObjectResponse.builder().build());
-    when(s3Client.putObject(any(PutObjectRequest.class), any(Path.class))).thenReturn(future);
+    when(s3Client.putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class)))
+        .thenReturn(future);
 
     // Act
     String resultKey = s3ObjectStorage.uploadObject(entity, tempFile, "custom-file-name");
@@ -111,7 +113,7 @@ class S3ObjectStorageImplTest {
     assertNotNull(resultKey);
     assertTrue(resultKey.contains(entityId.toString()));
     assertTrue(resultKey.contains("custom-file-name"));
-    verify(s3Client).putObject(any(PutObjectRequest.class), any(Path.class));
+    verify(s3Client).putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class));
   }
 
   @Test
