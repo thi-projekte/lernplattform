@@ -27,8 +27,8 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
         minWidth: 220,
         maxWidth: 280,
         background: selected
-          ? `linear-gradient(135deg, color-mix(in srgb, ${accentColor} 12%, #fffef0) 0%, color-mix(in srgb, ${accentColor} 12%, #f0f7ff) 100%)`
-          : 'linear-gradient(135deg, #fffef0 0%, #f0f7ff 100%)',
+          ? `linear-gradient(135deg, color-mix(in srgb, ${accentColor} 12%, #f0f7ff) 0%, color-mix(in srgb, ${accentColor} 12%, #fffef0) 100%)`
+          : 'linear-gradient(135deg, #f0f7ff 0%, #fffef0 100%)',
         transition: 'box-shadow 150ms ease, background 150ms ease',
       }}
     >
