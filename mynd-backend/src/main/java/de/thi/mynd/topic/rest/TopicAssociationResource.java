@@ -12,12 +12,11 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import java.util.UUID;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-
-import java.util.UUID;
 
 @Path("/topic-associations")
 @Authenticated
@@ -31,8 +30,9 @@ public final class TopicAssociationResource {
   @RolesAllowed("builder")
   @Produces(MediaType.APPLICATION_JSON)
   @Operation(
-          summary = "Creates a new association between two topics",
-          description = "Creates a new association between the two given topics. If the association already exists nothing happens.")
+      summary = "Creates a new association between two topics",
+      description =
+          "Creates a new association between the two given topics. If the association already exists nothing happens.")
   @APIResponse(responseCode = "404", description = "One of the topics does not exist")
   public UUID createAssociation(@Valid CreateTopicAssociationRequest request) {
     return associationService.createAssociation(request.owningTopicId, request.foreignTopicId).id;
@@ -42,8 +42,8 @@ public final class TopicAssociationResource {
   @Path("/{associationId}")
   @RolesAllowed("builder")
   @Operation(
-          summary = "Deletes an association",
-          description = "Deletes the association with the given ID")
+      summary = "Deletes an association",
+      description = "Deletes the association with the given ID")
   @APIResponse(responseCode = "404", description = "The topic association does not exist")
   public Response deleteAssociation(UUID associationId) {
     associationService.deleteAssociation(associationId);

@@ -95,7 +95,6 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
     topicAssociationRepository.flush();
 
     Log.infof("Successfully deleted topic association %s", associationId);
-
   }
 
   private Topic findTopic(UUID topicId) {

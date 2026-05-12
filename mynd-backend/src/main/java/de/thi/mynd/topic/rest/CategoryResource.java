@@ -30,14 +30,12 @@ public final class CategoryResource {
       summary = "Searches for categories",
       description = "Searches a maximum of five categories based on the search string.")
   @Parameter(
-          name = "query",
-          description = "The search string that is used to find specific categories",
-          required = true,
-          example = "Tech")
-  public List<Category> searchCategories(
+      name = "query",
+      description = "The search string that is used to find specific categories",
+      required = true,
+      example = "Tech")
+  public List<Category> searchCategories(@RestQuery String query) {
 
-          @RestQuery
-          String query) {
     return categoryService.searchMax5(query);
   }
 }
