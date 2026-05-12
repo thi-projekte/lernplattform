@@ -17,7 +17,7 @@ export type ContentElementType = z.infer<typeof ContentElementTypeSchema>;
 // ---- REQUESTS ----
 
 const ContentElementRequestSchema = z.object({
-  title: z.string(),
+  title: z.string().min(1),
   type: ContentElementTypeSchema,
   icon: z.string().min(1),
 });
