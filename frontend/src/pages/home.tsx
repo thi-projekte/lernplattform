@@ -11,7 +11,7 @@ import {
 } from '../api/topic-graph.ts';
 import LayoutLoader from '../components/layout-loader.tsx';
 import TopicGraphView from '../components/graph-view/topic-graph.tsx';
-import SkillTreeNodeComponent from '../components/graph-view/skill-tree-node.tsx';
+import GenericTopicNode from '../components/graph-view/generic-topic-node.tsx';
 import type {
   SkillTreeNodeData,
   SkillTreeOrientation,
@@ -22,7 +22,7 @@ import type { Node, NodeMouseHandler } from '@xyflow/react';
 import type { TopicGraphNodePositions } from '../components/graph-view/topic-graph.types.ts';
 
 const nodeTypes = {
-  skillTreeTopic: SkillTreeNodeComponent,
+  skillTreeTopic: GenericTopicNode,
 };
 
 const mergeGraphTopics = (current: GraphTopicDto[], incoming: GraphTopicDto[]) => {
