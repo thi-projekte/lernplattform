@@ -203,6 +203,7 @@ const HomePage = () => {
                   borderRadius: 16,
                   overflow: 'hidden',
                   border: '1px solid #e9ecef',
+                  background: '#f1f3f5ad',
                 }}
               >
                 <TopicGraphView
@@ -223,7 +224,7 @@ const HomePage = () => {
                   onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
                   fitView
                   fitViewPadding={orientation === 'horizontal' ? 0.22 : 0.3}
-                  backgroundColor="#e5e7eb"
+                  backgroundColor="#d1d5db"
                   backgroundGap={20}
                 />
               </div>
