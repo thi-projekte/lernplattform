@@ -360,10 +360,7 @@ const BuilderModeListPage = () => {
                                 aria-label={t('topic.personalGraph.linkToSelectedTopic')}
                                 disabled={
                                   isCreatingAssociation ||
-                                  areTopicsAlreadyAssociated(
-                                    selectedGraphTopic!.id,
-                                    suggestion.id
-                                  )
+                                  areTopicsAlreadyAssociated(selectedGraphTopic!.id, suggestion.id)
                                 }
                                 onClick={() =>
                                   void handleAssociationCreate(
