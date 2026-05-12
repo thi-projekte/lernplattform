@@ -1,4 +1,4 @@
-import { apiClient } from './common.ts';
+import { apiClient, safeValidateApiResponseContent } from './common.ts';
 import { useQueries, useQuery } from '@tanstack/react-query';
 import { type GraphTopicDto, GraphTopicDtoSchema } from '../schemas/topic-graph.ts';
 import { z } from 'zod';
@@ -21,7 +21,7 @@ const fetchMostPopularWithNeighbors = async (
       validateStatus: (status) => status <= 204,
     }
   );
-  return z.array(GraphTopicDtoSchema).parse(result.data);
+  return safeValidateApiResponseContent(z.array(GraphTopicDtoSchema), result.data);
 };
 
 export const useFetchMostPopularTopicsWithNeighbors = (
@@ -40,7 +40,7 @@ const fetchDirectNeighbors = async (topicId: string): Promise<GraphTopicDto[]> =
   const result = await apiClient.get(`/topics/graph/${topicId}/neighbors`, {
     validateStatus: (status) => status <= 204,
   });
-  return z.array(GraphTopicDtoSchema).parse(result.data);
+  return safeValidateApiResponseContent(z.array(GraphTopicDtoSchema), result.data);
 };
 
 export const useFetchDirectNeighbors = (topicId: string | null, enabled = true) => {
@@ -65,7 +65,7 @@ const searchTopicsInGraph = async (search: string): Promise<GraphTopicDto[]> => 
   const result = await apiClient.get(`/topics/graph?search=${search}`, {
     validateStatus: (status) => status <= 204,
   });
-  return z.array(GraphTopicDtoSchema).parse(result.data);
+  return safeValidateApiResponseContent(z.array(GraphTopicDtoSchema), result.data);
 };
 
 export const useSearchTopicsInGraph = (search: string) => {
