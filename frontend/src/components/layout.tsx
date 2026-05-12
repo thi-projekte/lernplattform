@@ -1,6 +1,6 @@
 import { ActionIcon, AppShell, Box, Burger, Group, Image, NavLink } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconUser } from '@tabler/icons-react';
+import { IconUser, IconLogout2 } from '@tabler/icons-react';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import { useTranslation } from 'react-i18next';
@@ -8,7 +8,7 @@ import { useTranslation } from 'react-i18next';
 import keycloak from '../keycloak.ts';
 import { routes, type TypedMyndRoute } from '../routing.ts';
 import { useLocation, useMatches, useNavigate } from 'react-router';
-import { isGranted } from '../auth.ts';
+import { isGranted, logout } from '../auth.ts';
 import AccessDenied from './access-denied.tsx';
 
 interface LayoutProps {
@@ -87,6 +87,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             <LanguagePicker />
             <ActionIcon variant="default" size="xl" onClick={() => keycloak.accountManagement()}>
               <IconUser size={32} stroke={1.5} />
+            </ActionIcon>
+            <ActionIcon variant="default" size="xl" onClick={logout}>
+              <IconLogout2 size={32} stroke={1.5} />
             </ActionIcon>
           </Group>
         </Group>
