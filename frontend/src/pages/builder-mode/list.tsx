@@ -381,7 +381,7 @@ const BuilderModeListPage = () => {
               </Stack>
             </Paper>
 
-            <Paper withBorder radius="md" p="md" h={760}>
+            <Paper withBorder radius="md" p="md" h={760} style={{ background: '#f1f3f5e0' }}>
               <PersonalTopicsGraph
                 topics={personalGraphTopics}
                 currentUsername={userService.account.username}
