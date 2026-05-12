@@ -12,9 +12,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.time.Duration;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
@@ -92,16 +89,16 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
     PutObjectRequest request = PutObjectRequest.builder().bucket(bucketName).key(objectKey).build();
 
     s3Client
-            .putObject(request, AsyncRequestBody.fromBytes(content))
-            .whenComplete(
-                    (response, exception) -> {
-                      if (exception != null) {
-                        Log.error(exception.getMessage());
-                        Log.trace(exception);
-                      } else {
-                        Log.infof("Successfully uploaded object %s", objectKey);
-                      }
-                    });
+        .putObject(request, AsyncRequestBody.fromBytes(content))
+        .whenComplete(
+            (response, exception) -> {
+              if (exception != null) {
+                Log.error(exception.getMessage());
+                Log.trace(exception);
+              } else {
+                Log.infof("Successfully uploaded object %s", objectKey);
+              }
+            });
   }
 
   private byte[] getBytesFromFile(File file) {
