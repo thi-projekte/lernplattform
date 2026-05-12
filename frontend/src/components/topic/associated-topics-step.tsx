@@ -24,6 +24,7 @@ import type {
   TopicGraphNodePositions,
 } from '../graph-view/topic-graph.types.ts';
 import type { ListTopicDto } from '../../schemas/topic.ts';
+import { useUserService } from '../../provider/user-provider.tsx';
 
 interface AssociatedTopicsStepProps {
   topic: Partial<Topic>;
@@ -32,6 +33,7 @@ interface AssociatedTopicsStepProps {
 
 const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) => {
   const { t } = useTranslation();
+  const userService = useUserService();
   const [editorMode, setEditorMode] = useState<'list' | 'graph'>('graph');
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
   const [lastViewport, setLastViewport] = useState<Viewport | null>(null);
@@ -308,6 +310,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                     overflow: 'hidden',
                     border: '1px dashed #ced4da',
                     borderRadius: 12,
+                    background: '#f1f3f5e0',
                   }}
                 >
                   <TopicAssociationsGraph
@@ -318,6 +321,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       relatedTopics: topic.relatedTopics,
                       isolatedTopics: searchSuggestions,
                     }}
+                    currentUsername={userService.account.username}
                     onTopicClick={setSelectedTopicNode}
                     onAssociationClick={removeTopic}
                     onMoveEnd={handleMoveEnd}
