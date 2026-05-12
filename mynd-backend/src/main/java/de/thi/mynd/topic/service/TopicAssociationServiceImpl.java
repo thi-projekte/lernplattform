@@ -10,6 +10,7 @@ import de.thi.mynd.topic.repository.TopicAssociationRepository;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.security.TopicAssociationVoter;
 import de.thi.mynd.topic.security.TopicVoter;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -72,6 +73,9 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
     newAssociation.owningTopic = owner;
     newAssociation.foreignTopic = foreign;
     topicAssociationRepository.persistAndFlush(newAssociation);
+
+    Log.infof("Successfully created association between %s and %s", owningTopicId, foreignTopicId);
+
     return newAssociation;
   }
 
@@ -89,6 +93,9 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
 
     topicAssociationRepository.delete(association);
     topicAssociationRepository.flush();
+
+    Log.infof("Successfully deleted topic association %s", associationId);
+
   }
 
   private Topic findTopic(UUID topicId) {

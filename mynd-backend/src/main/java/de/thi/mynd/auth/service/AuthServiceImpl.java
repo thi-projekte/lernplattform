@@ -2,6 +2,7 @@ package de.thi.mynd.auth.service;
 
 import de.thi.mynd.common.exception.UserNotFoundException;
 import de.thi.mynd.common.service.IdentityService;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
@@ -23,6 +24,8 @@ public final class AuthServiceImpl implements AuthService {
     List<String> newRoles = new ArrayList<>();
     newRoles.add("builder");
     identityService.addRolesToUser(username, newRoles);
+
+    Log.infof("Successfully made user %s a builder", username);
   }
 
   @Override
@@ -30,5 +33,7 @@ public final class AuthServiceImpl implements AuthService {
     List<String> newRoles = new ArrayList<>();
     newRoles.add("learner");
     identityService.addRolesToUser(username, newRoles);
+
+    Log.infof("Successfully made user %s a learner", username);
   }
 }
