@@ -779,8 +779,8 @@ export const buildSkillTreeGraph = (
         targetHandle,
         type: 'straight',
         style: {
-          stroke: '#94a3b8',
-          strokeWidth: 2.15,
+          stroke: '#cbd5e1',
+          strokeWidth: 1.25,
         },
       });
     });
