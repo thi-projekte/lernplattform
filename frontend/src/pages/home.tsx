@@ -203,7 +203,7 @@ const HomePage = () => {
                   borderRadius: 16,
                   overflow: 'hidden',
                   border: '1px solid #e9ecef',
-                  background: '#f1f3f5ad',
+                  background: '#f1f3f5e0',
                 }}
               >
                 <TopicGraphView
