@@ -1,15 +1,19 @@
 package de.thi.mynd.common.service;
 
 import de.thi.mynd.common.entity.BaseEntity;
+import de.thi.mynd.common.exception.NoFileProvidedException;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.inject.Named;
 import jakarta.transaction.Transactional;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.Files;
 import java.time.Duration;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
+import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
@@ -49,15 +53,17 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
   @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
   public String uploadObject(BaseEntity entity, File file) {
     String objectKey = getS3FileName(entity, file.getName());
-    uploadAsync(objectKey, file);
-
+    byte[] bytes = getBytesFromFile(file);
+    uploadAsync(objectKey, bytes);
     return objectKey;
   }
 
   @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
   public String uploadObject(BaseEntity entity, File file, String originalFileName) {
     String objectKey = getS3FileName(entity, originalFileName);
-    uploadAsync(objectKey, file);
+
+    byte[] bytes = getBytesFromFile(file);
+    uploadAsync(objectKey, bytes);
 
     return objectKey;
   }
@@ -79,11 +85,11 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
             });
   }
 
-  private void uploadAsync(String objectKey, File file) {
+  private void uploadAsync(String objectKey, byte[] content) {
     PutObjectRequest request = PutObjectRequest.builder().bucket(bucketName).key(objectKey).build();
 
     s3Client
-        .putObject(request, file.toPath())
+        .putObject(request, AsyncRequestBody.fromBytes(content))
         .whenComplete(
             (response, exception) -> {
               if (exception != null) {
@@ -93,6 +99,14 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
                 Log.infof("Successfully uploaded object %s", objectKey);
               }
             });
+  }
+
+  private byte[] getBytesFromFile(File file) {
+    try {
+      return Files.readAllBytes(file.toPath());
+    } catch (IOException e) {
+      throw new NoFileProvidedException("Cannot read the bytes from uploaded file");
+    }
   }
 
   private String getS3FileName(BaseEntity entity, String filename) {
