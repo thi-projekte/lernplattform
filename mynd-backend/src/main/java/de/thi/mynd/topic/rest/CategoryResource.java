@@ -9,7 +9,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
-
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
@@ -27,8 +26,16 @@ public final class CategoryResource {
 
   @Path("/search")
   @GET
-  @Operation(summary = "Searches for categories", description = "Searches a maximum of five categories based on the search string.")
-  public List<Category> searchCategories(@Parameter(description = "The search string that is used to find specific categories", required = true, example = "Tech") @RestQuery String query) {
+  @Operation(
+      summary = "Searches for categories",
+      description = "Searches a maximum of five categories based on the search string.")
+  public List<Category> searchCategories(
+      @Parameter(
+              description = "The search string that is used to find specific categories",
+              required = true,
+              example = "Tech")
+          @RestQuery
+          String query) {
     return categoryService.searchMax5(query);
   }
 }

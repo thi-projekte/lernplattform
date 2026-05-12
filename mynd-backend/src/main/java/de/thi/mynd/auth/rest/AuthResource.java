@@ -25,9 +25,13 @@ public final class AuthResource {
   @GET
   @Path("/check-is-builder")
   @Authenticated
-  @Operation(summary = "Check if the user is builder", description = "Checks whether the current user has the builder role assigned.")
+  @Operation(
+      summary = "Check if the user is builder",
+      description = "Checks whether the current user has the builder role assigned.")
   @APIResponse(responseCode = "200", description = "The current user has the builder role")
-  @APIResponse(responseCode = "204", description = "The current user does not have the builder role")
+  @APIResponse(
+      responseCode = "204",
+      description = "The current user does not have the builder role")
   public Response checkUserIsBuilder() {
     String username = identity.getPrincipal().getName();
     if (authService.checkUserIsBuilder(username)) {
@@ -39,7 +43,9 @@ public final class AuthResource {
   @POST
   @Path("/register-as-builder")
   @Authenticated
-  @Operation(summary = "Register the current user as builder", description = "Assigns the current user the builder role")
+  @Operation(
+      summary = "Register the current user as builder",
+      description = "Assigns the current user the builder role")
   @APIResponse(responseCode = "201", description = "The role got assigned successfully")
   @APIResponse(responseCode = "404", description = "The user could not be found in keycloak")
   public Response makeUserBuilder() {
@@ -51,7 +57,9 @@ public final class AuthResource {
   @POST
   @Path("/register-as-learner")
   @Authenticated
-  @Operation(summary = "Register the current user as learner", description = "Assigns the current user the learner role")
+  @Operation(
+      summary = "Register the current user as learner",
+      description = "Assigns the current user the learner role")
   @APIResponse(responseCode = "201", description = "The role got assigned successfully")
   @APIResponse(responseCode = "404", description = "The user could not be found in keycloak")
   public Response makeUserLearner() {
