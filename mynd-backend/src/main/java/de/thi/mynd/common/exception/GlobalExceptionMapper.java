@@ -3,7 +3,7 @@ package de.thi.mynd.common.exception;
 import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
-public class GlobalExceptionMapper {
+public final class GlobalExceptionMapper {
 
   @ServerExceptionMapper
   public Response mapFileTooLargeException(FileTooLargeException e) {
