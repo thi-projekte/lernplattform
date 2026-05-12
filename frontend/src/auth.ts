@@ -14,6 +14,6 @@ export const isGranted = (roles: Role[]) => {
 
 export const logout = () => {
   keycloak.logout({
-    redirectUri: window.location.origin
-  })
-}
+    redirectUri: window.location.origin,
+  });
+};
