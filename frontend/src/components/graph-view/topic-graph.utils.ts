@@ -780,7 +780,7 @@ export const buildSkillTreeGraph = (
         type: 'straight',
         style: {
           stroke: '#cbd5e1',
-          strokeWidth: 1.25,
+          strokeWidth: 0.8,
         },
       });
     });
