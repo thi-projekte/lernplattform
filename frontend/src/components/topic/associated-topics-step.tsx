@@ -3,18 +3,17 @@ import {
   ActionIcon,
   Badge,
   Box,
-  Button,
   Group,
   Paper,
   SegmentedControl,
   Stack,
   Text,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import type { OnMoveEnd, Viewport } from '@xyflow/react';
-import { IconTrash } from '@tabler/icons-react';
+import { IconEyeOff, IconLink, IconTrash } from '@tabler/icons-react';
 import TopicSearchbar from './topic-searchbar.tsx';
 import EntityTable from '../entity-table.tsx';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
@@ -24,6 +23,7 @@ import type {
   TopicGraphNodePositions,
 } from '../graph-view/topic-graph.types.ts';
 import type { ListTopicDto } from '../../schemas/topic.ts';
+import { useUserService } from '../../provider/user-provider.tsx';
 
 interface AssociatedTopicsStepProps {
   topic: Partial<Topic>;
@@ -32,9 +32,9 @@ interface AssociatedTopicsStepProps {
 
 const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) => {
   const { t } = useTranslation();
+  const userService = useUserService();
   const [editorMode, setEditorMode] = useState<'list' | 'graph'>('graph');
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
-  const [lastViewport, setLastViewport] = useState<Viewport | null>(null);
   const [searchSuggestions, setSearchSuggestions] = useState<ListTopicDto[]>([]);
   const [nodePositions, setNodePositions] = useState<TopicGraphNodePositions>({});
   const [isViewportLocked, setIsViewportLocked] = useState(false);
@@ -87,15 +87,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
     selectedTopicNode && typeof selectedTopicNode.payload.id === 'string'
       ? selectedTopicNode.payload.id
       : null;
-  const selectedCategories =
-    selectedTopicNode && 'categories' in selectedTopicNode.payload
-      ? selectedTopicNode.payload.categories
-      : undefined;
   const isolatedTopicCount = searchSuggestions.length;
-
-  const handleMoveEnd: OnMoveEnd = (_event, viewport) => {
-    setLastViewport(viewport);
-  };
 
   const handleSuggestionsChange = useCallback((topics: ListTopicDto[], searchTerm: string) => {
     const nextSuggestions = searchTerm.trim() ? topics.slice(0, 4) : [];
@@ -168,7 +160,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
           style={{
             display: 'grid',
             gap: '1rem',
-            gridTemplateColumns: '220px minmax(0, 1fr) 200px',
+            gridTemplateColumns: '260px minmax(0, 1fr)',
             alignItems: 'start',
           }}
         >
@@ -210,14 +202,42 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       <Stack gap={6}>
                         {searchSuggestions.map((suggestion) => (
                           <Paper key={suggestion.id} withBorder radius="md" p="xs">
-                            <Text fw={600} size="xs" truncate>
-                              {suggestion.title}
-                            </Text>
-                            {suggestion.creatorFullName && (
-                              <Text size="xs" c="dimmed" truncate>
-                                {suggestion.creatorFullName}
-                              </Text>
-                            )}
+                            <Group justify="space-between" align="flex-start" wrap="nowrap">
+                              <div style={{ minWidth: 0 }}>
+                                <Text fw={600} size="xs" truncate>
+                                  {suggestion.title}
+                                </Text>
+                                {suggestion.creatorFullName && (
+                                  <Text size="xs" c="dimmed" truncate>
+                                    {suggestion.creatorFullName}
+                                  </Text>
+                                )}
+                              </div>
+                              <Group gap={4} wrap="nowrap">
+                                <Tooltip label={t('topic.graph.addAssociation')} withArrow>
+                                  <ActionIcon
+                                    variant="light"
+                                    color="blue"
+                                    size="sm"
+                                    aria-label={t('topic.graph.addAssociation')}
+                                    onClick={() => createAssociation(suggestion.id)}
+                                  >
+                                    <IconLink size={14} />
+                                  </ActionIcon>
+                                </Tooltip>
+                                <Tooltip label={t('topic.graph.hideIsolatedTopic')} withArrow>
+                                  <ActionIcon
+                                    variant="subtle"
+                                    color="gray"
+                                    size="sm"
+                                    aria-label={t('topic.graph.hideIsolatedTopic')}
+                                    onClick={() => hideIsolatedTopic(suggestion.id)}
+                                  >
+                                    <IconEyeOff size={14} />
+                                  </ActionIcon>
+                                </Tooltip>
+                              </Group>
+                            </Group>
                           </Paper>
                         ))}
                       </Stack>
@@ -308,6 +328,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                     overflow: 'hidden',
                     border: '1px dashed #ced4da',
                     borderRadius: 12,
+                    background: '#f1f3f5e0',
                   }}
                 >
                   <TopicAssociationsGraph
@@ -318,9 +339,9 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       relatedTopics: topic.relatedTopics,
                       isolatedTopics: searchSuggestions,
                     }}
+                    currentUsername={userService.account.username}
                     onTopicClick={setSelectedTopicNode}
                     onAssociationClick={removeTopic}
-                    onMoveEnd={handleMoveEnd}
                     onNodePositionChange={handleNodePositionChange}
                     canEditAssociations
                     canDeleteAssociations
@@ -335,118 +356,6 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                     nodePositions={nodePositions}
                   />
                 </Box>
-              </Stack>
-            </Paper>
-          </div>
-          <div>
-            <Paper withBorder radius="md" p="sm" h={760}>
-              <Stack gap="md" h="100%">
-                <div>
-                  <Title order={4}>{t('topic.graph.inspectorTitle')}</Title>
-                </div>
-                {selectedTopicNode ? (
-                  <Stack gap="xs">
-                    <Title order={4}>{selectedTopicNode.title}</Title>
-                    {selectedTopicNode.creatorFullName && (
-                      <Text size="sm" c="dimmed">
-                        {selectedTopicNode.creatorFullName}
-                      </Text>
-                    )}
-                    {selectedCategories && selectedCategories.length > 0 && (
-                      <Group gap="xs">
-                        {selectedCategories.map((category) => (
-                          <Badge key={category.title} color={`#${category.color}`}>
-                            {category.title}
-                          </Badge>
-                        ))}
-                      </Group>
-                    )}
-                    <Text size="xs" c="dimmed">
-                      {selectedTopicNode.isRoot
-                        ? t('topic.graph.currentTopic')
-                        : selectedTopicNode.isIsolated
-                          ? t('topic.graph.isolatedTopic')
-                          : t('topic.graph.associatedTopic')}
-                    </Text>
-                    {!selectedTopicNode.isRoot &&
-                      !selectedTopicNode.isIsolated &&
-                      (() => {
-                        const selectedTopicId = selectedTopicNode.payload.id;
-                        if (typeof selectedTopicId !== 'string') {
-                          return null;
-                        }
-
-                        return (
-                          <Button
-                            variant="light"
-                            color="red"
-                            size="xs"
-                            onClick={() => removeTopic(selectedTopicId)}
-                          >
-                            {t('topic.graph.removeAssociation')}
-                          </Button>
-                        );
-                      })()}
-                    {selectedTopicNode.isIsolated &&
-                      (() => {
-                        const selectedTopicId = selectedTopicNode.payload.id;
-                        if (typeof selectedTopicId !== 'string') {
-                          return null;
-                        }
-
-                        return (
-                          <Stack gap="xs">
-                            <Button
-                              variant="light"
-                              color="blue"
-                              size="xs"
-                              onClick={() => createAssociation(selectedTopicId)}
-                            >
-                              {t('topic.graph.addAssociation')}
-                            </Button>
-                            <Button
-                              variant="subtle"
-                              color="gray"
-                              size="xs"
-                              onClick={() => hideIsolatedTopic(selectedTopicId)}
-                              fullWidth
-                              styles={{
-                                label: {
-                                  whiteSpace: 'normal',
-                                  textAlign: 'center',
-                                },
-                              }}
-                            >
-                              {t('topic.graph.hideIsolatedTopic')}
-                            </Button>
-                          </Stack>
-                        );
-                      })()}
-                  </Stack>
-                ) : (
-                  <Stack gap="xs">
-                    <Text size="xs" c="dimmed">
-                      {t('topic.graph.clickTopicNodeToSeeDetails')}
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      {t('topic.graph.clickAssociationToRemove')}
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      {t('topic.graph.clickIsolatedTopicToAssociate')}
-                    </Text>
-                  </Stack>
-                )}
-                <div style={{ marginTop: 'auto' }}>
-                  {lastViewport && (
-                    <Text size="sm" c="dimmed">
-                      {t('topic.graph.viewportStatus', {
-                        x: Math.round(lastViewport.x),
-                        y: Math.round(lastViewport.y),
-                        zoom: lastViewport.zoom.toFixed(2),
-                      })}
-                    </Text>
-                  )}
-                </div>
               </Stack>
             </Paper>
           </div>

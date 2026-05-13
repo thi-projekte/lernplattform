@@ -8,7 +8,7 @@ import type {
   OnConnect,
   OnMoveEnd,
 } from '@xyflow/react';
-import TopicNode from './topic-node.tsx';
+import GenericTopicNode from './generic-topic-node.tsx';
 import TopicGraphView from './topic-graph.tsx';
 import { buildTopicAssociationsGraph } from './topic-graph.utils.ts';
 import type {
@@ -18,11 +18,12 @@ import type {
 } from './topic-graph.types.ts';
 
 const nodeTypes: NodeTypes = {
-  topic: TopicNode,
+  topic: GenericTopicNode,
 };
 
 interface TopicAssociationsGraphProps {
   topic?: TopicAssociationsGraphInput;
+  currentUsername?: string;
   onTopicClick?: (topic: GraphTopicNodeData) => void;
   onAssociationClick?: (relatedTopicId: string) => void;
   onMoveEnd?: OnMoveEnd;
@@ -47,6 +48,7 @@ interface TopicAssociationsGraphProps {
 
 const TopicAssociationsGraph = ({
   topic,
+  currentUsername,
   onTopicClick,
   onAssociationClick,
   onMoveEnd,
@@ -64,13 +66,13 @@ const TopicAssociationsGraph = ({
   fitView = true,
   fitViewPadding = 0.2,
   fitViewMaxZoom,
-  backgroundColor = '#dee2e6',
+  backgroundColor = '#d1d5db',
   backgroundGap = 16,
   nodePositions,
 }: TopicAssociationsGraphProps) => {
   const { nodes, edges } = useMemo(
-    () => buildTopicAssociationsGraph(topic, nodePositions),
-    [nodePositions, topic]
+    () => buildTopicAssociationsGraph(topic, nodePositions, currentUsername),
+    [currentUsername, nodePositions, topic]
   );
 
   const handleNodeClick: NodeMouseHandler = (_event, node) => {

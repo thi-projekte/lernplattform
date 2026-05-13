@@ -8,12 +8,12 @@ import type {
 } from '@xyflow/react';
 import type { GraphTopicDto } from '../../schemas/topic-graph.ts';
 import type { GraphTopicNodeData } from './topic-graph.types.ts';
-import TopicNode from './topic-node.tsx';
+import GenericTopicNode from './generic-topic-node.tsx';
 import TopicGraphView from './topic-graph.tsx';
 import { buildPersonalTopicsGraph } from './topic-graph.utils.ts';
 
 const nodeTypes: NodeTypes = {
-  topic: TopicNode,
+  topic: GenericTopicNode,
 };
 
 interface PersonalTopicsGraphProps {
@@ -86,7 +86,7 @@ const PersonalTopicsGraph = ({
       viewportLocked={viewportLocked}
       onToggleViewportLock={onToggleViewportLock}
       fitViewMaxZoom={0.99}
-      backgroundColor="#d9e7f3"
+      backgroundColor="#d1d5db"
     />
   );
 };

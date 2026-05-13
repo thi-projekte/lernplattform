@@ -1,9 +1,7 @@
-import { Badge, Button, Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
+import { Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
 import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
-import { IconEye } from '@tabler/icons-react';
 import { useUserService } from '../provider/user-provider.tsx';
 import {
   useFetchDirectNeighborQueries,
@@ -11,7 +9,7 @@ import {
 } from '../api/topic-graph.ts';
 import LayoutLoader from '../components/layout-loader.tsx';
 import TopicGraphView from '../components/graph-view/topic-graph.tsx';
-import SkillTreeNodeComponent from '../components/graph-view/skill-tree-node.tsx';
+import GenericTopicNode from '../components/graph-view/generic-topic-node.tsx';
 import type {
   SkillTreeNodeData,
   SkillTreeOrientation,
@@ -22,7 +20,7 @@ import type { Node, NodeMouseHandler } from '@xyflow/react';
 import type { TopicGraphNodePositions } from '../components/graph-view/topic-graph.types.ts';
 
 const nodeTypes = {
-  skillTreeTopic: SkillTreeNodeComponent,
+  skillTreeTopic: GenericTopicNode,
 };
 
 const mergeGraphTopics = (current: GraphTopicDto[], incoming: GraphTopicDto[]) => {
@@ -49,12 +47,10 @@ const mergeGraphTopics = (current: GraphTopicDto[], incoming: GraphTopicDto[]) =
 
 const HomePage = () => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
   const userProfile = useUserService();
   const { data, isLoading } = useFetchMostPopularTopicsWithNeighbors();
 
   const [orientation, setOrientation] = useState<SkillTreeOrientation>('vertical');
-  const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const [expandedTopicIds, setExpandedTopicIds] = useState<string[]>([]);
   const [nodePositionsByOrientation, setNodePositionsByOrientation] = useState<
     Record<SkillTreeOrientation, TopicGraphNodePositions>
@@ -64,7 +60,6 @@ const HomePage = () => {
   });
   const [isViewportLocked, setIsViewportLocked] = useState(false);
   const directNeighborQueries = useFetchDirectNeighborQueries(expandedTopicIds);
-  const isExpandingNode = directNeighborQueries.some((query) => query.isFetching);
 
   const graphTopics = useMemo(() => {
     return directNeighborQueries.reduce(
@@ -72,11 +67,6 @@ const HomePage = () => {
       data ?? []
     );
   }, [data, directNeighborQueries]);
-
-  const selectedTopic = useMemo(
-    () => graphTopics.find((topic) => topic.id === selectedTopicId) ?? graphTopics[0] ?? null,
-    [graphTopics, selectedTopicId]
-  );
 
   const { nodes: layoutNodes, edges } = useMemo(
     () => buildSkillTreeGraph(graphTopics, orientation, userProfile.account.username),
@@ -129,7 +119,6 @@ const HomePage = () => {
         [orientation]: nextOrientationPositions,
       };
     });
-    setSelectedTopicId(topic.id);
     setExpandedTopicIds((current) =>
       current.includes(topic.id) ? current : [...current, topic.id]
     );
@@ -190,89 +179,33 @@ const HomePage = () => {
 
             <div
               style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(0, 1fr) 300px',
-                gap: 20,
-                minHeight: 640,
+                position: 'relative',
+                height: 640,
+                borderRadius: 16,
+                overflow: 'hidden',
+                border: '1px solid #e9ecef',
+                background: '#f1f3f5e0',
               }}
             >
-              <div
-                style={{
-                  position: 'relative',
-                  minHeight: 640,
-                  borderRadius: 16,
-                  overflow: 'hidden',
-                  border: '1px solid #e9ecef',
-                }}
-              >
-                <TopicGraphView
-                  key={orientation}
-                  nodes={nodes}
-                  edges={edges}
-                  nodeTypes={nodeTypes}
-                  onNodeClick={onNodeClick}
-                  onNodeDragStop={(_event, node) =>
-                    handleNodePositionChange(node.id, node.position)
-                  }
-                  allowCanvasPanning={!isViewportLocked}
-                  allowPanOnScroll={!isViewportLocked}
-                  allowNodeDragging={!isViewportLocked}
-                  showControls={false}
-                  showViewportToolbar
-                  viewportLocked={isViewportLocked}
-                  onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
-                  fitView
-                  fitViewPadding={orientation === 'horizontal' ? 0.22 : 0.3}
-                  backgroundColor="#e5e7eb"
-                  backgroundGap={20}
-                />
-              </div>
-
-              <Paper withBorder radius="lg" p="md" style={{ alignSelf: 'start' }}>
-                <Stack gap="md">
-                  <div>
-                    <Title order={3}>{t('journey.selectedTopic')}</Title>
-                    <Text size="sm" c="dimmed">
-                      {t('common.clickOnANodeToSeeContent')}
-                    </Text>
-                  </div>
-
-                  {selectedTopic && (
-                    <Paper withBorder radius="md" p="md">
-                      <Stack gap="xs">
-                        <Title order={4}>{selectedTopic.title}</Title>
-                        {selectedTopic.categories.length > 0 && (
-                          <Group gap="xs">
-                            {selectedTopic.categories.map((category) => (
-                              <Badge key={category.id} color={`#${category.color}`} radius="xl">
-                                {category.title}
-                              </Badge>
-                            ))}
-                          </Group>
-                        )}
-                        <Text size="sm" c="dimmed">
-                          {selectedTopic.creatorFullName || t('journey.unknownCreator')}
-                        </Text>
-                        {isExpandingNode && (
-                          <Text size="sm" c="blue">
-                            {t('journey.loadingNeighbors')}
-                          </Text>
-                        )}
-                        <Button
-                          leftSection={<IconEye size={16} />}
-                          variant="light"
-                          color="blue"
-                          fullWidth
-                          mt="sm"
-                          onClick={() => navigate(`/topics/${selectedTopic.id}/details`)}
-                        >
-                          {t('journey.openDetails')}
-                        </Button>
-                      </Stack>
-                    </Paper>
-                  )}
-                </Stack>
-              </Paper>
+              <TopicGraphView
+                key={orientation}
+                nodes={nodes}
+                edges={edges}
+                nodeTypes={nodeTypes}
+                onNodeClick={onNodeClick}
+                onNodeDragStop={(_event, node) => handleNodePositionChange(node.id, node.position)}
+                allowCanvasPanning={!isViewportLocked}
+                allowPanOnScroll={!isViewportLocked}
+                allowNodeDragging={!isViewportLocked}
+                showControls={false}
+                showViewportToolbar
+                viewportLocked={isViewportLocked}
+                onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
+                fitView
+                fitViewPadding={orientation === 'horizontal' ? 0.22 : 0.3}
+                backgroundColor="#d1d5db"
+                backgroundGap={20}
+              />
             </div>
           </Stack>
         </Paper>

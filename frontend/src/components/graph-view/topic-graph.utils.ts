@@ -111,7 +111,8 @@ export const buildTopicDetailsGraph = (
 
 export const buildTopicAssociationsGraph = (
   topic?: TopicAssociationsGraphInput,
-  nodePositions: TopicGraphNodePositions = {}
+  nodePositions: TopicGraphNodePositions = {},
+  currentUsername?: string
 ): { nodes: TopicGraphNode[]; edges: Edge[] } => {
   const nodes: TopicGraphNode[] = [];
   const edges: Edge[] = [];
@@ -119,6 +120,10 @@ export const buildTopicAssociationsGraph = (
   if (!topic) {
     return { nodes, edges };
   }
+
+  const currentUsernameNormalized = currentUsername?.trim().toLowerCase();
+  const isOwnedByCurrent = (creatorId?: string) =>
+    !!currentUsernameNormalized && creatorId?.toLowerCase() === currentUsernameNormalized;
 
   const rootId = topic.id ? `topic-${topic.id}` : 'topic-root';
   const rootTitle = topic.title?.trim() || 'Untitled topic';
@@ -133,6 +138,7 @@ export const buildTopicAssociationsGraph = (
       title: rootTitle,
       creatorFullName: topic.creatorFullName,
       isRoot: true,
+      isOwned: true,
       payload: topic as unknown as Topic | ListTopicDto,
     },
   });
@@ -158,6 +164,7 @@ export const buildTopicAssociationsGraph = (
         kind: 'topic',
         title: relatedTopic.title,
         creatorFullName: relatedTopic.creatorFullName,
+        isOwned: isOwnedByCurrent(relatedTopic.creatorId),
         payload: relatedTopic,
       },
     });
@@ -194,6 +201,7 @@ export const buildTopicAssociationsGraph = (
         title: isolatedTopic.title,
         creatorFullName: isolatedTopic.creatorFullName,
         isIsolated: true,
+        isOwned: isOwnedByCurrent(isolatedTopic.creatorId),
         payload: isolatedTopic,
       },
     });
@@ -778,9 +786,8 @@ export const buildSkillTreeGraph = (
         targetHandle,
         type: 'straight',
         style: {
-          stroke: '#94a3b8',
-          strokeWidth: 2.15,
-          strokeDasharray: '10 7',
+          stroke: '#cbd5e1',
+          strokeWidth: 0.8,
         },
       });
     });
