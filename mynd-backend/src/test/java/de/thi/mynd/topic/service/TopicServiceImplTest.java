@@ -158,11 +158,13 @@ public class TopicServiceImplTest {
 
   @Test
   void testGetTopicWithValidId() {
+    UUID topicId = UUID.randomUUID();
+
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
     when(topicLearnProgressService.getLearnProgressForTopic(any()))
         .thenThrow(TopicLearnProgressNotStartedException.class);
-
-    UUID topicId = UUID.randomUUID();
+    when(mappingRegistry.map(any(), eq(TopicDto.class)))
+        .thenReturn(TopicDto.builder().id(topicId).build());
 
     Assertions.assertDoesNotThrow(
         () -> {
