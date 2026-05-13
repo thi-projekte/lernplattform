@@ -3,5 +3,25 @@
   "aiMlAndDl": ["supervisedLearning", "neuralNetworks"],
   "supervisedLearning": ["decTrees"],
   "neuralNetworks": ["genAi"],
-  "genAi": ["prompting", "risksAndChances"]
+  "genAi": ["prompting", "risksAndChances"],
+  "pmIntro": [
+    "pmScope"
+  ],
+  "pmScope": [
+    "pmStakeholder",
+    "pmWbs"
+  ],
+  "pmWbs": [
+    "pmTime",
+    "pmKanban"
+  ],
+  "pmTime": [
+    "pmRisk"
+  ],
+  "pmKanban": [
+    "pmRisk"
+  ],
+  "pmRisk": [
+    "pmRetro"
+  ]
 }

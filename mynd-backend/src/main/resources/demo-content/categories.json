@@ -28,5 +28,41 @@
     "creatorId": "admin",
     "title": "Digitale Technologien",
     "color": "34eb6b"
+  },
+  {
+    "identifier": "projectManagementBasics",
+    "creatorId": "admin",
+    "title": "Projektmanagement Grundlagen",
+    "color": "2563EB"
+  },
+  {
+    "identifier": "projectPlanning",
+    "creatorId": "admin",
+    "title": "Projektplanung",
+    "color": "7C3AED"
+  },
+  {
+    "identifier": "communication",
+    "creatorId": "admin",
+    "title": "Kommunikation",
+    "color": "F59E0B"
+  },
+  {
+    "identifier": "projectControl",
+    "creatorId": "admin",
+    "title": "Projektsteuerung",
+    "color": "DC2626"
+  },
+  {
+    "identifier": "agileWorking",
+    "creatorId": "admin",
+    "title": "Agiles Arbeiten",
+    "color": "16A34A"
+  },
+  {
+    "identifier": "projectCompletion",
+    "creatorId": "admin",
+    "title": "Projektabschluss",
+    "color": "0891B2"
   }
 ]

@@ -198,5 +198,231 @@
         "uri": "https://youtu.be/0TAQwTWcW_Q?si=9P8zCTtXJG5C67fK"
       }
     ]
+  },
+  {
+    "identifier": "pmIntro",
+    "title": "Was ist Projektmanagement?",
+    "teaser": "Einstieg in Projektbegriff und Nutzen von Struktur.",
+    "creatorId": "admin",
+    "categories": [
+      "projectManagementBasics"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Grundlagen-Text",
+        "type": "RTF",
+        "rtfText": "<p>Projektmanagement bedeutet, ein einmaliges Vorhaben gezielt zu planen, zu steuern und zu einem brauchbaren Ergebnis zu bringen. Ein Projekt ist keine dauerhaft wiederkehrende Routineaufgabe, sondern hat ein klares Ziel, einen Anfang, ein Ende, begrenzte Ressourcen und meistens mehrere Beteiligte. Genau deshalb braucht es Struktur. Ohne Projektmanagement entstehen typische Probleme: Aufgaben bleiben unklar, Verantwortlichkeiten verschwimmen, Termine werden verpasst und am Ende weiß niemand genau, ob das Ergebnis wirklich zum ursprünglichen Ziel passt. Projektmanagement ist also nicht nur eine Sammlung von Methoden, sondern eine Denkweise: Was soll erreicht werden? Wer ist beteiligt? Welche Schritte sind nötig? Welche Risiken gibt es? Und woran erkennen wir, dass wir fertig sind? Für die Lernplattform ist dieser Node der Einstiegspunkt. Er erklärt das Grundproblem und macht klar, warum die weiteren Nodes wie Scope, Stakeholder, Zeitplanung, Kanban und Risiken logisch darauf aufbauen. In der Klickdemo kann dieser Node als Startpunkt der Journey Map dienen.</p>"
+      },
+      {
+        "title": "PM-Grundlagen allgemein",
+        "type": "URI",
+        "uri": "https://www.wrike.com/de/project-management-guide/die-grundlagen-des-projektmanagements/"
+      },
+      {
+        "title": "Audio-Platzhalter: Einstieg",
+        "type": "SPOTIFY_LINK",
+        "uri": "https://open.spotify.com/episode/2GcE1DlKA2iRWtE0PBcDR7?si=5a9ba53501444c5b"
+      }
+    ]
+  },
+  {
+    "identifier": "pmScope",
+    "title": "Ziele, Anforderungen und Scope sauber festlegen",
+    "teaser": "Ziele, Anforderungen und Nicht-Scope sauber trennen.",
+    "creatorId": "admin",
+    "categories": [
+      "projectPlanning"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Scope-Erklärung",
+        "type": "RTF",
+        "rtfText": "<p>Viele Projekte scheitern nicht, weil das Team zu wenig arbeitet, sondern weil nicht sauber geklärt wurde, was überhaupt gebaut oder erreicht werden soll. Ein gutes Projektziel beschreibt möglichst konkret, welches Ergebnis am Ende vorliegen soll. Der Scope legt fest, was Teil des Projekts ist und was ausdrücklich nicht dazugehört. Diese Abgrenzung ist brutal wichtig, weil sonst immer neue Wünsche in das Projekt wandern. Das nennt man Scope Creep. Besonders bei Softwareprojekten führt das schnell dazu, dass ein eigentlich kleiner MVP plötzlich zu einem unübersichtlichen Großprojekt wird. Ein sinnvoller Scope beantwortet deshalb drei Fragen: Was müssen wir liefern, damit der Nutzen sichtbar wird? Was ist nur nett, aber nicht kritisch? Was lassen wir bewusst weg? Für eure Lernplattform passt dieser Node besonders gut, weil euer Projekt selbst stark vom MVP-Denken lebt. Auch dort ist nicht das gesamte YaYoM-Universum relevant, sondern der Kern: Nodes, Content Assets, Relationships, Kategorien, Tags und Journey Map. In der Demo kann der Node zeigen, wie fachliches Wissen direkt auf das eigene Projekt übertragbar wird.</p>"
+      },
+      {
+        "title": "MVP-Erklärung",
+        "type": "URI",
+        "uri": "https://www.brickmakers.de/mvp-definition"
+      },
+      {
+        "title": "Scope Creep erklärt",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=_c-qzFV5yM4"
+      }
+    ]
+  },
+  {
+    "identifier": "pmStakeholder",
+    "title": "Stakeholder erkennen und Erwartungen verstehen",
+    "teaser": "Beteiligte und Erwartungen im Projekt erkennen.",
+    "creatorId": "admin",
+    "categories": [
+      "communication"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Stakeholder-Erklärung",
+        "type": "RTF",
+        "rtfText": "<p>Stakeholder sind Personen oder Gruppen, die ein Interesse am Projekt haben oder vom Ergebnis betroffen sind. Das können Auftraggeber, Nutzer, Entwickler, Professoren, Prüfer, Fachbereiche oder spätere Betreiber sein. In Projekten wird dieser Punkt oft unterschätzt. Technisch kann ein Ergebnis funktionieren und trotzdem scheitern, wenn wichtige Stakeholder andere Erwartungen hatten. Ein Beispiel: Das Entwicklerteam baut eine sehr flexible Plattform, der Nutzer wollte aber vor allem eine einfache Oberfläche. Oder der Auftraggeber erwartet eine Demo, während das Team hauptsächlich am Datenmodell gearbeitet hat. Stakeholder-Management bedeutet nicht, es allen recht zu machen. Es bedeutet, Erwartungen sichtbar zu machen und bewusst damit umzugehen. Wer entscheidet? Wer muss informiert werden? Wer nutzt das Ergebnis wirklich? Wer hat Einwände? Für die Lernplattform ist dieser Node nützlich, weil er eine andere Perspektive in die Journey Map bringt: Nicht nur Methoden und Technik sind wichtig, sondern auch Kommunikation und Zielgruppenverständnis. In einer Klickdemo kann man diesen Node als seitliche Vertiefung nach dem Scope-Node darstellen.</p>"
+      },
+      {
+        "title": "Stakeholder-Analyse",
+        "type": "URI",
+        "uri": "https://www.orghandbuch.de/Webs/OHB/DE/OrganisationshandbuchNEU/4_MethodenUndTechniken/Methoden_A_bis_Z/Stakeholderanalyse/Stakeholderanalyse_node.html"
+      },
+      {
+        "title": "Stakeholderanalyse Video",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=cLXU__NNeEI"
+      },
+      {
+        "title": "Reflexionsfrage",
+        "type": "RTF",
+        "rtfText": "<p>Welche drei Stakeholder hätten bei unserer Lernplattform den größten Einfluss auf den MVP?</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "pmWbs",
+    "title": "Aufgabenpakete und Work Breakdown Structure",
+    "teaser": "Große Ziele in konkrete Arbeitspakete zerlegen.",
+    "creatorId": "admin",
+    "categories": [
+      "projectPlanning"
+    ],
+    "duration": 20,
+    "contentElements": [
+      {
+        "title": "WBS-Erklärung",
+        "type": "RTF",
+        "rtfText": "<p>Eine Work Breakdown Structure, kurz WBS, zerlegt ein großes Projektziel in kleinere Arbeitspakete. Das klingt banal, ist aber einer der wichtigsten Schritte in der Projektplanung. Große Ziele wie „Lernplattform bauen“ sind zu ungenau. Daraus müssen konkrete Pakete entstehen, zum Beispiel „Node-Datenmodell definieren“, „Builder-Maske entwerfen“, „Content Assets speichern“, „Journey Map darstellen“ oder „Demo Content einpflegen“. Gute Arbeitspakete sind verständlich, begrenzt und so formuliert, dass jemand sie übernehmen kann. Dadurch wird aus einer großen Idee ein bearbeitbarer Plan. Die WBS hilft auch beim Schätzen: Wie lange dauert etwas? Wer ist verantwortlich? Welche Aufgabe hängt von welcher anderen ab? Schlechte Aufgabenpakete sind zu groß, zu vage oder vermischen mehrere Themen. In der Demo ist dieser Node besonders geeignet, um den Übergang von Konzept zu Umsetzung zu zeigen. Außerdem kann man damit direkt erklären, warum eure Teams nicht einfach alle gleichzeitig „an der Plattform arbeiten“, sondern getrennte, aber verbundene Teilaufgaben brauchen.</p>"
+      },
+      {
+        "title": "Work Breakdown Structure",
+        "type": "URI",
+        "uri": "https://www.gpm-ipma.de/ueber-die-gpm/blog/work-breakdown-structure-komplexes-einfach-machen"
+      },
+      {
+        "title": "WBS erklärt",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=_K4VLopVX-U"
+      }
+    ]
+  },
+  {
+    "identifier": "pmTime",
+    "title": "Zeitplanung und Meilensteine",
+    "teaser": "Meilensteine, Puffer und Abhängigkeiten planen.",
+    "creatorId": "admin",
+    "categories": [
+      "projectControl"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Zeitplanung-Text",
+        "type": "RTF",
+        "rtfText": "<p>Zeitplanung bedeutet nicht, jeden Arbeitsschritt perfekt vorherzusagen. Das wäre unrealistisch. Gute Zeitplanung bedeutet, zentrale Abschnitte und Meilensteine sichtbar zu machen. Ein Meilenstein ist ein überprüfbarer Zwischenstand, zum Beispiel „Datenmodell steht“, „erste Builder-Maske klickbar“, „Nodes können gespeichert werden“, „Journey Map zeigt Beziehungen“ oder „Demo-Pfad ist eingepflegt“. Meilensteine helfen, weil sie Diskussionen konkret machen. Statt allgemein zu sagen „wir sind fast fertig“, kann das Team prüfen, ob ein bestimmter Stand wirklich erreicht wurde. Besonders in Semesterprojekten ist das wichtig, weil die Zeit begrenzt ist und Prüfungen, andere Module oder private Termine dazwischenkommen. Zeitplanung sollte daher immer Puffer enthalten. Außerdem müssen Abhängigkeiten beachtet werden: Demo Content bringt wenig, wenn es noch keine Node-Detailansicht gibt; Relationship-Daten bringen wenig, wenn die Journey Map sie nicht darstellen kann. In der Lernplattform kann dieser Node zeigen, wie Projektwissen nicht isoliert bleibt, sondern über Relationships mit Aufgabenpaketen, Kanban und Risiken verbunden wird.</p>"
+      },
+      {
+        "title": "Meilenstein Projektmanagement",
+        "type": "URI",
+        "uri": "https://projekte-leicht-gemacht.de/blog/projektmanagement/klassisch/projektplanung/definition-meilensteine/"
+      },
+      {
+        "title": "Projektplanung mit Meilensteinen",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=blbJF2C7P_o"
+      }
+    ]
+  },
+  {
+    "identifier": "pmKanban",
+    "title": "Kanban: Arbeit sichtbar machen",
+    "teaser": "Aufgabenstatus sichtbar machen und WIP begrenzen.",
+    "creatorId": "admin",
+    "categories": [
+      "agileWorking"
+    ],
+    "duration": 35,
+    "contentElements": [
+      {
+        "title": "Kanban-Erklärung",
+        "type": "RTF",
+        "rtfText": "<p>Kanban ist eine einfache Methode, um Arbeit sichtbar zu machen. Typisch ist ein Board mit Spalten wie „To Do“, „In Arbeit“ und „Done“. Jede Aufgabe wird als Karte dargestellt und wandert durch diese Spalten. Der große Vorteil ist Transparenz: Jeder sieht, woran gearbeitet wird, was blockiert ist und was bereits erledigt wurde. Kanban ist besonders für Teams hilfreich, weil es versteckte Arbeit sichtbar macht. Wenn zehn Aufgaben gleichzeitig in „In Arbeit“ liegen, ist das meistens kein Zeichen von Produktivität, sondern ein Warnsignal. Zu viele parallele Aufgaben führen dazu, dass nichts richtig fertig wird. Deshalb arbeitet Kanban oft mit Work-in-Progress-Limits. Das bedeutet: Erst etwas fertigstellen, bevor zu viel Neues begonnen wird. Für eure Klickdemo ist Kanban ein guter Praxis-Node, weil er sehr anschaulich ist und direkt auf die Teamarbeit angewendet werden kann. Der Node kann mit Aufgabenpaketen und Zeitplanung verbunden werden: Die WBS definiert Aufgaben, Kanban macht deren Bearbeitungsstatus sichtbar.</p>"
+      },
+      {
+        "title": "Kanban allgemein",
+        "type": "URI",
+        "uri": "https://www.orghandbuch.de/Webs/OHB/DE/OrganisationshandbuchNEU/4_MethodenUndTechniken/Methoden_A_bis_Z/Kanban/Kanban_node.html"
+      },
+      {
+        "title": "Kanban einfach erklärt",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=yW28P8MwCr4"
+      }
+    ]
+  },
+  {
+    "identifier": "pmRisk",
+    "title": "Risiken früh erkennen",
+    "teaser": "Projektrisiken früh erkennen und Gegenmaßnahmen ableiten.",
+    "creatorId": "admin",
+    "categories": [
+      "projectControl"
+    ],
+    "duration": 20,
+    "contentElements": [
+      {
+        "title": "Risikomanagement-Erklärung",
+        "type": "RTF",
+        "rtfText": "<p>Ein Risiko ist ein mögliches Ereignis, das den Projekterfolg gefährden kann. Risiken sind noch keine eingetretenen Probleme, sondern Warnsignale. Genau deshalb lohnt es sich, früh darüber nachzudenken. Typische Risiken in Softwareprojekten sind unklarer Scope, fehlende Schnittstellen, Datenmodell ändert sich zu spät, Teammitglieder arbeiten aneinander vorbei, technische Probleme werden unterschätzt oder Demo-Inhalte fehlen bis kurz vor Schluss. Ein gutes Risikomanagement besteht nicht aus Panik, sondern aus nüchterner Einschätzung: Wie wahrscheinlich ist das Risiko? Wie groß wäre der Schaden? Was können wir jetzt tun, damit es nicht passiert oder weniger schlimm wird? Beispiel: Wenn die Journey Map vom Datenmodell abhängt, sollte das Datenmodell früh geklärt werden. Wenn Demo Content für die Präsentation wichtig ist, sollte er nicht erst am letzten Tag entstehen. In eurer Lernplattform ist dieser Node ein guter Reflexionspunkt, weil er Projektmanagement mit dem realen Semesterprojekt verbindet. Außerdem kann er als seitlicher Node an Zeitplanung, Kanban und Scope hängen.</p>"
+      },
+      {
+        "title": "Risikomanagement",
+        "type": "URI",
+        "uri": "https://www.bva.bund.de/DE/Services/Behoerden/Beratung/BZB/Themenwelten/Strategie/Projektmanagement/Wissenspool/S-O-S-Methode/stda_sos-kap8_risikomgmt.html"
+      },
+      {
+        "title": "Risiken im Projektmanagement",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=IDvII9iz3e0"
+      }
+    ]
+  },
+  {
+    "identifier": "pmRetro",
+    "title": "Review und Retrospektive",
+    "teaser": "Ergebnis prüfen und Zusammenarbeit verbessern.",
+    "creatorId": "admin",
+    "categories": [
+      "projectCompletion"
+    ],
+    "duration": 15,
+    "contentElements": [
+      {
+        "title": "Review und Retrospektive",
+        "type": "RTF",
+        "rtfText": "<p>Am Ende eines Projektabschnitts sollte nicht nur gefragt werden, ob etwas fertig ist. Es sollte auch gefragt werden, was daraus gelernt wurde. Ein Review betrachtet vor allem das Ergebnis: Funktioniert der Prototyp? Sind die wichtigsten Use Cases abgedeckt? Kann ein Nutzer einen Node öffnen, Content Assets sehen und Beziehungen in der Journey Map nachvollziehen? Eine Retrospektive betrachtet dagegen die Zusammenarbeit: Was lief gut? Was hat gebremst? Welche Kommunikation war unklar? Was sollte das Team beim nächsten Sprint anders machen? Beides ist wichtig, aber nicht dasselbe. Ohne Review bleibt unklar, ob das Produkt brauchbar ist. Ohne Retrospektive wiederholt das Team dieselben Arbeitsprobleme. Für eure Plattform ist dieser Node ein sinnvoller Abschluss, weil er den Lernpfad abrundet. Nach Scope, Planung, Aufgaben, Kanban und Risiken kommt die Frage: Was wurde gebaut und was wurde gelernt? In der Klickdemo kann dieser Node als letzter Knoten dienen und zeigen, dass Lernpfade nicht nur Wissen vermitteln, sondern auch Reflexion auslösen können.</p>"
+      },
+      {
+        "title": "Retrospektive Scrum",
+        "type": "URI",
+        "uri": "https://scrumguide.de/sprint-retrospektive/"
+      },
+      {
+        "title": "Retrospektive einfach erklärt",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=k65p4txMiX4"
+      },
+      {
+        "title": "Reflexionsfragen",
+        "type": "RTF",
+        "rtfText": "<p>Was lief gut? Was war unklar? Was blockierte uns? Was ändern wir beim nächsten Schritt?</p>"
+      }
+    ]
   }
 ]
