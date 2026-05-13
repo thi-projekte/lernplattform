@@ -1,6 +1,6 @@
 package de.thi.mynd.topic.entity;
 
-import de.thi.mynd.common.entity.BaseEntity;
+import de.thi.mynd.common.entity.BaseEntityWithId;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -9,7 +9,7 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "content_element")
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "type", discriminatorType = DiscriminatorType.STRING)
-public abstract class ContentElement extends BaseEntity {
+public abstract class ContentElement extends BaseEntityWithId {
 
   @Column(nullable = false)
   public String title;

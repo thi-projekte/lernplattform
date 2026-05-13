@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import de.thi.mynd.common.entity.BaseEntity;
+import de.thi.mynd.common.entity.BaseEntityWithId;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -38,7 +38,7 @@ class S3ObjectStorageImplTest {
   private static final String BUCKET_NAME = "test-bucket";
 
   // Simple concrete implementation of BaseEntity for testing
-  static class TestEntity extends BaseEntity {
+  static class TestEntity extends BaseEntityWithId {
     public TestEntity(UUID id) {
       this.id = id;
     }

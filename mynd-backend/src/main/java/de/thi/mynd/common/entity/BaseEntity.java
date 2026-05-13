@@ -11,8 +11,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 @EntityListeners(EntityOwnerPrePersistListener.class)
 public abstract class BaseEntity {
 
-  @Id @GeneratedValue public UUID id;
-
   @Column(nullable = false)
   public String creatorId;
 
