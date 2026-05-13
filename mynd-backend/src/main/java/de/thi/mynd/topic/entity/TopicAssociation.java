@@ -1,6 +1,5 @@
 package de.thi.mynd.topic.entity;
 
-import de.thi.mynd.common.entity.BaseEntity;
 import de.thi.mynd.common.entity.BaseEntityWithId;
 import jakarta.persistence.*;
 import org.hibernate.annotations.OnDelete;

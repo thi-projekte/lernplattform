@@ -1,7 +1,6 @@
 package de.thi.mynd.topic.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import de.thi.mynd.common.entity.BaseEntity;
 import de.thi.mynd.common.entity.BaseEntityWithId;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

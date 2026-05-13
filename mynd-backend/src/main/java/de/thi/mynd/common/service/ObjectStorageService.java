@@ -1,7 +1,6 @@
 package de.thi.mynd.common.service;
 
 import de.thi.mynd.common.entity.BaseEntityWithId;
-
 import java.io.File;
 import java.net.URL;
 
