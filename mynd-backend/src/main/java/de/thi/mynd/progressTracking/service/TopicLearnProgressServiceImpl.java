@@ -8,7 +8,6 @@ import de.thi.mynd.progressTracking.repository.LearnProgressTopicRepository;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -18,51 +17,46 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public final class TopicLearnProgressServiceImpl implements TopicLearnProgressService {
 
-    @Inject
-    LearnProgressTopicRepository learnProgressTopicRepository;
+  @Inject LearnProgressTopicRepository learnProgressTopicRepository;
 
-    @Inject
-    SecurityIdentity identity;
+  @Inject SecurityIdentity identity;
 
-    @Inject
-    MappingRegistry mappingRegistry;
+  @Inject MappingRegistry mappingRegistry;
 
-    @Override
-    public Map<UUID, TopicLearnProgressDto> getLearnProgressMappingForTopics(List<UUID> topicIds) {
-        String creatorId = identity.getPrincipal().getName();
-        List<LearnProgressTopic> topics = learnProgressTopicRepository.findByTopicIdsAndCreatorIdContentElementsFetched(topicIds, creatorId);
+  @Override
+  public Map<UUID, TopicLearnProgressDto> getLearnProgressMappingForTopics(List<UUID> topicIds) {
+    String creatorId = identity.getPrincipal().getName();
+    List<LearnProgressTopic> topics =
+        learnProgressTopicRepository.findByTopicIdsAndCreatorIdContentElementsFetched(
+            topicIds, creatorId);
 
-        return topics.stream()
-                .collect(Collectors.toMap(
-                        topic -> topic.id.topicId,
-                        topic -> mappingRegistry.map(topic, TopicLearnProgressDto.class)
-                ));
+    return topics.stream()
+        .collect(
+            Collectors.toMap(
+                topic -> topic.id.topicId,
+                topic -> mappingRegistry.map(topic, TopicLearnProgressDto.class)));
+  }
+
+  @Override
+  public TopicLearnProgressDto getLearnProgressForTopic(UUID topicId) {
+    String creatorId = identity.getPrincipal().getName();
+    Optional<LearnProgressTopic> progressTopicOptional =
+        learnProgressTopicRepository.findOneByTopicIdAndCreatorIdContentElementsFetched(
+            topicId, creatorId);
+
+    if (progressTopicOptional.isEmpty()) {
+      throw new TopicLearnProgressNotStartedException("This topic has not been started yet");
     }
 
-    @Override
-    public TopicLearnProgressDto getLearnProgressForTopic(UUID topicId) {
-        String creatorId = identity.getPrincipal().getName();
-        Optional<LearnProgressTopic> progressTopicOptional = learnProgressTopicRepository.findOneByTopicIdAndCreatorIdContentElementsFetched(topicId, creatorId);
+    return mappingRegistry.map(progressTopicOptional.get(), TopicLearnProgressDto.class);
+  }
 
-        if (progressTopicOptional.isEmpty()) {
-            throw new TopicLearnProgressNotStartedException("This topic has not been started yet");
-        }
+  @Override
+  public void startLearningTopicAsCurrentUser(UUID topicId) {}
 
-        return mappingRegistry.map(progressTopicOptional.get(), TopicLearnProgressDto.class);
-    }
+  @Override
+  public void manuallyCompleteTopicAsCurrentUser(UUID topicId) {}
 
-    @Override
-    public void startLearningTopicAsCurrentUser(UUID topicId) {
-
-    }
-
-    @Override
-    public void manuallyCompleteTopicAsCurrentUser(UUID topicId) {
-
-    }
-
-    @Override
-    public void completeLearningContentElementAsCurrentUser(UUID contentElementId) {
-
-    }
+  @Override
+  public void completeLearningContentElementAsCurrentUser(UUID contentElementId) {}
 }

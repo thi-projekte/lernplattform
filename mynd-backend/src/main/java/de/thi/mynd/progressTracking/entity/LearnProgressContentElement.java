@@ -7,17 +7,27 @@ import jakarta.persistence.*;
 @Table(name = "learn_progress_content_element")
 public class LearnProgressContentElement extends BaseEntity {
 
-    @EmbeddedId
-    @AttributeOverride(name = "creatorId", column = @Column(name = "creatorId", insertable = false, updatable = false))
-    public LearnProgressContentElementId id;
+  @EmbeddedId
+  @AttributeOverride(
+      name = "creatorId",
+      column = @Column(name = "creatorId", insertable = false, updatable = false))
+  public LearnProgressContentElementId id;
 
-    @ManyToOne
-    @JoinColumns({
-            @JoinColumn(name = "creatorId", referencedColumnName = "creatorId", insertable = false, updatable = false),
-            @JoinColumn(name = "topicId", referencedColumnName = "topicId", insertable = false, updatable = false)
-    })
-    public LearnProgressTopic progressTopic;
+  @ManyToOne
+  @JoinColumns({
+    @JoinColumn(
+        name = "creatorId",
+        referencedColumnName = "creatorId",
+        insertable = false,
+        updatable = false),
+    @JoinColumn(
+        name = "topicId",
+        referencedColumnName = "topicId",
+        insertable = false,
+        updatable = false)
+  })
+  public LearnProgressTopic progressTopic;
 
-    @Column(nullable = false)
-    public boolean completed;
+  @Column(nullable = false)
+  public boolean completed;
 }
