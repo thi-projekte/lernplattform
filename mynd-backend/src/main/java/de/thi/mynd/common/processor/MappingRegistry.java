@@ -11,25 +11,11 @@ public final class MappingRegistry {
 
   @Inject Instance<AbstractMappingProcessor<?, ?>> processors;
 
-  @SuppressWarnings("unchecked")
   public <E, D> D map(E entity, Class<D> dtoClass) {
 
     if (entity == null) return null;
 
-    AbstractMappingProcessor<E, D> processor =
-        (AbstractMappingProcessor<E, D>)
-            processors.stream()
-                .filter(
-                    p -> p.getEntityType().isInstance(entity) && p.getDtoType().equals(dtoClass))
-                .findFirst()
-                .orElseThrow(
-                    () ->
-                        new IllegalArgumentException(
-                            "No processor found for "
-                                + entity.getClass().getSimpleName()
-                                + " -> "
-                                + dtoClass.getSimpleName()));
-
+    AbstractMappingProcessor<E, D> processor = getMappingProcessor(entity, dtoClass);
     return processor.mapAndEnrich(entity);
   }
 
@@ -44,5 +30,21 @@ public final class MappingRegistry {
     if (entities == null) return List.of();
 
     return entities.stream().map(e -> this.map(e, typeResolver.apply(e))).toList();
+  }
+
+  @SuppressWarnings("unchecked")
+  private <E, D> AbstractMappingProcessor<E, D> getMappingProcessor(E entity, Class<D> dtoClass) {
+
+    return (AbstractMappingProcessor<E, D>)
+        processors.stream()
+            .filter(p -> p.getEntityType().isInstance(entity) && p.getDtoType().equals(dtoClass))
+            .findFirst()
+            .orElseThrow(
+                () ->
+                    new IllegalArgumentException(
+                        "No processor found for "
+                            + entity.getClass().getSimpleName()
+                            + " -> "
+                            + dtoClass.getSimpleName()));
   }
 }
