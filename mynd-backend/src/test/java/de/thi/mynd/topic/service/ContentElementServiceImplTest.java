@@ -5,6 +5,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.service.ObjectStorageService;
 import de.thi.mynd.topic.dto.content.ContentElementDto;
@@ -21,7 +22,6 @@ import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.UUID;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
@@ -106,7 +106,9 @@ class ContentElementServiceImplTest {
     when(contentElementRepository.findById(id)).thenReturn(null);
 
     // Act & Assert
-    assertThrows(NotFoundException.class, () -> contentElementService.deleteContentElement(id));
+    assertThrows(
+        EntityInstanceNotFoundException.class,
+        () -> contentElementService.deleteContentElement(id));
   }
 
   @Test
