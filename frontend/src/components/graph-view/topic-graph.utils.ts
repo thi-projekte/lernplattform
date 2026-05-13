@@ -1,4 +1,5 @@
 import type { Edge } from '@xyflow/react';
+import dagre from 'dagre';
 import type { ListTopicDto, Topic } from '../../schemas/topic';
 import type { GraphTopicDto } from '../../schemas/topic-graph.ts';
 import type {
@@ -7,6 +8,57 @@ import type {
   TopicGraphNodePositions,
 } from './topic-graph.types';
 import type { SkillTreeNode, SkillTreeOrientation } from './skill-tree.types.ts';
+
+// Approximate dimensions of the rendered topic card. Dagre uses these to
+// reserve space when laying out the graph so the cards don't visually overlap.
+const SKILL_NODE_WIDTH = 280;
+const SKILL_NODE_HEIGHT = 120;
+
+// Wraps a set of nodes + edges with dagre to compute non-overlapping positions.
+// React Flow expects top-left corner coordinates; dagre returns node centers,
+// so we offset by half the node size.
+const applyDagreLayout = <T extends { id: string; position: { x: number; y: number } }>(
+  nodes: T[],
+  edges: Edge[],
+  orientation: SkillTreeOrientation
+): T[] => {
+  if (nodes.length === 0) return nodes;
+
+  const dagreGraph = new dagre.graphlib.Graph();
+  dagreGraph.setDefaultEdgeLabel(() => ({}));
+  dagreGraph.setGraph({
+    rankdir: orientation === 'horizontal' ? 'LR' : 'TB',
+    nodesep: 40,
+    ranksep: 80,
+  });
+
+  nodes.forEach((node) => {
+    dagreGraph.setNode(node.id, {
+      width: SKILL_NODE_WIDTH,
+      height: SKILL_NODE_HEIGHT,
+    });
+  });
+
+  edges.forEach((edge) => {
+    if (dagreGraph.hasNode(edge.source) && dagreGraph.hasNode(edge.target)) {
+      dagreGraph.setEdge(edge.source, edge.target);
+    }
+  });
+
+  dagre.layout(dagreGraph);
+
+  return nodes.map((node) => {
+    const layouted = dagreGraph.node(node.id);
+    if (!layouted) return node;
+    return {
+      ...node,
+      position: {
+        x: layouted.x - SKILL_NODE_WIDTH / 2,
+        y: layouted.y - SKILL_NODE_HEIGHT / 2,
+      },
+    };
+  });
+};
 
 // The edge handles are derived from node angles so arrows stay attached to the
 // most natural side of each node. Be careful when changing this mapping,
@@ -793,5 +845,6 @@ export const buildSkillTreeGraph = (
     });
   });
 
-  return { nodes, edges };
+  const layoutedNodes = applyDagreLayout(nodes, edges, orientation);
+  return { nodes: layoutedNodes, edges };
 };
