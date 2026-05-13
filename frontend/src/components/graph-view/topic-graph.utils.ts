@@ -449,7 +449,8 @@ export const buildPersonalTopicsGraph = (
     });
   });
 
-  return { nodes, edges };
+  const layoutedNodes = applyDagreLayout(nodes, edges, 'vertical');
+  return { nodes: layoutedNodes, edges };
 };
 
 const buildGraphAdjacency = (topics: GraphTopicDto[]) => {
