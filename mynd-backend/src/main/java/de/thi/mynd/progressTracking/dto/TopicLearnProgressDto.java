@@ -12,6 +12,6 @@ public class TopicLearnProgressDto {
     public UUID topicId;
     public LearnProgressStatus status;
     public boolean completed;
-    public int percentageCompleted;
+    public double percentageCompleted;
     public List<UUID> completedContentElementIds;
 }
