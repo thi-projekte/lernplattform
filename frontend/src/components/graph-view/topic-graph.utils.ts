@@ -441,9 +441,8 @@ export const buildPersonalTopicsGraph = (
         targetHandle,
         type: 'straight',
         style: {
-          stroke: '#94a3b8',
-          strokeWidth: 2,
-          strokeDasharray: '8 6',
+          stroke: '#cbd5e1',
+          strokeWidth: 1.25,
         },
       });
     });
