@@ -25,6 +25,10 @@ RUN npm run keycloak
 FROM quay.io/keycloak/keycloak:latest AS keycloak-builder
 
 COPY --from=build-stage /app/dist_keycloak/keycloak-theme-for-kc-all-other-versions.jar /opt/keycloak/providers/theme.jar
+
+ENV KC_HEALTH_ENABLED=true
+ENV KC_DB=postgres
+
 RUN /opt/keycloak/bin/kc.sh build
 
 FROM quay.io/keycloak/keycloak:latest
