@@ -4,6 +4,8 @@ import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.security.SecurityService;
+import de.thi.mynd.progressTracking.exception.TopicLearnProgressNotStartedException;
+import de.thi.mynd.progressTracking.service.TopicLearnProgressService;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
@@ -29,6 +31,7 @@ public final class TopicServiceImpl implements TopicService {
   @Inject ContentElementService contentElementService;
   @Inject TopicAssociationService topicAssociationService;
   @Inject SecurityService securityService;
+  @Inject TopicLearnProgressService topicLearnProgressService;
 
   @Override
   public PaginationDto<ListTopicDto> findPersonalTopicsPaginated(int page, int pageSize) {
@@ -56,10 +59,11 @@ public final class TopicServiceImpl implements TopicService {
     Topic topic = getTopicByIdElseException(topicId);
 
     if (withOwnedRelatedTopics) {
-      return mappingRegistry.map(topic, TopicWithOwnedRelatedTopicsDto.class);
+      return enrichWithProgressData(
+          mappingRegistry.map(topic, TopicWithOwnedRelatedTopicsDto.class));
     }
 
-    return mappingRegistry.map(topic, TopicDto.class);
+    return enrichWithProgressData(mappingRegistry.map(topic, TopicDto.class));
   }
 
   @Override
@@ -137,5 +141,14 @@ public final class TopicServiceImpl implements TopicService {
     }
 
     return topicOptional.get();
+  }
+
+  private TopicDto enrichWithProgressData(TopicDto dto) {
+    try {
+      dto.learnProgress = topicLearnProgressService.getLearnProgressForTopic(dto.id);
+    } catch (TopicLearnProgressNotStartedException e) {
+    }
+
+    return dto;
   }
 }
