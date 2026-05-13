@@ -4,6 +4,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 @ApplicationScoped
@@ -12,23 +13,32 @@ public final class MappingRegistry {
   @Inject Instance<AbstractMappingProcessor<?, ?>> processors;
 
   public <E, D> D map(E entity, Class<D> dtoClass) {
-
     if (entity == null) return null;
-
     AbstractMappingProcessor<E, D> processor = getMappingProcessor(entity, dtoClass);
     return processor.mapAndEnrich(entity);
   }
 
+  // Map with additional data
+  public <E, D> D map(E entity, Class<D> dtoClass, Object... additionalData) {
+    if (entity == null) return null;
+    AbstractMappingProcessor<E, D> processor = getMappingProcessor(entity, dtoClass);
+    return processor.mapAndEnrich(entity, additionalData);
+  }
+
   public <E, D> List<D> mapList(List<E> entities, Class<D> dtoClass) {
     if (entities == null) return List.of();
-
     return entities.stream().map(e -> this.map(e, dtoClass)).toList();
+  }
+
+  // Map with additional data
+  public <E, D> List<D> mapList(List<E> entities, Class<D> dtoClass, Object... additionalData) {
+    if (entities == null) return List.of();
+    return entities.stream().map(e -> this.map(e, dtoClass, additionalData)).toList();
   }
 
   public <E, D> List<? extends D> mapList(
       List<E> entities, Function<E, Class<? extends D>> typeResolver) {
     if (entities == null) return List.of();
-
     return entities.stream().map(e -> this.map(e, typeResolver.apply(e))).toList();
   }
 

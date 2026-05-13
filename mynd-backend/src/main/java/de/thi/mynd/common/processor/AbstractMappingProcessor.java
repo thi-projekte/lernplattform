@@ -12,4 +12,8 @@ public abstract class AbstractMappingProcessor<E, D> {
   public abstract Class<E> getEntityType();
 
   public abstract Class<D> getDtoType();
+
+  public D mapAndEnrich(E entity, Object... additionalData) {
+      return mapAndEnrich(entity);
+  }
 }
