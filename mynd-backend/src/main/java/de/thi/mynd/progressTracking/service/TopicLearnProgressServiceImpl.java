@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public final class TopicLearnProgressServiceImpl implements TopicLearnProgressService {
@@ -28,13 +29,20 @@ public final class TopicLearnProgressServiceImpl implements TopicLearnProgressSe
 
     @Override
     public Map<UUID, TopicLearnProgressDto> getLearnProgressMappingForTopics(List<UUID> topicIds) {
-        return Map.of();
+        String creatorId = identity.getPrincipal().getName();
+        List<LearnProgressTopic> topics = learnProgressTopicRepository.findByTopicIdsAndCreatorIdContentElementsFetched(topicIds, creatorId);
+
+        return topics.stream()
+                .collect(Collectors.toMap(
+                        topic -> topic.id.topicId,
+                        topic -> mappingRegistry.map(topic, TopicLearnProgressDto.class)
+                ));
     }
 
     @Override
     public TopicLearnProgressDto getLearnProgressForTopic(UUID topicId) {
         String creatorId = identity.getPrincipal().getName();
-        Optional<LearnProgressTopic> progressTopicOptional = learnProgressTopicRepository.findByTopicIdAndCreatorIdContentElementsFetched(topicId, creatorId);
+        Optional<LearnProgressTopic> progressTopicOptional = learnProgressTopicRepository.findOneByTopicIdAndCreatorIdContentElementsFetched(topicId, creatorId);
 
         if (progressTopicOptional.isEmpty()) {
             throw new TopicLearnProgressNotStartedException("This topic has not been started yet");
