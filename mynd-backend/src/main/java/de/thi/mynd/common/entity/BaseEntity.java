@@ -10,7 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @EntityListeners(EntityOwnerPrePersistListener.class)
 public abstract class BaseEntity {
 
-  @Column(nullable = false)
+  @Column(nullable = false, name = "creatorId")
   public String creatorId;
 
   @CreationTimestamp
