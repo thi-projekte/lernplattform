@@ -11,6 +11,7 @@ import {
   type OnConnect,
   type OnMoveEnd,
   type NodeTypes,
+  type EdgeTypes,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
 import { useEffect } from 'react';
@@ -20,6 +21,7 @@ interface TopicGraphViewProps {
   nodes: Node[];
   edges: Edge[];
   nodeTypes: NodeTypes;
+  edgeTypes?: EdgeTypes;
   onNodeClick?: NodeMouseHandler;
   onNodeDragStop?: NodeMouseHandler;
   onEdgeClick?: EdgeMouseHandler;
@@ -44,6 +46,7 @@ const TopicGraphView = ({
   nodes,
   edges,
   nodeTypes,
+  edgeTypes,
   onNodeClick,
   onNodeDragStop,
   onEdgeClick,
@@ -78,6 +81,7 @@ const TopicGraphView = ({
       nodes={internalNodes}
       edges={internalEdges}
       nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
       onNodeClick={onNodeClick}
       onNodeDragStop={onNodeDragStop}
       onEdgeClick={onEdgeClick}

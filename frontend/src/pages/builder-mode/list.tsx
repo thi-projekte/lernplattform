@@ -13,7 +13,6 @@ import {
   ActionIcon,
   Badge,
   Button,
-  Card,
   Flex,
   Group,
   Paper,
@@ -102,9 +101,7 @@ const BuilderModeListPage = () => {
         : [],
     [graphTopics, searchSuggestions, selectedGraphTopicIsOwned]
   );
-  const { mutateAsync: editTopic, isPending: isDeletingAssociation } = useEditTopicMutation(
-    selectedGraphTopic?.id ?? ''
-  );
+  const { mutateAsync: editTopic } = useEditTopicMutation(selectedGraphTopic?.id ?? '');
   const { data: selectedOwnedTopicData } = useQueryTopic(
     selectedGraphTopic?.id ?? '',
     true,
@@ -115,6 +112,22 @@ const BuilderModeListPage = () => {
     () => (selectedGraphTopic ? [selectedGraphTopic.id] : []),
     [selectedGraphTopic]
   );
+  const lockedAssociationEdgeIds = useMemo(() => {
+    const ids = new Set<string>();
+    if (
+      !selectedGraphTopic ||
+      !selectedGraphTopicIsOwned ||
+      !selectedOwnedTopicDetails ||
+      selectedOwnedTopicDetails.relatedTopics.length !== 1
+    ) {
+      return ids;
+    }
+    const lastRelatedId = selectedOwnedTopicDetails.relatedTopics[0]?.id;
+    if (!lastRelatedId) return ids;
+    const edgeKey = [selectedGraphTopic.id, lastRelatedId].sort().join(':');
+    ids.add(`personal-topic-edge-${edgeKey}`);
+    return ids;
+  }, [selectedGraphTopic, selectedGraphTopicIsOwned, selectedOwnedTopicDetails]);
   const areTopicsAlreadyAssociated = useCallback(
     (owningTopicId: string, foreignTopicId: string) => {
       const owningTopic = personalGraphTopics.find((topic) => topic.id === owningTopicId);
@@ -295,7 +308,7 @@ const BuilderModeListPage = () => {
             style={{
               display: 'grid',
               gap: '1rem',
-              gridTemplateColumns: '240px minmax(0, 1fr) 320px',
+              gridTemplateColumns: '240px minmax(0, 1fr)',
               alignItems: 'start',
             }}
           >
@@ -396,10 +409,14 @@ const BuilderModeListPage = () => {
               <PersonalTopicsGraph
                 topics={personalGraphTopics}
                 currentUsername={userService.account.username}
+                selectedTopicId={selectedGraphTopic?.id}
+                lockedAssociationEdgeIds={lockedAssociationEdgeIds}
+                lockedAssociationTooltip={t('topic.personalGraph.keepAtLeastOneAssociation')}
                 onTopicClick={setSelectedTopicNode}
                 onConnect={handleConnect}
+                onAssociationClick={handleAssociationDelete}
                 canEditAssociations={!isCreatingAssociation}
-                canDeleteAssociations={false}
+                canDeleteAssociations={selectedGraphTopicIsOwned}
                 allowNodeDragging={!isViewportLocked}
                 allowCanvasPanning={!isViewportLocked}
                 allowPanOnScroll={!isViewportLocked}
@@ -407,91 +424,6 @@ const BuilderModeListPage = () => {
                 onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
               />
             </Paper>
-
-            <Card withBorder radius="md" p="md">
-              <Stack gap="md">
-                <div>
-                  <Title order={2}>{t('topic.personalGraph.selectedTopic')}</Title>
-                  <Text c="dimmed" mt={4}>
-                    {t('topic.personalGraph.emptySelection')}
-                  </Text>
-                </div>
-
-                {selectedGraphTopic ? (
-                  <Card withBorder radius="md" p="md">
-                    <Stack gap="md">
-                      <div>
-                        <Title order={3}>{selectedGraphTopic.title}</Title>
-                      </div>
-
-                      <Group gap={8}>
-                        {selectedGraphTopic.categories.map((category) => (
-                          <Badge key={category.id} color={category.color} variant="light">
-                            {category.title}
-                          </Badge>
-                        ))}
-                      </Group>
-
-                      <Badge
-                        w="fit-content"
-                        color={selectedGraphTopicIsOwned ? 'orange' : 'blue'}
-                        variant="light"
-                      >
-                        {selectedGraphTopicIsOwned
-                          ? t('topic.personalGraph.ownedTopic')
-                          : t('topic.personalGraph.foreignTopic')}
-                      </Badge>
-
-                      <Text c="dimmed">{selectedGraphTopic.creatorFullName}</Text>
-
-                      {selectedGraphTopicIsOwned && selectedOwnedTopicDetails ? (
-                        <Stack gap="xs">
-                          <Text fw={600} size="sm">
-                            {t('topic.graph.relatedTopicsTableTitle')}
-                          </Text>
-                          {selectedOwnedTopicDetails.relatedTopics.map(
-                            (relatedTopic: ListTopicDto) => {
-                              const isLastAssociation =
-                                selectedOwnedTopicDetails.relatedTopics.length <= 1;
-
-                              return (
-                                <Paper key={relatedTopic.id} withBorder radius="md" p="xs">
-                                  <Group justify="space-between" align="center" wrap="nowrap">
-                                    <div style={{ minWidth: 0 }}>
-                                      <Text fw={500} size="sm" truncate>
-                                        {relatedTopic.title}
-                                      </Text>
-                                      {relatedTopic.creatorFullName && (
-                                        <Text size="xs" c="dimmed" truncate>
-                                          {relatedTopic.creatorFullName}
-                                        </Text>
-                                      )}
-                                    </div>
-                                    <ActionIcon
-                                      variant="light"
-                                      color="red"
-                                      disabled={isDeletingAssociation || isLastAssociation}
-                                      onClick={() => void handleAssociationDelete(relatedTopic.id)}
-                                    >
-                                      <IconTrash size={16} />
-                                    </ActionIcon>
-                                  </Group>
-                                </Paper>
-                              );
-                            }
-                          )}
-                          {selectedOwnedTopicDetails.relatedTopics.length <= 1 ? (
-                            <Text size="xs" c="dimmed">
-                              {t('topic.personalGraph.keepAtLeastOneAssociation')}
-                            </Text>
-                          ) : null}
-                        </Stack>
-                      ) : null}
-                    </Stack>
-                  </Card>
-                ) : null}
-              </Stack>
-            </Card>
           </div>
         )}
       </Stack>
