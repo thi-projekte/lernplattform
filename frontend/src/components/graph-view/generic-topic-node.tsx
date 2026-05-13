@@ -30,8 +30,7 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
   const navigate = useNavigate();
 
   const categories = data.categories ?? data.payload?.categories ?? [];
-  const singleCategoryColor =
-    categories.length === 1 ? `#${categories[0].color}` : undefined;
+  const singleCategoryColor = categories.length === 1 ? `#${categories[0].color}` : undefined;
   const accentColor = singleCategoryColor ?? '#8b5cf6';
   const categoryLabels = categories.slice(0, 3);
   const topicId = data.payload?.id;

@@ -193,9 +193,7 @@ const HomePage = () => {
                 edges={edges}
                 nodeTypes={nodeTypes}
                 onNodeClick={onNodeClick}
-                onNodeDragStop={(_event, node) =>
-                  handleNodePositionChange(node.id, node.position)
-                }
+                onNodeDragStop={(_event, node) => handleNodePositionChange(node.id, node.position)}
                 allowCanvasPanning={!isViewportLocked}
                 allowPanOnScroll={!isViewportLocked}
                 allowNodeDragging={!isViewportLocked}
