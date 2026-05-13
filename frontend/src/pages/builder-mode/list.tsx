@@ -21,10 +21,11 @@ import {
   Stack,
   Text,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import type { OnConnect } from '@xyflow/react';
-import { IconPlusFilled, IconTrash } from '@tabler/icons-react';
+import { IconLink, IconPlusFilled, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
 import LayoutLoader from '../../components/layout-loader.tsx';
@@ -344,37 +345,47 @@ const BuilderModeListPage = () => {
                             </Group>
                           )}
                         </div>
-                        <ActionIcon
-                          variant="light"
-                          color="red"
-                          onClick={() =>
-                            setSearchSuggestions((current) =>
-                              current.filter((topic) => topic.id !== suggestion.id)
-                            )
-                          }
-                        >
-                          <IconTrash size={16} />
-                        </ActionIcon>
+                        <Group gap="xs" wrap="nowrap">
+                          {selectedGraphTopicIsOwned && (
+                            <Tooltip
+                              label={
+                                areTopicsAlreadyAssociated(selectedGraphTopic!.id, suggestion.id)
+                                  ? t('topic.personalGraph.alreadyLinked')
+                                  : t('topic.personalGraph.linkToSelectedTopic')
+                              }
+                              withArrow
+                            >
+                              <ActionIcon
+                                variant="light"
+                                aria-label={t('topic.personalGraph.linkToSelectedTopic')}
+                                disabled={
+                                  isCreatingAssociation ||
+                                  areTopicsAlreadyAssociated(selectedGraphTopic!.id, suggestion.id)
+                                }
+                                onClick={() =>
+                                  void handleAssociationCreate(
+                                    selectedGraphTopic!.id,
+                                    suggestion.id
+                                  )
+                                }
+                              >
+                                <IconLink size={16} />
+                              </ActionIcon>
+                            </Tooltip>
+                          )}
+                          <ActionIcon
+                            variant="light"
+                            color="red"
+                            onClick={() =>
+                              setSearchSuggestions((current) =>
+                                current.filter((topic) => topic.id !== suggestion.id)
+                              )
+                            }
+                          >
+                            <IconTrash size={16} />
+                          </ActionIcon>
+                        </Group>
                       </Group>
-                      {selectedGraphTopicIsOwned ? (
-                        <Button
-                          mt="sm"
-                          size="xs"
-                          fullWidth
-                          variant="light"
-                          disabled={
-                            isCreatingAssociation ||
-                            areTopicsAlreadyAssociated(selectedGraphTopic!.id, suggestion.id)
-                          }
-                          onClick={() =>
-                            void handleAssociationCreate(selectedGraphTopic!.id, suggestion.id)
-                          }
-                        >
-                          {areTopicsAlreadyAssociated(selectedGraphTopic!.id, suggestion.id)
-                            ? t('topic.personalGraph.alreadyLinked')
-                            : t('topic.personalGraph.linkToSelectedTopic')}
-                        </Button>
-                      ) : null}
                     </Paper>
                   ))}
                 </Stack>
