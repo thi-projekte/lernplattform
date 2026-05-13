@@ -18,6 +18,9 @@ public class LearnProgressTopic extends BaseEntity {
     @Enumerated(EnumType.STRING)
     public LearnProgressStatus status;
 
+    @Column(nullable = false)
+    public int contentElementsToComplete;
+
     @OneToMany(mappedBy = "progressTopic")
     public List<LearnProgressContentElement> contentElements;
 }
