@@ -1,5 +1,6 @@
 package de.thi.mynd.common.processor;
 
+import de.thi.mynd.common.exception.ObtainNotImplementedException;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
@@ -26,7 +27,15 @@ public final class MappingRegistry {
   }
 
   public <E, D> List<D> mapList(List<E> entities, Class<D> dtoClass) {
-    if (entities == null) return List.of();
+    if (entities == null || entities.isEmpty()) return List.of();
+
+    AbstractMappingProcessor<E, D> processor = getMappingProcessor(entities.getFirst(), dtoClass);
+    Object[] additionalData = tryObtainAdditionalData(processor, entities);
+
+    if (additionalData.length > 0) {
+      return mapList(entities, dtoClass, additionalData);
+    }
+
     return entities.stream().map(e -> this.map(e, dtoClass)).toList();
   }
 
@@ -40,6 +49,14 @@ public final class MappingRegistry {
       List<E> entities, Function<E, Class<? extends D>> typeResolver) {
     if (entities == null) return List.of();
     return entities.stream().map(e -> this.map(e, typeResolver.apply(e))).toList();
+  }
+
+  private <E, D> Object[] tryObtainAdditionalData(AbstractMappingProcessor<E, D> processor, List<E> entities) {
+    try {
+      return processor.obtainAdditionalData(entities);
+    } catch (ObtainNotImplementedException e) {
+      return new Object[] {};
+    }
   }
 
   @SuppressWarnings("unchecked")
