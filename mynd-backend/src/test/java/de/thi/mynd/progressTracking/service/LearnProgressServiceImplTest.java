@@ -29,9 +29,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
-class TopicLearnProgressServiceImplTest {
+class LearnProgressServiceImplTest {
 
-  @Inject TopicLearnProgressService topicLearnProgressService;
+  @Inject
+  LearnProgressService learnProgressService;
 
   @InjectMock LearnProgressTopicRepository learnProgressTopicRepository;
   @InjectMock LearnProgressContentElementRepository learnProgressContentElementRepository;
@@ -63,7 +64,7 @@ class TopicLearnProgressServiceImplTest {
         .thenReturn(Optional.of(progressTopic));
     when(mappingRegistry.map(progressTopic, TopicLearnProgressDto.class)).thenReturn(expectedDto);
 
-    TopicLearnProgressDto result = topicLearnProgressService.getLearnProgressForTopic(topicId);
+    TopicLearnProgressDto result = learnProgressService.getLearnProgressForTopic(topicId);
 
     assertNotNull(result);
     assertEquals(expectedDto, result);
@@ -79,7 +80,7 @@ class TopicLearnProgressServiceImplTest {
 
     assertThrows(
         TopicLearnProgressNotStartedException.class,
-        () -> topicLearnProgressService.getLearnProgressForTopic(topicId));
+        () -> learnProgressService.getLearnProgressForTopic(topicId));
   }
 
   // ---------------------------------------------------------------------------
@@ -102,7 +103,7 @@ class TopicLearnProgressServiceImplTest {
     when(mappingRegistry.map(t2, TopicLearnProgressDto.class)).thenReturn(dto2);
 
     Map<UUID, TopicLearnProgressDto> result =
-        topicLearnProgressService.getLearnProgressMappingForTopics(List.of(topicId1, topicId2));
+        learnProgressService.getLearnProgressMappingForTopics(List.of(topicId1, topicId2));
 
     assertEquals(2, result.size());
     assertEquals(dto1, result.get(topicId1));
@@ -116,7 +117,7 @@ class TopicLearnProgressServiceImplTest {
         .thenReturn(List.of());
 
     Map<UUID, TopicLearnProgressDto> result =
-        topicLearnProgressService.getLearnProgressMappingForTopics(List.of());
+        learnProgressService.getLearnProgressMappingForTopics(List.of());
 
     assertTrue(result.isEmpty());
   }
@@ -132,7 +133,7 @@ class TopicLearnProgressServiceImplTest {
     when(learnProgressTopicRepository.findByIdOptional(any())).thenReturn(Optional.empty());
     when(contentElementService.getCountOfElementsForTopicId(topicId)).thenReturn(5L);
 
-    topicLearnProgressService.startLearningTopicAsCurrentUser(topicId);
+    learnProgressService.startLearningTopicAsCurrentUser(topicId);
 
     verify(learnProgressTopicRepository)
         .persistAndFlush(
@@ -153,7 +154,7 @@ class TopicLearnProgressServiceImplTest {
 
     assertThrows(
         TopicLearnProgressAlreadyStartedException.class,
-        () -> topicLearnProgressService.startLearningTopicAsCurrentUser(topicId));
+        () -> learnProgressService.startLearningTopicAsCurrentUser(topicId));
 
     verify(learnProgressTopicRepository, never()).persistAndFlush(any());
   }
@@ -165,7 +166,7 @@ class TopicLearnProgressServiceImplTest {
     when(learnProgressTopicRepository.findByIdOptional(any())).thenReturn(Optional.empty());
     when(contentElementService.getCountOfElementsForTopicId(topicId)).thenReturn(0L);
 
-    topicLearnProgressService.startLearningTopicAsCurrentUser(topicId);
+    learnProgressService.startLearningTopicAsCurrentUser(topicId);
 
     verify(learnProgressTopicRepository)
         .persistAndFlush(argThat(topic -> topic.contentElementsToComplete == 0L));
@@ -183,7 +184,7 @@ class TopicLearnProgressServiceImplTest {
     when(learnProgressTopicRepository.findByIdOptional(any()))
         .thenReturn(Optional.of(progressTopic));
 
-    topicLearnProgressService.manuallyCompleteTopicAsCurrentUser(topicId);
+    learnProgressService.manuallyCompleteTopicAsCurrentUser(topicId);
 
     verify(learnProgressTopicRepository)
         .persistAndFlush(argThat(topic -> topic.status == LearnProgressStatus.COMPLETED_MANUALLY));
@@ -197,7 +198,7 @@ class TopicLearnProgressServiceImplTest {
 
     assertThrows(
         TopicLearnProgressNotStartedException.class,
-        () -> topicLearnProgressService.manuallyCompleteTopicAsCurrentUser(topicId));
+        () -> learnProgressService.manuallyCompleteTopicAsCurrentUser(topicId));
 
     verify(learnProgressTopicRepository, never()).persistAndFlush(any());
   }
@@ -211,7 +212,7 @@ class TopicLearnProgressServiceImplTest {
     when(learnProgressTopicRepository.findByIdOptional(any()))
         .thenReturn(Optional.of(progressTopic));
 
-    topicLearnProgressService.manuallyCompleteTopicAsCurrentUser(topicId);
+    learnProgressService.manuallyCompleteTopicAsCurrentUser(topicId);
 
     verify(learnProgressTopicRepository)
         .persistAndFlush(argThat(topic -> topic.status == LearnProgressStatus.COMPLETED_MANUALLY));
@@ -233,7 +234,7 @@ class TopicLearnProgressServiceImplTest {
     assertThrows(
         ContentElementLearnProgressAlreadyCompletedException.class,
         () ->
-            topicLearnProgressService.completeLearningContentElementAsCurrentUser(
+            learnProgressService.completeLearningContentElementAsCurrentUser(
                 contentElementId));
 
     verify(learnProgressTopicRepository, never()).persistAndFlush(any());
@@ -255,7 +256,7 @@ class TopicLearnProgressServiceImplTest {
     assertThrows(
         TopicLearnProgressNotStartedException.class,
         () ->
-            topicLearnProgressService.completeLearningContentElementAsCurrentUser(
+            learnProgressService.completeLearningContentElementAsCurrentUser(
                 contentElementId));
   }
 
@@ -274,7 +275,7 @@ class TopicLearnProgressServiceImplTest {
     when(learnProgressTopicRepository.findByIdOptional(any()))
         .thenReturn(Optional.of(progressTopic));
 
-    topicLearnProgressService.completeLearningContentElementAsCurrentUser(contentElementId);
+    learnProgressService.completeLearningContentElementAsCurrentUser(contentElementId);
 
     verify(learnProgressTopicRepository)
         .persistAndFlush(
@@ -301,7 +302,7 @@ class TopicLearnProgressServiceImplTest {
     when(learnProgressTopicRepository.findByIdOptional(any()))
         .thenReturn(Optional.of(progressTopic));
 
-    topicLearnProgressService.completeLearningContentElementAsCurrentUser(contentElementId);
+    learnProgressService.completeLearningContentElementAsCurrentUser(contentElementId);
 
     verify(learnProgressTopicRepository)
         .persistAndFlush(
@@ -324,7 +325,7 @@ class TopicLearnProgressServiceImplTest {
     when(learnProgressTopicRepository.findByIdOptional(any()))
         .thenReturn(Optional.of(progressTopic));
 
-    topicLearnProgressService.completeLearningContentElementAsCurrentUser(contentElementId);
+    learnProgressService.completeLearningContentElementAsCurrentUser(contentElementId);
 
     verify(learnProgressTopicRepository)
         .persistAndFlush(argThat(topic -> topic.status == LearnProgressStatus.STARTED));
@@ -345,7 +346,7 @@ class TopicLearnProgressServiceImplTest {
     when(learnProgressTopicRepository.findByIdOptional(any()))
         .thenReturn(Optional.of(progressTopic));
 
-    topicLearnProgressService.completeLearningContentElementAsCurrentUser(contentElementId);
+    learnProgressService.completeLearningContentElementAsCurrentUser(contentElementId);
 
     verify(learnProgressTopicRepository)
         .persistAndFlush(

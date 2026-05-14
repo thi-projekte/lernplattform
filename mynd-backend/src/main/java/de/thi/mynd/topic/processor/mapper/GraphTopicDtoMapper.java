@@ -2,7 +2,7 @@ package de.thi.mynd.topic.processor.mapper;
 
 import de.thi.mynd.common.processor.AbstractMappingProcessor;
 import de.thi.mynd.progressTracking.dto.TopicLearnProgressDto;
-import de.thi.mynd.progressTracking.service.TopicLearnProgressService;
+import de.thi.mynd.progressTracking.service.LearnProgressService;
 import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.entity.Topic;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -15,7 +15,8 @@ import java.util.UUID;
 @ApplicationScoped
 public final class GraphTopicDtoMapper extends AbstractMappingProcessor<Topic, GraphTopicDto> {
 
-  @Inject TopicLearnProgressService topicLearnProgressService;
+  @Inject
+  LearnProgressService learnProgressService;
 
   @Override
   public GraphTopicDto mapAndEnrich(Topic entity) {
@@ -55,7 +56,7 @@ public final class GraphTopicDtoMapper extends AbstractMappingProcessor<Topic, G
   public Object[] obtainAdditionalData(List<Topic> entities) {
     List<UUID> topicIds = entities.stream().map(e -> e.id).toList();
     Map<UUID, TopicLearnProgressDto> mapping =
-        topicLearnProgressService.getLearnProgressMappingForTopics(topicIds);
+        learnProgressService.getLearnProgressMappingForTopics(topicIds);
 
     return new Object[] {mapping};
   }

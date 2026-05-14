@@ -21,7 +21,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
-public final class TopicLearnProgressServiceImpl implements TopicLearnProgressService {
+public final class LearnProgressServiceImpl implements LearnProgressService {
 
   @Inject LearnProgressTopicRepository learnProgressTopicRepository;
 

@@ -6,7 +6,7 @@ import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.security.SecurityService;
 import de.thi.mynd.progressTracking.dto.TopicLearnProgressDto;
 import de.thi.mynd.progressTracking.exception.TopicLearnProgressNotStartedException;
-import de.thi.mynd.progressTracking.service.TopicLearnProgressService;
+import de.thi.mynd.progressTracking.service.LearnProgressService;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
@@ -32,7 +32,8 @@ public final class TopicServiceImpl implements TopicService {
   @Inject ContentElementService contentElementService;
   @Inject TopicAssociationService topicAssociationService;
   @Inject SecurityService securityService;
-  @Inject TopicLearnProgressService topicLearnProgressService;
+  @Inject
+  LearnProgressService learnProgressService;
 
   @Override
   public PaginationDto<ListTopicDto> findPersonalTopicsPaginated(int page, int pageSize) {
@@ -146,7 +147,7 @@ public final class TopicServiceImpl implements TopicService {
   private <T> T mapTopicToDto(Topic topic, Class<T> clazz) {
     Map<UUID, TopicLearnProgressDto> map = new HashMap<>();
     try {
-      map.put(topic.id, topicLearnProgressService.getLearnProgressForTopic(topic.id));
+      map.put(topic.id, learnProgressService.getLearnProgressForTopic(topic.id));
     } catch (TopicLearnProgressNotStartedException e) {
     }
     return mappingRegistry.map(topic, clazz, map);

@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-public interface TopicLearnProgressService {
+public interface LearnProgressService {
 
   Map<UUID, TopicLearnProgressDto> getLearnProgressMappingForTopics(List<UUID> topicIds);
 

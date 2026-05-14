@@ -8,7 +8,7 @@ import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.progressTracking.exception.TopicLearnProgressNotStartedException;
-import de.thi.mynd.progressTracking.service.TopicLearnProgressService;
+import de.thi.mynd.progressTracking.service.LearnProgressService;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
@@ -45,7 +45,8 @@ public class TopicServiceImplTest {
 
   @InjectMock MappingRegistry mappingRegistry;
 
-  @InjectMock TopicLearnProgressService topicLearnProgressService;
+  @InjectMock
+  LearnProgressService learnProgressService;
 
   private static final String USERNAME = "test-user";
 
@@ -161,7 +162,7 @@ public class TopicServiceImplTest {
     UUID topicId = UUID.randomUUID();
 
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
-    when(topicLearnProgressService.getLearnProgressForTopic(any()))
+    when(learnProgressService.getLearnProgressForTopic(any()))
         .thenThrow(TopicLearnProgressNotStartedException.class);
     when(mappingRegistry.map(any(), eq(TopicDto.class), any()))
         .thenReturn(TopicDto.builder().id(topicId).build());
