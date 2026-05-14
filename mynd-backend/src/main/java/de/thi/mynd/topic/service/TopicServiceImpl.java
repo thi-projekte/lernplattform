@@ -59,11 +59,10 @@ public final class TopicServiceImpl implements TopicService {
     Topic topic = getTopicByIdElseException(topicId);
 
     if (withOwnedRelatedTopics) {
-      return enrichWithProgressData(
-          mappingRegistry.map(topic, TopicWithOwnedRelatedTopicsDto.class));
+      return mapTopicToDto(topic, TopicWithOwnedRelatedTopicsDto.class);
     }
 
-    return enrichWithProgressData(mappingRegistry.map(topic, TopicDto.class));
+    return mapTopicToDto(topic, TopicDto.class);
   }
 
   @Override
@@ -75,7 +74,7 @@ public final class TopicServiceImpl implements TopicService {
 
     Log.infof("Successfully created topic (%s, %s)", topic.id, topic.title);
 
-    return mappingRegistry.map(topic, TopicDto.class);
+    return mapTopicToDto(topic, TopicDto.class);
   }
 
   @Override
@@ -90,7 +89,7 @@ public final class TopicServiceImpl implements TopicService {
 
     Log.infof("Successfully updated topic (%s, %s)", topic.id, topic.title);
 
-    return mappingRegistry.map(topic, TopicDto.class);
+    return mapTopicToDto(topic, TopicDto.class);
   }
 
   @Override
@@ -143,9 +142,9 @@ public final class TopicServiceImpl implements TopicService {
     return topicOptional.get();
   }
 
-  private TopicDto mapTopicToDto(Topic topic) {
+  private <T> T mapTopicToDto(Topic topic, Class<T> clazz) {
     Map<UUID, TopicLearnProgressDto> map = new HashMap<>();
     map.put(topic.id, topicLearnProgressService.getLearnProgressForTopic(topic.id));
-    return mappingRegistry.map(topic, TopicDto.class, map);
+    return mappingRegistry.map(topic, clazz, map);
   }
 }
