@@ -80,14 +80,20 @@ const TopicDetailsPage = () => {
 
           <Tabs.Panel
             value="visual"
-            style={{ flex: 1, position: 'relative', borderRadius: 16, overflow: 'hidden' }}
+            style={{
+              flex: 1,
+              position: 'relative',
+              borderRadius: 16,
+              overflow: 'hidden',
+              background: '#f1f3f5e0',
+            }}
           >
             <TopicGraphView
               nodes={nodes}
               edges={edges}
               onNodeClick={onNodeClick}
               nodeTypes={nodeTypes}
-              backgroundColor="#d9e7f3"
+              backgroundColor="#d1d5db"
             />
           </Tabs.Panel>
 
