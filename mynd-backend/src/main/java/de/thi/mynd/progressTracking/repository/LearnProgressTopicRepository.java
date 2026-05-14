@@ -1,14 +1,16 @@
 package de.thi.mynd.progressTracking.repository;
 
+import de.thi.mynd.common.repository.MyndBaseCustomIdRepository;
 import de.thi.mynd.common.repository.MyndBaseRepository;
 import de.thi.mynd.progressTracking.entity.LearnProgressTopic;
+import de.thi.mynd.progressTracking.entity.LearnProgressTopicId;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
-public final class LearnProgressTopicRepository extends MyndBaseRepository<LearnProgressTopic> {
+public final class LearnProgressTopicRepository extends MyndBaseCustomIdRepository<LearnProgressTopic, LearnProgressTopicId> {
 
   public Optional<LearnProgressTopic> findOneByTopicIdAndCreatorIdContentElementsFetched(
       UUID topicId, String creatorId) {

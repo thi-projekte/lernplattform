@@ -9,4 +9,14 @@ public final class ProgressTrackingExceptionMapper {
   public Response mapTopicLearnProgressNotStarted(TopicLearnProgressNotStartedException e) {
     return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
   }
+
+  @ServerExceptionMapper
+  public Response mapTopicLearnProgressAlreadyStarted(TopicLearnProgressAlreadyStartedException e) {
+    return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+  }
+
+  @ServerExceptionMapper
+  public Response mapContentElementLearnProgressAlreadyCompletedException(ContentElementLearnProgressAlreadyCompletedException e) {
+    return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+  }
 }

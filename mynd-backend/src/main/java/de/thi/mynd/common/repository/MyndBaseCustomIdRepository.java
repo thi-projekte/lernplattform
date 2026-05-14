@@ -2,14 +2,13 @@ package de.thi.mynd.common.repository;
 
 import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.common.entity.BaseEntity;
-import de.thi.mynd.common.entity.BaseEntityWithId;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class MyndBaseRepository<T extends BaseEntityWithId>
-    implements PanacheRepositoryBase<T, UUID> {
+public abstract class MyndBaseCustomIdRepository<T extends BaseEntity, I>
+    implements PanacheRepositoryBase<T, I> {
 
   public List<T> findAllWithLimit(int limit) {
     return findAll().range(0, limit).list();
