@@ -58,6 +58,20 @@ public final class ContentElementServiceImpl implements ContentElementService {
   }
 
   @Override
+  public ContentElement getContentElementEntityById(UUID contentElementId) {
+    Optional<ContentElement> optional = contentElementRepository.findByIdOptional(contentElementId);
+    if (optional.isEmpty()) {
+      throw new EntityInstanceNotFoundException("This content element does not exist");
+    }
+    return optional.get();
+  }
+
+  @Override
+  public long getCountOfElementsForTopicId(UUID topicId) {
+    return contentElementRepository.countForTopic(topicId);
+  }
+
+  @Override
   @Transactional
   public void deleteContentElement(UUID elementId) {
     ContentElement element = contentElementRepository.findById(elementId);
