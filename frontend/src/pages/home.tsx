@@ -23,6 +23,11 @@ const nodeTypes = {
   skillTreeTopic: GenericTopicNode,
 };
 
+const cachedDagrePositions: Record<SkillTreeOrientation, TopicGraphNodePositions> = {
+  vertical: {},
+  horizontal: {},
+};
+
 const mergeGraphTopics = (current: GraphTopicDto[], incoming: GraphTopicDto[]) => {
   const merged = new Map<string, GraphTopicDto>();
 
@@ -78,14 +83,20 @@ const HomePage = () => {
     [nodePositionsByOrientation, orientation]
   );
 
-  const nodes = useMemo(
-    () =>
-      layoutNodes.map((node) => ({
-        ...node,
-        position: currentNodePositions[node.id] ?? node.position,
-      })),
-    [currentNodePositions, layoutNodes]
-  );
+  const nodes = useMemo(() => {
+    const cached = cachedDagrePositions[orientation];
+    return layoutNodes.map((node) => {
+      const userPosition = currentNodePositions[node.id];
+      if (userPosition) {
+        return { ...node, position: userPosition };
+      }
+      if (cached[node.id]) {
+        return { ...node, position: cached[node.id] };
+      }
+      cached[node.id] = node.position;
+      return node;
+    });
+  }, [currentNodePositions, layoutNodes, orientation]);
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
     const graphNode = node as Node<SkillTreeNodeData>;

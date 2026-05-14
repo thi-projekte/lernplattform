@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import type {
   EdgeMouseHandler,
+  EdgeTypes,
   NodeMouseHandler,
   NodeTypes,
   OnConnect,
@@ -9,6 +10,7 @@ import type {
 import type { GraphTopicDto } from '../../schemas/topic-graph.ts';
 import type { GraphTopicNodeData } from './topic-graph.types.ts';
 import GenericTopicNode from './generic-topic-node.tsx';
+import LockedAssociationEdge from './locked-association-edge.tsx';
 import TopicGraphView from './topic-graph.tsx';
 import { buildPersonalTopicsGraph } from './topic-graph.utils.ts';
 
@@ -16,9 +18,16 @@ const nodeTypes: NodeTypes = {
   topic: GenericTopicNode,
 };
 
+const edgeTypes: EdgeTypes = {
+  protected: LockedAssociationEdge,
+};
+
 interface PersonalTopicsGraphProps {
   topics: GraphTopicDto[];
   currentUsername?: string;
+  selectedTopicId?: string;
+  lockedAssociationEdgeId?: string | null;
+  lockedAssociationTooltip?: string;
   onTopicClick?: (topic: GraphTopicNodeData) => void;
   onMoveEnd?: OnMoveEnd;
   onConnect?: OnConnect;
@@ -35,6 +44,9 @@ interface PersonalTopicsGraphProps {
 const PersonalTopicsGraph = ({
   topics,
   currentUsername,
+  selectedTopicId,
+  lockedAssociationEdgeId,
+  lockedAssociationTooltip,
   onTopicClick,
   onMoveEnd,
   onConnect,
@@ -47,23 +59,48 @@ const PersonalTopicsGraph = ({
   viewportLocked = false,
   onToggleViewportLock,
 }: PersonalTopicsGraphProps) => {
-  const { nodes, edges } = useMemo(
+  const built = useMemo(
     () => buildPersonalTopicsGraph(topics, currentUsername),
     [currentUsername, topics]
   );
+
+  const nodes = useMemo(() => {
+    if (!selectedTopicId) return built.nodes;
+    return built.nodes.map((node) =>
+      node.id === selectedTopicId ? { ...node, selected: true } : node
+    );
+  }, [built.nodes, selectedTopicId]);
+
+  const edges = useMemo(() => {
+    if (!lockedAssociationEdgeId) return built.edges;
+    return built.edges.map((edge) =>
+      edge.id === lockedAssociationEdgeId
+        ? { ...edge, type: 'protected', data: { tooltipLabel: lockedAssociationTooltip } }
+        : edge
+    );
+  }, [built.edges, lockedAssociationEdgeId, lockedAssociationTooltip]);
 
   const handleNodeClick: NodeMouseHandler = (_event, node) => {
     onTopicClick?.(node.data as GraphTopicNodeData);
   };
 
   const handleEdgeClick: EdgeMouseHandler = (_event, edge) => {
-    if (!canDeleteAssociations || !onAssociationClick) {
+    if (!canDeleteAssociations || !onAssociationClick || !selectedTopicId) {
       return;
     }
 
-    const relatedTopicId = edge.target.startsWith('personal-topic-')
-      ? edge.target.replace('personal-topic-', '')
-      : edge.target;
+    if (lockedAssociationEdgeId && edge.id === lockedAssociationEdgeId) {
+      return;
+    }
+
+    if (edge.source !== selectedTopicId && edge.target !== selectedTopicId) {
+      return;
+    }
+
+    const relatedTopicId = edge.source === selectedTopicId ? edge.target : edge.source;
+    if (!relatedTopicId || relatedTopicId === selectedTopicId) {
+      return;
+    }
 
     onAssociationClick(relatedTopicId);
   };
@@ -73,6 +110,7 @@ const PersonalTopicsGraph = ({
       nodes={nodes}
       edges={edges}
       nodeTypes={nodeTypes}
+      edgeTypes={edgeTypes}
       onNodeClick={onTopicClick ? handleNodeClick : undefined}
       onEdgeClick={canDeleteAssociations ? handleEdgeClick : undefined}
       onMoveEnd={onMoveEnd}

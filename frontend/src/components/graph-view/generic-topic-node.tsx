@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react';
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
 import { ActionIcon, Button, Group, Paper, Stack, Text } from '@mantine/core';
 import { IconEye } from '@tabler/icons-react';
@@ -38,6 +39,9 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
 
   const isBuilderMode = data.kind === 'topic';
   const isForeign = isBuilderMode && data.isOwned === false;
+  const handleStyle: CSSProperties = isBuilderMode
+    ? { opacity: 0 }
+    : { opacity: 0, pointerEvents: 'none' };
 
   const baseBackground = isBuilderMode
     ? isForeign
@@ -54,23 +58,29 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
   return (
     <Paper
       radius="lg"
-      shadow={selected ? 'lg' : 'sm'}
+      shadow={selected ? 'xl' : 'sm'}
       p="md"
       style={{
         minWidth: 220,
         maxWidth: 280,
         background: selected ? selectedBackground : baseBackground,
-        transition: 'box-shadow 150ms ease, background 150ms ease',
+        border: selected ? `2px solid ${accentColor}` : '2px solid transparent',
+        outline: selected
+          ? `4px solid color-mix(in srgb, ${accentColor} 22%, transparent)`
+          : 'none',
+        outlineOffset: selected ? '2px' : '0',
+        transition:
+          'box-shadow 150ms ease, background 150ms ease, border-color 150ms ease, outline 150ms ease',
       }}
     >
-      <Handle type="target" position={Position.Top} id="top" style={{ opacity: 0 }} />
-      <Handle type="target" position={Position.Right} id="right" style={{ opacity: 0 }} />
-      <Handle type="target" position={Position.Bottom} id="bottom" style={{ opacity: 0 }} />
-      <Handle type="target" position={Position.Left} id="left" style={{ opacity: 0 }} />
-      <Handle type="source" position={Position.Top} id="top" style={{ opacity: 0 }} />
-      <Handle type="source" position={Position.Right} id="right" style={{ opacity: 0 }} />
-      <Handle type="source" position={Position.Bottom} id="bottom" style={{ opacity: 0 }} />
-      <Handle type="source" position={Position.Left} id="left" style={{ opacity: 0 }} />
+      <Handle type="target" position={Position.Top} id="top" style={handleStyle} />
+      <Handle type="target" position={Position.Right} id="right" style={handleStyle} />
+      <Handle type="target" position={Position.Bottom} id="bottom" style={handleStyle} />
+      <Handle type="target" position={Position.Left} id="left" style={handleStyle} />
+      <Handle type="source" position={Position.Top} id="top" style={handleStyle} />
+      <Handle type="source" position={Position.Right} id="right" style={handleStyle} />
+      <Handle type="source" position={Position.Bottom} id="bottom" style={handleStyle} />
+      <Handle type="source" position={Position.Left} id="left" style={handleStyle} />
 
       <Stack gap="xs">
         <Group gap="sm" align="flex-start" wrap="nowrap">

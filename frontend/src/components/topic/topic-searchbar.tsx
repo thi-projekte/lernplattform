@@ -24,7 +24,7 @@ const TopicSearchbar = ({ onAdd, existingIds = [], onSuggestionsChange }: TopicS
     [existingIds, suggestions]
   );
   const autocompleteData = useMemo(
-    () => filteredSuggestions.map((t) => t.title),
+    () => filteredSuggestions.map((t) => ({ value: t.id, label: t.title })),
     [filteredSuggestions]
   );
 
@@ -33,7 +33,7 @@ const TopicSearchbar = ({ onAdd, existingIds = [], onSuggestionsChange }: TopicS
   }, [debouncedSearch, filteredSuggestions, onSuggestionsChange]);
 
   const handleOptionSubmit = (val: string) => {
-    const selectedTopic = filteredSuggestions.find((topic) => topic.title === val);
+    const selectedTopic = filteredSuggestions.find((topic) => topic.id === val);
 
     if (selectedTopic && onAdd) {
       onAdd(selectedTopic);
