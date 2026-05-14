@@ -1,7 +1,6 @@
 package de.thi.mynd.common.repository;
 
 import de.thi.mynd.common.dto.PaginationDto;
-import de.thi.mynd.common.entity.BaseEntity;
 import de.thi.mynd.common.entity.BaseEntityWithId;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;

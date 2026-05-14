@@ -16,7 +16,8 @@ public final class ProgressTrackingExceptionMapper {
   }
 
   @ServerExceptionMapper
-  public Response mapContentElementLearnProgressAlreadyCompletedException(ContentElementLearnProgressAlreadyCompletedException e) {
+  public Response mapContentElementLearnProgressAlreadyCompletedException(
+      ContentElementLearnProgressAlreadyCompletedException e) {
     return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
   }
 }

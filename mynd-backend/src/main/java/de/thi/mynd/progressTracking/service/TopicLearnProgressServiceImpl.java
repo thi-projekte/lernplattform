@@ -10,12 +10,10 @@ import de.thi.mynd.progressTracking.repository.LearnProgressContentElementReposi
 import de.thi.mynd.progressTracking.repository.LearnProgressTopicRepository;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.service.ContentElementService;
-import de.thi.mynd.topic.service.TopicService;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,15 +25,13 @@ public final class TopicLearnProgressServiceImpl implements TopicLearnProgressSe
 
   @Inject LearnProgressTopicRepository learnProgressTopicRepository;
 
-  @Inject
-  LearnProgressContentElementRepository learnProgressContentElementRepository;
+  @Inject LearnProgressContentElementRepository learnProgressContentElementRepository;
 
   @Inject SecurityIdentity identity;
 
   @Inject MappingRegistry mappingRegistry;
 
-  @Inject
-  ContentElementService contentElementService;
+  @Inject ContentElementService contentElementService;
 
   @Override
   public Map<UUID, TopicLearnProgressDto> getLearnProgressMappingForTopics(List<UUID> topicIds) {
@@ -68,7 +64,8 @@ public final class TopicLearnProgressServiceImpl implements TopicLearnProgressSe
   @Override
   @Transactional
   public void startLearningTopicAsCurrentUser(UUID topicId) {
-    Optional<LearnProgressTopic> learnProgressTopicOptional = getByTopicIdAndCurrentCreator(topicId);
+    Optional<LearnProgressTopic> learnProgressTopicOptional =
+        getByTopicIdAndCurrentCreator(topicId);
 
     if (learnProgressTopicOptional.isPresent()) {
       throw new TopicLearnProgressAlreadyStartedException("This topic has already been started");
@@ -93,7 +90,8 @@ public final class TopicLearnProgressServiceImpl implements TopicLearnProgressSe
   @Override
   @Transactional
   public void manuallyCompleteTopicAsCurrentUser(UUID topicId) {
-    Optional<LearnProgressTopic> learnProgressTopicOptional = getByTopicIdAndCurrentCreator(topicId);
+    Optional<LearnProgressTopic> learnProgressTopicOptional =
+        getByTopicIdAndCurrentCreator(topicId);
 
     if (learnProgressTopicOptional.isEmpty()) {
       throw new TopicLearnProgressNotStartedException("This topic has not been started yet");
@@ -107,21 +105,24 @@ public final class TopicLearnProgressServiceImpl implements TopicLearnProgressSe
   @Override
   @Transactional
   public void completeLearningContentElementAsCurrentUser(UUID contentElementId) {
-    Optional<LearnProgressContentElement> learnProgressContentElement = getByContentElementIdAndCurrentCreator(contentElementId);
+    Optional<LearnProgressContentElement> learnProgressContentElement =
+        getByContentElementIdAndCurrentCreator(contentElementId);
 
     if (learnProgressContentElement.isPresent()) {
-      throw new ContentElementLearnProgressAlreadyCompletedException("Content element already completed");
+      throw new ContentElementLearnProgressAlreadyCompletedException(
+          "Content element already completed");
     }
 
-    ContentElement contentElement = contentElementService.getContentElementEntityById(contentElementId);
+    ContentElement contentElement =
+        contentElementService.getContentElementEntityById(contentElementId);
 
-    Optional<LearnProgressTopic> learnProgressTopicOptional = getByTopicIdAndCurrentCreator(contentElement.topic.id);
+    Optional<LearnProgressTopic> learnProgressTopicOptional =
+        getByTopicIdAndCurrentCreator(contentElement.topic.id);
     if (learnProgressTopicOptional.isEmpty()) {
       throw new TopicLearnProgressNotStartedException("This topic has not been started yet");
     }
 
     LearnProgressTopic progressTopic = learnProgressTopicOptional.get();
-
 
     LearnProgressContentElementId id = new LearnProgressContentElementId();
     id.topicId = contentElement.topic.id;
@@ -150,8 +151,10 @@ public final class TopicLearnProgressServiceImpl implements TopicLearnProgressSe
     return learnProgressTopicRepository.findByIdOptional(id);
   }
 
-  private Optional<LearnProgressContentElement> getByContentElementIdAndCurrentCreator(UUID contentElementId) {
+  private Optional<LearnProgressContentElement> getByContentElementIdAndCurrentCreator(
+      UUID contentElementId) {
     String creatorId = identity.getPrincipal().getName();
-    return learnProgressContentElementRepository.findByContentElementIdAndCreatorId(contentElementId, creatorId);
+    return learnProgressContentElementRepository.findByContentElementIdAndCreatorId(
+        contentElementId, creatorId);
   }
 }

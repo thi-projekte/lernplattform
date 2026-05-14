@@ -7,7 +7,6 @@ import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
 import de.thi.mynd.topic.requests.content.ContentElementRequest;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
@@ -17,7 +16,8 @@ public interface ContentElementService {
 
   List<ContentElementDto> getContentElementsForTopic(UUID topicId);
 
-  ContentElement getContentElementEntityById(UUID contentElementId) throws EntityInstanceNotFoundException;
+  ContentElement getContentElementEntityById(UUID contentElementId)
+      throws EntityInstanceNotFoundException;
 
   long getCountOfElementsForTopicId(UUID topicId);
 

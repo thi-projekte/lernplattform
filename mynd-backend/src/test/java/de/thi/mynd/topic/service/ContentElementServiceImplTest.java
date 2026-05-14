@@ -168,8 +168,7 @@ class ContentElementServiceImplTest {
     ContentElement expected = new PdfElement();
     expected.id = id;
 
-    when(contentElementRepository.findByIdOptional(id))
-            .thenReturn(Optional.of(expected));
+    when(contentElementRepository.findByIdOptional(id)).thenReturn(Optional.of(expected));
 
     ContentElement result = contentElementService.getContentElementEntityById(id);
 
@@ -183,11 +182,11 @@ class ContentElementServiceImplTest {
   void throwsWhenNotFound() {
     UUID id = UUID.randomUUID();
 
-    when(contentElementRepository.findByIdOptional(id))
-            .thenReturn(Optional.empty());
+    when(contentElementRepository.findByIdOptional(id)).thenReturn(Optional.empty());
 
-    assertThrows(EntityInstanceNotFoundException.class,
-            () -> contentElementService.getContentElementEntityById(id));
+    assertThrows(
+        EntityInstanceNotFoundException.class,
+        () -> contentElementService.getContentElementEntityById(id));
 
     verify(contentElementRepository, times(1)).findByIdOptional(id);
   }
@@ -197,11 +196,11 @@ class ContentElementServiceImplTest {
   void forwardsIdUnchanged() {
     UUID id = UUID.randomUUID();
 
-    when(contentElementRepository.findByIdOptional(any()))
-            .thenReturn(Optional.empty());
+    when(contentElementRepository.findByIdOptional(any())).thenReturn(Optional.empty());
 
-    assertThrows(EntityInstanceNotFoundException.class,
-            () -> contentElementService.getContentElementEntityById(id));
+    assertThrows(
+        EntityInstanceNotFoundException.class,
+        () -> contentElementService.getContentElementEntityById(id));
 
     // Verify the exact same UUID reference was forwarded
     verify(contentElementRepository).findByIdOptional(id);
@@ -250,9 +249,11 @@ class ContentElementServiceImplTest {
     UUID topicId = UUID.randomUUID();
 
     when(contentElementRepository.countForTopic(topicId))
-            .thenThrow(new RuntimeException("DB unavailable"));
+        .thenThrow(new RuntimeException("DB unavailable"));
 
-    RuntimeException ex = assertThrows(RuntimeException.class,
+    RuntimeException ex =
+        assertThrows(
+            RuntimeException.class,
             () -> contentElementService.getCountOfElementsForTopicId(topicId));
     assertEquals("DB unavailable", ex.getMessage());
   }
