@@ -60,7 +60,9 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
         maxWidth: 280,
         background: selected ? selectedBackground : baseBackground,
         border: selected ? `2px solid ${accentColor}` : '2px solid transparent',
-        outline: selected ? `4px solid color-mix(in srgb, ${accentColor} 22%, transparent)` : 'none',
+        outline: selected
+          ? `4px solid color-mix(in srgb, ${accentColor} 22%, transparent)`
+          : 'none',
         outlineOffset: selected ? '2px' : '0',
         transition:
           'box-shadow 150ms ease, background 150ms ease, border-color 150ms ease, outline 150ms ease',
