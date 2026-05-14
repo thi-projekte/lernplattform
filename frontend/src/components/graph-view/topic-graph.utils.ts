@@ -86,29 +86,6 @@ const getOppositeHandle = (handle: string) => {
   }
 };
 
-const getAssociationAngles = (count: number) => {
-  if (count <= 0) return [];
-  if (count === 1) return [-Math.PI / 2];
-  if (count === 2) return [(-5 * Math.PI) / 6, -Math.PI / 6];
-
-  const startAngle = (-5 * Math.PI) / 6;
-  const endAngle = -Math.PI / 6;
-  const step = (endAngle - startAngle) / (count - 1);
-
-  return Array.from({ length: count }, (_, index) => startAngle + index * step);
-};
-
-const getIsolatedAngles = (count: number) => {
-  if (count <= 0) return [];
-  if (count === 1) return [Math.PI / 2];
-
-  const startAngle = Math.PI / 4;
-  const endAngle = (3 * Math.PI) / 4;
-  const step = (endAngle - startAngle) / (count - 1);
-
-  return Array.from({ length: count }, (_, index) => startAngle + index * step);
-};
-
 export const buildTopicDetailsGraph = (
   topic?: Omit<Topic, 'relatedTopics'>
 ): { nodes: TopicGraphNode[]; edges: Edge[] } => {
@@ -179,12 +156,11 @@ export const buildTopicAssociationsGraph = (
 
   const rootId = topic.id ? `topic-${topic.id}` : 'topic-root';
   const rootTitle = topic.title?.trim() || 'Untitled topic';
-  const rootPosition = { x: 400, y: 320 };
 
   nodes.push({
     id: rootId,
     type: 'topic',
-    position: nodePositions[rootId] ?? rootPosition,
+    position: { x: 0, y: 0 },
     data: {
       kind: 'topic',
       title: rootTitle,
@@ -199,19 +175,14 @@ export const buildTopicAssociationsGraph = (
   const isolatedTopics = (topic.isolatedTopics ?? []).filter(
     (isolatedTopic) => !relatedTopics.some((relatedTopic) => relatedTopic.id === isolatedTopic.id)
   );
-  const radius = 250;
-  const angles = getAssociationAngles(relatedTopics.length);
 
-  relatedTopics.forEach((relatedTopic, index) => {
-    const angle = angles[index] ?? -Math.PI / 2;
-    const x = rootPosition.x + radius * Math.cos(angle);
-    const y = rootPosition.y + radius * Math.sin(angle);
+  relatedTopics.forEach((relatedTopic) => {
     const nodeId = `related-topic-${relatedTopic.id}`;
 
     nodes.push({
       id: nodeId,
       type: 'topic',
-      position: nodePositions[nodeId] ?? { x, y },
+      position: { x: 0, y: 0 },
       data: {
         kind: 'topic',
         title: relatedTopic.title,
@@ -221,33 +192,23 @@ export const buildTopicAssociationsGraph = (
       },
     });
 
-    const sourceHandle = getHandleForAngle(angle);
-    const targetHandle = getOppositeHandle(sourceHandle);
-
     edges.push({
       id: `edge-topic-${relatedTopic.id}`,
       source: rootId,
       target: nodeId,
-      sourceHandle,
-      targetHandle,
+      sourceHandle: 'bottom',
+      targetHandle: 'top',
       style: { stroke: '#adb5bd', strokeWidth: 0.8 },
     });
   });
 
-  const isolatedRadius = 180;
-  const isolatedAngles = getIsolatedAngles(isolatedTopics.length);
-
-  isolatedTopics.forEach((isolatedTopic, index) => {
-    const angle = isolatedAngles[index] ?? Math.PI / 2;
-    const x = rootPosition.x + isolatedRadius * Math.cos(angle);
-    const y = rootPosition.y + isolatedRadius * Math.sin(angle);
-
+  isolatedTopics.forEach((isolatedTopic) => {
     const nodeId = `isolated-topic-${isolatedTopic.id}`;
 
     nodes.push({
       id: nodeId,
       type: 'topic',
-      position: nodePositions[nodeId] ?? { x, y },
+      position: { x: 0, y: 0 },
       data: {
         kind: 'topic',
         title: isolatedTopic.title,
@@ -259,7 +220,14 @@ export const buildTopicAssociationsGraph = (
     });
   });
 
-  return { nodes, edges };
+  const layoutedNodes = applyDagreLayout(nodes, edges, 'vertical');
+
+  const finalNodes = layoutedNodes.map((node) => ({
+    ...node,
+    position: nodePositions[node.id] ?? node.position,
+  }));
+
+  return { nodes: finalNodes, edges };
 };
 
 export const buildPersonalTopicsGraph = (
