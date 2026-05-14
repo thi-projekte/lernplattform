@@ -93,6 +93,7 @@ const TopicGraphView = ({
       fitViewOptions={{ padding: fitViewPadding, maxZoom: fitViewMaxZoom }}
       nodesDraggable={canEditAssociations || allowNodeDragging}
       nodesConnectable={canEditAssociations}
+      nodeDragThreshold={6}
       connectOnClick={false}
       panOnDrag={allowCanvasPanning ? (allowNodeDragging ? [1, 2] : true) : false}
       panOnScroll={allowPanOnScroll}
