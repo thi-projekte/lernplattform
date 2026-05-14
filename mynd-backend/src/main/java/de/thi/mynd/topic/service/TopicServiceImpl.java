@@ -5,6 +5,7 @@ import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.security.SecurityService;
 import de.thi.mynd.progressTracking.dto.TopicLearnProgressDto;
+import de.thi.mynd.progressTracking.exception.TopicLearnProgressNotStartedException;
 import de.thi.mynd.progressTracking.service.TopicLearnProgressService;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
@@ -144,7 +145,10 @@ public final class TopicServiceImpl implements TopicService {
 
   private <T> T mapTopicToDto(Topic topic, Class<T> clazz) {
     Map<UUID, TopicLearnProgressDto> map = new HashMap<>();
-    map.put(topic.id, topicLearnProgressService.getLearnProgressForTopic(topic.id));
+    try {
+      map.put(topic.id, topicLearnProgressService.getLearnProgressForTopic(topic.id));
+    } catch (TopicLearnProgressNotStartedException e) {
+    }
     return mappingRegistry.map(topic, clazz, map);
   }
 }
