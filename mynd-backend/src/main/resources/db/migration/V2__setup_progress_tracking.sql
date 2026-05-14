@@ -4,7 +4,7 @@ create table learn_progress_topic (
     createdAt timestamp(6) not null,
     updatedAt timestamp(6) not null,
     status varchar(32) not null,
-    contentElementsToComplete integer not null,
+    contentElementsToComplete bigint not null,
     primary key (topicId, creatorId)
 );
 
