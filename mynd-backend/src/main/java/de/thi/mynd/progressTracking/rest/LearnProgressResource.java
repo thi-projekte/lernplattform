@@ -95,7 +95,8 @@ public final class LearnProgressResource {
       description = "Content element successfully marked as completed")
   @APIResponse(
       responseCode = "409",
-      description = "This content element has already been completed by the user or the topic has not been started yet")
+      description =
+          "This content element has already been completed by the user or the topic has not been started yet")
   @APIResponse(responseCode = "401", description = "User is not authenticated")
   public Response completeContentElement(UUID contentElementId) {
     learnProgressService.completeLearningContentElementAsCurrentUser(contentElementId);
