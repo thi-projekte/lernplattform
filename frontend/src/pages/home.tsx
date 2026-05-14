@@ -1,7 +1,7 @@
 import { Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
 import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useUserService } from '../provider/user-provider.tsx';
 import {
   useFetchDirectNeighborQueries,
@@ -86,6 +86,28 @@ const HomePage = () => {
       })),
     [currentNodePositions, layoutNodes]
   );
+
+  useEffect(() => {
+    setNodePositionsByOrientation((current) => {
+      const currentOrientationPositions = current[orientation] ?? {};
+      const newPositions: TopicGraphNodePositions = {};
+      let hasNew = false;
+      layoutNodes.forEach((node) => {
+        if (!currentOrientationPositions[node.id]) {
+          newPositions[node.id] = node.position;
+          hasNew = true;
+        }
+      });
+      if (!hasNew) return current;
+      return {
+        ...current,
+        [orientation]: {
+          ...currentOrientationPositions,
+          ...newPositions,
+        },
+      };
+    });
+  }, [layoutNodes, orientation]);
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
     const graphNode = node as Node<SkillTreeNodeData>;
