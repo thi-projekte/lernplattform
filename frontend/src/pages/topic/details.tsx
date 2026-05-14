@@ -57,7 +57,6 @@ const TopicDetailsPage = () => {
   return (
     <Layout>
       <Breadcrumbs mb="md">
-        <Anchor href="/">Startseite</Anchor>
         <Anchor>{topic?.title}</Anchor>
         {displayedElement && !('teaser' in displayedElement) && (
           <Anchor>{(displayedElement as AnyContentElementDto).title}</Anchor>
