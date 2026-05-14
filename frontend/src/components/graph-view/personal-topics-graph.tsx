@@ -26,7 +26,7 @@ interface PersonalTopicsGraphProps {
   topics: GraphTopicDto[];
   currentUsername?: string;
   selectedTopicId?: string;
-  lockedAssociationEdgeIds?: Set<string>;
+  lockedAssociationEdgeId?: string | null;
   lockedAssociationTooltip?: string;
   onTopicClick?: (topic: GraphTopicNodeData) => void;
   onMoveEnd?: OnMoveEnd;
@@ -45,7 +45,7 @@ const PersonalTopicsGraph = ({
   topics,
   currentUsername,
   selectedTopicId,
-  lockedAssociationEdgeIds,
+  lockedAssociationEdgeId,
   lockedAssociationTooltip,
   onTopicClick,
   onMoveEnd,
@@ -59,20 +59,26 @@ const PersonalTopicsGraph = ({
   viewportLocked = false,
   onToggleViewportLock,
 }: PersonalTopicsGraphProps) => {
-  const { nodes, edges } = useMemo(() => {
-    const built = buildPersonalTopicsGraph(topics, currentUsername);
-    if (!lockedAssociationEdgeIds || lockedAssociationEdgeIds.size === 0) {
-      return built;
-    }
+  const built = useMemo(
+    () => buildPersonalTopicsGraph(topics, currentUsername),
+    [currentUsername, topics]
+  );
 
-    const decoratedEdges = built.edges.map((edge) =>
-      lockedAssociationEdgeIds.has(edge.id)
+  const nodes = useMemo(() => {
+    if (!selectedTopicId) return built.nodes;
+    return built.nodes.map((node) =>
+      node.id === selectedTopicId ? { ...node, selected: true } : node
+    );
+  }, [built.nodes, selectedTopicId]);
+
+  const edges = useMemo(() => {
+    if (!lockedAssociationEdgeId) return built.edges;
+    return built.edges.map((edge) =>
+      edge.id === lockedAssociationEdgeId
         ? { ...edge, type: 'protected', data: { tooltipLabel: lockedAssociationTooltip } }
         : edge
     );
-
-    return { nodes: built.nodes, edges: decoratedEdges };
-  }, [currentUsername, lockedAssociationEdgeIds, lockedAssociationTooltip, topics]);
+  }, [built.edges, lockedAssociationEdgeId, lockedAssociationTooltip]);
 
   const handleNodeClick: NodeMouseHandler = (_event, node) => {
     onTopicClick?.(node.data as GraphTopicNodeData);
@@ -83,7 +89,11 @@ const PersonalTopicsGraph = ({
       return;
     }
 
-    if (lockedAssociationEdgeIds?.has(edge.id)) {
+    if (lockedAssociationEdgeId && edge.id === lockedAssociationEdgeId) {
+      return;
+    }
+
+    if (edge.source !== selectedTopicId && edge.target !== selectedTopicId) {
       return;
     }
 

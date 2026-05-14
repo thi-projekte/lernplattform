@@ -53,13 +53,17 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
   return (
     <Paper
       radius="lg"
-      shadow={selected ? 'lg' : 'sm'}
+      shadow={selected ? 'xl' : 'sm'}
       p="md"
       style={{
         minWidth: 220,
         maxWidth: 280,
         background: selected ? selectedBackground : baseBackground,
-        transition: 'box-shadow 150ms ease, background 150ms ease',
+        border: selected ? `2px solid ${accentColor}` : '2px solid transparent',
+        outline: selected ? `4px solid color-mix(in srgb, ${accentColor} 22%, transparent)` : 'none',
+        outlineOffset: selected ? '2px' : '0',
+        transition:
+          'box-shadow 150ms ease, background 150ms ease, border-color 150ms ease, outline 150ms ease',
       }}
     >
       <Handle type="target" position={Position.Top} id="top" style={{ opacity: 0 }} />

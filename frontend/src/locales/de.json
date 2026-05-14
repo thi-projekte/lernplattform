@@ -184,7 +184,8 @@
       "linkToSelectedTopic": "Mit ausgewähltem Thema verknüpfen",
       "alreadyLinked": "Bereits verknüpft",
       "ownedTopic": "Eigenes Thema",
-      "foreignTopic": "Fremdes Thema"
+      "foreignTopic": "Fremdes Thema",
+      "removeOwnTopic": "Aus Graph entfernen"
     }
   },
   "auth": {
