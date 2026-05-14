@@ -138,7 +138,8 @@ class TopicGraphServiceImplTest {
     // Assert
     assertFalse(result.isEmpty());
     verify(mappingRegistry)
-        .mapList(argThat(list -> list.contains(neighborTopic)), eq(GraphTopicDto.class));
+        .mapListWithAdditionalData(
+            argThat(list -> list.contains(neighborTopic)), eq(GraphTopicDto.class));
   }
 
   @Test
