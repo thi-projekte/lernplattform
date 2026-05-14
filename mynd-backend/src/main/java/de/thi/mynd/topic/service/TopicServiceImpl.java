@@ -4,7 +4,7 @@ import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.security.SecurityService;
-import de.thi.mynd.progressTracking.exception.TopicLearnProgressNotStartedException;
+import de.thi.mynd.progressTracking.dto.TopicLearnProgressDto;
 import de.thi.mynd.progressTracking.service.TopicLearnProgressService;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
@@ -143,12 +143,9 @@ public final class TopicServiceImpl implements TopicService {
     return topicOptional.get();
   }
 
-  private TopicDto enrichWithProgressData(TopicDto dto) {
-    try {
-      dto.learnProgress = topicLearnProgressService.getLearnProgressForTopic(dto.id);
-    } catch (TopicLearnProgressNotStartedException e) {
-    }
-
-    return dto;
+  private TopicDto mapTopicToDto(Topic topic) {
+    Map<UUID, TopicLearnProgressDto> map = new HashMap<>();
+    map.put(topic.id, topicLearnProgressService.getLearnProgressForTopic(topic.id));
+    return mappingRegistry.map(topic, TopicDto.class, map);
   }
 }
