@@ -45,8 +45,7 @@ public class TopicServiceImplTest {
 
   @InjectMock MappingRegistry mappingRegistry;
 
-  @InjectMock
-  LearnProgressService learnProgressService;
+  @InjectMock LearnProgressService learnProgressService;
 
   private static final String USERNAME = "test-user";
 

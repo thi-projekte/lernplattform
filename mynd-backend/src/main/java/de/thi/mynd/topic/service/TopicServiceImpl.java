@@ -32,8 +32,7 @@ public final class TopicServiceImpl implements TopicService {
   @Inject ContentElementService contentElementService;
   @Inject TopicAssociationService topicAssociationService;
   @Inject SecurityService securityService;
-  @Inject
-  LearnProgressService learnProgressService;
+  @Inject LearnProgressService learnProgressService;
 
   @Override
   public PaginationDto<ListTopicDto> findPersonalTopicsPaginated(int page, int pageSize) {

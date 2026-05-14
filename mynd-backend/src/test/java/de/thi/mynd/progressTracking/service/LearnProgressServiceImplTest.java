@@ -31,8 +31,7 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 class LearnProgressServiceImplTest {
 
-  @Inject
-  LearnProgressService learnProgressService;
+  @Inject LearnProgressService learnProgressService;
 
   @InjectMock LearnProgressTopicRepository learnProgressTopicRepository;
   @InjectMock LearnProgressContentElementRepository learnProgressContentElementRepository;
@@ -233,9 +232,7 @@ class LearnProgressServiceImplTest {
 
     assertThrows(
         ContentElementLearnProgressAlreadyCompletedException.class,
-        () ->
-            learnProgressService.completeLearningContentElementAsCurrentUser(
-                contentElementId));
+        () -> learnProgressService.completeLearningContentElementAsCurrentUser(contentElementId));
 
     verify(learnProgressTopicRepository, never()).persistAndFlush(any());
   }
@@ -255,9 +252,7 @@ class LearnProgressServiceImplTest {
 
     assertThrows(
         TopicLearnProgressNotStartedException.class,
-        () ->
-            learnProgressService.completeLearningContentElementAsCurrentUser(
-                contentElementId));
+        () -> learnProgressService.completeLearningContentElementAsCurrentUser(contentElementId));
   }
 
   @Test

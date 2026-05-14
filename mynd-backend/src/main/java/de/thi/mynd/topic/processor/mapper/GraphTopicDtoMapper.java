@@ -15,8 +15,7 @@ import java.util.UUID;
 @ApplicationScoped
 public final class GraphTopicDtoMapper extends AbstractMappingProcessor<Topic, GraphTopicDto> {
 
-  @Inject
-  LearnProgressService learnProgressService;
+  @Inject LearnProgressService learnProgressService;
 
   @Override
   public GraphTopicDto mapAndEnrich(Topic entity) {
