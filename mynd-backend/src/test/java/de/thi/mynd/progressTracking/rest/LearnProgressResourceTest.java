@@ -56,7 +56,7 @@ class LearnProgressResourceTest {
                 .when()
                 .get("/learn-progress/topics/{topicId}", topicId)
                 .then()
-                .statusCode(404);
+                .statusCode(409);
     }
 
     @Test
@@ -178,7 +178,7 @@ class LearnProgressResourceTest {
                 .when()
                 .post("/learn-progress/topics/{topicId}/complete", topicId)
                 .then()
-                .statusCode(404);
+                .statusCode(409);
     }
 
     @Test
@@ -254,7 +254,7 @@ class LearnProgressResourceTest {
                 .when()
                 .post("/learn-progress/content-elements/{contentElementId}/complete", contentElementId)
                 .then()
-                .statusCode(404);
+                .statusCode(409);
     }
 
     @Test
