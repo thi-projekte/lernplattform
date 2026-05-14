@@ -315,11 +315,6 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       {t('topic.graph.workspaceDescription')}
                     </Text>
                   </div>
-                  <Group gap={6} wrap="wrap" justify="flex-end" maw={250}>
-                    <Badge color="red">{t('topic.graph.legendRoot')}</Badge>
-                    <Badge color="orange">{t('topic.graph.legendAssociated')}</Badge>
-                    <Badge color="blue">{t('topic.graph.legendIsolated')}</Badge>
-                  </Group>
                 </Group>
                 <Box
                   style={{

@@ -184,7 +184,8 @@
       "linkToSelectedTopic": "Link to selected topic",
       "alreadyLinked": "Already linked",
       "ownedTopic": "Own topic",
-      "foreignTopic": "Foreign topic"
+      "foreignTopic": "Foreign topic",
+      "removeOwnTopic": "Remove from graph"
     }
   },
   "auth": {
