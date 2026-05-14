@@ -51,7 +51,8 @@ class TopicGraphServiceImplTest {
     List<Topic> mockTopics = List.of(testTopic);
     when(topicGraphRepository.findNMostPopular(n)).thenReturn(mockTopics);
     when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.ofNullable(testTopic));
-    when(mappingRegistry.mapList(mockTopics, GraphTopicDto.class)).thenReturn(List.of(testDto));
+    when(mappingRegistry.mapListWithAdditionalData(mockTopics, GraphTopicDto.class))
+        .thenReturn(List.of(testDto));
 
     // Act
     List<GraphTopicDto> result =
@@ -73,7 +74,8 @@ class TopicGraphServiceImplTest {
     when(topicGraphRepository.findNMostPopularFilterByCategoryIds(n, categoryIds))
         .thenReturn(mockTopics);
     when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.ofNullable(testTopic));
-    when(mappingRegistry.mapList(mockTopics, GraphTopicDto.class)).thenReturn(List.of(testDto));
+    when(mappingRegistry.mapListWithAdditionalData(mockTopics, GraphTopicDto.class))
+        .thenReturn(List.of(testDto));
 
     // Act
     List<GraphTopicDto> result =
@@ -127,7 +129,7 @@ class TopicGraphServiceImplTest {
     mainTopic.ownedAssociations = List.of(association);
 
     when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.of(mainTopic));
-    when(mappingRegistry.mapList(anyList(), eq(GraphTopicDto.class)))
+    when(mappingRegistry.mapListWithAdditionalData(anyList(), eq(GraphTopicDto.class)))
         .thenReturn(List.of(GraphTopicDto.builder().build()));
 
     // Act
@@ -136,7 +138,8 @@ class TopicGraphServiceImplTest {
     // Assert
     assertFalse(result.isEmpty());
     verify(mappingRegistry)
-        .mapList(argThat(list -> list.contains(neighborTopic)), eq(GraphTopicDto.class));
+        .mapListWithAdditionalData(
+            argThat(list -> list.contains(neighborTopic)), eq(GraphTopicDto.class));
   }
 
   @Test
@@ -158,13 +161,14 @@ class TopicGraphServiceImplTest {
     String query = "AI";
     int limit = 10;
     when(topicRepository.findBySearch(query, limit)).thenReturn(Collections.emptyList());
-    when(mappingRegistry.mapList(anyList(), eq(GraphTopicDto.class))).thenReturn(new ArrayList<>());
+    when(mappingRegistry.mapListWithAdditionalData(anyList(), eq(GraphTopicDto.class)))
+        .thenReturn(new ArrayList<>());
 
     // Act
     topicGraphService.searchTopicNodes(query, limit);
 
     // Assert
     verify(topicRepository).findBySearch(query, limit);
-    verify(mappingRegistry).mapList(anyList(), eq(GraphTopicDto.class));
+    verify(mappingRegistry).mapListWithAdditionalData(anyList(), eq(GraphTopicDto.class));
   }
 }

@@ -4,6 +4,9 @@ import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.security.SecurityService;
+import de.thi.mynd.progressTracking.dto.TopicLearnProgressDto;
+import de.thi.mynd.progressTracking.exception.TopicLearnProgressNotStartedException;
+import de.thi.mynd.progressTracking.service.LearnProgressService;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
@@ -29,6 +32,7 @@ public final class TopicServiceImpl implements TopicService {
   @Inject ContentElementService contentElementService;
   @Inject TopicAssociationService topicAssociationService;
   @Inject SecurityService securityService;
+  @Inject LearnProgressService learnProgressService;
 
   @Override
   public PaginationDto<ListTopicDto> findPersonalTopicsPaginated(int page, int pageSize) {
@@ -56,10 +60,10 @@ public final class TopicServiceImpl implements TopicService {
     Topic topic = getTopicByIdElseException(topicId);
 
     if (withOwnedRelatedTopics) {
-      return mappingRegistry.map(topic, TopicWithOwnedRelatedTopicsDto.class);
+      return mapTopicToDto(topic, TopicWithOwnedRelatedTopicsDto.class);
     }
 
-    return mappingRegistry.map(topic, TopicDto.class);
+    return mapTopicToDto(topic, TopicDto.class);
   }
 
   @Override
@@ -71,7 +75,7 @@ public final class TopicServiceImpl implements TopicService {
 
     Log.infof("Successfully created topic (%s, %s)", topic.id, topic.title);
 
-    return mappingRegistry.map(topic, TopicDto.class);
+    return mapTopicToDto(topic, TopicDto.class);
   }
 
   @Override
@@ -86,7 +90,7 @@ public final class TopicServiceImpl implements TopicService {
 
     Log.infof("Successfully updated topic (%s, %s)", topic.id, topic.title);
 
-    return mappingRegistry.map(topic, TopicDto.class);
+    return mapTopicToDto(topic, TopicDto.class);
   }
 
   @Override
@@ -137,5 +141,14 @@ public final class TopicServiceImpl implements TopicService {
     }
 
     return topicOptional.get();
+  }
+
+  private <T> T mapTopicToDto(Topic topic, Class<T> clazz) {
+    Map<UUID, TopicLearnProgressDto> map = new HashMap<>();
+    try {
+      map.put(topic.id, learnProgressService.getLearnProgressForTopic(topic.id));
+    } catch (TopicLearnProgressNotStartedException e) {
+    }
+    return mappingRegistry.map(topic, clazz, map);
   }
 }

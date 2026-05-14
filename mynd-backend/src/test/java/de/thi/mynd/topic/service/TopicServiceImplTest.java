@@ -7,6 +7,8 @@ import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
+import de.thi.mynd.progressTracking.exception.TopicLearnProgressNotStartedException;
+import de.thi.mynd.progressTracking.service.LearnProgressService;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
@@ -42,6 +44,8 @@ public class TopicServiceImplTest {
   @InjectMock TopicAssociationService topicAssociationService;
 
   @InjectMock MappingRegistry mappingRegistry;
+
+  @InjectMock LearnProgressService learnProgressService;
 
   private static final String USERNAME = "test-user";
 
@@ -154,9 +158,13 @@ public class TopicServiceImplTest {
 
   @Test
   void testGetTopicWithValidId() {
-    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
-
     UUID topicId = UUID.randomUUID();
+
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
+    when(learnProgressService.getLearnProgressForTopic(any()))
+        .thenThrow(TopicLearnProgressNotStartedException.class);
+    when(mappingRegistry.map(any(), eq(TopicDto.class), any()))
+        .thenReturn(TopicDto.builder().id(topicId).build());
 
     Assertions.assertDoesNotThrow(
         () -> {
@@ -236,9 +244,10 @@ public class TopicServiceImplTest {
   void testGetTopicMappingBasedOnWithOwnedRelatedTopicsFlag()
       throws EntityInstanceNotFoundException {
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
-    when(mappingRegistry.map(any(), eq(TopicWithOwnedRelatedTopicsDto.class)))
+    when(mappingRegistry.map(any(), eq(TopicWithOwnedRelatedTopicsDto.class), any()))
         .thenReturn(TopicWithOwnedRelatedTopicsDto.builder().build());
-    when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
+    when(mappingRegistry.map(any(), eq(TopicDto.class), any()))
+        .thenReturn(TopicDto.builder().build());
 
     TopicDto topicDto1 = topicService.getTopic(UUID.randomUUID(), true);
     TopicDto topicDto2 = topicService.getTopic(UUID.randomUUID(), false);

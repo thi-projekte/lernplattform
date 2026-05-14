@@ -10,4 +10,4 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityScheme;
     scheme = "bearer",
     bearerFormat = "JWT",
     description = "Provide a valid Keycloak JWT access token")
-public class OpenApiConfig extends Application {}
+public final class OpenApiConfig extends Application {}

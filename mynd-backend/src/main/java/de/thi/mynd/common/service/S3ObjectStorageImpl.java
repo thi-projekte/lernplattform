@@ -1,6 +1,6 @@
 package de.thi.mynd.common.service;
 
-import de.thi.mynd.common.entity.BaseEntity;
+import de.thi.mynd.common.entity.BaseEntityWithId;
 import de.thi.mynd.common.exception.NoFileProvidedException;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -51,7 +51,7 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
 
   @Override
   @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-  public String uploadObject(BaseEntity entity, File file) {
+  public String uploadObject(BaseEntityWithId entity, File file) {
     String objectKey = getS3FileName(entity, file.getName());
     byte[] bytes = getBytesFromFile(file);
     uploadAsync(objectKey, bytes);
@@ -59,7 +59,7 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
   }
 
   @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-  public String uploadObject(BaseEntity entity, File file, String originalFileName) {
+  public String uploadObject(BaseEntityWithId entity, File file, String originalFileName) {
     String objectKey = getS3FileName(entity, originalFileName);
 
     byte[] bytes = getBytesFromFile(file);
@@ -109,7 +109,7 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
     }
   }
 
-  private String getS3FileName(BaseEntity entity, String filename) {
+  private String getS3FileName(BaseEntityWithId entity, String filename) {
     return String.format("%s/%s/%s", entity.getClass(), entity.id, filename).replaceAll(" ", "_");
   }
 }

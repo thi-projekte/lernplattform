@@ -12,4 +12,8 @@ public final class ContentElementRepository extends MyndBaseRepository<ContentEl
   public List<ContentElement> findForTopic(UUID topicId) {
     return find("topic.id = ?1", topicId).list();
   }
+
+  public long countForTopic(UUID topicId) {
+    return find("topic.id = ?1", topicId).count();
+  }
 }

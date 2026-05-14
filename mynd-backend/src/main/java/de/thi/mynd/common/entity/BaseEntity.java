@@ -3,7 +3,6 @@ package de.thi.mynd.common.entity;
 import de.thi.mynd.common.security.EntityOwnerPrePersistListener;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.util.UUID;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -11,9 +10,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 @EntityListeners(EntityOwnerPrePersistListener.class)
 public abstract class BaseEntity {
 
-  @Id @GeneratedValue public UUID id;
-
-  @Column(nullable = false)
+  @Column(nullable = false, name = "creatorId")
   public String creatorId;
 
   @CreationTimestamp
