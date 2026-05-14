@@ -80,10 +80,7 @@ const BuilderModeListPage = () => {
     !!selectedGraphTopic &&
     !!currentUsername &&
     selectedGraphTopic.creatorId.toLowerCase() === currentUsername;
-  const personalGraphTopics = useMemo<GraphTopicDto[]>(
-    () => graphTopics ?? [],
-    [graphTopics]
-  );
+  const personalGraphTopics = useMemo<GraphTopicDto[]>(() => graphTopics ?? [], [graphTopics]);
   const { mutateAsync: editTopic } = useEditTopicMutation(selectedGraphTopic?.id ?? '');
   const { data: selectedOwnedTopicData } = useQueryTopic(
     selectedGraphTopic?.id ?? '',
