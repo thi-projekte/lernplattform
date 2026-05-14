@@ -163,7 +163,7 @@ public class TopicServiceImplTest {
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
     when(topicLearnProgressService.getLearnProgressForTopic(any()))
         .thenThrow(TopicLearnProgressNotStartedException.class);
-    when(mappingRegistry.map(any(), eq(TopicDto.class)))
+    when(mappingRegistry.map(any(), eq(TopicDto.class), any()))
         .thenReturn(TopicDto.builder().id(topicId).build());
 
     Assertions.assertDoesNotThrow(
@@ -244,9 +244,10 @@ public class TopicServiceImplTest {
   void testGetTopicMappingBasedOnWithOwnedRelatedTopicsFlag()
       throws EntityInstanceNotFoundException {
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
-    when(mappingRegistry.map(any(), eq(TopicWithOwnedRelatedTopicsDto.class)))
+    when(mappingRegistry.map(any(), eq(TopicWithOwnedRelatedTopicsDto.class), any()))
         .thenReturn(TopicWithOwnedRelatedTopicsDto.builder().build());
-    when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
+    when(mappingRegistry.map(any(), eq(TopicDto.class), any()))
+        .thenReturn(TopicDto.builder().build());
 
     TopicDto topicDto1 = topicService.getTopic(UUID.randomUUID(), true);
     TopicDto topicDto2 = topicService.getTopic(UUID.randomUUID(), false);
