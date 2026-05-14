@@ -1,7 +1,7 @@
 import { Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
 import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useUserService } from '../provider/user-provider.tsx';
 import {
   useFetchDirectNeighborQueries,
@@ -21,6 +21,11 @@ import type { TopicGraphNodePositions } from '../components/graph-view/topic-gra
 
 const nodeTypes = {
   skillTreeTopic: GenericTopicNode,
+};
+
+const cachedDagrePositions: Record<SkillTreeOrientation, TopicGraphNodePositions> = {
+  vertical: {},
+  horizontal: {},
 };
 
 const mergeGraphTopics = (current: GraphTopicDto[], incoming: GraphTopicDto[]) => {
@@ -78,36 +83,20 @@ const HomePage = () => {
     [nodePositionsByOrientation, orientation]
   );
 
-  const nodes = useMemo(
-    () =>
-      layoutNodes.map((node) => ({
-        ...node,
-        position: currentNodePositions[node.id] ?? node.position,
-      })),
-    [currentNodePositions, layoutNodes]
-  );
-
-  useEffect(() => {
-    setNodePositionsByOrientation((current) => {
-      const currentOrientationPositions = current[orientation] ?? {};
-      const newPositions: TopicGraphNodePositions = {};
-      let hasNew = false;
-      layoutNodes.forEach((node) => {
-        if (!currentOrientationPositions[node.id]) {
-          newPositions[node.id] = node.position;
-          hasNew = true;
-        }
-      });
-      if (!hasNew) return current;
-      return {
-        ...current,
-        [orientation]: {
-          ...currentOrientationPositions,
-          ...newPositions,
-        },
-      };
+  const nodes = useMemo(() => {
+    const cached = cachedDagrePositions[orientation];
+    return layoutNodes.map((node) => {
+      const userPosition = currentNodePositions[node.id];
+      if (userPosition) {
+        return { ...node, position: userPosition };
+      }
+      if (cached[node.id]) {
+        return { ...node, position: cached[node.id] };
+      }
+      cached[node.id] = node.position;
+      return node;
     });
-  }, [layoutNodes, orientation]);
+  }, [currentNodePositions, layoutNodes, orientation]);
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
     const graphNode = node as Node<SkillTreeNodeData>;
