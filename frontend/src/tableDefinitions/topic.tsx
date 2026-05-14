@@ -1,4 +1,4 @@
-import { ActionIcon, Badge, Flex } from '@mantine/core';
+import { ActionIcon, Flex } from '@mantine/core';
 import { type EntityTableProps } from '../components/entity-table.tsx';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { Category, ListTopicDto } from '../schemas/topic.ts';
@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { formatDate } from '../utils/date.ts';
 import { IconEye, IconPencil, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
+import CategoryBadge from '../components/category-badge.tsx';
 
 interface TopicColumnProps {
   editAction?: boolean;
@@ -30,11 +31,14 @@ export const useTopicColumns = ({
     }),
     columnHelper.accessor('categories', {
       cell: (info) => (
-        <Flex gap={3}>
+        <Flex gap={3} wrap="wrap">
           {info.getValue().map((category: Category) => (
-            <Badge color={category.color} variant="light" key={category.id}>
-              {category.title}
-            </Badge>
+            <CategoryBadge
+              key={category.id}
+              title={category.title}
+              color={category.color ?? '8b5cf6'}
+              size="sm"
+            />
           ))}
         </Flex>
       ),
@@ -46,9 +50,12 @@ export const useTopicColumns = ({
     }),
     columnHelper.accessor('creatorFullName', {
       cell: (info) => (
-        <Badge color="indigo" variant="light">
-          {info.getValue()}
-        </Badge>
+        <CategoryBadge
+          title={info.getValue()}
+          color="#4c6ef5"
+          size="sm"
+          style={{ textTransform: 'uppercase' }}
+        />
       ),
       header: t('common.creatorFullName'),
     }),

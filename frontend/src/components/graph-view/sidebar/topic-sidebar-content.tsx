@@ -1,9 +1,10 @@
-import { Badge, Button, Group, Text, Title, Divider, Stack, ThemeIcon } from '@mantine/core';
+import { Button, Group, Text, Title, Divider, Stack, ThemeIcon } from '@mantine/core';
 import type { Topic } from '../../../schemas/topic';
 import { useTranslation } from 'react-i18next';
 import { IconEdit, IconRobot } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
+import CategoryBadge from '../../category-badge.tsx';
 
 interface TopicSidebarContentProps {
   selectedElement: Topic;
@@ -25,11 +26,9 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
       <Text size="sm" c="dimmed">
         {t('topic.fields.author')}: {selectedElement.creatorFullName}
       </Text>
-      <Group>
-        {selectedElement.categories?.map((cat, i) => (
-          <Badge key={i} color={`#${cat.color}`}>
-            {cat.title}
-          </Badge>
+      <Group gap={6}>
+        {selectedElement.categories?.map((cat) => (
+          <CategoryBadge key={cat.id} title={cat.title} color={cat.color ?? '8b5cf6'} />
         ))}
       </Group>
       <Text size="sm" c="dimmed">

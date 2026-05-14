@@ -1,6 +1,7 @@
 import { Handle, Position, type NodeProps } from '@xyflow/react';
-import { Badge, Text } from '@mantine/core';
+import { Text } from '@mantine/core';
 import type { SkillTreeNode } from './skill-tree.types.ts';
+import CategoryBadge from '../category-badge.tsx';
 
 type SkillTreeNodeProps = NodeProps<SkillTreeNode>;
 
@@ -106,26 +107,13 @@ const SkillTreeNodeComponent = ({ data, selected }: SkillTreeNodeProps) => {
             maxWidth: 210,
           }}
         >
-          {categoryLabels.map((category) => {
-            const categoryColor = `#${category.color}`;
-
-            return (
-              <Badge
-                key={category.id}
-                radius="xl"
-                variant="light"
-                style={{
-                  color: categoryColor,
-                  background: `color-mix(in srgb, ${categoryColor} 14%, white)`,
-                  border: `1px solid color-mix(in srgb, ${categoryColor} 20%, white)`,
-                  textTransform: 'none',
-                  fontWeight: 600,
-                }}
-              >
-                {category.title}
-              </Badge>
-            );
-          })}
+          {categoryLabels.map((category) => (
+            <CategoryBadge
+              key={category.id}
+              title={category.title}
+              color={category.color ?? '8b5cf6'}
+            />
+          ))}
         </div>
       )}
     </div>
