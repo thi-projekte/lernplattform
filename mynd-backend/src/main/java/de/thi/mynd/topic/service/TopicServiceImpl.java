@@ -12,7 +12,6 @@ import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.Topic;
-import de.thi.mynd.topic.exception.TooManyContentElementsException;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.requests.TopicRequest;
 import de.thi.mynd.topic.security.TopicVoter;
@@ -119,11 +118,6 @@ public final class TopicServiceImpl implements TopicService {
   }
 
   private void updateTopicFieldsAndAssociations(Topic topic, TopicRequest request) {
-
-    if (topic.contentElements.size() > 12) {
-      throw new TooManyContentElementsException(
-          "You can register a maximum of 12 content elements per topic");
-    }
 
     topic.title = request.title;
     topic.teaser = request.teaser;
