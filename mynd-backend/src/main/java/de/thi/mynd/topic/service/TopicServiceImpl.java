@@ -121,7 +121,8 @@ public final class TopicServiceImpl implements TopicService {
   private void updateTopicFieldsAndAssociations(Topic topic, TopicRequest request) {
 
     if (topic.contentElements.size() > 12) {
-      throw new TooManyContentElementsException("You can register a maximum of 12 content elements per topic");
+      throw new TooManyContentElementsException(
+          "You can register a maximum of 12 content elements per topic");
     }
 
     topic.title = request.title;
