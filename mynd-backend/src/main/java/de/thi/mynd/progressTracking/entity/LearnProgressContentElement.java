@@ -5,12 +5,12 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "learn_progress_content_element")
+@AttributeOverride(
+        name = "creatorId",
+        column = @Column(name = "creatorId", insertable = false, updatable = false))
 public class LearnProgressContentElement extends BaseEntity {
 
   @EmbeddedId
-  @AttributeOverride(
-      name = "creatorId",
-      column = @Column(name = "creatorId", insertable = false, updatable = false))
   public LearnProgressContentElementId id;
 
   @ManyToOne
