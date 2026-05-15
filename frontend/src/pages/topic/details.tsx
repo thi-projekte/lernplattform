@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { useQueryTopic } from '../../api/topic.ts';
 import { type Node, type NodeMouseHandler } from '@xyflow/react';
 import { Layout } from '../../components/layout.tsx';
-import { Paper, Text, Stack, Breadcrumbs, Anchor, Tabs } from '@mantine/core';
+import { Paper, Text, Stack, Tabs } from '@mantine/core';
 import type { Topic } from '../../schemas/topic.ts';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import TopicNode from '../../components/graph-view/topic-node.tsx';
@@ -56,14 +56,6 @@ const TopicDetailsPage = () => {
 
   return (
     <Layout>
-      <Breadcrumbs mb="md">
-        <Anchor href="/">Startseite</Anchor>
-        <Anchor>{topic?.title}</Anchor>
-        {displayedElement && !('teaser' in displayedElement) && (
-          <Anchor>{(displayedElement as AnyContentElementDto).title}</Anchor>
-        )}
-      </Breadcrumbs>
-
       <div
         style={{
           display: 'flex',
