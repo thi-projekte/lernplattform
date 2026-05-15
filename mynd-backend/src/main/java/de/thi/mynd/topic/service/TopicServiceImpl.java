@@ -131,6 +131,8 @@ public final class TopicServiceImpl implements TopicService {
     topicRepository.persist(topic);
     topicRepository.flush();
 
+    topicRepository.updateSearchVectors(topic.id, topic.title, topic.teaser);
+
     contentElementService.updateTopicAssociation(topic, request.contentElements);
   }
 

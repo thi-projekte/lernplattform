@@ -21,11 +21,32 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
     return buildPaginationFromQuery(query, page, pageSize);
   }
 
+  @SuppressWarnings("unchecked")
   public List<Topic> findBySearch(String search, int limit) {
-    String formattedSearch = ("%" + search + "%").toLowerCase();
-    return find("lower(title) like ?1 or lower(teaser) like ?2", formattedSearch, formattedSearch)
-        .range(0, limit)
-        .list();
+    return getEntityManager()
+        .createNativeQuery(
+            "SELECT * FROM topic WHERE "
+                + "title_search_vector @@ plainto_tsquery('german', :search) OR "
+                + "teaser_search_vector @@ plainto_tsquery('german', :search) "
+                + "LIMIT :limit",
+            Topic.class)
+        .setParameter("search", search)
+        .setParameter("limit", limit)
+        .getResultList();
+  }
+
+  @jakarta.transaction.Transactional
+  public void updateSearchVectors(java.util.UUID topicId, String title, String teaser) {
+    getEntityManager()
+        .createNativeQuery(
+            "UPDATE topic SET "
+                + "title_search_vector  = to_tsvector('german', :title), "
+                + "teaser_search_vector = to_tsvector('german', :teaser) "
+                + "WHERE id = :id")
+        .setParameter("title", title)
+        .setParameter("teaser", teaser)
+        .setParameter("id", topicId)
+        .executeUpdate();
   }
 
   public List<Topic> findByOwningTopicId(UUID topicId) {

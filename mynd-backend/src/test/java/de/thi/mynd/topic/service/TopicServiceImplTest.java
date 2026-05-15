@@ -100,6 +100,7 @@ public class TopicServiceImplTest {
 
     // Assert
     verify(topicRepository).persist(any(Topic.class));
+    verify(topicRepository).updateSearchVectors(any(), anyString(), anyString());
     verify(contentElementService)
         .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
   }
@@ -227,6 +228,7 @@ public class TopicServiceImplTest {
 
     // Assert
     verify(topicRepository).persist(any(Topic.class));
+    verify(topicRepository).updateSearchVectors(any(), anyString(), anyString());
     verify(contentElementService)
         .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
   }
