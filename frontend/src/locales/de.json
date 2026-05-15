@@ -116,6 +116,10 @@
     "contentElementForm": {
       "incompleteFormError": "Bitte fülle alle Pflichtfelder aus, bevor du fortfährst."
     },
+    "contentElements": {
+      "limitReached": "Maximal 12 Inhalte pro Thema erlaubt.",
+      "countLabel": "{{count}} / {{max}} Inhalte"
+    },
     "errors": {
       "titleMissing": "Titel fehlt",
       "minOneCategory": "Mindestens eine Kategorie auswählen",
