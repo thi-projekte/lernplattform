@@ -1,10 +1,11 @@
 import type { CSSProperties } from 'react';
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
-import { ActionIcon, Button, Group, Paper, Stack, Text } from '@mantine/core';
+import { ActionIcon, Button, Group, Paper, Progress, Stack, Text } from '@mantine/core';
 import { IconEye } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import CategoryBadge from '../category-badge.tsx';
+import type { TopicLearnProgressDto } from '../../schemas/learn-progress.ts';
 
 const DETAIL_BUTTON_VARIANT: 'icon-text' | 'icon-only' = 'icon-text';
 
@@ -22,6 +23,7 @@ interface GenericTopicNodeData extends Record<string, unknown> {
   payload?: {
     id?: string;
     categories?: NodeCategory[];
+    learnProgress?: TopicLearnProgressDto | null;
   };
 }
 
@@ -39,6 +41,9 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
 
   const isBuilderMode = data.kind === 'topic';
   const isForeign = isBuilderMode && data.isOwned === false;
+  const learnProgress = data.payload?.learnProgress;
+  const progressPercent = learnProgress?.percentageCompleted ?? 0;
+  const isProgressCompleted = !!learnProgress?.completed;
   const handleStyle: CSSProperties = isBuilderMode
     ? { opacity: 0 }
     : { opacity: 0, pointerEvents: 'none' };
@@ -146,6 +151,15 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
               </ActionIcon>
             </Group>
           ))}
+
+        {learnProgress && (
+          <Progress
+            value={progressPercent}
+            color={isProgressCompleted ? 'green' : 'blue'}
+            size="xs"
+            radius="xl"
+          />
+        )}
       </Stack>
     </Paper>
   );

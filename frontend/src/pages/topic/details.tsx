@@ -107,7 +107,10 @@ const TopicDetailsPage = () => {
               {isTopic ? (
                 <TopicSidebarContent selectedElement={displayedElement as Topic} />
               ) : (
-                <ContentSidebarContent selectedElement={displayedElement as AnyContentElementDto} />
+                <ContentSidebarContent
+                  selectedElement={displayedElement as AnyContentElementDto}
+                  topicLearnProgress={topic?.learnProgress}
+                />
               )}
             </Stack>
           ) : (

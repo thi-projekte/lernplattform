@@ -2,6 +2,7 @@ import { z } from 'zod';
 import i18n from '../i18n.ts';
 import { BaseEntitySchema, createPaginatedSchema } from './common.ts';
 import { AnyContentElementDtoSchema } from './content-element.ts';
+import { TopicLearnProgressDtoSchema } from './learn-progress.ts';
 
 export const CategorySchema = BaseEntitySchema.extend({
   title: z.string(),
@@ -49,6 +50,7 @@ export const TopicSchema = z
     id: z.uuid().optional(),
     creatorId: z.string().optional(),
     creatorFullName: z.string().optional(),
+    learnProgress: TopicLearnProgressDtoSchema.nullish(),
   })
   .extend(TopicCoreDataSchema.shape)
   .extend(TopicAssociatedTopicsSchema.shape)

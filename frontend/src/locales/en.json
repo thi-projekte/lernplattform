@@ -101,7 +101,14 @@
     "actions": {
       "create": "Create topic",
       "createContentElement": "Create content element",
-      "start": "Start Topic"
+      "start": "Start Topic",
+      "complete": "Complete topic",
+      "completed": "Completed",
+      "markContentElementCompleted": "Mark as completed",
+      "contentElementCompleted": "Completed"
+    },
+    "progress": {
+      "label": "Progress"
     },
     "fields": {
       "title": "Title",
