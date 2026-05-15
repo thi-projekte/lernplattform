@@ -36,9 +36,22 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
 
   const learnProgress = selectedElement.learnProgress;
   const topicId = selectedElement.id;
-  const isStarted = !!learnProgress && !learnProgress.completed;
-  const isCompleted = !!learnProgress?.completed;
-  const progressPercent = (learnProgress?.percentageCompleted ?? 0) * 100;
+
+  const contentElementIds = new Set(selectedElement.contentElements?.map((el) => el.id) ?? []);
+  const completedCurrentIds = (learnProgress?.completedContentElementIds ?? []).filter((id) =>
+    contentElementIds.has(id)
+  );
+  const totalContentElements = contentElementIds.size;
+  const isManuallyCompleted = learnProgress?.status === 'COMPLETED_MANUALLY';
+  const isAutoCompleted =
+    totalContentElements > 0 && completedCurrentIds.length >= totalContentElements;
+  const isCompleted = isManuallyCompleted || isAutoCompleted;
+  const isStarted = !!learnProgress && !isCompleted;
+  const progressPercent = isCompleted
+    ? 100
+    : totalContentElements > 0
+      ? (completedCurrentIds.length / totalContentElements) * 100
+      : 0;
 
   return (
     <>
