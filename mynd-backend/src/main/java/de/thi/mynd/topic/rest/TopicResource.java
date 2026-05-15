@@ -73,6 +73,7 @@ public final class TopicResource {
   @Operation(
       summary = "Creates a new topic",
       description = "Creates a new topic and assigns the provided content elements to it.")
+  @APIResponse(responseCode = "400", description = "too many content elements (max. 12)")
   public TopicDto createTopic(@Valid TopicRequest createTopicRequest) {
     return topicService.createTopic(createTopicRequest);
   }
@@ -84,6 +85,7 @@ public final class TopicResource {
       summary = "Updates a topic",
       description = "Updates a topic and updates the provided content elements by ID.")
   @APIResponse(responseCode = "404", description = "The topic does not exist")
+  @APIResponse(responseCode = "400", description = "too many content elements (max. 12)")
   public TopicDto updateTopic(UUID topicId, @Valid TopicRequest updateTopicRequest) {
     return topicService.updateTopic(topicId, updateTopicRequest);
   }
