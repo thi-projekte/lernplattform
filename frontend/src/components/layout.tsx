@@ -1,12 +1,4 @@
-import {
-  ActionIcon,
-  AppShell,
-  Box,
-  Burger,
-  Group,
-  Image,
-  NavLink,
-} from '@mantine/core';
+import { ActionIcon, AppShell, Box, Burger, Group, Image, NavLink } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconUser, IconLogout2 } from '@tabler/icons-react';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
@@ -160,7 +152,6 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             onClick={() => keycloak.accountManagement()}
             title="Benutzerkonto öffnen"
             aria-label="Benutzerkonto öffnen"
-
             label={desktopExpanded ? userDisplayName : undefined}
             description={desktopExpanded ? userRole : undefined}
             leftSection={
