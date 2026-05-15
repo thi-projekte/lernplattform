@@ -103,6 +103,7 @@
       "createContentElement": "Create content element",
       "start": "Start Topic",
       "complete": "Complete topic",
+      "completeBlockedHint": "Mark all content elements as completed first.",
       "completed": "Completed",
       "markContentElementCompleted": "Mark as completed",
       "contentElementCompleted": "Completed"
