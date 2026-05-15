@@ -6,14 +6,14 @@ import { useDisclosure } from '@mantine/hooks';
 import CreateContentElementModal from './modal/create-content-element.tsx';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import { DragDropContext, Draggable, Droppable, type OnDragEndResponder } from '@hello-pangea/dnd';
-import { useMemo } from 'react';
+import { type Dispatch, type SetStateAction, useMemo } from 'react';
 import ContentElementDisplay from './content-element-display.tsx';
 import { notifications } from '@mantine/notifications';
 import { useDeleteContentElementMutation } from '../../api/topic.ts';
 
 interface ContentElementsDndProps {
   topic: Partial<Topic>;
-  setTopic: (topic: Partial<Topic>) => void;
+  setTopic: Dispatch<SetStateAction<Partial<Topic>>>;
 }
 
 const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
@@ -24,10 +24,10 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
     useDeleteContentElementMutation();
 
   const addContentElement = (contentElement: AnyContentElementDto) => {
-    setTopic({
-      ...topic,
+    setTopic((prev) => ({
+      ...prev,
       contentElements: [...(topic.contentElements ?? []), contentElement],
-    });
+    }));
   };
 
   const sortedContentElements = useMemo<AnyContentElementDto[]>(() => {

@@ -11,7 +11,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { useCallback, useMemo, useState } from 'react';
+import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconEyeOff, IconLink, IconTrash } from '@tabler/icons-react';
 import TopicSearchbar from './topic-searchbar.tsx';
@@ -28,7 +28,7 @@ import CategoryBadge from '../category-badge.tsx';
 
 interface AssociatedTopicsStepProps {
   topic: Partial<Topic>;
-  setTopic: (topic: Partial<Topic>) => void;
+  setTopic: Dispatch<SetStateAction<Partial<Topic>>>;
 }
 
 const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) => {
@@ -41,10 +41,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
   const [isViewportLocked, setIsViewportLocked] = useState(false);
 
   const removeTopic = (topicId: string) => {
-    setTopic({
-      ...topic,
+    setTopic((prev) => ({
+      ...prev,
       relatedTopics: (topic.relatedTopics ?? []).filter((ass) => ass.id !== topicId),
-    });
+    }));
 
     setSelectedTopicNode((current) => (current && current.payload.id === topicId ? null : current));
   };
@@ -56,10 +56,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
       return;
     }
 
-    setTopic({
-      ...topic,
+    setTopic((prev) => ({
+      ...prev,
       relatedTopics: [...(topic.relatedTopics ?? []), topicToAdd],
-    });
+    }));
 
     setSelectedTopicNode({
       kind: 'topic',
