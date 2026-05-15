@@ -7,6 +7,7 @@ import {
   Divider,
   Stack,
   ThemeIcon,
+  Tooltip,
 } from '@mantine/core';
 import type { Topic } from '../../../schemas/topic';
 import { useTranslation } from 'react-i18next';
@@ -14,10 +15,7 @@ import { IconCheck, IconEdit, IconRobot } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
 import CategoryBadge from '../../category-badge.tsx';
-import {
-  useCompleteTopicMutation,
-  useStartTopicMutation,
-} from '../../../api/learn-progress.ts';
+import { useCompleteTopicMutation, useStartTopicMutation } from '../../../api/learn-progress.ts';
 
 interface TopicSidebarContentProps {
   selectedElement: Topic;
@@ -84,15 +82,22 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           {t('topic.actions.completed')}
         </Button>
       ) : isStarted ? (
-        <Button
-          color="green"
-          fullWidth
-          mt="xl"
-          loading={isCompleting}
-          onClick={() => topicId && completeTopic(topicId)}
+        <Tooltip
+          label={t('topic.actions.completeBlockedHint')}
+          disabled={progressPercent >= 100}
+          withArrow
         >
-          {t('topic.actions.complete')}
-        </Button>
+          <Button
+            color="green"
+            fullWidth
+            mt="xl"
+            loading={isCompleting}
+            disabled={progressPercent < 100}
+            onClick={() => topicId && completeTopic(topicId)}
+          >
+            {t('topic.actions.complete')}
+          </Button>
+        </Tooltip>
       ) : (
         <Button
           color="blue"

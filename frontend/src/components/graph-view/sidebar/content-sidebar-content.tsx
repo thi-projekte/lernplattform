@@ -29,8 +29,9 @@ const ContentSidebarContent = ({
 
   const topicStarted = !!topicLearnProgress;
   const topicCompleted = !!topicLearnProgress?.completed;
-  const isElementCompleted =
-    !!topicLearnProgress?.completedContentElementIds.includes(selectedElement.id);
+  const isElementCompleted = !!topicLearnProgress?.completedContentElementIds.includes(
+    selectedElement.id
+  );
   const canMarkCompleted = topicStarted && !topicCompleted && !isElementCompleted;
 
   return (
@@ -71,11 +72,7 @@ const ContentSidebarContent = ({
           {t('topic.actions.contentElementCompleted')}
         </Button>
       ) : (
-        <Tooltip
-          label={t('topic.actions.start')}
-          disabled={topicStarted}
-          withArrow
-        >
+        <Tooltip label={t('topic.actions.start')} disabled={topicStarted} withArrow>
           <Button
             color="blue"
             fullWidth

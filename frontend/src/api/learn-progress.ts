@@ -12,13 +12,9 @@ const completeTopic = async (topicId: string) =>
   });
 
 const completeContentElement = async (contentElementId: string) =>
-  await apiClient.post(
-    `/learn-progress/content-elements/${contentElementId}/complete`,
-    undefined,
-    {
-      validateStatus: (status) => status === 200,
-    }
-  );
+  await apiClient.post(`/learn-progress/content-elements/${contentElementId}/complete`, undefined, {
+    validateStatus: (status) => status === 200,
+  });
 
 const invalidateProgressQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
   queryClient.invalidateQueries({ queryKey: ['topic'] });
