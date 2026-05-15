@@ -118,6 +118,7 @@ public final class TopicServiceImpl implements TopicService {
   }
 
   private void updateTopicFieldsAndAssociations(Topic topic, TopicRequest request) {
+
     topic.title = request.title;
     topic.teaser = request.teaser;
     topic.creatorId = identity.getPrincipal().getName();
