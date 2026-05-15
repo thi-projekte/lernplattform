@@ -40,7 +40,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
   const topicId = selectedElement.id;
   const isStarted = !!learnProgress && !learnProgress.completed;
   const isCompleted = !!learnProgress?.completed;
-  const progressPercent = learnProgress?.percentageCompleted ?? 0;
+  const progressPercent = (learnProgress?.percentageCompleted ?? 0) * 100;
 
   return (
     <>

@@ -42,7 +42,7 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
   const isBuilderMode = data.kind === 'topic';
   const isForeign = isBuilderMode && data.isOwned === false;
   const learnProgress = data.payload?.learnProgress;
-  const progressPercent = learnProgress?.percentageCompleted ?? 0;
+  const progressPercent = (learnProgress?.percentageCompleted ?? 0) * 100;
   const isProgressCompleted = !!learnProgress?.completed;
   const handleStyle: CSSProperties = isBuilderMode
     ? { opacity: 0 }
