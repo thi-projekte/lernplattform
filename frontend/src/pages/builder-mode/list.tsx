@@ -11,7 +11,6 @@ import { useQueryClient } from '@tanstack/react-query';
 import EntityTable from '../../components/entity-table.tsx';
 import {
   ActionIcon,
-  Badge,
   Button,
   Flex,
   Group,
@@ -36,6 +35,7 @@ import type { GraphTopicDto } from '../../schemas/topic-graph.ts';
 import { useCreateAssociation } from '../../api/association.ts';
 import TopicSearchbar from '../../components/topic/topic-searchbar.tsx';
 import type { ListTopicDto, Topic } from '../../schemas/topic.ts';
+import CategoryBadge from '../../components/category-badge.tsx';
 
 const BuilderModeListPage = () => {
   const [pagination, setPagination] = useState<PaginationState>({ pageSize: 20, pageIndex: 0 });
@@ -316,27 +316,25 @@ const BuilderModeListPage = () => {
                       {selectedGraphTopic.categories.length > 0 && (
                         <Group gap={6}>
                           {selectedGraphTopic.categories.map((category) => (
-                            <Badge
+                            <CategoryBadge
                               key={category.id}
-                              color={category.color}
-                              variant="light"
+                              title={category.title}
+                              color={category.color ?? '8b5cf6'}
                               size="sm"
-                            >
-                              {category.title}
-                            </Badge>
+                            />
                           ))}
                         </Group>
                       )}
-                      <Badge
+                      <CategoryBadge
                         w="fit-content"
-                        color={selectedGraphTopicIsOwned ? 'orange' : 'blue'}
-                        variant="light"
                         size="sm"
-                      >
-                        {selectedGraphTopicIsOwned
-                          ? t('topic.personalGraph.ownedTopic')
-                          : t('topic.personalGraph.foreignTopic')}
-                      </Badge>
+                        title={
+                          selectedGraphTopicIsOwned
+                            ? t('topic.personalGraph.ownedTopic')
+                            : t('topic.personalGraph.foreignTopic')
+                        }
+                        color={selectedGraphTopicIsOwned ? '#f08c00' : '#228be6'}
+                      />
                       {selectedGraphTopic.creatorFullName && (
                         <Text size="xs" c="dimmed">
                           {selectedGraphTopic.creatorFullName}
@@ -395,15 +393,13 @@ const BuilderModeListPage = () => {
                                 {suggestion.creatorFullName}
                               </Text>
                             )}
-                            {suggestion.categories.length > 0 && (
-                              <Group gap={6} mt={8}>
-                                {suggestion.categories.slice(0, 1).map((category) => (
-                                  <Badge key={category.id} color={category.color} variant="light">
-                                    {category.title}
-                                  </Badge>
-                                ))}
-                              </Group>
-                            )}
+                            {suggestion.categories.slice(0, 1).map((category) => (
+                              <CategoryBadge
+                                key={category.id}
+                                title={category.title}
+                                color={category.color ?? '8b5cf6'}
+                              />
+                            ))}
                           </div>
                           <Group gap="xs" wrap="nowrap">
                             {canLink && (

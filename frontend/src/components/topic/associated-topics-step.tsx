@@ -24,6 +24,7 @@ import type {
 } from '../graph-view/topic-graph.types.ts';
 import type { ListTopicDto } from '../../schemas/topic.ts';
 import { useUserService } from '../../provider/user-provider.tsx';
+import CategoryBadge from '../category-badge.tsx';
 
 interface AssociatedTopicsStepProps {
   topic: Partial<Topic>;
@@ -281,9 +282,11 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                           {relatedTopic.categories.length > 0 && (
                             <Group gap={6} mt={8}>
                               {relatedTopic.categories.slice(0, 1).map((category) => (
-                                <Badge key={category.id} color={category.color} variant="light">
-                                  {category.title}
-                                </Badge>
+                                <CategoryBadge
+                                  key={category.id}
+                                  title={category.title}
+                                  color={category.color ?? '8b5cf6'}
+                                />
                               ))}
                             </Group>
                           )}
