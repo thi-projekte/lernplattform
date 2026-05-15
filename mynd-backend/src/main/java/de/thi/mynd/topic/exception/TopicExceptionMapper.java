@@ -9,4 +9,9 @@ public final class TopicExceptionMapper {
   public Response mapAssociationAlreadyExistsException(AssociationAlreadyExistsException e) {
     return Response.status(Response.Status.FOUND).entity(e.getMessage()).build();
   }
+
+  @ServerExceptionMapper
+  public Response mapTooManyContentElementsException(TooManyContentElementsException e) {
+    return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+  }
 }
