@@ -1,9 +1,10 @@
 import type { CSSProperties } from 'react';
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
-import { ActionIcon, Badge, Button, Group, Paper, Stack, Text } from '@mantine/core';
+import { ActionIcon, Button, Group, Paper, Stack, Text } from '@mantine/core';
 import { IconEye } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
+import CategoryBadge from '../category-badge.tsx';
 
 const DETAIL_BUTTON_VARIANT: 'icon-text' | 'icon-only' = 'icon-text';
 
@@ -100,25 +101,14 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
             </Text>
             {categoryLabels.length > 0 && (
               <Group gap={4} wrap="wrap">
-                {categoryLabels.map((category) => {
-                  const categoryColor = `#${category.color}`;
-                  return (
-                    <Badge
-                      key={category.id}
-                      radius="xl"
-                      variant="light"
-                      size="xs"
-                      style={{
-                        color: categoryColor,
-                        background: `color-mix(in srgb, ${categoryColor} 14%, white)`,
-                        textTransform: 'none',
-                        fontWeight: 600,
-                      }}
-                    >
-                      {category.title}
-                    </Badge>
-                  );
-                })}
+                {categoryLabels.map((category) => (
+                  <CategoryBadge
+                    key={category.id}
+                    title={category.title}
+                    color={category.color}
+                    size="xs"
+                  />
+                ))}
               </Group>
             )}
           </Stack>
