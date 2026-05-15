@@ -117,7 +117,8 @@
       "incompleteFormError": "Please fill in all required fields before continuing."
     },
     "contentElements": {
-      "limitReached": "Maximum of 12 content elements per topic."
+      "limitReached": "Maximum of 12 content elements per topic.",
+      "countLabel": "{{count}} / {{max}} content elements"
     },
     "errors": {
       "titleMissing": "Title missing",

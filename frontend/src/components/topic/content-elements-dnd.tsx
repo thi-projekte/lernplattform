@@ -1,4 +1,14 @@
-import { ActionIcon, Button, Flex, Paper, Stack, ThemeIcon, Title, Tooltip } from '@mantine/core';
+import {
+  ActionIcon,
+  Button,
+  Flex,
+  Paper,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
+  Tooltip,
+} from '@mantine/core';
 import { IconGripVertical, IconPlusFilled, IconTrash } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { Topic } from '../../schemas/topic.ts';
@@ -80,7 +90,7 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
 
   return (
     <>
-      <Flex justify="flex-end" w="100%" mt={12} mb={12}>
+      <Flex justify="flex-end" w="100%" mt={12} mb={12} direction="column" align="flex-end">
         <Tooltip
           label={t('topic.contentElements.limitReached')}
           disabled={!isLimitReached}
@@ -91,6 +101,9 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
             &nbsp;{t('topic.actions.createContentElement')}
           </Button>
         </Tooltip>
+        <Text size="xs" c={isLimitReached ? 'red' : 'dimmed'} mt={4}>
+          {t('topic.contentElements.countLabel', { count: contentElementCount, max: 12 })}
+        </Text>
       </Flex>
       <CreateContentElementModal
         opened={opened}
