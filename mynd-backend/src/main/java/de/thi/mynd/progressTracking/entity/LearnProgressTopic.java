@@ -7,12 +7,11 @@ import java.util.List;
 @Entity
 @Table(name = "learn_progress_topic")
 @AttributeOverride(
-        name = "creatorId",
-        column = @Column(name = "creatorId", insertable = false, updatable = false))
+    name = "creatorId",
+    column = @Column(name = "creatorId", insertable = false, updatable = false))
 public class LearnProgressTopic extends BaseEntity {
 
-  @EmbeddedId
-  public LearnProgressTopicId id;
+  @EmbeddedId public LearnProgressTopicId id;
 
   @Column(nullable = false)
   @Enumerated(EnumType.STRING)
