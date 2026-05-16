@@ -23,5 +23,49 @@
   ],
   "pmRisk": [
     "pmRetro"
+  ],
+  "lifeManualIntro": [
+    "connectingDots",
+    "joyInLife"
+  ],
+  "connectingDots": [
+    "talentSearch",
+    "livingInNow"
+  ],
+  "joyInLife": [
+    "talentSearch",
+    "energyAndFlow"
+  ],
+  "talentSearch": [
+    "strengthFormula"
+  ],
+  "strengthFormula": [
+    "comfortZone"
+  ],
+  "comfortZone": [
+    "beliefsSelfSabotage"
+  ],
+  "beliefsSelfSabotage": [
+    "valuesBasics"
+  ],
+  "valuesBasics": [
+    "gutDecisions",
+    "successRedefined"
+  ],
+  "gutDecisions": [
+    "livingInNow"
+  ],
+  "livingInNow": [
+    "successRedefined"
+  ],
+  "successRedefined": [
+    "energyAndFlow",
+    "penthouseTheory"
+  ],
+  "energyAndFlow": [
+    "penthouseTheory"
+  ],
+  "penthouseTheory": [
+    "sixLifeAreas"
   ]
 }

@@ -64,5 +64,41 @@
     "creatorId": "admin",
     "title": "Projektabschluss",
     "color": "0891B2"
+  },
+  {
+    "identifier": "personalDevelopment",
+    "creatorId": "admin",
+    "title": "Persönliche Entwicklung",
+    "color": "7C3AED"
+  },
+  {
+    "identifier": "motivationJoy",
+    "creatorId": "admin",
+    "title": "Motivation & Lebensfreude",
+    "color": "F59E0B"
+  },
+  {
+    "identifier": "strengthsTalents",
+    "creatorId": "admin",
+    "title": "Stärken & Talente",
+    "color": "10B981"
+  },
+  {
+    "identifier": "valuesDecisions",
+    "creatorId": "admin",
+    "title": "Werte & Entscheidungen",
+    "color": "2563EB"
+  },
+  {
+    "identifier": "lifePlanning",
+    "creatorId": "admin",
+    "title": "Lebensplanung",
+    "color": "EC4899"
+  },
+  {
+    "identifier": "reflectionMindset",
+    "creatorId": "admin",
+    "title": "Reflexion & Mindset",
+    "color": "64748B"
   }
 ]
