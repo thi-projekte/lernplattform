@@ -24,9 +24,13 @@
   "pmRisk": [
     "pmRetro"
   ],
+  "pmStakeholder": [
+    "lifeManualIntro"
+  ],
   "lifeManualIntro": [
     "connectingDots",
-    "joyInLife"
+    "joyInLife",
+    "pmStakeholder"
   ],
   "connectingDots": [
     "talentSearch",
