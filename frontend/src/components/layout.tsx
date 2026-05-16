@@ -150,8 +150,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         <Box mt="auto">
           <NavLink
             onClick={() => keycloak.accountManagement()}
-            title="Benutzerkonto öffnen"
-            aria-label="Benutzerkonto öffnen"
+            title={t('layout.openAccount')}
+            aria-label={t('layout.openAccount')}
             label={desktopExpanded ? userDisplayName : undefined}
             description={desktopExpanded ? userRole : undefined}
             leftSection={
