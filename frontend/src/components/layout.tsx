@@ -10,6 +10,7 @@ import { routes, type TypedMyndRoute } from '../routing.ts';
 import { useLocation, useMatches, useNavigate } from 'react-router';
 import { isGranted, logout } from '../auth.ts';
 import AccessDenied from './access-denied.tsx';
+import { useUserService } from '../provider/user-provider.tsx';
 
 interface LayoutProps {
   children: ReactNode;
@@ -19,11 +20,22 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const [opened, { toggle }] = useDisclosure();
   const [desktopExpanded, setDesktopExpanded] = useState(false);
   const { t } = useTranslation();
+  const userService = useUserService();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const matches = useMatches();
 
   const sidebarRoutes = routes.filter((r) => r.isSidebar && r.path);
+  const userDisplayName =
+    [userService.account.firstName, userService.account.lastName].filter(Boolean).join(' ') ||
+    userService.account.username ||
+    userService.account.email ||
+    t('journey.genericUser');
+  const userRole = userService.roles.includes('builder')
+    ? t('auth.role_builder')
+    : userService.roles.includes('learner')
+      ? t('auth.role_learner')
+      : undefined;
 
   const longestActiveTarget = sidebarRoutes
     .filter((route) => pathname.indexOf(route.path ?? '') > -1)
@@ -85,9 +97,6 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
           <Group px="md">
             <LanguagePicker />
-            <ActionIcon variant="default" size="xl" onClick={() => keycloak.accountManagement()}>
-              <IconUser size={32} stroke={1.5} />
-            </ActionIcon>
             <ActionIcon variant="default" size="xl" onClick={logout}>
               <IconLogout2 size={32} stroke={1.5} />
             </ActionIcon>
@@ -102,6 +111,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         style={{
           transition: 'width 150ms ease',
           overflowX: 'hidden',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
         {sidebarRoutes
@@ -135,6 +146,52 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               />
             );
           })}
+
+        <Box mt="auto">
+          <NavLink
+            onClick={() => keycloak.accountManagement()}
+            title={t('layout.openAccount')}
+            aria-label={t('layout.openAccount')}
+            label={desktopExpanded ? userDisplayName : undefined}
+            description={desktopExpanded ? userRole : undefined}
+            leftSection={
+              <Box
+                style={{
+                  width: 44,
+                  height: 56,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                }}
+              >
+                <IconUser size={32} stroke={1.5} />
+              </Box>
+            }
+            styles={{
+              root: {
+                height: 56,
+                borderRadius: 12,
+                paddingInline: desktopExpanded ? undefined : 0,
+                overflow: 'hidden',
+                transition: 'background-color 150ms ease, color 150ms ease',
+              },
+              label: {
+                fontWeight: 700,
+              },
+              body: {
+                display: desktopExpanded ? undefined : 'none',
+                minWidth: 0,
+              },
+              section: {
+                marginInlineEnd: desktopExpanded ? undefined : 0,
+                width: desktopExpanded ? 44 : '100%',
+                minWidth: desktopExpanded ? 44 : '100%',
+                justifyContent: 'center',
+              },
+            }}
+          />
+        </Box>
       </AppShell.Navbar>
 
       <AppShell.Main>
