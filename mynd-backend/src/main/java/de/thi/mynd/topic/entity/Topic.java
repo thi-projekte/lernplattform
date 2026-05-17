@@ -17,17 +17,17 @@ public class Topic extends BaseEntityWithId {
   public String teaser;
 
   @Column(
-          name = "title_search_vector",
-          columnDefinition = "tsvector",
-          insertable = false,
-          updatable = false)
+      name = "title_search_vector",
+      columnDefinition = "tsvector",
+      insertable = false,
+      updatable = false)
   public String titleSearchVector;
 
   @Column(
-          name = "teaser_search_vector",
-          columnDefinition = "tsvector",
-          insertable = false,
-          updatable = false)
+      name = "teaser_search_vector",
+      columnDefinition = "tsvector",
+      insertable = false,
+      updatable = false)
   public String teaserSearchVector;
 
   @Column public int estimatedLearningDuration;
@@ -36,9 +36,9 @@ public class Topic extends BaseEntityWithId {
 
   @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(
-          name = "join_topic_category",
-          joinColumns = @JoinColumn(name = "topic_id"),
-          inverseJoinColumns = @JoinColumn(name = "category_id"))
+      name = "join_topic_category",
+      joinColumns = @JoinColumn(name = "topic_id"),
+      inverseJoinColumns = @JoinColumn(name = "category_id"))
   public List<Category> categories = new ArrayList<>();
 
   @OneToMany(mappedBy = "owningTopic", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -37,15 +37,15 @@ public final class TopicServiceImpl implements TopicService {
   @Override
   public PaginationDto<ListTopicDto> findPersonalTopicsPaginated(int page, int pageSize) {
     PaginationDto<Topic> paginatedTopics =
-            topicRepository.findForCreatorPaginated(identity.getPrincipal().getName(), page, pageSize);
+        topicRepository.findForCreatorPaginated(identity.getPrincipal().getName(), page, pageSize);
 
     List<ListTopicDto> listDtos =
-            mappingRegistry.mapList(paginatedTopics.results, ListTopicDto.class);
+        mappingRegistry.mapList(paginatedTopics.results, ListTopicDto.class);
 
     return PaginationDto.<ListTopicDto>builder()
-            .results(listDtos)
-            .totalPages(paginatedTopics.totalPages)
-            .build();
+        .results(listDtos)
+        .totalPages(paginatedTopics.totalPages)
+        .build();
   }
 
   @Override
@@ -61,7 +61,7 @@ public final class TopicServiceImpl implements TopicService {
 
   @Override
   public TopicDto getTopic(UUID topicId, boolean withOwnedRelatedTopics)
-          throws EntityInstanceNotFoundException {
+      throws EntityInstanceNotFoundException {
     Topic topic = getTopicByIdElseException(topicId);
 
     if (withOwnedRelatedTopics) {
@@ -129,8 +129,8 @@ public final class TopicServiceImpl implements TopicService {
     topic.categories = categoryService.findByAssociatedEntities(request.categories);
     topic.ownedAssociations.clear();
     topic.ownedAssociations.addAll(
-            topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
-                    topic, request.relatedTopics, identity.getPrincipal().getName()));
+        topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
+            topic, request.relatedTopics, identity.getPrincipal().getName()));
     topic.estimatedLearningDuration = request.estimatedLearningDuration;
 
     topicRepository.persist(topic);

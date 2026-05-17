@@ -24,36 +24,36 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
   @SuppressWarnings("unchecked")
   public List<Topic> findBySearch(String search, int limit) {
     return getEntityManager()
-            .createNativeQuery(
-                    "SELECT * FROM topic WHERE "
-                            + "title_search_vector @@ plainto_tsquery('german', :search) OR "
-                            + "teaser_search_vector @@ plainto_tsquery('german', :search) "
-                            + "WITH search_query AS (SELECT plainto_tsquery('german', :search) AS query) "
-                            + "SELECT topic.* FROM topic, search_query "
-                            + "WHERE title_search_vector @@ search_query.query "
-                            + "OR teaser_search_vector @@ search_query.query "
-                            + "ORDER BY "
-                            + "ts_rank_cd(title_search_vector, search_query.query) DESC, "
-                            + "ts_rank_cd(teaser_search_vector, search_query.query) DESC "
-                            + "LIMIT :limit",
-                    Topic.class)
-            .setParameter("search", search)
-            .setParameter("limit", limit)
-            .getResultList();
+        .createNativeQuery(
+            "SELECT * FROM topic WHERE "
+                + "title_search_vector @@ plainto_tsquery('german', :search) OR "
+                + "teaser_search_vector @@ plainto_tsquery('german', :search) "
+                + "WITH search_query AS (SELECT plainto_tsquery('german', :search) AS query) "
+                + "SELECT topic.* FROM topic, search_query "
+                + "WHERE title_search_vector @@ search_query.query "
+                + "OR teaser_search_vector @@ search_query.query "
+                + "ORDER BY "
+                + "ts_rank_cd(title_search_vector, search_query.query) DESC, "
+                + "ts_rank_cd(teaser_search_vector, search_query.query) DESC "
+                + "LIMIT :limit",
+            Topic.class)
+        .setParameter("search", search)
+        .setParameter("limit", limit)
+        .getResultList();
   }
 
   @jakarta.transaction.Transactional
   public void updateSearchVectors(java.util.UUID topicId, String title, String teaser) {
     getEntityManager()
-            .createNativeQuery(
-                    "UPDATE topic SET "
-                            + "title_search_vector  = to_tsvector('german', :title), "
-                            + "teaser_search_vector = to_tsvector('german', :teaser) "
-                            + "WHERE id = :id")
-            .setParameter("title", title)
-            .setParameter("teaser", teaser)
-            .setParameter("id", topicId)
-            .executeUpdate();
+        .createNativeQuery(
+            "UPDATE topic SET "
+                + "title_search_vector  = to_tsvector('german', :title), "
+                + "teaser_search_vector = to_tsvector('german', :teaser) "
+                + "WHERE id = :id")
+        .setParameter("title", title)
+        .setParameter("teaser", teaser)
+        .setParameter("id", topicId)
+        .executeUpdate();
   }
 
   public List<Topic> findByOwningTopicId(UUID topicId) {
