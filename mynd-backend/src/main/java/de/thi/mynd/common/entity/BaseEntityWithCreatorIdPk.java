@@ -8,5 +8,5 @@ import jakarta.persistence.*;
     column = @Column(name = "creatorId", insertable = false, updatable = false))
 public abstract class BaseEntityWithCreatorIdPk extends BaseEntity {
 
-  @EmbeddedId CreatorIdKey id;
+  @EmbeddedId public CreatorIdKey id;
 }

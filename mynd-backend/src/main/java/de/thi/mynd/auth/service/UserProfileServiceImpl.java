@@ -4,6 +4,7 @@ import de.thi.mynd.auth.dto.ProfilePictureDto;
 import de.thi.mynd.auth.entity.UserProfile;
 import de.thi.mynd.auth.exception.ProfilePictureNotFoundException;
 import de.thi.mynd.auth.repository.UserProfileRepository;
+import de.thi.mynd.common.entity.CreatorIdKey;
 import de.thi.mynd.common.exception.FileTooLargeException;
 import de.thi.mynd.common.exception.InvalidFileTypeException;
 import de.thi.mynd.common.exception.NoFileProvidedException;
@@ -34,6 +35,9 @@ public final class UserProfileServiceImpl implements UserProfileService {
             () -> {
               UserProfile newProfile = new UserProfile();
               newProfile.creatorId = username;
+              CreatorIdKey id = new CreatorIdKey();
+              id.creatorId = username;
+              newProfile.id = id;
               return newProfile;
             });
 
