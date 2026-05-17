@@ -7,7 +7,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import java.util.Optional;
 
 @ApplicationScoped
-public final class UserProfileRepository extends MyndBaseCustomIdRepository<UserProfile, CreatorIdKey> {
+public final class UserProfileRepository
+    extends MyndBaseCustomIdRepository<UserProfile, CreatorIdKey> {
 
   public Optional<UserProfile> findByUsername(String username) {
     return find("id.creatorId = ?1", username).singleResultOptional();
