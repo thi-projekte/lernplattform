@@ -98,7 +98,15 @@
     "actions": {
       "create": "Thema erstellen",
       "createContentElement": "Inhalt anlegen",
-      "start": "Thema starten"
+      "start": "Thema starten",
+      "complete": "Thema abschließen",
+      "completeBlockedHint": "Markiere zuerst alle Inhalte als abgeschlossen.",
+      "completed": "Abgeschlossen",
+      "markContentElementCompleted": "Als abgeschlossen markieren",
+      "contentElementCompleted": "Abgeschlossen"
+    },
+    "progress": {
+      "label": "Fortschritt"
     },
     "fields": {
       "title": "Titel",
