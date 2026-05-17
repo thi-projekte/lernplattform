@@ -19,7 +19,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
-
 @Path("/auth")
 @Tag(name = "Authorization")
 @SecurityRequirement(name = "keycloak")
@@ -76,6 +75,7 @@ public final class AuthResource {
     authService.makeUserALearner(username);
     return Response.status(201).build();
   }
+
   @POST
   @Path("/profile-picture")
   @Authenticated
