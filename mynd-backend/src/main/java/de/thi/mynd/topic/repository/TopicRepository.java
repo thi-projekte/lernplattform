@@ -28,7 +28,7 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
                     "SELECT * FROM topic WHERE "
                             + "title_search_vector @@ plainto_tsquery('german', :search) OR "
                             + "teaser_search_vector @@ plainto_tsquery('german', :search) "
-                    "WITH search_query AS (SELECT plainto_tsquery('german', :search) AS query) "
+                            + "WITH search_query AS (SELECT plainto_tsquery('german', :search) AS query) "
                             + "SELECT topic.* FROM topic, search_query "
                             + "WHERE title_search_vector @@ search_query.query "
                             + "OR teaser_search_vector @@ search_query.query "
