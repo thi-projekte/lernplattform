@@ -1,10 +1,24 @@
-import { Button, Group, Text, Title, Divider, Stack, ThemeIcon } from '@mantine/core';
+import {
+  Button,
+  Group,
+  Progress,
+  Text,
+  Title,
+  Divider,
+  Stack,
+  ThemeIcon,
+  Tooltip,
+} from '@mantine/core';
 import type { Topic } from '../../../schemas/topic';
 import { useTranslation } from 'react-i18next';
-import { IconEdit, IconRobot } from '@tabler/icons-react';
+import { IconCheck, IconEdit, IconRobot } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
 import CategoryBadge from '../../category-badge.tsx';
+import {
+  useCompleteTopicManuallyMutation,
+  useStartTopicMutation,
+} from '../../../api/learn-progress.ts';
 
 interface TopicSidebarContentProps {
   selectedElement: Topic;
@@ -19,6 +33,28 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
     !!selectedElement.creatorId &&
     !!currentUsername &&
     selectedElement.creatorId.toLowerCase() === currentUsername;
+
+  const { mutate: startTopic, isPending: isStarting } = useStartTopicMutation();
+  const { mutate: completeTopic, isPending: isCompleting } = useCompleteTopicManuallyMutation();
+
+  const learnProgress = selectedElement.learnProgress;
+  const topicId = selectedElement.id;
+
+  const contentElementIds = new Set(selectedElement.contentElements?.map((el) => el.id) ?? []);
+  const completedCurrentIds = (learnProgress?.completedContentElementIds ?? []).filter((id) =>
+    contentElementIds.has(id)
+  );
+  const totalContentElements = contentElementIds.size;
+  const isManuallyCompleted = learnProgress?.status === 'COMPLETED_MANUALLY';
+  const isAutoCompleted =
+    totalContentElements > 0 && completedCurrentIds.length >= totalContentElements;
+  const isCompleted = isManuallyCompleted || isAutoCompleted;
+  const isStarted = !!learnProgress && !isCompleted;
+  const progressPercent = isCompleted
+    ? 100
+    : totalContentElements > 0
+      ? (completedCurrentIds.length / totalContentElements) * 100
+      : 0;
 
   return (
     <>
@@ -49,9 +85,60 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           {t('common.edit')}
         </Button>
       )}
-      <Button color="blue" fullWidth mt="xl">
-        {t('topic.actions.start')}
-      </Button>
+
+      {isCompleted ? (
+        <Button
+          color="green"
+          variant="light"
+          fullWidth
+          mt="xl"
+          disabled
+          leftSection={<IconCheck size={16} />}
+        >
+          {t('topic.actions.completed')}
+        </Button>
+      ) : isStarted ? (
+        <Tooltip
+          label={t('topic.actions.completeBlockedHint')}
+          disabled={progressPercent >= 100}
+          withArrow
+        >
+          <Button
+            color="green"
+            fullWidth
+            mt="xl"
+            loading={isCompleting}
+            onClick={() => topicId && completeTopic(topicId)}
+          >
+            {t('topic.actions.complete')}
+          </Button>
+        </Tooltip>
+      ) : (
+        <Button
+          color="blue"
+          fullWidth
+          mt="xl"
+          loading={isStarting}
+          onClick={() => topicId && startTopic(topicId)}
+        >
+          {t('topic.actions.start')}
+        </Button>
+      )}
+
+      {learnProgress && (
+        <Stack gap={4} mt="md">
+          <Group justify="space-between">
+            <Text size="xs" c="dimmed">
+              {t('topic.progress.label')}
+            </Text>
+            <Text size="xs" fw={600}>
+              {Math.round(progressPercent)}%
+            </Text>
+          </Group>
+          <Progress value={progressPercent} color={isCompleted ? 'green' : 'blue'} />
+        </Stack>
+      )}
+
       <Divider mt="xl" />
 
       <Stack gap="sm" mt="md">

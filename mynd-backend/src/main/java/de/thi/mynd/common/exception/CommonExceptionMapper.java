@@ -29,9 +29,4 @@ public final class CommonExceptionMapper {
   public Response mapEntityInstanceNotFoundException(EntityInstanceNotFoundException e) {
     return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
   }
-
-  @ServerExceptionMapper
-  public Response mapProfilePictureNotFoundException(ProfilePictureNotFoundException e) {
-    return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
-  }
 }
