@@ -213,7 +213,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                 label: { fontWeight: 400 },
               }}
             >
-              {t("common.back")}
+              {t('common.back')}
             </Button>
           )}
           {isCurrentRouteGranted ? children : <AccessDenied />}

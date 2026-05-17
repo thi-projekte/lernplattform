@@ -15,7 +15,10 @@ import { IconCheck, IconEdit, IconRobot } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
 import CategoryBadge from '../../category-badge.tsx';
-import { useCompleteTopicManuallyMutation, useStartTopicMutation } from '../../../api/learn-progress.ts';
+import {
+  useCompleteTopicManuallyMutation,
+  useStartTopicMutation,
+} from '../../../api/learn-progress.ts';
 
 interface TopicSidebarContentProps {
   selectedElement: Topic;
