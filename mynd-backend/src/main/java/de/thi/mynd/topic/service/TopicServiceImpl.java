@@ -54,7 +54,7 @@ public final class TopicServiceImpl implements TopicService {
       return List.of();
     }
 
-    List<Topic> topics = topicRepository.findBySearch(search.trim(), 5);
+    List<Topic> topics = topicRepository.findBySearch(search, 5);
     return mappingRegistry.mapList(topics, ListTopicDto.class);
   }
 
