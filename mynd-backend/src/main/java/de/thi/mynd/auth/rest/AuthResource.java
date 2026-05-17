@@ -79,6 +79,10 @@ public final class AuthResource {
   @POST
   @Path("/profile-picture")
   @Authenticated
+  @Operation(
+      summary = "Upload a profile picture",
+      description = "Uploads a profile picture for the current user. Replaces any existing one.")
+  @APIResponse(responseCode = "201", description = "Profile picture uploaded successfully")
   public Response uploadProfilePicture(@RestForm("file") FileUpload file) {
     String username = identity.getPrincipal().getName();
     ProfilePictureDto dto = userProfileService.uploadProfilePicture(username, file);
@@ -88,6 +92,11 @@ public final class AuthResource {
   @DELETE
   @Path("/profile-picture")
   @Authenticated
+  @Operation(
+      summary = "Delete the profile picture",
+      description = "Deletes the profile picture of the current user.")
+  @APIResponse(responseCode = "200", description = "Profile picture deleted successfully")
+  @APIResponse(responseCode = "404", description = "The user has no profile picture")
   public Response deleteProfilePicture() {
     String username = identity.getPrincipal().getName();
     userProfileService.deleteProfilePicture(username);
@@ -97,6 +106,11 @@ public final class AuthResource {
   @GET
   @Path("/profile-picture/{username}")
   @Authenticated
+  @Operation(
+      summary = "Get a profile picture",
+      description = "Returns a presigned URL for the profile picture of the given user.")
+  @APIResponse(responseCode = "200", description = "Presigned URL returned successfully")
+  @APIResponse(responseCode = "404", description = "The user has no profile picture")
   public ProfilePictureDto getProfilePicture(@PathParam("username") String username) {
     return userProfileService.getProfilePicture(username);
   }
