@@ -1,17 +1,17 @@
 import {
   Button,
+  Divider,
   Group,
   Progress,
+  ThemeIcon,
   Text,
   Title,
-  Divider,
   Stack,
-  ThemeIcon,
   Tooltip,
 } from '@mantine/core';
 import type { Topic } from '../../../schemas/topic';
 import { useTranslation } from 'react-i18next';
-import { IconCheck, IconEdit, IconRobot } from '@tabler/icons-react';
+import { IconCheck, IconEdit, IconMessageCircle, IconRobot } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
 import CategoryBadge from '../../category-badge.tsx';
@@ -139,25 +139,28 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
         </Stack>
       )}
 
-      <Divider mt="xl" />
+      <Divider mt="lg" />
 
-      <Stack gap="sm" mt="md">
-        <Group>
-          <ThemeIcon color="blue" radius="xl">
-            <IconRobot size={16} />
-          </ThemeIcon>
-          <Text fw={500}>Myna</Text>
+      <Group gap="sm" mt="md">
+        <ThemeIcon color="blue" radius="xl" variant="light">
+          <IconRobot size={16} />
+        </ThemeIcon>
+        <div>
+          <Text fw={600}>Myna</Text>
           <Text size="xs" c="dimmed">
             {t('topic.myna.subtitle')}
           </Text>
-        </Group>
-        <Text size="sm" c="dimmed">
-          {t('topic.myna.description')}
-        </Text>
-        <Button variant="outline" color="blue" fullWidth>
-          {t('topic.myna.askButton')}
-        </Button>
-      </Stack>
+        </div>
+      </Group>
+      <Button
+        variant="outline"
+        color="blue"
+        fullWidth
+        mt="sm"
+        leftSection={<IconMessageCircle size={16} />}
+      >
+        {t('topic.myna.askButton')}
+      </Button>
     </>
   );
 };

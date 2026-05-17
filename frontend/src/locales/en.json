@@ -188,7 +188,7 @@
     "personalGraph": {
       "selectedTopic": "Selected topic",
       "emptySelection": "Click on a node to inspect the topic.",
-      "graphDescription": "Switch between the list and a graph view of your personal topics.",
+      "graphDescription": "List or graph view of your topics.",
       "searchHintSelectOwned": "Select one of your own topics first before linking a foreign topic.",
       "keepAtLeastOneAssociation": "At least one associated topic must remain linked.",
       "linkToSelectedTopic": "Link to selected topic",
