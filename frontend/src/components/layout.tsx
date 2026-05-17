@@ -158,20 +158,11 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                   flexShrink: 0,
                 }}
               >
-                <Avatar
-                  src={profilePicture?.url}
-                  size={40}
-                  radius="50%"
-                  color="blue"
-                  styles={{
-                    placeholder: {
-                      background: 'rgba(124, 198, 232, 0.18)',
-                      color: '#1B9ED6',
-                    },
-                  }}
-                >
-                  <IconUser size={22} stroke={1.6} />
-                </Avatar>
+                {profilePicture?.url ? (
+                  <Avatar src={profilePicture.url} size={40} radius="50%" />
+                ) : (
+                  <IconUser size={32} stroke={1.5} />
+                )}
               </Box>
             }
             styles={{
