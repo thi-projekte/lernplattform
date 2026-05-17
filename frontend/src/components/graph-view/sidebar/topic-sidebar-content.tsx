@@ -105,7 +105,6 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
             fullWidth
             mt="xl"
             loading={isCompleting}
-            disabled={progressPercent < 100}
             onClick={() => topicId && completeTopic(topicId)}
           >
             {t('topic.actions.complete')}
