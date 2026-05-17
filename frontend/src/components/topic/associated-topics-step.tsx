@@ -326,7 +326,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                     overflow: 'hidden',
                     border: '1px dashed #ced4da',
                     borderRadius: 12,
-                    background: '#f1f3f5e0',
+                    background: '#fafbfc',
                   }}
                 >
                   <TopicAssociationsGraph

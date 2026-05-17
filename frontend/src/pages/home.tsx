@@ -172,7 +172,7 @@ const HomePage = () => {
           </Text>
         </Stack>
 
-        <Paper withBorder radius="lg" p="lg">
+        <Paper radius="lg" p="lg" bg="transparent">
           <Stack gap="md">
             <Group justify="space-between" align="center">
               <Text size="sm" c="dimmed">
@@ -195,7 +195,7 @@ const HomePage = () => {
                 borderRadius: 16,
                 overflow: 'hidden',
                 border: '1px solid #e9ecef',
-                background: '#f1f3f5e0',
+                background: '#fafbfc',
               }}
             >
               <TopicGraphView

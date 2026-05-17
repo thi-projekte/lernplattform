@@ -77,7 +77,7 @@ const TopicDetailsPage = () => {
               position: 'relative',
               borderRadius: 16,
               overflow: 'hidden',
-              background: '#f1f3f5e0',
+              background: '#fafbfc',
             }}
           >
             <TopicGraphView

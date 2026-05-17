@@ -51,13 +51,13 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
   const baseBackground = isBuilderMode
     ? isForeign
       ? 'linear-gradient(135deg, #f4f9fe 0%, #e8f1f9 100%)'
-      : 'linear-gradient(135deg, #fffbf2 0%, #fff5e0 100%)'
+      : '#ffffb865'
     : 'linear-gradient(135deg, #e7f2ff 0%, #fff9e6 100%)';
 
   const selectedBackground = isBuilderMode
     ? isForeign
       ? 'linear-gradient(135deg, #e6f0fa 0%, #d4e4f3 100%)'
-      : 'linear-gradient(135deg, #fff5e0 0%, #ffecc4 100%)'
+      : '#f1f1adf0'
     : `linear-gradient(135deg, color-mix(in srgb, ${accentColor} 10%, #d4e7fc) 0%, color-mix(in srgb, ${accentColor} 10%, #fff2b8) 100%)`;
 
   return (

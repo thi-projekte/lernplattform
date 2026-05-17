@@ -70,9 +70,7 @@ const AccountPage = () => {
     <Layout>
       <Box
         style={{
-          minHeight: 'calc(100vh - 104px)',
-          background:
-            'radial-gradient(circle at 50% 0%, rgba(124, 198, 232, 0.46) 0%, rgba(124, 198, 232, 0.22) 32%, rgba(255, 255, 255, 0) 62%), linear-gradient(180deg, #f4fbff 0%, #ffffff 56%, #f8fafc 100%)',
+          minHeight: 'calc(100vh - 152px)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -190,10 +188,10 @@ const AccountPage = () => {
                   size="sm"
                   onClick={() => keycloak.accountManagement()}
                   style={{
-                    backgroundColor: '#7CC6E8',
+                    backgroundColor: '#3aa3d8',
                     color: '#FFFFFF',
                     fontWeight: 700,
-                    boxShadow: '0 8px 18px rgba(124, 198, 232, 0.32)',
+                    boxShadow: '0 8px 18px rgba(58, 163, 216, 0.4)',
                   }}
                 >
                   {t('account.editInKeycloak')}

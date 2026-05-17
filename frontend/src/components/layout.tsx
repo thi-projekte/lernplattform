@@ -67,7 +67,12 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       }}
       padding={0}
     >
-      <AppShell.Header>
+      <AppShell.Header
+        style={{
+          background: '#e4f3fb',
+          borderBottom: '1px solid rgba(176, 210, 232, 0.5)',
+        }}
+      >
         <Group h="100%" justify="space-between" wrap="nowrap">
           <Box
             visibleFrom="sm"
@@ -101,6 +106,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         onMouseEnter={() => setDesktopExpanded(true)}
         onMouseLeave={() => setDesktopExpanded(false)}
         style={{
+          background: '#e4f3fb',
+          borderRight: '1px solid rgba(176, 210, 232, 0.46)',
           transition: 'width 150ms ease',
           overflowX: 'hidden',
           display: 'flex',
@@ -197,6 +204,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           py="md"
           style={{
             minHeight: 'calc(100vh - 104px)',
+            background: 'linear-gradient(180deg, #def0fa 0%, #eaf6fc 60%, #e5f4fb 100%)',
           }}
         >
           {pathname !== '/' && (
