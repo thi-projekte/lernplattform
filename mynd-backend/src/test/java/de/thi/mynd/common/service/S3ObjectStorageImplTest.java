@@ -117,6 +117,27 @@ class S3ObjectStorageImplTest {
   }
 
   @Test
+  void testUploadObjectWithCustomKey() throws IOException {
+    // Arrange
+    File tempFile = File.createTempFile("test-upload", ".txt");
+    tempFile.deleteOnExit();
+    String key = "custom-key";
+
+    CompletableFuture<PutObjectResponse> future =
+        CompletableFuture.completedFuture(PutObjectResponse.builder().build());
+    when(s3Client.putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class)))
+        .thenReturn(future);
+
+    // Act
+    String resultKey = s3ObjectStorage.uploadObject(key, tempFile);
+
+    // Assert
+    assertNotNull(resultKey);
+    assertTrue(resultKey.equals(key));
+    verify(s3Client).putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class));
+  }
+
+  @Test
   void testTryDeleteObject() {
     // Arrange
     String objectKey = "delete-me.png";
