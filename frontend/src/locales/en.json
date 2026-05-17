@@ -3,7 +3,8 @@
     "dashboard": "Dashboard",
     "builderMode": "Builder Mode",
     "createTopic": "Create topic",
-    "editTopic": "Edit topic"
+    "editTopic": "Edit topic",
+    "account": "My profile"
   },
   "journey": {
     "title": "Your journey map",
@@ -205,6 +206,13 @@
   },
   "layout": {
     "openAccount": "Open user account"
+  },
+  "account": {
+    "title": "My profile",
+    "profilePicture": "Profile picture",
+    "deleteProfilePicture": "Delete profile picture",
+    "editInKeycloak": "Edit profile in Keycloak",
+    "logout": "Log out"
   },
   "onboarding": {
     "title": "Onboarding",

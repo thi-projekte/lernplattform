@@ -1,14 +1,13 @@
-import { ActionIcon, AppShell, Box, Burger, Button, Group, Image, NavLink } from '@mantine/core';
+import { AppShell, Box, Burger, Button, Group, Image, NavLink } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconChevronLeft, IconUser, IconLogout2 } from '@tabler/icons-react';
+import { IconChevronLeft, IconUser } from '@tabler/icons-react';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import { useTranslation } from 'react-i18next';
 
-import keycloak from '../keycloak.ts';
 import { routes, type TypedMyndRoute } from '../routing.ts';
 import { useLocation, useMatches, useNavigate } from 'react-router';
-import { isGranted, logout } from '../auth.ts';
+import { isGranted } from '../auth.ts';
 import AccessDenied from './access-denied.tsx';
 import { useUserService } from '../provider/user-provider.tsx';
 
@@ -94,9 +93,6 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           </Group>
           <Group px="md">
             <LanguagePicker />
-            <ActionIcon variant="default" size="xl" onClick={logout}>
-              <IconLogout2 size={32} stroke={1.5} />
-            </ActionIcon>
           </Group>
         </Group>
       </AppShell.Header>
@@ -146,7 +142,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
         <Box mt="auto">
           <NavLink
-            onClick={() => keycloak.accountManagement()}
+            onClick={() => navigate('/account')}
+            active={pathname === '/account'}
             title={t('layout.openAccount')}
             aria-label={t('layout.openAccount')}
             label={desktopExpanded ? userDisplayName : undefined}
