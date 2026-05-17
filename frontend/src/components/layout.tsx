@@ -1,6 +1,7 @@
-import { AppShell, Box, Burger, Button, Group, Image, NavLink } from '@mantine/core';
+import { AppShell, Avatar, Box, Burger, Button, Group, Image, NavLink } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronLeft, IconUser } from '@tabler/icons-react';
+import { useQueryProfilePicture } from '../api/profile-picture.ts';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import { useTranslation } from 'react-i18next';
@@ -20,6 +21,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const [desktopExpanded, setDesktopExpanded] = useState(false);
   const { t } = useTranslation();
   const userService = useUserService();
+  const { data: profilePicture } = useQueryProfilePicture(userService.account.username);
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const matches = useMatches();
@@ -159,7 +161,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                   flexShrink: 0,
                 }}
               >
-                <IconUser size={32} stroke={1.5} />
+                <Avatar src={profilePicture?.url} size={40} radius="50%">
+                  <IconUser size={24} stroke={1.5} />
+                </Avatar>
               </Box>
             }
             styles={{
