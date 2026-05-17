@@ -50,12 +50,11 @@ public final class TopicServiceImpl implements TopicService {
 
   @Override
   public List<ListTopicDto> findTopicsBySearchMax5(String search) {
-    List<Topic> topics = topicRepository.findBySearch(search, 5);
     if (search == null || search.isBlank()) {
       return List.of();
     }
 
-    topics = topicRepository.findBySearch(search.trim(), 5);
+    List<Topic> topics = topicRepository.findBySearch(search.trim(), 5);
     return mappingRegistry.mapList(topics, ListTopicDto.class);
   }
 
