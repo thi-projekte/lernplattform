@@ -1,12 +1,4 @@
-import {
-  Group,
-  Paper,
-  SegmentedControl,
-  Stack,
-  Text,
-  Title,
-  useMantineTheme,
-} from '@mantine/core';
+import { Group, Paper, SegmentedControl, Stack, Text, Title, useMantineTheme } from '@mantine/core';
 import type { Node, NodeMouseHandler } from '@xyflow/react';
 import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -222,7 +214,7 @@ const HomePage = () => {
                 viewportLocked={isViewportLocked}
                 onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
                 fitView
-                fitViewPadding={orientation === "horizontal" ? 0.22 : 0.3}
+                fitViewPadding={orientation === 'horizontal' ? 0.22 : 0.3}
                 backgroundColor={theme.other.graphDots}
                 backgroundGap={20}
               />

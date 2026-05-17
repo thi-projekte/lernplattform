@@ -442,7 +442,13 @@ const BuilderModeListPage = () => {
               </Stack>
             </Paper>
 
-            <Paper withBorder radius="md" p="md" h={760} style={{ background: theme.other.graphBg }}>
+            <Paper
+              withBorder
+              radius="md"
+              p="md"
+              h={760}
+              style={{ background: theme.other.graphBg }}
+            >
               <PersonalTopicsGraph
                 topics={personalGraphTopics}
                 currentUsername={userService.account.username}
