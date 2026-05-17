@@ -22,6 +22,7 @@ import type {
   GraphTopicNodeData,
   TopicGraphNodePositions,
 } from '../graph-view/topic-graph.types.ts';
+import { buildTopicAssociationsGraph } from '../graph-view/topic-graph.utils.ts';
 import type { ListTopicDto } from '../../schemas/topic.ts';
 import { useUserService } from '../../provider/user-provider.tsx';
 import CategoryBadge from '../category-badge.tsx';
@@ -43,7 +44,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
   const removeTopic = (topicId: string) => {
     setTopic((prev) => ({
       ...prev,
-      relatedTopics: (topic.relatedTopics ?? []).filter((ass) => ass.id !== topicId),
+      relatedTopics: (prev.relatedTopics ?? []).filter((ass) => ass.id !== topicId),
     }));
 
     setSelectedTopicNode((current) => (current && current.payload.id === topicId ? null : current));
@@ -56,10 +57,42 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
       return;
     }
 
+    const currentGraph = buildTopicAssociationsGraph(
+      {
+        id: topic.id,
+        title: topic.title,
+        categories: topic.categories,
+        relatedTopics: topic.relatedTopics,
+        isolatedTopics: searchSuggestions,
+      },
+      nodePositions,
+      userService.account.username
+    );
+
+    setNodePositions((current) => {
+      const next = { ...current };
+
+      currentGraph.nodes.forEach((node) => {
+        next[node.id] = node.position;
+      });
+
+      const isolatedNodeId = `isolated-topic-${topicId}`;
+      const relatedNodeId = `related-topic-${topicId}`;
+
+      if (next[isolatedNodeId]) {
+        next[relatedNodeId] = next[isolatedNodeId];
+        delete next[isolatedNodeId];
+      }
+
+      return next;
+    });
+
     setTopic((prev) => ({
       ...prev,
-      relatedTopics: [...(topic.relatedTopics ?? []), topicToAdd],
+      relatedTopics: [...(prev.relatedTopics ?? []), topicToAdd],
     }));
+
+    setSearchSuggestions((current) => current.filter((suggestion) => suggestion.id !== topicId));
 
     setSelectedTopicNode({
       kind: 'topic',
@@ -120,6 +153,20 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
       });
     },
     []
+  );
+
+  const handleGraphTopicClick = useCallback(
+    (graphNode: GraphTopicNodeData) => {
+      const topicId = typeof graphNode.payload.id === 'string' ? graphNode.payload.id : null;
+
+      if (graphNode.isIsolated && topicId) {
+        createAssociation(topicId);
+        return;
+      }
+
+      setSelectedTopicNode(graphNode);
+    },
+    [createAssociation]
   );
 
   return (
@@ -338,7 +385,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       isolatedTopics: searchSuggestions,
                     }}
                     currentUsername={userService.account.username}
-                    onTopicClick={setSelectedTopicNode}
+                    onTopicClick={handleGraphTopicClick}
                     onAssociationClick={removeTopic}
                     onNodePositionChange={handleNodePositionChange}
                     canEditAssociations

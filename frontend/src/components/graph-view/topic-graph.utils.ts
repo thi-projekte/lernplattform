@@ -13,6 +13,8 @@ import type { SkillTreeNode, SkillTreeOrientation } from './skill-tree.types.ts'
 // reserve space when laying out the graph so the cards don't visually overlap.
 const SKILL_NODE_WIDTH = 280;
 const SKILL_NODE_HEIGHT = 120;
+const TOPIC_NODE_HORIZONTAL_GAP = 48;
+const TOPIC_NODE_VERTICAL_GAP = 56;
 
 // Wraps a set of nodes + edges with dagre to compute non-overlapping positions.
 // React Flow expects top-left corner coordinates; dagre returns node centers,
@@ -84,6 +86,44 @@ const getOppositeHandle = (handle: string) => {
     default:
       return 'left';
   }
+};
+
+const overlapsExistingTopicNode = (
+  candidate: { x: number; y: number },
+  occupiedPositions: { x: number; y: number }[]
+) =>
+  occupiedPositions.some(
+    (position) =>
+      Math.abs(position.x - candidate.x) < SKILL_NODE_WIDTH + TOPIC_NODE_HORIZONTAL_GAP &&
+      Math.abs(position.y - candidate.y) < SKILL_NODE_HEIGHT + TOPIC_NODE_VERTICAL_GAP
+  );
+
+const getNextIsolatedTopicPosition = (
+  occupiedPositions: { x: number; y: number }[],
+  startX: number,
+  startY: number
+) => {
+  let row = 0;
+  let column = 0;
+
+  while (row < 32) {
+    const candidate = {
+      x: startX + column * (SKILL_NODE_WIDTH + TOPIC_NODE_HORIZONTAL_GAP),
+      y: startY + row * (SKILL_NODE_HEIGHT + TOPIC_NODE_VERTICAL_GAP),
+    };
+
+    if (!overlapsExistingTopicNode(candidate, occupiedPositions)) {
+      return candidate;
+    }
+
+    column += 1;
+    if (column === 2) {
+      column = 0;
+      row += 1;
+    }
+  }
+
+  return { x: startX, y: startY };
 };
 
 export const buildTopicDetailsGraph = (
@@ -202,13 +242,35 @@ export const buildTopicAssociationsGraph = (
     });
   });
 
+  const layoutedNodes = applyDagreLayout(nodes, edges, 'vertical');
+
+  const finalNodes = layoutedNodes.map((node) => ({
+    ...node,
+    position: nodePositions[node.id] ?? node.position,
+  }));
+
+  const occupiedPositions = finalNodes.map((node) => node.position);
+  const maxConnectedX = finalNodes.length
+    ? Math.max(...finalNodes.map((node) => node.position.x))
+    : 0;
+  const minConnectedY = finalNodes.length
+    ? Math.min(...finalNodes.map((node) => node.position.y))
+    : 0;
+  const isolatedStartX = maxConnectedX + SKILL_NODE_WIDTH + 120;
+  const isolatedStartY = minConnectedY;
+
   isolatedTopics.forEach((isolatedTopic) => {
     const nodeId = `isolated-topic-${isolatedTopic.id}`;
+    const position =
+      nodePositions[nodeId] ??
+      getNextIsolatedTopicPosition(occupiedPositions, isolatedStartX, isolatedStartY);
 
-    nodes.push({
+    occupiedPositions.push(position);
+
+    finalNodes.push({
       id: nodeId,
       type: 'topic',
-      position: { x: 0, y: 0 },
+      position,
       data: {
         kind: 'topic',
         title: isolatedTopic.title,
@@ -219,13 +281,6 @@ export const buildTopicAssociationsGraph = (
       },
     });
   });
-
-  const layoutedNodes = applyDagreLayout(nodes, edges, 'vertical');
-
-  const finalNodes = layoutedNodes.map((node) => ({
-    ...node,
-    position: nodePositions[node.id] ?? node.position,
-  }));
 
   return { nodes: finalNodes, edges };
 };
