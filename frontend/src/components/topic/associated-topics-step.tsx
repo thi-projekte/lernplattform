@@ -50,57 +50,60 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
     setSelectedTopicNode((current) => (current && current.payload.id === topicId ? null : current));
   };
 
-  const createAssociation = (topicId: string) => {
-    const topicToAdd = searchSuggestions.find((topic) => topic.id === topicId);
+  const createAssociation = useCallback(
+    (topicId: string) => {
+      const topicToAdd = searchSuggestions.find((topic) => topic.id === topicId);
 
-    if (!topicToAdd) {
-      return;
-    }
-
-    const currentGraph = buildTopicAssociationsGraph(
-      {
-        id: topic.id,
-        title: topic.title,
-        categories: topic.categories,
-        relatedTopics: topic.relatedTopics,
-        isolatedTopics: searchSuggestions,
-      },
-      nodePositions,
-      userService.account.username
-    );
-
-    setNodePositions((current) => {
-      const next = { ...current };
-
-      currentGraph.nodes.forEach((node) => {
-        next[node.id] = node.position;
-      });
-
-      const isolatedNodeId = `isolated-topic-${topicId}`;
-      const relatedNodeId = `related-topic-${topicId}`;
-
-      if (next[isolatedNodeId]) {
-        next[relatedNodeId] = next[isolatedNodeId];
-        delete next[isolatedNodeId];
+      if (!topicToAdd) {
+        return;
       }
 
-      return next;
-    });
+      const currentGraph = buildTopicAssociationsGraph(
+        {
+          id: topic.id,
+          title: topic.title,
+          categories: topic.categories,
+          relatedTopics: topic.relatedTopics,
+          isolatedTopics: searchSuggestions,
+        },
+        nodePositions,
+        userService.account.username
+      );
 
-    setTopic((prev) => ({
-      ...prev,
-      relatedTopics: [...(prev.relatedTopics ?? []), topicToAdd],
-    }));
+      setNodePositions((current) => {
+        const next = { ...current };
 
-    setSearchSuggestions((current) => current.filter((suggestion) => suggestion.id !== topicId));
+        currentGraph.nodes.forEach((node) => {
+          next[node.id] = node.position;
+        });
 
-    setSelectedTopicNode({
-      kind: 'topic',
-      title: topicToAdd.title,
-      creatorFullName: topicToAdd.creatorFullName,
-      payload: topicToAdd,
-    });
-  };
+        const isolatedNodeId = `isolated-topic-${topicId}`;
+        const relatedNodeId = `related-topic-${topicId}`;
+
+        if (next[isolatedNodeId]) {
+          next[relatedNodeId] = next[isolatedNodeId];
+          delete next[isolatedNodeId];
+        }
+
+        return next;
+      });
+
+      setTopic((prev) => ({
+        ...prev,
+        relatedTopics: [...(prev.relatedTopics ?? []), topicToAdd],
+      }));
+
+      setSearchSuggestions((current) => current.filter((suggestion) => suggestion.id !== topicId));
+
+      setSelectedTopicNode({
+        kind: 'topic',
+        title: topicToAdd.title,
+        creatorFullName: topicToAdd.creatorFullName,
+        payload: topicToAdd,
+      });
+    },
+    [nodePositions, searchSuggestions, setTopic, topic.categories, topic.id, topic.relatedTopics, topic.title, userService.account.username]
+  );
 
   const hideIsolatedTopic = (topicId: string) => {
     setSearchSuggestions((current) => current.filter((topic) => topic.id !== topicId));
