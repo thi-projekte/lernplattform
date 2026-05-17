@@ -1,5 +1,6 @@
 package de.thi.mynd.topic.service;
 
+import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.security.SecurityService;
 import de.thi.mynd.common.service.FileAssociatedEntity;
@@ -15,7 +16,6 @@ import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import jakarta.ws.rs.NotFoundException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -58,11 +58,25 @@ public final class ContentElementServiceImpl implements ContentElementService {
   }
 
   @Override
+  public ContentElement getContentElementEntityById(UUID contentElementId) {
+    Optional<ContentElement> optional = contentElementRepository.findByIdOptional(contentElementId);
+    if (optional.isEmpty()) {
+      throw new EntityInstanceNotFoundException("This content element does not exist");
+    }
+    return optional.get();
+  }
+
+  @Override
+  public long getCountOfElementsForTopicId(UUID topicId) {
+    return contentElementRepository.countForTopic(topicId);
+  }
+
+  @Override
   @Transactional
   public void deleteContentElement(UUID elementId) {
     ContentElement element = contentElementRepository.findById(elementId);
     if (element == null) {
-      throw new NotFoundException("Content element does not exist");
+      throw new EntityInstanceNotFoundException("Content element does not exist");
     }
 
     securityService.denyUnlessGranted(element, ContentElementVoter.Delete);

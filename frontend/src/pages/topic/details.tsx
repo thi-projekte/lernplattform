@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { useQueryTopic } from '../../api/topic.ts';
 import { type Node, type NodeMouseHandler } from '@xyflow/react';
 import { Layout } from '../../components/layout.tsx';
-import { Paper, Text, Stack, Breadcrumbs, Anchor, Tabs } from '@mantine/core';
+import { Paper, Text, Stack, Tabs, useMantineTheme } from '@mantine/core';
 import type { Topic } from '../../schemas/topic.ts';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import TopicNode from '../../components/graph-view/topic-node.tsx';
@@ -23,6 +23,7 @@ const nodeTypes = {
 
 const TopicDetailsPage = () => {
   const { t } = useTranslation();
+  const theme = useMantineTheme();
 
   const { topicId } = useParams<{ topicId: string }>();
   const { data: topic, isLoading } = useQueryTopic(topicId || '', false);
@@ -56,67 +57,79 @@ const TopicDetailsPage = () => {
 
   return (
     <Layout>
-      <Breadcrumbs mb="md">
-        <Anchor href="/">Startseite</Anchor>
-        <Anchor>{topic?.title}</Anchor>
-        {displayedElement && !('teaser' in displayedElement) && (
-          <Anchor>{(displayedElement as AnyContentElementDto).title}</Anchor>
-        )}
-      </Breadcrumbs>
-
-      <div
-        style={{
-          display: 'flex',
-          width: '100%',
-          height: 'calc(100vh - 100px)',
-          overflow: 'hidden',
-        }}
+      <Tabs
+        defaultValue="visual"
+        style={{ height: 'calc(100vh - 176px)', display: 'flex', flexDirection: 'column' }}
       >
-        <Tabs defaultValue="visual" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <Tabs.List>
-            <Tabs.Tab value="visual">{t('topic.tabs.visual')}</Tabs.Tab>
-            <Tabs.Tab value="notes">{t('topic.tabs.notes')}</Tabs.Tab>
-          </Tabs.List>
+        <Tabs.List mb="md">
+          <Tabs.Tab value="visual">{t('topic.tabs.visual')}</Tabs.Tab>
+          <Tabs.Tab value="notes">{t('topic.tabs.notes')}</Tabs.Tab>
+        </Tabs.List>
 
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'minmax(0, 1fr) 360px',
+            gap: 16,
+            width: '100%',
+            flex: 1,
+            minHeight: 0,
+            overflow: 'hidden',
+          }}
+        >
           <Tabs.Panel
             value="visual"
-            style={{ flex: 1, position: 'relative', borderRadius: 16, overflow: 'hidden' }}
+            style={{
+              position: 'relative',
+              borderRadius: 16,
+              overflow: 'hidden',
+              background: theme.other.graphBg,
+            }}
           >
             <TopicGraphView
               nodes={nodes}
               edges={edges}
               onNodeClick={onNodeClick}
               nodeTypes={nodeTypes}
-              backgroundColor="#d9e7f3"
+              backgroundColor="#d1d5db"
             />
           </Tabs.Panel>
 
           <Tabs.Panel value="notes" p="md">
             <Text c="dimmed">{t('topic.tabs.notesPlaceholder')}</Text>
           </Tabs.Panel>
-        </Tabs>
 
-        <Paper
-          shadow="md"
-          p="xl"
-          style={{
-            width: 400,
-            overflowY: 'auto',
-          }}
-        >
-          {displayedElement ? (
-            <Stack gap="md">
-              {isTopic ? (
-                <TopicSidebarContent selectedElement={displayedElement as Topic} />
-              ) : (
-                <ContentSidebarContent selectedElement={displayedElement as AnyContentElementDto} />
-              )}
-            </Stack>
-          ) : (
-            <Text c="dimmed">{t('common.clickOnANodeToSeeContent')}</Text>
-          )}
-        </Paper>
-      </div>
+          <Paper
+            withBorder
+            shadow="none"
+            radius="md"
+            p="lg"
+            style={{
+              width: '100%',
+              height: '100%',
+              overflowY: 'auto',
+            }}
+          >
+            {displayedElement ? (
+              <Stack gap="md">
+                {isTopic ? (
+                  <TopicSidebarContent selectedElement={displayedElement as Topic} />
+                ) : (
+                  <ContentSidebarContent
+                    selectedElement={displayedElement as AnyContentElementDto}
+                    topicLearnProgress={topic?.learnProgress}
+                    topicContentElementIds={
+                      topic?.contentElements?.map((el: AnyContentElementDto) => el.id) ?? []
+                    }
+                  />
+                )}
+              </Stack>
+            ) : (
+              <Text c="dimmed">{t('common.clickOnANodeToSeeContent')}</Text>
+            )}
+          </Paper>
+        </div>
+      </Tabs>
     </Layout>
   );
 };

@@ -3,5 +3,73 @@
   "aiMlAndDl": ["supervisedLearning", "neuralNetworks"],
   "supervisedLearning": ["decTrees"],
   "neuralNetworks": ["genAi"],
-  "genAi": ["prompting", "risksAndChances"]
+  "genAi": ["prompting", "risksAndChances"],
+  "pmIntro": [
+    "pmScope"
+  ],
+  "pmScope": [
+    "pmStakeholder",
+    "pmWbs"
+  ],
+  "pmWbs": [
+    "pmTime",
+    "pmKanban"
+  ],
+  "pmTime": [
+    "pmRisk"
+  ],
+  "pmKanban": [
+    "pmRisk"
+  ],
+  "pmRisk": [
+    "pmRetro"
+  ],
+  "pmStakeholder": [
+    "lifeManualIntro"
+  ],
+  "lifeManualIntro": [
+    "connectingDots",
+    "joyInLife",
+    "pmStakeholder"
+  ],
+  "connectingDots": [
+    "talentSearch",
+    "livingInNow"
+  ],
+  "joyInLife": [
+    "talentSearch",
+    "energyAndFlow"
+  ],
+  "talentSearch": [
+    "strengthFormula"
+  ],
+  "strengthFormula": [
+    "comfortZone"
+  ],
+  "comfortZone": [
+    "beliefsSelfSabotage"
+  ],
+  "beliefsSelfSabotage": [
+    "valuesBasics"
+  ],
+  "valuesBasics": [
+    "gutDecisions",
+    "successRedefined"
+  ],
+  "gutDecisions": [
+    "livingInNow"
+  ],
+  "livingInNow": [
+    "successRedefined"
+  ],
+  "successRedefined": [
+    "energyAndFlow",
+    "penthouseTheory"
+  ],
+  "energyAndFlow": [
+    "penthouseTheory"
+  ],
+  "penthouseTheory": [
+    "sixLifeAreas"
+  ]
 }

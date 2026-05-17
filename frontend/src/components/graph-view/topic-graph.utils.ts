@@ -1,4 +1,5 @@
 import type { Edge } from '@xyflow/react';
+import dagre from 'dagre';
 import type { ListTopicDto, Topic } from '../../schemas/topic';
 import type { GraphTopicDto } from '../../schemas/topic-graph.ts';
 import type {
@@ -7,6 +8,57 @@ import type {
   TopicGraphNodePositions,
 } from './topic-graph.types';
 import type { SkillTreeNode, SkillTreeOrientation } from './skill-tree.types.ts';
+
+// Approximate dimensions of the rendered topic card. Dagre uses these to
+// reserve space when laying out the graph so the cards don't visually overlap.
+const SKILL_NODE_WIDTH = 280;
+const SKILL_NODE_HEIGHT = 120;
+
+// Wraps a set of nodes + edges with dagre to compute non-overlapping positions.
+// React Flow expects top-left corner coordinates; dagre returns node centers,
+// so we offset by half the node size.
+const applyDagreLayout = <T extends { id: string; position: { x: number; y: number } }>(
+  nodes: T[],
+  edges: Edge[],
+  orientation: SkillTreeOrientation
+): T[] => {
+  if (nodes.length === 0) return nodes;
+
+  const dagreGraph = new dagre.graphlib.Graph();
+  dagreGraph.setDefaultEdgeLabel(() => ({}));
+  dagreGraph.setGraph({
+    rankdir: orientation === 'horizontal' ? 'LR' : 'TB',
+    nodesep: 40,
+    ranksep: 80,
+  });
+
+  nodes.forEach((node) => {
+    dagreGraph.setNode(node.id, {
+      width: SKILL_NODE_WIDTH,
+      height: SKILL_NODE_HEIGHT,
+    });
+  });
+
+  edges.forEach((edge) => {
+    if (dagreGraph.hasNode(edge.source) && dagreGraph.hasNode(edge.target)) {
+      dagreGraph.setEdge(edge.source, edge.target);
+    }
+  });
+
+  dagre.layout(dagreGraph);
+
+  return nodes.map((node) => {
+    const layouted = dagreGraph.node(node.id);
+    if (!layouted) return node;
+    return {
+      ...node,
+      position: {
+        x: layouted.x - SKILL_NODE_WIDTH / 2,
+        y: layouted.y - SKILL_NODE_HEIGHT / 2,
+      },
+    };
+  });
+};
 
 // The edge handles are derived from node angles so arrows stay attached to the
 // most natural side of each node. Be careful when changing this mapping,
@@ -32,29 +84,6 @@ const getOppositeHandle = (handle: string) => {
     default:
       return 'left';
   }
-};
-
-const getAssociationAngles = (count: number) => {
-  if (count <= 0) return [];
-  if (count === 1) return [-Math.PI / 2];
-  if (count === 2) return [(-5 * Math.PI) / 6, -Math.PI / 6];
-
-  const startAngle = (-5 * Math.PI) / 6;
-  const endAngle = -Math.PI / 6;
-  const step = (endAngle - startAngle) / (count - 1);
-
-  return Array.from({ length: count }, (_, index) => startAngle + index * step);
-};
-
-const getIsolatedAngles = (count: number) => {
-  if (count <= 0) return [];
-  if (count === 1) return [Math.PI / 2];
-
-  const startAngle = Math.PI / 4;
-  const endAngle = (3 * Math.PI) / 4;
-  const step = (endAngle - startAngle) / (count - 1);
-
-  return Array.from({ length: count }, (_, index) => startAngle + index * step);
 };
 
 export const buildTopicDetailsGraph = (
@@ -111,7 +140,8 @@ export const buildTopicDetailsGraph = (
 
 export const buildTopicAssociationsGraph = (
   topic?: TopicAssociationsGraphInput,
-  nodePositions: TopicGraphNodePositions = {}
+  nodePositions: TopicGraphNodePositions = {},
+  currentUsername?: string
 ): { nodes: TopicGraphNode[]; edges: Edge[] } => {
   const nodes: TopicGraphNode[] = [];
   const edges: Edge[] = [];
@@ -120,19 +150,23 @@ export const buildTopicAssociationsGraph = (
     return { nodes, edges };
   }
 
+  const currentUsernameNormalized = currentUsername?.trim().toLowerCase();
+  const isOwnedByCurrent = (creatorId?: string) =>
+    !!currentUsernameNormalized && creatorId?.toLowerCase() === currentUsernameNormalized;
+
   const rootId = topic.id ? `topic-${topic.id}` : 'topic-root';
   const rootTitle = topic.title?.trim() || 'Untitled topic';
-  const rootPosition = { x: 400, y: 320 };
 
   nodes.push({
     id: rootId,
     type: 'topic',
-    position: nodePositions[rootId] ?? rootPosition,
+    position: { x: 0, y: 0 },
     data: {
       kind: 'topic',
       title: rootTitle,
       creatorFullName: topic.creatorFullName,
       isRoot: true,
+      isOwned: true,
       payload: topic as unknown as Topic | ListTopicDto,
     },
   });
@@ -141,66 +175,59 @@ export const buildTopicAssociationsGraph = (
   const isolatedTopics = (topic.isolatedTopics ?? []).filter(
     (isolatedTopic) => !relatedTopics.some((relatedTopic) => relatedTopic.id === isolatedTopic.id)
   );
-  const radius = 250;
-  const angles = getAssociationAngles(relatedTopics.length);
 
-  relatedTopics.forEach((relatedTopic, index) => {
-    const angle = angles[index] ?? -Math.PI / 2;
-    const x = rootPosition.x + radius * Math.cos(angle);
-    const y = rootPosition.y + radius * Math.sin(angle);
+  relatedTopics.forEach((relatedTopic) => {
     const nodeId = `related-topic-${relatedTopic.id}`;
 
     nodes.push({
       id: nodeId,
       type: 'topic',
-      position: nodePositions[nodeId] ?? { x, y },
+      position: { x: 0, y: 0 },
       data: {
         kind: 'topic',
         title: relatedTopic.title,
         creatorFullName: relatedTopic.creatorFullName,
+        isOwned: isOwnedByCurrent(relatedTopic.creatorId),
         payload: relatedTopic,
       },
     });
-
-    const sourceHandle = getHandleForAngle(angle);
-    const targetHandle = getOppositeHandle(sourceHandle);
 
     edges.push({
       id: `edge-topic-${relatedTopic.id}`,
       source: rootId,
       target: nodeId,
-      sourceHandle,
-      targetHandle,
-      animated: true,
-      style: { stroke: '#adb5bd', strokeWidth: 2 },
+      sourceHandle: 'bottom',
+      targetHandle: 'top',
+      style: { stroke: '#adb5bd', strokeWidth: 0.8 },
     });
   });
 
-  const isolatedRadius = 180;
-  const isolatedAngles = getIsolatedAngles(isolatedTopics.length);
-
-  isolatedTopics.forEach((isolatedTopic, index) => {
-    const angle = isolatedAngles[index] ?? Math.PI / 2;
-    const x = rootPosition.x + isolatedRadius * Math.cos(angle);
-    const y = rootPosition.y + isolatedRadius * Math.sin(angle);
-
+  isolatedTopics.forEach((isolatedTopic) => {
     const nodeId = `isolated-topic-${isolatedTopic.id}`;
 
     nodes.push({
       id: nodeId,
       type: 'topic',
-      position: nodePositions[nodeId] ?? { x, y },
+      position: { x: 0, y: 0 },
       data: {
         kind: 'topic',
         title: isolatedTopic.title,
         creatorFullName: isolatedTopic.creatorFullName,
         isIsolated: true,
+        isOwned: isOwnedByCurrent(isolatedTopic.creatorId),
         payload: isolatedTopic,
       },
     });
   });
 
-  return { nodes, edges };
+  const layoutedNodes = applyDagreLayout(nodes, edges, 'vertical');
+
+  const finalNodes = layoutedNodes.map((node) => ({
+    ...node,
+    position: nodePositions[node.id] ?? node.position,
+  }));
+
+  return { nodes: finalNodes, edges };
 };
 
 export const buildPersonalTopicsGraph = (
@@ -382,15 +409,15 @@ export const buildPersonalTopicsGraph = (
         targetHandle,
         type: 'straight',
         style: {
-          stroke: '#94a3b8',
-          strokeWidth: 2,
-          strokeDasharray: '8 6',
+          stroke: '#cbd5e1',
+          strokeWidth: 1.25,
         },
       });
     });
   });
 
-  return { nodes, edges };
+  const layoutedNodes = applyDagreLayout(nodes, edges, 'vertical');
+  return { nodes: layoutedNodes, edges };
 };
 
 const buildGraphAdjacency = (topics: GraphTopicDto[]) => {
@@ -779,13 +806,13 @@ export const buildSkillTreeGraph = (
         targetHandle,
         type: 'straight',
         style: {
-          stroke: '#94a3b8',
-          strokeWidth: 2.15,
-          strokeDasharray: '10 7',
+          stroke: '#cbd5e1',
+          strokeWidth: 0.8,
         },
       });
     });
   });
 
-  return { nodes, edges };
+  const layoutedNodes = applyDagreLayout(nodes, edges, orientation);
+  return { nodes: layoutedNodes, edges };
 };

@@ -65,9 +65,13 @@ const brandGray: MantineColorsTuple = [
   '#35475a',
 ];
 
+const appFontFamily =
+  "Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+
 export const theme = createTheme({
   primaryColor: 'brand',
-  primaryShade: 4,
+  primaryShade: 6,
+  defaultRadius: 'md',
   colors: {
     brand,
     brandGreen,
@@ -75,16 +79,29 @@ export const theme = createTheme({
     brandYellow,
     brandGray,
   },
-  fontFamily: "-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif",
+  other: {
+    layoutHeaderBg: '#f1f7fb',
+    layoutNavbarBg: '#f1f7fb',
+    layoutMainBg: 'linear-gradient(180deg, #eef5fa 0%, #f5fafd 60%, #f1f8fc 100%)',
+    layoutBorder: 'rgba(176, 210, 232, 0.5)',
+    graphBg: '#fafbfc',
+    graphDots: '#d1d5db',
+    nodeOwnBg: '#ffffb865',
+    nodeOwnSelectedBg: '#f1f1adf0',
+    nodeForeignBg: 'linear-gradient(135deg, #f4f9fe 0%, #e8f1f9 100%)',
+    nodeForeignSelectedBg: 'linear-gradient(135deg, #e6f0fa 0%, #d4e4f3 100%)',
+    nodeJourneyBg: 'linear-gradient(135deg, #e7f2ff 0%, #fff9e6 100%)',
+  },
+  fontFamily: appFontFamily,
   fontFamilyMonospace:
     "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace",
   headings: {
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif",
-    fontWeight: '700',
+    fontFamily: appFontFamily,
+    fontWeight: '750',
     sizes: {
-      h1: { fontSize: '2rem', lineHeight: '1.2' },
-      h2: { fontSize: '1.5rem', lineHeight: '1.3' },
-      h3: { fontSize: '1.25rem', lineHeight: '1.4' },
+      h1: { fontSize: '1.875rem', lineHeight: '1.2' },
+      h2: { fontSize: '1.375rem', lineHeight: '1.3' },
+      h3: { fontSize: '1.125rem', lineHeight: '1.35' },
     },
   },
 });

@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CategoryService {
 
-  List<Category> search(String query);
+  List<Category> searchMax5(String query);
 
   List<Category> findByAssociatedEntities(List<AssociatedEntityRequest> entities);
 }

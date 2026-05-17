@@ -1,5 +1,6 @@
 package de.thi.mynd.topic.dto;
 
+import de.thi.mynd.progressTracking.dto.TopicLearnProgressDto;
 import de.thi.mynd.topic.dto.content.ContentElementDto;
 import de.thi.mynd.topic.entity.Category;
 import java.time.LocalDateTime;
@@ -19,4 +20,5 @@ public class TopicDto {
   public List<Category> categories;
   public int estimatedLearningDuration;
   public List<ContentElementDto> contentElements;
+  public TopicLearnProgressDto learnProgress;
 }

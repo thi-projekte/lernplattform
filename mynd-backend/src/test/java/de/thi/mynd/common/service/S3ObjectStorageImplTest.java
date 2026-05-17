@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-import de.thi.mynd.common.entity.BaseEntity;
+import de.thi.mynd.common.entity.BaseEntityWithId;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -12,11 +12,11 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.file.Path;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import software.amazon.awssdk.core.async.AsyncRequestBody;
 import software.amazon.awssdk.services.s3.S3AsyncClient;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.DeleteObjectResponse;
@@ -38,7 +38,7 @@ class S3ObjectStorageImplTest {
   private static final String BUCKET_NAME = "test-bucket";
 
   // Simple concrete implementation of BaseEntity for testing
-  static class TestEntity extends BaseEntity {
+  static class TestEntity extends BaseEntityWithId {
     public TestEntity(UUID id) {
       this.id = id;
     }
@@ -80,7 +80,8 @@ class S3ObjectStorageImplTest {
 
     CompletableFuture<PutObjectResponse> future =
         CompletableFuture.completedFuture(PutObjectResponse.builder().build());
-    when(s3Client.putObject(any(PutObjectRequest.class), any(Path.class))).thenReturn(future);
+    when(s3Client.putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class)))
+        .thenReturn(future);
 
     // Act
     String resultKey = s3ObjectStorage.uploadObject(entity, tempFile);
@@ -89,7 +90,7 @@ class S3ObjectStorageImplTest {
     assertNotNull(resultKey);
     assertTrue(resultKey.contains(entityId.toString()));
     assertTrue(resultKey.contains("test-upload"));
-    verify(s3Client).putObject(any(PutObjectRequest.class), any(Path.class));
+    verify(s3Client).putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class));
   }
 
   @Test
@@ -102,7 +103,8 @@ class S3ObjectStorageImplTest {
 
     CompletableFuture<PutObjectResponse> future =
         CompletableFuture.completedFuture(PutObjectResponse.builder().build());
-    when(s3Client.putObject(any(PutObjectRequest.class), any(Path.class))).thenReturn(future);
+    when(s3Client.putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class)))
+        .thenReturn(future);
 
     // Act
     String resultKey = s3ObjectStorage.uploadObject(entity, tempFile, "custom-file-name");
@@ -111,7 +113,28 @@ class S3ObjectStorageImplTest {
     assertNotNull(resultKey);
     assertTrue(resultKey.contains(entityId.toString()));
     assertTrue(resultKey.contains("custom-file-name"));
-    verify(s3Client).putObject(any(PutObjectRequest.class), any(Path.class));
+    verify(s3Client).putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class));
+  }
+
+  @Test
+  void testUploadObjectWithCustomKey() throws IOException {
+    // Arrange
+    File tempFile = File.createTempFile("test-upload", ".txt");
+    tempFile.deleteOnExit();
+    String key = "custom-key";
+
+    CompletableFuture<PutObjectResponse> future =
+        CompletableFuture.completedFuture(PutObjectResponse.builder().build());
+    when(s3Client.putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class)))
+        .thenReturn(future);
+
+    // Act
+    String resultKey = s3ObjectStorage.uploadObject(key, tempFile);
+
+    // Assert
+    assertNotNull(resultKey);
+    assertTrue(resultKey.equals(key));
+    verify(s3Client).putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class));
   }
 
   @Test

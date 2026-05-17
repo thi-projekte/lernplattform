@@ -25,7 +25,9 @@ const ContentElementDisplay = ({ contentElement }: ContentElementDisplayProps) =
   if (contentElement.type === 'RTF') {
     return (
       <div
+        // react-doctor-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
+          // react-doctor-disable-next-line react/no-danger
           __html: (contentElement as RtfElementDto).rtfText,
         }}
       />
