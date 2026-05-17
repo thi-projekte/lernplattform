@@ -6,6 +6,7 @@ import { IconHammer, IconHome, type IconProps } from '@tabler/icons-react';
 import CreateTopicPage from './pages/builder-mode/create.tsx';
 import EditTopicPage from './pages/builder-mode/edit.tsx';
 import TopicDetailsPage from './pages/topic/details.tsx';
+import AccountPage from './pages/account.tsx';
 import { Role } from './auth.ts';
 
 export interface TypedMyndRoute extends BaseRouteObject {
@@ -47,6 +48,11 @@ export const routes: TypedMyndRoute[] = [
     path: '/topics/:topicId/details',
     Component: TopicDetailsPage,
     translation: 'topicDetails',
+  },
+  {
+    path: '/account',
+    Component: AccountPage,
+    translation: 'account',
   },
 ];
 
