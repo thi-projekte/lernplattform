@@ -2,11 +2,11 @@ package de.thi.mynd.auth.service;
 
 import de.thi.mynd.auth.dto.ProfilePictureDto;
 import de.thi.mynd.auth.entity.UserProfile;
+import de.thi.mynd.auth.exception.ProfilePictureNotFoundException;
 import de.thi.mynd.auth.repository.UserProfileRepository;
 import de.thi.mynd.common.exception.FileTooLargeException;
 import de.thi.mynd.common.exception.InvalidFileTypeException;
 import de.thi.mynd.common.exception.NoFileProvidedException;
-import de.thi.mynd.common.exception.ProfilePictureNotFoundException;
 import de.thi.mynd.common.service.ObjectStorageService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
