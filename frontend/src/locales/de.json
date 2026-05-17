@@ -187,7 +187,7 @@
     "personalGraph": {
       "selectedTopic": "Ausgewähltes Thema",
       "emptySelection": "Klicke auf eine Node, um das Thema zu prüfen.",
-      "graphDescription": "Wechsle zwischen der Liste und einer Graphenansicht deiner eigenen Themen.",
+      "graphDescription": "Liste oder Graphansicht deiner Themen.",
       "searchHintSelectOwned": "Wähle zuerst eines deiner eigenen Themen aus, um ein fremdes Thema zu verknüpfen.",
       "keepAtLeastOneAssociation": "Mindestens ein verknüpftes Thema muss bestehen bleiben.",
       "linkToSelectedTopic": "Mit ausgewähltem Thema verknüpfen",

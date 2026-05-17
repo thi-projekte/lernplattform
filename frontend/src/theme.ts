@@ -65,9 +65,13 @@ const brandGray: MantineColorsTuple = [
   '#35475a',
 ];
 
+const appFontFamily =
+  "Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif";
+
 export const theme = createTheme({
   primaryColor: 'brand',
   primaryShade: 4,
+  defaultRadius: 'md',
   colors: {
     brand,
     brandGreen,
@@ -75,16 +79,16 @@ export const theme = createTheme({
     brandYellow,
     brandGray,
   },
-  fontFamily: "-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif",
+  fontFamily: appFontFamily,
   fontFamilyMonospace:
     "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace",
   headings: {
-    fontFamily: "-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif",
-    fontWeight: '700',
+    fontFamily: appFontFamily,
+    fontWeight: '750',
     sizes: {
-      h1: { fontSize: '2rem', lineHeight: '1.2' },
-      h2: { fontSize: '1.5rem', lineHeight: '1.3' },
-      h3: { fontSize: '1.25rem', lineHeight: '1.4' },
+      h1: { fontSize: '1.875rem', lineHeight: '1.2' },
+      h2: { fontSize: '1.375rem', lineHeight: '1.3' },
+      h3: { fontSize: '1.125rem', lineHeight: '1.35' },
     },
   },
 });
