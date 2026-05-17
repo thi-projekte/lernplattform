@@ -102,7 +102,16 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
         payload: topicToAdd,
       });
     },
-    [nodePositions, searchSuggestions, setTopic, topic.categories, topic.id, topic.relatedTopics, topic.title, userService.account.username]
+    [
+      nodePositions,
+      searchSuggestions,
+      setTopic,
+      topic.categories,
+      topic.id,
+      topic.relatedTopics,
+      topic.title,
+      userService.account.username,
+    ]
   );
 
   const hideIsolatedTopic = (topicId: string) => {
