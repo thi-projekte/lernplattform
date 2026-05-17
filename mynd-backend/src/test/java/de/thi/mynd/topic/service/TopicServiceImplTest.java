@@ -92,7 +92,7 @@ public class TopicServiceImplTest {
     when(categoryService.findByAssociatedEntities(any())).thenReturn(new ArrayList<>());
     when(topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
             any(), any(), anyString()))
-        .thenReturn(new ArrayList<>());
+            .thenReturn(new ArrayList<>());
     when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
 
     // Act
@@ -101,15 +101,26 @@ public class TopicServiceImplTest {
     // Assert
     verify(topicRepository).persist(any(Topic.class));
     verify(topicRepository).updateSearchVectors(any(), any(), any());
+    verify(topicRepository).flush();
     verify(contentElementService)
-        .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
+            .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
   }
 
   @Test
   void testFindTopicsBySearchMax5() {
     when(topicRepository.findBySearch("test", 5)).thenReturn(new ArrayList<>());
     topicService.findTopicsBySearchMax5("test");
+    topicService.findTopicsBySearchMax5("  test  ");
     verify(topicRepository).findBySearch("test", 5);
+  }
+
+  @Test
+  void testFindTopicsBySearchMax5WithBlankSearch() {
+    List<ListTopicDto> result = topicService.findTopicsBySearchMax5("   ");
+
+    Assertions.assertTrue(result.isEmpty());
+    verify(topicRepository, never()).findBySearch(anyString(), anyInt());
+    verify(mappingRegistry, never()).mapList(anyList(), eq(ListTopicDto.class));
   }
 
   @Test
@@ -117,11 +128,11 @@ public class TopicServiceImplTest {
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.empty());
 
     Exception ex =
-        Assertions.assertThrows(
-            EntityInstanceNotFoundException.class,
-            () -> {
-              topicService.deleteTopic(UUID.randomUUID());
-            });
+            Assertions.assertThrows(
+                    EntityInstanceNotFoundException.class,
+                    () -> {
+                      topicService.deleteTopic(UUID.randomUUID());
+                    });
 
     Assertions.assertEquals("No topic exists for the provided UUID", ex.getMessage());
   }
@@ -136,7 +147,6 @@ public class TopicServiceImplTest {
     contentElement.title = "Content";
     contentElement.creatorId = "creator";
     contentElement.type = ContentType.PDF;
-
     UUID topicId = UUID.randomUUID();
 
     Topic topic = new Topic();
@@ -214,7 +224,7 @@ public class TopicServiceImplTest {
     when(categoryService.findByAssociatedEntities(any())).thenReturn(new ArrayList<>());
     when(topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
             any(), any(), anyString()))
-        .thenReturn(new ArrayList<>());
+            .thenReturn(new ArrayList<>());
     when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(topic));
 
@@ -222,15 +232,16 @@ public class TopicServiceImplTest {
 
     // Act
     Assertions.assertDoesNotThrow(
-        () -> {
-          topicService.updateTopic(topicId, request);
-        });
+            () -> {
+              topicService.updateTopic(topicId, request);
+            });
 
     // Assert
     verify(topicRepository).persist(any(Topic.class));
     verify(topicRepository).updateSearchVectors(any(), any(), any());
+    verify(topicRepository).flush();
     verify(contentElementService)
-        .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
+            .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
   }
 
   @Test
@@ -244,15 +255,16 @@ public class TopicServiceImplTest {
 
   @Test
   void testGetTopicMappingBasedOnWithOwnedRelatedTopicsFlag()
-      throws EntityInstanceNotFoundException {
+          throws EntityInstanceNotFoundException {
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(new Topic()));
     when(mappingRegistry.map(any(), eq(TopicWithOwnedRelatedTopicsDto.class), any()))
-        .thenReturn(TopicWithOwnedRelatedTopicsDto.builder().build());
+            .thenReturn(TopicWithOwnedRelatedTopicsDto.builder().build());
     when(mappingRegistry.map(any(), eq(TopicDto.class), any()))
-        .thenReturn(TopicDto.builder().build());
+            .thenReturn(TopicDto.builder().build());
 
     TopicDto topicDto1 = topicService.getTopic(UUID.randomUUID(), true);
     TopicDto topicDto2 = topicService.getTopic(UUID.randomUUID(), false);
+
 
     Assertions.assertInstanceOf(TopicWithOwnedRelatedTopicsDto.class, topicDto1);
     Assertions.assertFalse(topicDto2 instanceof TopicWithOwnedRelatedTopicsDto);
