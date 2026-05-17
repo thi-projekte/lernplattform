@@ -83,6 +83,9 @@ public final class AuthResource {
       summary = "Upload a profile picture",
       description = "Uploads a profile picture for the current user. Replaces any existing one.")
   @APIResponse(responseCode = "201", description = "Profile picture uploaded successfully")
+  @APIResponse(responseCode = "413", description = "The file is larger than 5 MB")
+  @APIResponse(responseCode = "415", description = "Image has invalid file type")
+  @APIResponse(responseCode = "400", description = "No file provided")
   public Response uploadProfilePicture(@RestForm("file") FileUpload file) {
     String username = identity.getPrincipal().getName();
     ProfilePictureDto dto = userProfileService.uploadProfilePicture(username, file);
