@@ -10,7 +10,6 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -27,19 +26,19 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
   @SuppressWarnings("unchecked")
   public List<Topic> findBySearch(String search, int limit) {
 
-    String tsQuery = Arrays.stream(search.trim().split("\\s+"))
-            .collect(Collectors.joining(" & ")) + ":*";
+    String tsQuery =
+        Arrays.stream(search.trim().split("\\s+")).collect(Collectors.joining(" & ")) + ":*";
 
     return getEntityManager()
         .createNativeQuery(
-                "WITH search_query AS (SELECT to_tsquery('german', :search) AS query) "
-                        + "SELECT topic.* FROM topic, search_query "
-                        + "WHERE title_search_vector @@ search_query.query "
-                        + "OR teaser_search_vector @@ search_query.query "
-                        + "ORDER BY "
-                        + "ts_rank_cd(title_search_vector, search_query.query) DESC, "
-                        + "ts_rank_cd(teaser_search_vector, search_query.query) DESC "
-                        + "LIMIT :limit",
+            "WITH search_query AS (SELECT to_tsquery('german', :search) AS query) "
+                + "SELECT topic.* FROM topic, search_query "
+                + "WHERE title_search_vector @@ search_query.query "
+                + "OR teaser_search_vector @@ search_query.query "
+                + "ORDER BY "
+                + "ts_rank_cd(title_search_vector, search_query.query) DESC, "
+                + "ts_rank_cd(teaser_search_vector, search_query.query) DESC "
+                + "LIMIT :limit",
             Topic.class)
         .setParameter("search", tsQuery)
         .setParameter("limit", limit)
