@@ -16,6 +16,20 @@ public class Topic extends BaseEntityWithId {
   @Column(nullable = false, columnDefinition = "TEXT")
   public String teaser;
 
+  @Column(
+      name = "title_search_vector",
+      columnDefinition = "tsvector",
+      insertable = false,
+      updatable = false)
+  public String titleSearchVector;
+
+  @Column(
+      name = "teaser_search_vector",
+      columnDefinition = "tsvector",
+      insertable = false,
+      updatable = false)
+  public String teaserSearchVector;
+
   @Column public int estimatedLearningDuration;
 
   @Column public Integer popularityScore = 0;
