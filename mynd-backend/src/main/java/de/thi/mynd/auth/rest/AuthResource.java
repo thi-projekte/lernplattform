@@ -22,8 +22,7 @@ public final class AuthResource {
 
   @Inject AuthService authService;
 
-  @Inject
-  UserProfileService userProfileService;
+  @Inject UserProfileService userProfileService;
 
   @Inject SecurityIdentity identity;
 
