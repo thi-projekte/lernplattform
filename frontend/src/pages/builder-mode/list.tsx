@@ -267,9 +267,6 @@ const BuilderModeListPage = () => {
       </Flex>
       <Stack gap="md" mt={12}>
         <Stack gap="xs" align="center">
-          <Text c="dimmed" size="sm" ta="center">
-            {t('topic.personalGraph.graphDescription')}
-          </Text>
           <Group justify="center" w="100%">
             <SegmentedControl
               value={viewMode}
@@ -306,9 +303,6 @@ const BuilderModeListPage = () => {
               <Stack gap="md" h="100%" style={{ minHeight: 0 }}>
                 <div>
                   <Title order={4}>{t('topic.graph.graphModeRailTitle')}</Title>
-                  <Text size="xs" c="dimmed">
-                    {t('topic.graph.graphModeRailDescription')}
-                  </Text>
                 </div>
 
                 {selectedGraphTopic && (

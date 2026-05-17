@@ -7,25 +7,25 @@ import {
   Title,
   useMantineTheme,
 } from '@mantine/core';
-import { Layout } from '../components/layout.tsx';
-import { useTranslation } from 'react-i18next';
+import type { Node, NodeMouseHandler } from '@xyflow/react';
 import { useCallback, useMemo, useState } from 'react';
-import { useUserService } from '../provider/user-provider.tsx';
+import { useTranslation } from 'react-i18next';
 import {
   useFetchDirectNeighborQueries,
   useFetchMostPopularTopicsWithNeighbors,
 } from '../api/topic-graph.ts';
-import LayoutLoader from '../components/layout-loader.tsx';
 import TopicGraphView from '../components/graph-view/topic-graph.tsx';
+import type { TopicGraphNodePositions } from '../components/graph-view/topic-graph.types.ts';
 import GenericTopicNode from '../components/graph-view/generic-topic-node.tsx';
 import type {
   SkillTreeNodeData,
   SkillTreeOrientation,
 } from '../components/graph-view/skill-tree.types.ts';
 import { buildSkillTreeGraph } from '../components/graph-view/topic-graph.utils.ts';
+import { Layout } from '../components/layout.tsx';
+import LayoutLoader from '../components/layout-loader.tsx';
+import { useUserService } from '../provider/user-provider.tsx';
 import type { GraphTopicDto } from '../schemas/topic-graph.ts';
-import type { Node, NodeMouseHandler } from '@xyflow/react';
-import type { TopicGraphNodePositions } from '../components/graph-view/topic-graph.types.ts';
 
 const nodeTypes = {
   skillTreeTopic: GenericTopicNode,
@@ -181,7 +181,7 @@ const HomePage = () => {
           </Text>
         </Stack>
 
-        <Paper radius="lg" p="lg" bg="transparent">
+        <Paper withBorder radius="lg" p="lg" bg="transparent" style={{ overflow: 'hidden' }}>
           <Stack gap="md">
             <Group justify="space-between" align="center">
               <Text size="sm" c="dimmed">
@@ -203,7 +203,7 @@ const HomePage = () => {
                 height: 640,
                 borderRadius: 16,
                 overflow: 'hidden',
-                border: '1px solid #e9ecef',
+                border: `1px solid ${theme.other.layoutBorder}`,
                 background: theme.other.graphBg,
               }}
             >
@@ -222,8 +222,8 @@ const HomePage = () => {
                 viewportLocked={isViewportLocked}
                 onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
                 fitView
-                fitViewPadding={orientation === 'horizontal' ? 0.22 : 0.3}
-                backgroundColor="#d1d5db"
+                fitViewPadding={orientation === "horizontal" ? 0.22 : 0.3}
+                backgroundColor={theme.other.graphDots}
                 backgroundGap={20}
               />
             </div>

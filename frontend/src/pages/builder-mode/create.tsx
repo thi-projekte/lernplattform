@@ -25,19 +25,16 @@ const CreateTopicPage = () => {
   const steps: StepperStep[] = [
     {
       label: t('topic.steps.coreDataTitle'),
-      description: t('topic.steps.coreDataDescription'),
       canProceed: TopicCoreDataSchema.safeParse(topic).success ?? false,
       step: <CoreDataStep topic={topic} setTopic={setTopic} />,
     },
     {
       label: t('topic.steps.associatedTopicsTitle'),
-      description: t('topic.steps.associatedTopicsDescription'),
       canProceed: TopicAssociatedTopicsSchema.safeParse(topic).success ?? false,
       step: <AssociatedTopicsStep topic={topic} setTopic={setTopic} />,
     },
     {
       label: t('topic.steps.contentElementsTitle'),
-      description: t('topic.steps.contentElementsDescription'),
       canProceed: TopicContentElementsSchema.safeParse(topic).success ?? false,
       step: <ContentElementsDnd topic={topic} setTopic={setTopic} />,
     },
