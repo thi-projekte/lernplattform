@@ -5,7 +5,6 @@ import {
   Button,
   Container,
   Group,
-  Image,
   Paper,
   Stack,
   Text,
@@ -80,9 +79,9 @@ const AccountPage = () => {
           padding: '16px',
         }}
       >
-        <Container size={480} w="100%">
+        <Container size={520} w="100%">
           <Paper
-            p="lg"
+            p={32}
             radius="lg"
             style={{
               background: '#FFFFFF',
@@ -90,26 +89,29 @@ const AccountPage = () => {
               boxShadow: '0 24px 60px rgba(31, 42, 68, 0.12)',
             }}
           >
-            <Stack gap="md">
-              <Stack gap={2} align="center">
-                <Image src="/mynd-logo.png" alt="MYnd Logo" w={90} fit="contain" />
-                <Text
-                  fw={800}
-                  ta="center"
-                  style={{ color: '#1F2A44', fontSize: 22, lineHeight: 1.15 }}
-                >
-                  {t('account.title')}
-                </Text>
-              </Stack>
+            <Stack gap="lg">
+              <Text
+                fw={800}
+                ta="center"
+                style={{ color: '#1F2A44', fontSize: 26, lineHeight: 1.15 }}
+              >
+                {t('account.title')}
+              </Text>
 
-              <Stack gap={6} align="center">
+              <Stack gap="sm" align="center">
                 <Avatar
                   src={profilePicture?.url}
-                  size={88}
+                  size={110}
                   radius="50%"
                   style={{ border: '3px solid #7CC6E8' }}
+                  styles={{
+                    placeholder: {
+                      background: 'rgba(124, 198, 232, 0.18)',
+                      color: '#1B9ED6',
+                    },
+                  }}
                 >
-                  <IconUser size={44} />
+                  <IconUser size={56} />
                 </Avatar>
                 <Stack gap={2} align="center">
                   <Text fw={700} size="md" style={{ color: '#1F2A44' }}>
@@ -132,8 +134,8 @@ const AccountPage = () => {
                 </Stack>
               </Stack>
 
-              <Stack gap={6}>
-                <Text fw={700} size="xs" style={{ color: '#1F2A44' }}>
+              <Stack gap="xs">
+                <Text fw={700} size="sm" style={{ color: '#1F2A44' }}>
                   {t('account.profilePicture')}
                 </Text>
                 <Dropzone
@@ -146,14 +148,14 @@ const AccountPage = () => {
                   loading={isUploading}
                   multiple={false}
                   radius="md"
-                  p="sm"
+                  p="md"
                   styles={{
                     root: { border: '2px dashed #7CC6E8', background: '#F7FCFF' },
                   }}
                 >
-                  <Group justify="center" gap="sm" mih={60} style={{ pointerEvents: 'none' }}>
-                    <IconPhotoUp size={24} stroke={1.5} color="#1B9ED6" />
-                    <Stack gap={0} align="center">
+                  <Group justify="center" gap="md" mih={80} style={{ pointerEvents: 'none' }}>
+                    <IconPhotoUp size={28} stroke={1.5} color="#1B9ED6" />
+                    <Stack gap={2} align="center">
                       <Text size="sm" fw={600} style={{ color: '#1F2A44' }}>
                         {t('common.dropYourFileHere')}
                       </Text>

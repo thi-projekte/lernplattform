@@ -38,13 +38,10 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       ? t('auth.role_learner')
       : undefined;
 
-  const longestActiveTarget = sidebarRoutes
-    .filter((route) => pathname.indexOf(route.path ?? '') > -1)
-    .reduce((longest, current) => {
-      return (current.path?.length || 0) > (longest.path?.length || 0) ? current : longest;
-    }, {});
-
-  const isActive = (path: string) => longestActiveTarget.path === path;
+  const isActive = (path: string) => {
+    if (path === '/') return pathname === '/';
+    return pathname === path || pathname.startsWith(path + '/');
+  };
 
   const matchingRoute = useMemo<TypedMyndRoute | null>(() => {
     if (matches.length > 0) {
@@ -161,8 +158,19 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                   flexShrink: 0,
                 }}
               >
-                <Avatar src={profilePicture?.url} size={40} radius="50%">
-                  <IconUser size={24} stroke={1.5} />
+                <Avatar
+                  src={profilePicture?.url}
+                  size={40}
+                  radius="50%"
+                  color="blue"
+                  styles={{
+                    placeholder: {
+                      background: 'rgba(124, 198, 232, 0.18)',
+                      color: '#1B9ED6',
+                    },
+                  }}
+                >
+                  <IconUser size={22} stroke={1.6} />
                 </Avatar>
               </Box>
             }
