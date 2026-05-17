@@ -65,6 +65,7 @@ const brandGray: MantineColorsTuple = [
   '#35475a',
 ];
 
+
 export const theme = createTheme({
   primaryColor: 'brand',
   primaryShade: 4,
@@ -75,6 +76,12 @@ export const theme = createTheme({
     brandYellow,
     brandGray,
   },
+  other: {
+    appBg: brandGray[2],
+    headerBg: brandGray[4],
+    navbarBg: brandGray[3],
+  },
+
   fontFamily: "-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif",
   fontFamilyMonospace:
     "ui-monospace, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, monospace",
