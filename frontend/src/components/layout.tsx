@@ -1,6 +1,6 @@
-import { ActionIcon, AppShell, Box, Burger, Group, Image, NavLink } from '@mantine/core';
+import { ActionIcon, AppShell, Box, Burger, Button, Group, Image, NavLink } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconUser, IconLogout2 } from '@tabler/icons-react';
+import { IconChevronLeft, IconUser, IconLogout2 } from '@tabler/icons-react';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import { useTranslation } from 'react-i18next';
@@ -74,8 +74,6 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           <Box
             visibleFrom="sm"
             style={{
-              //width: desktopNavbarWidth,
-              //minWidth: desktopNavbarWidth,
               width: 80,
               minWidth: 80,
               height: '100%',
@@ -94,7 +92,6 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             <Burger opened={opened} onClick={toggle} size="sm" />
             <Image src="/mynd-logo.png" alt="MYnd Logo" h={58} w="auto" fit="contain" />
           </Group>
-
           <Group px="md">
             <LanguagePicker />
             <ActionIcon variant="default" size="xl" onClick={logout}>
@@ -202,6 +199,23 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             minHeight: 'calc(100vh - 104px)',
           }}
         >
+          {pathname !== '/' && (
+            <Button
+              variant="subtle"
+              color="gray"
+              leftSection={<IconChevronLeft size={16} stroke={2} />}
+              onClick={() => navigate(-1)}
+              mb="md"
+              px="xs"
+              size="sm"
+              styles={{
+                root: { color: 'var(--mantine-color-dimmed)' },
+                label: { fontWeight: 400 },
+              }}
+            >
+              Zurück
+            </Button>
+          )}
           {isCurrentRouteGranted ? children : <AccessDenied />}
         </Box>
       </AppShell.Main>
