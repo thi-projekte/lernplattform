@@ -11,13 +11,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { Dropzone, IMAGE_MIME_TYPE, type FileWithPath } from '@mantine/dropzone';
-import {
-  IconLogout2,
-  IconPhotoUp,
-  IconTrash,
-  IconUser,
-  IconUserCog,
-} from '@tabler/icons-react';
+import { IconLogout2, IconPhotoUp, IconTrash, IconUser, IconUserCog } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { Layout } from '../components/layout.tsx';
 import { useUserService } from '../provider/user-provider.tsx';
