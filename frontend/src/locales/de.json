@@ -85,19 +85,16 @@
       "personalTopics": "Eigene Themen",
       "createContentElement": "Inhalt anlegen"
     },
-
     "myna": {
       "subtitle": "KI-Assistent",
       "description": "Myna kann die gespeicherten Inhalte zusammenfassen und passende nächste Quellen vorschlagen.",
       "askButton": "Myna fragen"
     },
-
     "tabs": {
       "visual": "Visuell",
       "notes": "Notizen",
       "notesPlaceholder": "Noch keine Notizen vorhanden."
     },
-
     "actions": {
       "create": "Thema erstellen",
       "createContentElement": "Inhalt anlegen",
@@ -115,6 +112,10 @@
     },
     "contentElementForm": {
       "incompleteFormError": "Bitte fülle alle Pflichtfelder aus, bevor du fortfährst."
+    },
+    "contentElements": {
+      "limitReached": "Maximal 12 Inhalte pro Thema erlaubt.",
+      "countLabel": "{{count}} / {{max}} Inhalte"
     },
     "errors": {
       "titleMissing": "Titel fehlt",
@@ -184,7 +185,8 @@
       "linkToSelectedTopic": "Mit ausgewähltem Thema verknüpfen",
       "alreadyLinked": "Bereits verknüpft",
       "ownedTopic": "Eigenes Thema",
-      "foreignTopic": "Fremdes Thema"
+      "foreignTopic": "Fremdes Thema",
+      "removeOwnTopic": "Aus Graph entfernen"
     }
   },
   "auth": {
@@ -192,6 +194,9 @@
     "noAccessPageText": "Anscheinend verfügen Sie nicht über die erforderlichen Berechtigungen, um diese Seite anzuzeigen. Wenn Sie glauben, dass es sich um einen Fehler handelt, wenden Sie sich bitte an Ihren Administrator.",
     "role_builder": "Builder",
     "role_learner": "Learner"
+  },
+  "layout": {
+    "openAccount": "Benutzerkonto öffnen"
   },
   "onboarding": {
     "title": "Onboarding",

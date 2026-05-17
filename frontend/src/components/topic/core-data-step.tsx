@@ -3,10 +3,11 @@ import { schemaResolver, useForm } from '@mantine/form';
 import { NumberInput, Textarea, TextInput } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import CategorySelect from './category-select.tsx';
+import type { Dispatch, SetStateAction } from 'react';
 
 interface TopicCoreDataStepProps {
   topic: Partial<Topic>;
-  setTopic: (topic: Partial<Topic>) => void;
+  setTopic: Dispatch<SetStateAction<Partial<Topic>>>;
 }
 
 const TopicCoreDataStep = ({ topic, setTopic }: TopicCoreDataStepProps) => {
@@ -22,7 +23,7 @@ const TopicCoreDataStep = ({ topic, setTopic }: TopicCoreDataStepProps) => {
     },
     validate: schemaResolver(TopicCoreDataSchema, { sync: true }),
     onValuesChange: (values) =>
-      form.validate() && form.isValid() && setTopic({ ...topic, ...values }),
+      form.validate() && form.isValid() && setTopic((prev) => ({ ...prev, ...values })),
   });
 
   return (

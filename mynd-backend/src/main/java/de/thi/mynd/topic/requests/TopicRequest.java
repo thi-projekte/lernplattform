@@ -20,6 +20,6 @@ public final class TopicRequest {
   @Size(min = 1, max = 4)
   public List<@Valid AssociatedEntityRequest> relatedTopics;
 
-  @Size(min = 1)
+  @Size(min = 1, max = 12)
   public List<@Valid AssociatedContentElementRequest> contentElements;
 }

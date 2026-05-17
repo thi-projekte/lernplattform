@@ -11,9 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import EntityTable from '../../components/entity-table.tsx';
 import {
   ActionIcon,
-  Badge,
   Button,
-  Card,
   Flex,
   Group,
   Paper,
@@ -21,10 +19,11 @@ import {
   Stack,
   Text,
   Title,
+  Tooltip,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import type { OnConnect } from '@xyflow/react';
-import { IconPlusFilled, IconTrash } from '@tabler/icons-react';
+import { IconLink, IconPlusFilled, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
 import LayoutLoader from '../../components/layout-loader.tsx';
@@ -36,6 +35,7 @@ import type { GraphTopicDto } from '../../schemas/topic-graph.ts';
 import { useCreateAssociation } from '../../api/association.ts';
 import TopicSearchbar from '../../components/topic/topic-searchbar.tsx';
 import type { ListTopicDto, Topic } from '../../schemas/topic.ts';
+import CategoryBadge from '../../components/category-badge.tsx';
 
 const BuilderModeListPage = () => {
   const [pagination, setPagination] = useState<PaginationState>({ pageSize: 20, pageIndex: 0 });
@@ -80,30 +80,8 @@ const BuilderModeListPage = () => {
     !!selectedGraphTopic &&
     !!currentUsername &&
     selectedGraphTopic.creatorId.toLowerCase() === currentUsername;
-  const personalGraphTopics = useMemo<GraphTopicDto[]>(
-    () =>
-      graphTopics
-        ? [
-            ...graphTopics,
-            ...(selectedGraphTopicIsOwned
-              ? searchSuggestions
-                  .filter((suggestion) => !graphTopics.some((topic) => topic.id === suggestion.id))
-                  .map((suggestion) => ({
-                    id: suggestion.id,
-                    title: suggestion.title,
-                    categories: suggestion.categories,
-                    creatorId: suggestion.creatorId,
-                    creatorFullName: suggestion.creatorFullName,
-                    associatedTopics: [],
-                  }))
-              : []),
-          ]
-        : [],
-    [graphTopics, searchSuggestions, selectedGraphTopicIsOwned]
-  );
-  const { mutateAsync: editTopic, isPending: isDeletingAssociation } = useEditTopicMutation(
-    selectedGraphTopic?.id ?? ''
-  );
+  const personalGraphTopics = useMemo<GraphTopicDto[]>(() => graphTopics ?? [], [graphTopics]);
+  const { mutateAsync: editTopic } = useEditTopicMutation(selectedGraphTopic?.id ?? '');
   const { data: selectedOwnedTopicData } = useQueryTopic(
     selectedGraphTopic?.id ?? '',
     true,
@@ -114,6 +92,20 @@ const BuilderModeListPage = () => {
     () => (selectedGraphTopic ? [selectedGraphTopic.id] : []),
     [selectedGraphTopic]
   );
+  const lockedAssociationEdgeId = useMemo(() => {
+    if (
+      !selectedGraphTopic ||
+      !selectedGraphTopicIsOwned ||
+      !selectedOwnedTopicDetails ||
+      selectedOwnedTopicDetails.relatedTopics.length !== 1
+    ) {
+      return null;
+    }
+    const lastRelatedId = selectedOwnedTopicDetails.relatedTopics[0]?.id;
+    if (!lastRelatedId) return null;
+    const edgeKey = [selectedGraphTopic.id, lastRelatedId].sort().join(':');
+    return `personal-topic-edge-${edgeKey}`;
+  }, [selectedGraphTopic, selectedGraphTopicIsOwned, selectedOwnedTopicDetails]);
   const areTopicsAlreadyAssociated = useCallback(
     (owningTopicId: string, foreignTopicId: string) => {
       const owningTopic = personalGraphTopics.find((topic) => topic.id === owningTopicId);
@@ -246,6 +238,16 @@ const BuilderModeListPage = () => {
     ]
   );
 
+  const handleTopicDelete = useCallback(() => {
+    if (!selectedGraphTopic || !selectedGraphTopicIsOwned) return;
+    mutate(selectedGraphTopic.id, {
+      onSuccess: () => {
+        setSelectedTopicNode(null);
+        void refetchGraphTopics();
+      },
+    });
+  }, [mutate, refetchGraphTopics, selectedGraphTopic, selectedGraphTopicIsOwned]);
+
   if (isLoading || (viewMode === 'graph' && isGraphLoading)) {
     return <LayoutLoader />;
   }
@@ -294,101 +296,168 @@ const BuilderModeListPage = () => {
             style={{
               display: 'grid',
               gap: '1rem',
-              gridTemplateColumns: '240px minmax(0, 1fr) 320px',
+              gridTemplateColumns: '240px minmax(0, 1fr)',
               alignItems: 'start',
             }}
           >
             <Paper withBorder radius="md" p="sm" h={760}>
-              <Stack gap="md" h="100%">
+              <Stack gap="md" h="100%" style={{ minHeight: 0 }}>
                 <div>
-                  <Group justify="space-between" align="center" wrap="nowrap">
-                    <Title order={4}>{t('topic.graph.graphModeRailTitle')}</Title>
-                    <Badge variant="light" color="gray">
-                      {personalGraphTopics.length}
-                    </Badge>
-                  </Group>
+                  <Title order={4}>{t('topic.graph.graphModeRailTitle')}</Title>
                   <Text size="xs" c="dimmed">
                     {t('topic.graph.graphModeRailDescription')}
                   </Text>
                 </div>
+
+                {selectedGraphTopic && (
+                  <Paper withBorder radius="md" p="sm">
+                    <Stack gap="xs">
+                      <Text fw={600}>{selectedGraphTopic.title}</Text>
+                      {selectedGraphTopic.categories.length > 0 && (
+                        <Group gap={6}>
+                          {selectedGraphTopic.categories.map((category) => (
+                            <CategoryBadge
+                              key={category.id}
+                              title={category.title}
+                              color={category.color ?? '8b5cf6'}
+                              size="sm"
+                            />
+                          ))}
+                        </Group>
+                      )}
+                      <CategoryBadge
+                        w="fit-content"
+                        size="sm"
+                        title={
+                          selectedGraphTopicIsOwned
+                            ? t('topic.personalGraph.ownedTopic')
+                            : t('topic.personalGraph.foreignTopic')
+                        }
+                        color={selectedGraphTopicIsOwned ? '#f08c00' : '#228be6'}
+                      />
+                      {selectedGraphTopic.creatorFullName && (
+                        <Text size="xs" c="dimmed">
+                          {selectedGraphTopic.creatorFullName}
+                        </Text>
+                      )}
+                      {selectedGraphTopicIsOwned && (
+                        <Button
+                          variant="light"
+                          color="red"
+                          size="xs"
+                          mt="xs"
+                          fullWidth
+                          leftSection={<IconTrash size={14} />}
+                          onClick={handleTopicDelete}
+                          styles={{
+                            label: { whiteSpace: 'normal', lineHeight: 1.2 },
+                            root: { height: 'auto', minHeight: 28, paddingBlock: 6 },
+                          }}
+                        >
+                          {t('topic.personalGraph.removeOwnTopic')}
+                        </Button>
+                      )}
+                    </Stack>
+                  </Paper>
+                )}
+
                 <TopicSearchbar
                   existingIds={blockedSearchTopicIds}
                   onAdd={handleSuggestionAdd}
                   onSuggestionsChange={handleSuggestionsChange}
                 />
-                <Text size="xs" c="dimmed">
-                  {selectedGraphTopic && selectedGraphTopicIsOwned
-                    ? t('topic.graph.graphModeSearchHint')
-                    : t('topic.personalGraph.searchHintSelectOwned')}
-                </Text>
+
+                {!selectedGraphTopic && (
+                  <Text size="xs" c="dimmed">
+                    {t('topic.personalGraph.searchHintSelectOwned')}
+                  </Text>
+                )}
+
                 <Stack gap="xs" style={{ flex: 1, minHeight: 0, overflow: 'auto' }}>
-                  {searchSuggestions.map((suggestion) => (
-                    <Paper key={suggestion.id} withBorder radius="md" p="sm">
-                      <Group justify="space-between" align="flex-start" wrap="nowrap">
-                        <div style={{ minWidth: 0 }}>
-                          <Text fw={600} size="sm" truncate>
-                            {suggestion.title}
-                          </Text>
-                          {suggestion.creatorFullName && (
-                            <Text size="xs" c="dimmed" truncate>
-                              {suggestion.creatorFullName}
+                  {searchSuggestions.map((suggestion) => {
+                    const canLink = !!(selectedGraphTopic && selectedGraphTopicIsOwned);
+                    const alreadyLinked = !!(
+                      canLink &&
+                      selectedGraphTopic &&
+                      areTopicsAlreadyAssociated(selectedGraphTopic.id, suggestion.id)
+                    );
+                    return (
+                      <Paper key={suggestion.id} withBorder radius="md" p="sm">
+                        <Group justify="space-between" align="flex-start" wrap="nowrap">
+                          <div style={{ minWidth: 0 }}>
+                            <Text fw={600} size="sm" truncate>
+                              {suggestion.title}
                             </Text>
-                          )}
-                          {suggestion.categories.length > 0 && (
-                            <Group gap={6} mt={8}>
-                              {suggestion.categories.slice(0, 1).map((category) => (
-                                <Badge key={category.id} color={category.color} variant="light">
-                                  {category.title}
-                                </Badge>
-                              ))}
-                            </Group>
-                          )}
-                        </div>
-                        <ActionIcon
-                          variant="light"
-                          color="red"
-                          onClick={() =>
-                            setSearchSuggestions((current) =>
-                              current.filter((topic) => topic.id !== suggestion.id)
-                            )
-                          }
-                        >
-                          <IconTrash size={16} />
-                        </ActionIcon>
-                      </Group>
-                      {selectedGraphTopicIsOwned ? (
-                        <Button
-                          mt="sm"
-                          size="xs"
-                          fullWidth
-                          variant="light"
-                          disabled={
-                            isCreatingAssociation ||
-                            areTopicsAlreadyAssociated(selectedGraphTopic!.id, suggestion.id)
-                          }
-                          onClick={() =>
-                            void handleAssociationCreate(selectedGraphTopic!.id, suggestion.id)
-                          }
-                        >
-                          {areTopicsAlreadyAssociated(selectedGraphTopic!.id, suggestion.id)
-                            ? t('topic.personalGraph.alreadyLinked')
-                            : t('topic.personalGraph.linkToSelectedTopic')}
-                        </Button>
-                      ) : null}
-                    </Paper>
-                  ))}
+                            {suggestion.creatorFullName && (
+                              <Text size="xs" c="dimmed" truncate>
+                                {suggestion.creatorFullName}
+                              </Text>
+                            )}
+                            {suggestion.categories.slice(0, 1).map((category) => (
+                              <CategoryBadge
+                                key={category.id}
+                                title={category.title}
+                                color={category.color ?? '8b5cf6'}
+                              />
+                            ))}
+                          </div>
+                          <Group gap="xs" wrap="nowrap">
+                            {canLink && (
+                              <Tooltip
+                                label={
+                                  alreadyLinked
+                                    ? t('topic.personalGraph.alreadyLinked')
+                                    : t('topic.personalGraph.linkToSelectedTopic')
+                                }
+                                withArrow
+                              >
+                                <ActionIcon
+                                  variant="light"
+                                  aria-label={t('topic.personalGraph.linkToSelectedTopic')}
+                                  disabled={isCreatingAssociation || alreadyLinked}
+                                  onClick={() =>
+                                    void handleAssociationCreate(
+                                      selectedGraphTopic.id,
+                                      suggestion.id
+                                    )
+                                  }
+                                >
+                                  <IconLink size={16} />
+                                </ActionIcon>
+                              </Tooltip>
+                            )}
+                            <ActionIcon
+                              variant="light"
+                              color="red"
+                              onClick={() =>
+                                setSearchSuggestions((current) =>
+                                  current.filter((topic) => topic.id !== suggestion.id)
+                                )
+                              }
+                            >
+                              <IconTrash size={16} />
+                            </ActionIcon>
+                          </Group>
+                        </Group>
+                      </Paper>
+                    );
+                  })}
                 </Stack>
               </Stack>
             </Paper>
 
-            <Paper withBorder radius="md" p="md" h={760}>
+            <Paper withBorder radius="md" p="md" h={760} style={{ background: '#f1f3f5e0' }}>
               <PersonalTopicsGraph
                 topics={personalGraphTopics}
                 currentUsername={userService.account.username}
+                selectedTopicId={selectedGraphTopic?.id}
+                lockedAssociationEdgeId={lockedAssociationEdgeId}
+                lockedAssociationTooltip={t('topic.personalGraph.keepAtLeastOneAssociation')}
                 onTopicClick={setSelectedTopicNode}
                 onConnect={handleConnect}
+                onAssociationClick={handleAssociationDelete}
                 canEditAssociations={!isCreatingAssociation}
-                canDeleteAssociations={false}
+                canDeleteAssociations={selectedGraphTopicIsOwned}
                 allowNodeDragging={!isViewportLocked}
                 allowCanvasPanning={!isViewportLocked}
                 allowPanOnScroll={!isViewportLocked}
@@ -396,91 +465,6 @@ const BuilderModeListPage = () => {
                 onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
               />
             </Paper>
-
-            <Card withBorder radius="md" p="md">
-              <Stack gap="md">
-                <div>
-                  <Title order={2}>{t('topic.personalGraph.selectedTopic')}</Title>
-                  <Text c="dimmed" mt={4}>
-                    {t('topic.personalGraph.emptySelection')}
-                  </Text>
-                </div>
-
-                {selectedGraphTopic ? (
-                  <Card withBorder radius="md" p="md">
-                    <Stack gap="md">
-                      <div>
-                        <Title order={3}>{selectedGraphTopic.title}</Title>
-                      </div>
-
-                      <Group gap={8}>
-                        {selectedGraphTopic.categories.map((category) => (
-                          <Badge key={category.id} color={category.color} variant="light">
-                            {category.title}
-                          </Badge>
-                        ))}
-                      </Group>
-
-                      <Badge
-                        w="fit-content"
-                        color={selectedGraphTopicIsOwned ? 'orange' : 'blue'}
-                        variant="light"
-                      >
-                        {selectedGraphTopicIsOwned
-                          ? t('topic.personalGraph.ownedTopic')
-                          : t('topic.personalGraph.foreignTopic')}
-                      </Badge>
-
-                      <Text c="dimmed">{selectedGraphTopic.creatorFullName}</Text>
-
-                      {selectedGraphTopicIsOwned && selectedOwnedTopicDetails ? (
-                        <Stack gap="xs">
-                          <Text fw={600} size="sm">
-                            {t('topic.graph.relatedTopicsTableTitle')}
-                          </Text>
-                          {selectedOwnedTopicDetails.relatedTopics.map(
-                            (relatedTopic: ListTopicDto) => {
-                              const isLastAssociation =
-                                selectedOwnedTopicDetails.relatedTopics.length <= 1;
-
-                              return (
-                                <Paper key={relatedTopic.id} withBorder radius="md" p="xs">
-                                  <Group justify="space-between" align="center" wrap="nowrap">
-                                    <div style={{ minWidth: 0 }}>
-                                      <Text fw={500} size="sm" truncate>
-                                        {relatedTopic.title}
-                                      </Text>
-                                      {relatedTopic.creatorFullName && (
-                                        <Text size="xs" c="dimmed" truncate>
-                                          {relatedTopic.creatorFullName}
-                                        </Text>
-                                      )}
-                                    </div>
-                                    <ActionIcon
-                                      variant="light"
-                                      color="red"
-                                      disabled={isDeletingAssociation || isLastAssociation}
-                                      onClick={() => void handleAssociationDelete(relatedTopic.id)}
-                                    >
-                                      <IconTrash size={16} />
-                                    </ActionIcon>
-                                  </Group>
-                                </Paper>
-                              );
-                            }
-                          )}
-                          {selectedOwnedTopicDetails.relatedTopics.length <= 1 ? (
-                            <Text size="xs" c="dimmed">
-                              {t('topic.personalGraph.keepAtLeastOneAssociation')}
-                            </Text>
-                          ) : null}
-                        </Stack>
-                      ) : null}
-                    </Stack>
-                  </Card>
-                ) : null}
-              </Stack>
-            </Card>
           </div>
         )}
       </Stack>

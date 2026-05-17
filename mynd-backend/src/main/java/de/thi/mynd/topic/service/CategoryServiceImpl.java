@@ -14,7 +14,7 @@ public final class CategoryServiceImpl implements CategoryService {
   @Inject CategoryRepository categoryRepository;
 
   @Override
-  public List<Category> search(String query) {
+  public List<Category> searchMax5(String query) {
     if (query == null) {
       return categoryRepository.findAllWithLimit(5);
     }

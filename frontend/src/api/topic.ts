@@ -1,4 +1,4 @@
-import { apiClient } from './common.ts';
+import { apiClient, safeValidateApiResponseContent } from './common.ts';
 import {
   type Category,
   CategorySchema,
@@ -23,7 +23,7 @@ const fetchCategories = async (search: string): Promise<Category[]> => {
   const result = await apiClient.get(`/categories/search?query=${search}`, {
     validateStatus: (status) => status <= 204,
   });
-  return z.array(CategorySchema).parse(result.data);
+  return safeValidateApiResponseContent(z.array(CategorySchema), result.data);
 };
 
 export const useQueryCategories = (search: string) => {
@@ -41,7 +41,7 @@ const fetchPersonalTopicsPaginated = async (
   const result = await apiClient.get(`/topics/personal?page=${page}&pageSize=${pageSize}`, {
     validateStatus: (status) => status <= 204,
   });
-  return PaginatedListTopicDtoSchema.parse(result.data);
+  return safeValidateApiResponseContent(PaginatedListTopicDtoSchema, result.data);
 };
 
 export const useQueryPersonalTopicsPaginated = (pagination: PaginationState) => {
@@ -55,7 +55,7 @@ const fetchTopicsList = async (search: string): Promise<ListTopicDto[]> => {
   const result = await apiClient.get(`/topics?search=${encodeURIComponent(search)}`, {
     validateStatus: (status) => status <= 204,
   });
-  return z.array(ListTopicDtoSchema).parse(result.data);
+  return safeValidateApiResponseContent(z.array(ListTopicDtoSchema), result.data);
 };
 
 export const useQuerySearchTopic = (search: string) => {
@@ -83,7 +83,7 @@ const createContentElement = async (
     validateStatus: (status) => status <= 201,
   });
 
-  return AnyContentElementDtoSchema.parse(result.data);
+  return safeValidateApiResponseContent(AnyContentElementDtoSchema, result.data);
 };
 
 export const useCreateContentElementMutation = () =>
@@ -109,7 +109,7 @@ const createTopic = async (createTopic: Partial<Topic>) => {
     validateStatus: (status) => status <= 204,
   });
 
-  return TopicCoreDataSchema.parse(result.data);
+  return safeValidateApiResponseContent(TopicCoreDataSchema, result.data);
 };
 
 export const useCreateTopicMutation = () => {
@@ -149,11 +149,11 @@ const fetchTopic = async (topicId: string, withOwnedRelatedTopics: boolean) => {
     }
   );
 
-  if (false === withOwnedRelatedTopics) {
-    return TopicSchema.omit({ relatedTopics: true }).parse(result.data);
+  if (!withOwnedRelatedTopics) {
+    return safeValidateApiResponseContent(TopicSchema.omit({ relatedTopics: true }), result.data);
   }
 
-  return TopicSchema.parse(result.data);
+  return safeValidateApiResponseContent(TopicSchema, result.data);
 };
 
 export const useQueryTopic = (topicId: string, withOwnedRelatedTopics: boolean, enabled = true) => {

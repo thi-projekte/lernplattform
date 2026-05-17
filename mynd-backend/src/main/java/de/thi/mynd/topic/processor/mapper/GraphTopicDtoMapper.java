@@ -1,19 +1,21 @@
 package de.thi.mynd.topic.processor.mapper;
 
 import de.thi.mynd.common.processor.AbstractMappingProcessor;
-import de.thi.mynd.common.service.IdentityService;
+import de.thi.mynd.progressTracking.dto.TopicLearnProgressDto;
+import de.thi.mynd.progressTracking.service.LearnProgressService;
 import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.entity.Topic;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @ApplicationScoped
 public final class GraphTopicDtoMapper extends AbstractMappingProcessor<Topic, GraphTopicDto> {
 
-  @Inject IdentityService identityService;
+  @Inject LearnProgressService learnProgressService;
 
   @Override
   public GraphTopicDto mapAndEnrich(Topic entity) {
@@ -33,6 +35,29 @@ public final class GraphTopicDtoMapper extends AbstractMappingProcessor<Topic, G
         .creatorFullName(identityService.getFullNameByUsername(entity.creatorId))
         .associatedTopics(associatedTopicIds)
         .build();
+  }
+
+  @Override
+  @SuppressWarnings("unchecked")
+  public GraphTopicDto mapAndEnrich(Topic entity, Object... additionalData) {
+    GraphTopicDto withoutProgressData = this.mapAndEnrich(entity);
+    Map<UUID, TopicLearnProgressDto> progressData =
+        (Map<UUID, TopicLearnProgressDto>) additionalData[0];
+
+    if (progressData.containsKey(entity.id)) {
+      withoutProgressData.learnProgress = progressData.get(entity.id);
+    }
+
+    return withoutProgressData;
+  }
+
+  @Override
+  public Object[] obtainAdditionalData(List<Topic> entities) {
+    List<UUID> topicIds = entities.stream().map(e -> e.id).toList();
+    Map<UUID, TopicLearnProgressDto> mapping =
+        learnProgressService.getLearnProgressMappingForTopics(topicIds);
+
+    return new Object[] {mapping};
   }
 
   @Override

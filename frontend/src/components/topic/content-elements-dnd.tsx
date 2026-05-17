@@ -1,4 +1,14 @@
-import { ActionIcon, Button, Flex, Paper, Stack, ThemeIcon, Title } from '@mantine/core';
+import {
+  ActionIcon,
+  Button,
+  Flex,
+  Paper,
+  Stack,
+  Text,
+  ThemeIcon,
+  Title,
+  Tooltip,
+} from '@mantine/core';
 import { IconGripVertical, IconPlusFilled, IconTrash } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { Topic } from '../../schemas/topic.ts';
@@ -6,14 +16,14 @@ import { useDisclosure } from '@mantine/hooks';
 import CreateContentElementModal from './modal/create-content-element.tsx';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import { DragDropContext, Draggable, Droppable, type OnDragEndResponder } from '@hello-pangea/dnd';
-import { useMemo } from 'react';
+import { type Dispatch, type SetStateAction, useMemo } from 'react';
 import ContentElementDisplay from './content-element-display.tsx';
 import { notifications } from '@mantine/notifications';
 import { useDeleteContentElementMutation } from '../../api/topic.ts';
 
 interface ContentElementsDndProps {
   topic: Partial<Topic>;
-  setTopic: (topic: Partial<Topic>) => void;
+  setTopic: Dispatch<SetStateAction<Partial<Topic>>>;
 }
 
 const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
@@ -24,10 +34,10 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
     useDeleteContentElementMutation();
 
   const addContentElement = (contentElement: AnyContentElementDto) => {
-    setTopic({
-      ...topic,
+    setTopic((prev) => ({
+      ...prev,
       contentElements: [...(topic.contentElements ?? []), contentElement],
-    });
+    }));
   };
 
   const sortedContentElements = useMemo<AnyContentElementDto[]>(() => {
@@ -75,13 +85,25 @@ const ContentElementsDnd = ({ topic, setTopic }: ContentElementsDndProps) => {
     });
   };
 
+  const contentElementCount = topic.contentElements?.length ?? 0;
+  const isLimitReached = contentElementCount >= 12;
+
   return (
     <>
-      <Flex justify="flex-end" w="100%" mt={12} mb={12}>
-        <Button variant="filled" onClick={open}>
-          <IconPlusFilled />
-          &nbsp;{t('topic.actions.createContentElement')}
-        </Button>
+      <Flex justify="flex-end" w="100%" mt={12} mb={12} direction="column" align="flex-end">
+        <Tooltip
+          label={t('topic.contentElements.limitReached')}
+          disabled={!isLimitReached}
+          withArrow
+        >
+          <Button variant="filled" onClick={open} disabled={isLimitReached}>
+            <IconPlusFilled />
+            &nbsp;{t('topic.actions.createContentElement')}
+          </Button>
+        </Tooltip>
+        <Text size="xs" c={isLimitReached ? 'red' : 'dimmed'} mt={4}>
+          {t('topic.contentElements.countLabel', { count: contentElementCount, max: 12 })}
+        </Text>
       </Flex>
       <CreateContentElementModal
         opened={opened}

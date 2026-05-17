@@ -22,14 +22,14 @@ class CategoryServiceImplTest {
   @InjectMock CategoryRepository categoryRepository;
 
   @Test
-  void testSearch_WithNullQuery() {
+  void testSearch_Max5_WithNullQuery() {
     // Arrange
     Category cat = new Category();
     cat.title = "Default Category";
     when(categoryRepository.findAllWithLimit(5)).thenReturn(List.of(cat));
 
     // Act
-    List<Category> results = categoryService.search(null);
+    List<Category> results = categoryService.searchMax5(null);
 
     // Assert
     Assertions.assertEquals(1, results.size());
@@ -39,14 +39,14 @@ class CategoryServiceImplTest {
   }
 
   @Test
-  void testSearch_WithQuery() {
+  void testSearch_Max5_WithQuery() {
     // Arrange
     String query = "Java";
     when(categoryRepository.findByTitleWithLimit(eq(query), eq(5)))
         .thenReturn(List.of(new Category()));
 
     // Act
-    categoryService.search(query);
+    categoryService.searchMax5(query);
 
     // Assert
     verify(categoryRepository).findByTitleWithLimit(query, 5);

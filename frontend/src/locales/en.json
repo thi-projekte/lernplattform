@@ -85,19 +85,16 @@
       "personalTopics": "Personal topics",
       "createContentElement": "Create content element"
     },
-
     "myna": {
       "subtitle": "AI Assistant",
       "description": "Myna can summarize the saved content and suggest suitable next sources.",
       "askButton": "Ask Myna"
     },
-
     "tabs": {
       "visual": "Visual",
       "notes": "Notes",
       "notesPlaceholder": "No notes yet."
     },
-
     "actions": {
       "create": "Create topic",
       "createContentElement": "Create content element",
@@ -115,6 +112,10 @@
     },
     "contentElementForm": {
       "incompleteFormError": "Please fill in all required fields before continuing."
+    },
+    "contentElements": {
+      "limitReached": "Maximum of 12 content elements per topic.",
+      "countLabel": "{{count}} / {{max}} content elements"
     },
     "errors": {
       "titleMissing": "Title missing",
@@ -184,7 +185,8 @@
       "linkToSelectedTopic": "Link to selected topic",
       "alreadyLinked": "Already linked",
       "ownedTopic": "Own topic",
-      "foreignTopic": "Foreign topic"
+      "foreignTopic": "Foreign topic",
+      "removeOwnTopic": "Remove from graph"
     }
   },
   "auth": {
@@ -192,6 +194,9 @@
     "noAccessPageText": "It looks like you don't have the necessary permissions to view this page. If you think this is a mistake, please contact your administrator.",
     "role_builder": "Builder",
     "role_learner": "Learner"
+  },
+  "layout": {
+    "openAccount": "Open user account"
   },
   "onboarding": {
     "title": "Onboarding",

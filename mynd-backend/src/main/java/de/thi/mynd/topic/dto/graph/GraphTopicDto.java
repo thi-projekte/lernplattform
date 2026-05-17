@@ -1,5 +1,6 @@
 package de.thi.mynd.topic.dto.graph;
 
+import de.thi.mynd.progressTracking.dto.TopicLearnProgressDto;
 import de.thi.mynd.topic.entity.Category;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +22,8 @@ public final class GraphTopicDto {
   public String creatorFullName;
 
   public List<UUID> associatedTopics;
+
+  public TopicLearnProgressDto learnProgress;
 
   @Override
   public boolean equals(Object obj) {

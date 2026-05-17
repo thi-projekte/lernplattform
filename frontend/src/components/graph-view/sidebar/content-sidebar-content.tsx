@@ -1,4 +1,4 @@
-import { ActionIcon, Badge, Group, Modal, ThemeIcon, Title } from '@mantine/core';
+import { ActionIcon, Group, Modal, ThemeIcon, Title } from '@mantine/core';
 import { createElement } from 'react';
 import type { AnyContentElementDto } from '../../../schemas/content-element';
 import ContentElementDisplay from '../../topic/content-element-display';
@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useDisclosure } from '@mantine/hooks';
 import { IconMaximize } from '@tabler/icons-react';
 import { CONTENT_ICONS, DEFAULT_ICON_BY_TYPE } from '../../icon-picker/icons';
+import CategoryBadge from '../../category-badge.tsx';
 
 interface ContentSidebarContentProps {
   selectedElement: AnyContentElementDto;
@@ -31,9 +32,11 @@ const ContentSidebarContent = ({ selectedElement }: ContentSidebarContentProps) 
             <Title order={3} style={{ lineHeight: 1.2 }}>
               {selectedElement.title}
             </Title>
-            <Badge color="teal" mt="xs">
-              {t(`topic.contentElementType.${selectedElement.type}`)}
-            </Badge>
+            <CategoryBadge
+              mt="xs"
+              title={t(`topic.contentElementType.${selectedElement.type}`)}
+              color="#0ca678"
+            />
           </div>
         </Group>
         <ActionIcon variant="light" onClick={open} size="lg">

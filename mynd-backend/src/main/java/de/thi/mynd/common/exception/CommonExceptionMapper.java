@@ -3,7 +3,7 @@ package de.thi.mynd.common.exception;
 import jakarta.ws.rs.core.Response;
 import org.jboss.resteasy.reactive.server.ServerExceptionMapper;
 
-public class GlobalExceptionMapper {
+public final class CommonExceptionMapper {
 
   @ServerExceptionMapper
   public Response mapFileTooLargeException(FileTooLargeException e) {
@@ -18,5 +18,15 @@ public class GlobalExceptionMapper {
   @ServerExceptionMapper
   public Response mapNoFileProvidedException(NoFileProvidedException e) {
     return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+  }
+
+  @ServerExceptionMapper
+  public Response mapUserNotFoundException(UserNotFoundException e) {
+    return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+  }
+
+  @ServerExceptionMapper
+  public Response mapEntityInstanceNotFoundException(EntityInstanceNotFoundException e) {
+    return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
   }
 }

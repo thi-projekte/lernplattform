@@ -36,6 +36,7 @@ const StepperProgress = ({ steps, onComplete, isLoading, lastStepLabel }: Steppe
             label={step.label}
             description={step.description}
             allowStepSelect={canProceed(i - 1)}
+            key={step.label + i}
           >
             {step.step}
           </Stepper.Step>
