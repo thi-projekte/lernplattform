@@ -172,7 +172,7 @@ const HomePage = () => {
           </Text>
         </Stack>
 
-        <Paper radius="lg" p="lg" bg="brandGray.2">
+        <Paper withBorder radius="lg" p="lg">
           <Stack gap="md">
             <Group justify="space-between" align="center">
               <Text size="sm" c="dimmed">
@@ -202,8 +202,7 @@ const HomePage = () => {
                   minHeight: 640,
                   borderRadius: 16,
                   overflow: 'hidden',
-                  backgroundColor: '#ffffff',
-                  boxShadow: '0 1px 4px rgba(0, 0, 0, 0.1)',
+                  border: '1px solid #e9ecef',
                 }}
               >
                 <TopicGraphView
@@ -229,12 +228,7 @@ const HomePage = () => {
                 />
               </div>
 
-              <Paper
-                radius="lg"
-                p="md"
-                shadow="sm"
-                style={{ alignSelf: 'start', backgroundColor: 'white' }}
-              >
+              <Paper withBorder radius="lg" p="md" style={{ alignSelf: 'start' }}>
                 <Stack gap="md">
                   <div>
                     <Title order={3}>{t('journey.selectedTopic')}</Title>

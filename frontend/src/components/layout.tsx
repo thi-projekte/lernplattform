@@ -57,7 +57,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       }}
       padding={0}
     >
-      <AppShell.Header style={{ backgroundColor: 'var(--mantine-color-brandGray-5)' }}>
+      <AppShell.Header>
         <Group h="100%" justify="space-between" wrap="nowrap">
           <Box
             visibleFrom="sm"
@@ -94,7 +94,6 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         onMouseEnter={() => setDesktopExpanded(true)}
         onMouseLeave={() => setDesktopExpanded(false)}
         style={{
-          backgroundColor: 'var(--mantine-color-brandGray-4)',
           transition: 'width 150ms ease',
           overflowX: 'hidden',
         }}
@@ -136,7 +135,6 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         <Box
           px="md"
           py="md"
-          bg="brandGray.2"
           style={{
             minHeight: 'calc(100vh - 104px)',
           }}
