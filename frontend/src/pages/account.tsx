@@ -74,12 +74,15 @@ const AccountPage = () => {
           minHeight: 'calc(100vh - 104px)',
           background:
             'radial-gradient(circle at 50% 0%, rgba(124, 198, 232, 0.46) 0%, rgba(124, 198, 232, 0.22) 32%, rgba(255, 255, 255, 0) 62%), linear-gradient(180deg, #f4fbff 0%, #ffffff 56%, #f8fafc 100%)',
-          paddingBottom: 56,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '16px',
         }}
       >
-        <Container size={520} mt="md" mb="xl" pt="md">
+        <Container size={480} w="100%">
           <Paper
-            p={42}
+            p="lg"
             radius="lg"
             style={{
               background: '#FFFFFF',
@@ -87,38 +90,39 @@ const AccountPage = () => {
               boxShadow: '0 24px 60px rgba(31, 42, 68, 0.12)',
             }}
           >
-            <Stack gap="xl">
-              <Stack gap={6} align="center">
-                <Image src="/mynd-logo.png" alt="MYnd Logo" w={125} fit="contain" />
+            <Stack gap="md">
+              <Stack gap={2} align="center">
+                <Image src="/mynd-logo.png" alt="MYnd Logo" w={90} fit="contain" />
                 <Text
                   fw={800}
                   ta="center"
-                  style={{ color: '#1F2A44', fontSize: 30, lineHeight: 1.15 }}
+                  style={{ color: '#1F2A44', fontSize: 22, lineHeight: 1.15 }}
                 >
                   {t('account.title')}
                 </Text>
               </Stack>
 
-              <Stack gap="md" align="center">
+              <Stack gap={6} align="center">
                 <Avatar
                   src={profilePicture?.url}
-                  size={128}
+                  size={88}
                   radius="50%"
                   style={{ border: '3px solid #7CC6E8' }}
                 >
-                  <IconUser size={64} />
+                  <IconUser size={44} />
                 </Avatar>
-                <Stack gap={4} align="center">
-                  <Text fw={700} size="lg" style={{ color: '#1F2A44' }}>
+                <Stack gap={2} align="center">
+                  <Text fw={700} size="md" style={{ color: '#1F2A44' }}>
                     {displayName}
                   </Text>
                   {userService.account.email && (
-                    <Text size="sm" style={{ color: '#5F6F7E' }}>
+                    <Text size="xs" style={{ color: '#5F6F7E' }}>
                       {userService.account.email}
                     </Text>
                   )}
                   {userRole && (
                     <Badge
+                      size="sm"
                       variant="light"
                       style={{ background: 'rgba(124, 198, 232, 0.22)', color: '#1B9ED6' }}
                     >
@@ -128,8 +132,8 @@ const AccountPage = () => {
                 </Stack>
               </Stack>
 
-              <Stack gap="xs">
-                <Text fw={700} size="sm" style={{ color: '#1F2A44' }}>
+              <Stack gap={6}>
+                <Text fw={700} size="xs" style={{ color: '#1F2A44' }}>
                   {t('account.profilePicture')}
                 </Text>
                 <Dropzone
@@ -142,16 +146,14 @@ const AccountPage = () => {
                   loading={isUploading}
                   multiple={false}
                   radius="md"
+                  p="sm"
                   styles={{
-                    root: {
-                      border: '2px dashed #7CC6E8',
-                      background: '#F7FCFF',
-                    },
+                    root: { border: '2px dashed #7CC6E8', background: '#F7FCFF' },
                   }}
                 >
-                  <Group justify="center" gap="md" mih={100} style={{ pointerEvents: 'none' }}>
-                    <IconPhotoUp size={32} stroke={1.5} color="#1B9ED6" />
-                    <Stack gap={4} align="center">
+                  <Group justify="center" gap="sm" mih={60} style={{ pointerEvents: 'none' }}>
+                    <IconPhotoUp size={24} stroke={1.5} color="#1B9ED6" />
+                    <Stack gap={0} align="center">
                       <Text size="sm" fw={600} style={{ color: '#1F2A44' }}>
                         {t('common.dropYourFileHere')}
                       </Text>
@@ -166,11 +168,11 @@ const AccountPage = () => {
                     <Button
                       variant="outline"
                       color="red"
-                      leftSection={<IconTrash size={16} />}
+                      size="xs"
+                      leftSection={<IconTrash size={14} />}
                       onClick={handleDelete}
                       loading={isDeleting}
                       radius="md"
-                      mt="xs"
                     >
                       {t('account.deleteProfilePicture')}
                     </Button>
@@ -178,34 +180,30 @@ const AccountPage = () => {
                 )}
               </Stack>
 
-              <Stack gap="sm">
+              <Stack gap="xs">
                 <Button
-                  leftSection={<IconUserCog size={18} />}
+                  leftSection={<IconUserCog size={16} />}
                   fullWidth
                   radius="md"
+                  size="sm"
                   onClick={() => keycloak.accountManagement()}
                   style={{
                     backgroundColor: '#7CC6E8',
                     color: '#FFFFFF',
                     fontWeight: 700,
-                    minHeight: 46,
-                    boxShadow: '0 12px 28px rgba(124, 198, 232, 0.32)',
+                    boxShadow: '0 8px 18px rgba(124, 198, 232, 0.32)',
                   }}
                 >
                   {t('account.editInKeycloak')}
                 </Button>
                 <Button
-                  leftSection={<IconLogout2 size={18} />}
+                  leftSection={<IconLogout2 size={16} />}
                   variant="outline"
                   fullWidth
                   radius="md"
+                  size="sm"
                   onClick={logout}
-                  style={{
-                    borderColor: '#E86A6A',
-                    color: '#C24747',
-                    fontWeight: 700,
-                    minHeight: 40,
-                  }}
+                  style={{ borderColor: '#E86A6A', color: '#C24747', fontWeight: 700 }}
                 >
                   {t('account.logout')}
                 </Button>
