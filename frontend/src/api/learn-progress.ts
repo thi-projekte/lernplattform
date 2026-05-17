@@ -6,7 +6,7 @@ const startTopic = async (topicId: string) =>
     validateStatus: (status) => status === 200,
   });
 
-const completeTopic = async (topicId: string) =>
+const completeTopicManually = async (topicId: string) =>
   await apiClient.post(`/learn-progress/topics/${topicId}/complete`, undefined, {
     validateStatus: (status) => status === 200,
   });
@@ -32,11 +32,11 @@ export const useStartTopicMutation = () => {
   });
 };
 
-export const useCompleteTopicMutation = () => {
+export const useCompleteTopicManuallyMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: ['completeTopic'],
-    mutationFn: completeTopic,
+    mutationKey: ['completeTopicManually'],
+    mutationFn: completeTopicManually,
     onSuccess: () => invalidateProgressQueries(queryClient),
   });
 };

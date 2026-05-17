@@ -15,7 +15,7 @@ import { IconCheck, IconEdit, IconRobot } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
 import CategoryBadge from '../../category-badge.tsx';
-import { useCompleteTopicMutation, useStartTopicMutation } from '../../../api/learn-progress.ts';
+import { useCompleteTopicManuallyMutation, useStartTopicMutation } from '../../../api/learn-progress.ts';
 
 interface TopicSidebarContentProps {
   selectedElement: Topic;
@@ -32,7 +32,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
     selectedElement.creatorId.toLowerCase() === currentUsername;
 
   const { mutate: startTopic, isPending: isStarting } = useStartTopicMutation();
-  const { mutate: completeTopic, isPending: isCompleting } = useCompleteTopicMutation();
+  const { mutate: completeTopic, isPending: isCompleting } = useCompleteTopicManuallyMutation();
 
   const learnProgress = selectedElement.learnProgress;
   const topicId = selectedElement.id;
