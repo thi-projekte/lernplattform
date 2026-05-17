@@ -1,17 +1,19 @@
 package de.thi.mynd.auth.rest;
 
+import de.thi.mynd.auth.dto.ProfilePictureDto;
 import de.thi.mynd.auth.service.AuthService;
+import de.thi.mynd.auth.service.UserProfileService;
 import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+import org.jboss.resteasy.reactive.RestForm;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @Path("/auth")
 @Tag(name = "Authorization")
@@ -19,6 +21,9 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 public final class AuthResource {
 
   @Inject AuthService authService;
+
+  @Inject
+  UserProfileService userProfileService;
 
   @Inject SecurityIdentity identity;
 
