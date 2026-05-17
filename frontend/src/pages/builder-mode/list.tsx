@@ -20,6 +20,7 @@ import {
   Text,
   Title,
   Tooltip,
+  useMantineTheme,
 } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
 import type { OnConnect } from '@xyflow/react';
@@ -38,6 +39,7 @@ import type { ListTopicDto, Topic } from '../../schemas/topic.ts';
 import CategoryBadge from '../../components/category-badge.tsx';
 
 const BuilderModeListPage = () => {
+  const theme = useMantineTheme();
   const [pagination, setPagination] = useState<PaginationState>({ pageSize: 20, pageIndex: 0 });
   const [viewMode, setViewMode] = useState<'list' | 'graph'>('list');
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
@@ -446,7 +448,7 @@ const BuilderModeListPage = () => {
               </Stack>
             </Paper>
 
-            <Paper withBorder radius="md" p="md" h={760} style={{ background: '#fafbfc' }}>
+            <Paper withBorder radius="md" p="md" h={760} style={{ background: theme.other.graphBg }}>
               <PersonalTopicsGraph
                 topics={personalGraphTopics}
                 currentUsername={userService.account.username}

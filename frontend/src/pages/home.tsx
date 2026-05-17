@@ -1,4 +1,12 @@
-import { Group, Paper, SegmentedControl, Stack, Text, Title } from '@mantine/core';
+import {
+  Group,
+  Paper,
+  SegmentedControl,
+  Stack,
+  Text,
+  Title,
+  useMantineTheme,
+} from '@mantine/core';
 import { Layout } from '../components/layout.tsx';
 import { useTranslation } from 'react-i18next';
 import { useCallback, useMemo, useState } from 'react';
@@ -52,6 +60,7 @@ const mergeGraphTopics = (current: GraphTopicDto[], incoming: GraphTopicDto[]) =
 
 const HomePage = () => {
   const { t } = useTranslation();
+  const theme = useMantineTheme();
   const userProfile = useUserService();
   const { data, isLoading } = useFetchMostPopularTopicsWithNeighbors();
 
@@ -195,7 +204,7 @@ const HomePage = () => {
                 borderRadius: 16,
                 overflow: 'hidden',
                 border: '1px solid #e9ecef',
-                background: '#fafbfc',
+                background: theme.other.graphBg,
               }}
             >
               <TopicGraphView

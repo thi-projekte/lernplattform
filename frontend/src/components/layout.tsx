@@ -1,4 +1,14 @@
-import { AppShell, Avatar, Box, Burger, Button, Group, Image, NavLink } from '@mantine/core';
+import {
+  AppShell,
+  Avatar,
+  Box,
+  Burger,
+  Button,
+  Group,
+  Image,
+  NavLink,
+  useMantineTheme,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronLeft, IconUser } from '@tabler/icons-react';
 import { useQueryProfilePicture } from '../api/profile-picture.ts';
@@ -22,6 +32,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const { t } = useTranslation();
   const userService = useUserService();
   const { data: profilePicture } = useQueryProfilePicture(userService.account.username);
+  const theme = useMantineTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const matches = useMatches();
@@ -69,8 +80,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     >
       <AppShell.Header
         style={{
-          background: '#e4f3fb',
-          borderBottom: '1px solid rgba(176, 210, 232, 0.5)',
+          background: theme.other.layoutHeaderBg,
+          borderBottom: `1px solid ${theme.other.layoutBorder}`,
         }}
       >
         <Group h="100%" justify="space-between" wrap="nowrap">
@@ -106,8 +117,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         onMouseEnter={() => setDesktopExpanded(true)}
         onMouseLeave={() => setDesktopExpanded(false)}
         style={{
-          background: '#e4f3fb',
-          borderRight: '1px solid rgba(176, 210, 232, 0.46)',
+          background: theme.other.layoutNavbarBg,
+          borderRight: `1px solid ${theme.other.layoutBorder}`,
           transition: 'width 150ms ease',
           overflowX: 'hidden',
           display: 'flex',
@@ -204,7 +215,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           py="md"
           style={{
             minHeight: 'calc(100vh - 104px)',
-            background: 'linear-gradient(180deg, #def0fa 0%, #eaf6fc 60%, #e5f4fb 100%)',
+            background: theme.other.layoutMainBg,
           }}
         >
           {pathname !== '/' && (
