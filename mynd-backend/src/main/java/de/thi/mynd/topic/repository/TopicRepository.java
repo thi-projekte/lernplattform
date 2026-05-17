@@ -42,20 +42,6 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
         .getResultList();
   }
 
-  @jakarta.transaction.Transactional
-  public void updateSearchVectors(java.util.UUID topicId, String title, String teaser) {
-    getEntityManager()
-        .createNativeQuery(
-            "UPDATE topic SET "
-                + "title_search_vector  = to_tsvector('german', :title), "
-                + "teaser_search_vector = to_tsvector('german', :teaser) "
-                + "WHERE id = :id")
-        .setParameter("title", title)
-        .setParameter("teaser", teaser)
-        .setParameter("id", topicId)
-        .executeUpdate();
-  }
-
   public List<Topic> findByOwningTopicId(UUID topicId) {
     CriteriaBuilder cb = getEntityManager().getCriteriaBuilder();
     CriteriaQuery<Topic> cq = cb.createQuery(Topic.class);
