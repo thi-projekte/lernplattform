@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import { useQueryTopic } from '../../api/topic.ts';
 import { type Node, type NodeMouseHandler } from '@xyflow/react';
 import { Layout } from '../../components/layout.tsx';
-import { Paper, Text, Stack, Tabs } from '@mantine/core';
+import { Paper, Text, Stack, Tabs, useMantineTheme } from '@mantine/core';
 import type { Topic } from '../../schemas/topic.ts';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import TopicNode from '../../components/graph-view/topic-node.tsx';
@@ -23,6 +23,7 @@ const nodeTypes = {
 
 const TopicDetailsPage = () => {
   const { t } = useTranslation();
+  const theme = useMantineTheme();
 
   const { topicId } = useParams<{ topicId: string }>();
   const { data: topic, isLoading } = useQueryTopic(topicId || '', false);
@@ -82,7 +83,7 @@ const TopicDetailsPage = () => {
               position: 'relative',
               borderRadius: 16,
               overflow: 'hidden',
-              background: '#f1f3f5e0',
+              background: theme.other.graphBg,
             }}
           >
             <TopicGraphView

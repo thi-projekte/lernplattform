@@ -70,7 +70,7 @@ const appFontFamily =
 
 export const theme = createTheme({
   primaryColor: 'brand',
-  primaryShade: 4,
+  primaryShade: 6,
   defaultRadius: 'md',
   colors: {
     brand,
@@ -78,6 +78,19 @@ export const theme = createTheme({
     brandRed,
     brandYellow,
     brandGray,
+  },
+  other: {
+    layoutHeaderBg: '#f1f7fb',
+    layoutNavbarBg: '#f1f7fb',
+    layoutMainBg: 'linear-gradient(180deg, #eef5fa 0%, #f5fafd 60%, #f1f8fc 100%)',
+    layoutBorder: 'rgba(176, 210, 232, 0.5)',
+    graphBg: '#fafbfc',
+    graphDots: '#d1d5db',
+    nodeOwnBg: '#ffffb865',
+    nodeOwnSelectedBg: '#f1f1adf0',
+    nodeForeignBg: 'linear-gradient(135deg, #f4f9fe 0%, #e8f1f9 100%)',
+    nodeForeignSelectedBg: 'linear-gradient(135deg, #e6f0fa 0%, #d4e4f3 100%)',
+    nodeJourneyBg: 'linear-gradient(135deg, #e7f2ff 0%, #fff9e6 100%)',
   },
   fontFamily: appFontFamily,
   fontFamilyMonospace:

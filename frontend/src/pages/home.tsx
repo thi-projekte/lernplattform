@@ -1,23 +1,23 @@
-import { Paper, SegmentedControl, Stack, Title } from '@mantine/core';
-import { Layout } from '../components/layout.tsx';
-import { useTranslation } from 'react-i18next';
+import { Group, Paper, SegmentedControl, Stack, Text, Title, useMantineTheme } from '@mantine/core';
+import type { Node, NodeMouseHandler } from '@xyflow/react';
 import { useCallback, useMemo, useState } from 'react';
-import { useUserService } from '../provider/user-provider.tsx';
+import { useTranslation } from 'react-i18next';
 import {
   useFetchDirectNeighborQueries,
   useFetchMostPopularTopicsWithNeighbors,
 } from '../api/topic-graph.ts';
-import LayoutLoader from '../components/layout-loader.tsx';
 import TopicGraphView from '../components/graph-view/topic-graph.tsx';
+import type { TopicGraphNodePositions } from '../components/graph-view/topic-graph.types.ts';
 import GenericTopicNode from '../components/graph-view/generic-topic-node.tsx';
 import type {
   SkillTreeNodeData,
   SkillTreeOrientation,
 } from '../components/graph-view/skill-tree.types.ts';
 import { buildSkillTreeGraph } from '../components/graph-view/topic-graph.utils.ts';
+import { Layout } from '../components/layout.tsx';
+import LayoutLoader from '../components/layout-loader.tsx';
+import { useUserService } from '../provider/user-provider.tsx';
 import type { GraphTopicDto } from '../schemas/topic-graph.ts';
-import type { Node, NodeMouseHandler } from '@xyflow/react';
-import type { TopicGraphNodePositions } from '../components/graph-view/topic-graph.types.ts';
 
 const nodeTypes = {
   skillTreeTopic: GenericTopicNode,
@@ -52,6 +52,7 @@ const mergeGraphTopics = (current: GraphTopicDto[], incoming: GraphTopicDto[]) =
 
 const HomePage = () => {
   const { t } = useTranslation();
+  const theme = useMantineTheme();
   const userProfile = useUserService();
   const { data, isLoading } = useFetchMostPopularTopicsWithNeighbors();
 
@@ -163,53 +164,62 @@ const HomePage = () => {
   return (
     <Layout>
       <Stack gap="lg">
-        <Title order={1}>{t('journey.title')}</Title>
+        <Stack gap={4}>
+          <Title order={1}>{t('journey.title')}</Title>
+          <Text c="dimmed">
+            {t('journey.subtitle', {
+              name: userProfile.account.username ?? t('journey.genericUser'),
+            })}
+          </Text>
+        </Stack>
 
-        <Paper withBorder radius="lg" p="xs" style={{ overflow: 'hidden' }}>
-          <div
-            style={{
-              position: 'relative',
-              height: 640,
-              borderRadius: 12,
-              overflow: 'hidden',
-              background: '#f8fafc',
-            }}
-          >
-            <SegmentedControl
-              value={orientation}
-              onChange={(value) => setOrientation(value as SkillTreeOrientation)}
-              data={[
-                { label: t('journey.orientation.vertical'), value: 'vertical' },
-                { label: t('journey.orientation.horizontal'), value: 'horizontal' },
-              ]}
+        <Paper withBorder radius="lg" p="lg" bg="transparent" style={{ overflow: 'hidden' }}>
+          <Stack gap="md">
+            <Group justify="space-between" align="center">
+              <Text size="sm" c="dimmed">
+                {t('journey.tipText')}
+              </Text>
+              <SegmentedControl
+                value={orientation}
+                onChange={(value) => setOrientation(value as SkillTreeOrientation)}
+                data={[
+                  { label: t('journey.orientation.vertical'), value: 'vertical' },
+                  { label: t('journey.orientation.horizontal'), value: 'horizontal' },
+                ]}
+              />
+            </Group>
+
+            <div
               style={{
-                position: 'absolute',
-                top: 16,
-                right: 16,
-                zIndex: 2,
-                boxShadow: '0 8px 24px rgba(15, 23, 42, 0.08)',
+                position: 'relative',
+                height: 640,
+                borderRadius: 16,
+                overflow: 'hidden',
+                border: `1px solid ${theme.other.layoutBorder}`,
+                background: theme.other.graphBg,
               }}
-            />
-            <TopicGraphView
-              key={orientation}
-              nodes={nodes}
-              edges={edges}
-              nodeTypes={nodeTypes}
-              onNodeClick={onNodeClick}
-              onNodeDragStop={(_event, node) => handleNodePositionChange(node.id, node.position)}
-              allowCanvasPanning={!isViewportLocked}
-              allowPanOnScroll={!isViewportLocked}
-              allowNodeDragging={!isViewportLocked}
-              showControls={false}
-              showViewportToolbar
-              viewportLocked={isViewportLocked}
-              onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
-              fitView
-              fitViewPadding={orientation === 'horizontal' ? 0.22 : 0.3}
-              backgroundColor="#d1d5db"
-              backgroundGap={20}
-            />
-          </div>
+            >
+              <TopicGraphView
+                key={orientation}
+                nodes={nodes}
+                edges={edges}
+                nodeTypes={nodeTypes}
+                onNodeClick={onNodeClick}
+                onNodeDragStop={(_event, node) => handleNodePositionChange(node.id, node.position)}
+                allowCanvasPanning={!isViewportLocked}
+                allowPanOnScroll={!isViewportLocked}
+                allowNodeDragging={!isViewportLocked}
+                showControls={false}
+                showViewportToolbar
+                viewportLocked={isViewportLocked}
+                onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
+                fitView
+                fitViewPadding={orientation === 'horizontal' ? 0.22 : 0.3}
+                backgroundColor={theme.other.graphDots}
+                backgroundGap={20}
+              />
+            </div>
+          </Stack>
         </Paper>
       </Stack>
     </Layout>

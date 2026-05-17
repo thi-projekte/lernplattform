@@ -1,6 +1,15 @@
 import type { CSSProperties } from 'react';
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
-import { ActionIcon, Button, Group, Paper, Progress, Stack, Text } from '@mantine/core';
+import {
+  ActionIcon,
+  Button,
+  Group,
+  Paper,
+  Progress,
+  Stack,
+  Text,
+  useMantineTheme,
+} from '@mantine/core';
 import { IconEye } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
@@ -32,6 +41,7 @@ type GenericTopicNodeProps = NodeProps<Node<GenericTopicNodeData>>;
 const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const theme = useMantineTheme();
 
   const categories = data.categories ?? data.payload?.categories ?? [];
   const singleCategoryColor = categories.length === 1 ? `#${categories[0].color}` : undefined;
@@ -50,14 +60,14 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
 
   const baseBackground = isBuilderMode
     ? isForeign
-      ? 'linear-gradient(135deg, #f4f9fe 0%, #e8f1f9 100%)'
-      : 'linear-gradient(135deg, #fffbf2 0%, #fff5e0 100%)'
-    : 'linear-gradient(135deg, #e7f2ff 0%, #fff9e6 100%)';
+      ? theme.other.nodeForeignBg
+      : theme.other.nodeOwnBg
+    : theme.other.nodeJourneyBg;
 
   const selectedBackground = isBuilderMode
     ? isForeign
-      ? 'linear-gradient(135deg, #e6f0fa 0%, #d4e4f3 100%)'
-      : 'linear-gradient(135deg, #fff5e0 0%, #ffecc4 100%)'
+      ? theme.other.nodeForeignSelectedBg
+      : theme.other.nodeOwnSelectedBg
     : `linear-gradient(135deg, color-mix(in srgb, ${accentColor} 10%, #d4e7fc) 0%, color-mix(in srgb, ${accentColor} 10%, #fff2b8) 100%)`;
 
   return (
