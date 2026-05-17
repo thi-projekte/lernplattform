@@ -109,14 +109,6 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
     }
   }
 
-  @Override
-  @Transactional(value = Transactional.TxType.NOT_SUPPORTED)
-  public String uploadObject(String objectKey, File file) {
-    byte[] bytes = getBytesFromFile(file);
-    uploadAsync(objectKey, bytes);
-    return objectKey;
-  }
-
   private String getS3FileName(BaseEntityWithId entity, String filename) {
     return String.format("%s/%s/%s", entity.getClass(), entity.id, filename).replaceAll(" ", "_");
   }

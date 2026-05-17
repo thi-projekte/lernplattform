@@ -10,8 +10,6 @@ public interface ObjectStorageService {
 
   String uploadObject(BaseEntityWithId entity, File file, String originalFileName);
 
-  String uploadObject(String objectKey, File file);
-
   URL getPresignedUrlForFile(String objectKey);
 
   void tryDeleteObject(String objectKey);
