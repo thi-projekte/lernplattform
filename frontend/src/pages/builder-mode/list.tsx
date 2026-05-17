@@ -280,8 +280,6 @@ const BuilderModeListPage = () => {
           </Group>
         </Stack>
 
-        <TopicSearchbar onSuggestionsChange={handleSuggestionsChange} />
-
         {viewMode === 'list' ? (
           data && (
             <EntityTable
