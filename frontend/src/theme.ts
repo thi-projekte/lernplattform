@@ -65,6 +65,7 @@ const brandGray: MantineColorsTuple = [
   '#35475a',
 ];
 
+
 export const theme = createTheme({
   primaryColor: 'brand',
   primaryShade: 4,
