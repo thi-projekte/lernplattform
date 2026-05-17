@@ -3,11 +3,12 @@ import {
   Badge,
   Box,
   Button,
-  Card,
+  Container,
   Group,
+  Image,
+  Paper,
   Stack,
   Text,
-  Title,
   Tooltip,
 } from '@mantine/core';
 import { Dropzone, IMAGE_MIME_TYPE, type FileWithPath } from '@mantine/dropzone';
@@ -68,96 +69,151 @@ const AccountPage = () => {
 
   return (
     <Layout>
-      <Stack gap="lg" maw={720} mx="auto">
-        <Title order={1}>{t('account.title')}</Title>
+      <Box
+        style={{
+          minHeight: 'calc(100vh - 104px)',
+          background:
+            'radial-gradient(circle at 50% 0%, rgba(124, 198, 232, 0.46) 0%, rgba(124, 198, 232, 0.22) 32%, rgba(255, 255, 255, 0) 62%), linear-gradient(180deg, #f4fbff 0%, #ffffff 56%, #f8fafc 100%)',
+          paddingBottom: 56,
+        }}
+      >
+        <Container size={520} mt="md" mb="xl" pt="md">
+          <Paper
+            p={42}
+            radius="lg"
+            style={{
+              background: '#FFFFFF',
+              border: '1.5px solid #D6DCE2',
+              boxShadow: '0 24px 60px rgba(31, 42, 68, 0.12)',
+            }}
+          >
+            <Stack gap="xl">
+              <Stack gap={6} align="center">
+                <Image src="/mynd-logo.png" alt="MYnd Logo" w={125} fit="contain" />
+                <Text
+                  fw={800}
+                  ta="center"
+                  style={{ color: '#1F2A44', fontSize: 30, lineHeight: 1.15 }}
+                >
+                  {t('account.title')}
+                </Text>
+              </Stack>
 
-        <Card withBorder radius="md" p="lg">
-          <Stack gap="md">
-            <Group align="center" wrap="nowrap">
-              <Avatar src={profilePicture?.url} size={96} radius="50%">
-                <IconUser size={48} />
-              </Avatar>
-              <Stack gap={4} style={{ flex: 1, minWidth: 0 }}>
-                <Title order={3}>{displayName}</Title>
-                {userService.account.email && (
-                  <Text c="dimmed" size="sm">
-                    {userService.account.email}
+              <Stack gap="md" align="center">
+                <Avatar
+                  src={profilePicture?.url}
+                  size={128}
+                  radius="50%"
+                  style={{ border: '3px solid #7CC6E8' }}
+                >
+                  <IconUser size={64} />
+                </Avatar>
+                <Stack gap={4} align="center">
+                  <Text fw={700} size="lg" style={{ color: '#1F2A44' }}>
+                    {displayName}
                   </Text>
-                )}
-                {userRole && (
-                  <Badge color="blue" variant="light" w="fit-content">
-                    {userRole}
-                  </Badge>
+                  {userService.account.email && (
+                    <Text size="sm" style={{ color: '#5F6F7E' }}>
+                      {userService.account.email}
+                    </Text>
+                  )}
+                  {userRole && (
+                    <Badge
+                      variant="light"
+                      style={{ background: 'rgba(124, 198, 232, 0.22)', color: '#1B9ED6' }}
+                    >
+                      {userRole}
+                    </Badge>
+                  )}
+                </Stack>
+              </Stack>
+
+              <Stack gap="xs">
+                <Text fw={700} size="sm" style={{ color: '#1F2A44' }}>
+                  {t('account.profilePicture')}
+                </Text>
+                <Dropzone
+                  onDrop={handleDrop}
+                  onReject={() =>
+                    notifications.show({ color: 'red', message: t('common.fileRejected') })
+                  }
+                  maxSize={MAX_FILE_SIZE}
+                  accept={IMAGE_MIME_TYPE}
+                  loading={isUploading}
+                  multiple={false}
+                  radius="md"
+                  styles={{
+                    root: {
+                      border: '2px dashed #7CC6E8',
+                      background: '#F7FCFF',
+                    },
+                  }}
+                >
+                  <Group justify="center" gap="md" mih={100} style={{ pointerEvents: 'none' }}>
+                    <IconPhotoUp size={32} stroke={1.5} color="#1B9ED6" />
+                    <Stack gap={4} align="center">
+                      <Text size="sm" fw={600} style={{ color: '#1F2A44' }}>
+                        {t('common.dropYourFileHere')}
+                      </Text>
+                      <Text size="xs" style={{ color: '#5F6F7E' }}>
+                        {t('common.maxFileSize', { size: '5 MB' })}
+                      </Text>
+                    </Stack>
+                  </Group>
+                </Dropzone>
+                {profilePicture?.url && (
+                  <Tooltip label={t('account.deleteProfilePicture')} withArrow>
+                    <Button
+                      variant="outline"
+                      color="red"
+                      leftSection={<IconTrash size={16} />}
+                      onClick={handleDelete}
+                      loading={isDeleting}
+                      radius="md"
+                      mt="xs"
+                    >
+                      {t('account.deleteProfilePicture')}
+                    </Button>
+                  </Tooltip>
                 )}
               </Stack>
-            </Group>
 
-            <Box>
-              <Text fw={600} size="sm" mb="xs">
-                {t('account.profilePicture')}
-              </Text>
-              <Dropzone
-                onDrop={handleDrop}
-                onReject={() =>
-                  notifications.show({
-                    color: 'red',
-                    message: t('common.fileRejected'),
-                  })
-                }
-                maxSize={MAX_FILE_SIZE}
-                accept={IMAGE_MIME_TYPE}
-                loading={isUploading}
-                multiple={false}
-              >
-                <Group justify="center" gap="md" mih={120} style={{ pointerEvents: 'none' }}>
-                  <IconPhotoUp size={32} stroke={1.5} />
-                  <Stack gap={4} align="center">
-                    <Text size="sm" fw={500}>
-                      {t('common.dropYourFileHere')}
-                    </Text>
-                    <Text size="xs" c="dimmed">
-                      {t('common.maxFileSize', { size: '5 MB' })}
-                    </Text>
-                  </Stack>
-                </Group>
-              </Dropzone>
-
-              {profilePicture?.url && (
-                <Tooltip label={t('account.deleteProfilePicture')} withArrow>
-                  <Button
-                    variant="light"
-                    color="red"
-                    leftSection={<IconTrash size={16} />}
-                    mt="md"
-                    onClick={handleDelete}
-                    loading={isDeleting}
-                  >
-                    {t('account.deleteProfilePicture')}
-                  </Button>
-                </Tooltip>
-              )}
-            </Box>
-          </Stack>
-        </Card>
-
-        <Group justify="space-between">
-          <Button
-            variant="light"
-            leftSection={<IconUserCog size={16} />}
-            onClick={() => keycloak.accountManagement()}
-          >
-            {t('account.editInKeycloak')}
-          </Button>
-          <Button
-            variant="light"
-            color="red"
-            leftSection={<IconLogout2 size={16} />}
-            onClick={logout}
-          >
-            {t('account.logout')}
-          </Button>
-        </Group>
-      </Stack>
+              <Stack gap="sm">
+                <Button
+                  leftSection={<IconUserCog size={18} />}
+                  fullWidth
+                  radius="md"
+                  onClick={() => keycloak.accountManagement()}
+                  style={{
+                    backgroundColor: '#7CC6E8',
+                    color: '#FFFFFF',
+                    fontWeight: 700,
+                    minHeight: 46,
+                    boxShadow: '0 12px 28px rgba(124, 198, 232, 0.32)',
+                  }}
+                >
+                  {t('account.editInKeycloak')}
+                </Button>
+                <Button
+                  leftSection={<IconLogout2 size={18} />}
+                  variant="outline"
+                  fullWidth
+                  radius="md"
+                  onClick={logout}
+                  style={{
+                    borderColor: '#E86A6A',
+                    color: '#C24747',
+                    fontWeight: 700,
+                    minHeight: 40,
+                  }}
+                >
+                  {t('account.logout')}
+                </Button>
+              </Stack>
+            </Stack>
+          </Paper>
+        </Container>
+      </Box>
     </Layout>
   );
 };
