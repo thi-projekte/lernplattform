@@ -57,6 +57,7 @@ const HomePage = () => {
 
   const [orientation, setOrientation] = useState<SkillTreeOrientation>('vertical');
   const [expandedTopicIds, setExpandedTopicIds] = useState<string[]>([]);
+  const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const [nodePositionsByOrientation, setNodePositionsByOrientation] = useState<
     Record<SkillTreeOrientation, TopicGraphNodePositions>
   >({
@@ -87,20 +88,23 @@ const HomePage = () => {
     const cached = cachedDagrePositions[orientation];
     return layoutNodes.map((node) => {
       const userPosition = currentNodePositions[node.id];
+      const selected = node.data.payload.id === selectedTopicId;
+
       if (userPosition) {
-        return { ...node, position: userPosition };
+        return { ...node, position: userPosition, selected };
       }
       if (cached[node.id]) {
-        return { ...node, position: cached[node.id] };
+        return { ...node, position: cached[node.id], selected };
       }
       cached[node.id] = node.position;
-      return node;
+      return { ...node, selected };
     });
-  }, [currentNodePositions, layoutNodes, orientation]);
+  }, [currentNodePositions, layoutNodes, orientation, selectedTopicId]);
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
     const graphNode = node as Node<SkillTreeNodeData>;
     const topic = graphNode.data.payload;
+    setSelectedTopicId(topic.id);
 
     setNodePositionsByOrientation((current) => {
       const currentOrientationPositions = current[orientation] ?? {};

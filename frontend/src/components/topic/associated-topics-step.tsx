@@ -121,6 +121,29 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
     selectedTopicNode && typeof selectedTopicNode.payload.id === 'string'
       ? selectedTopicNode.payload.id
       : null;
+  const selectedGraphTopicId = useMemo(() => {
+    if (!selectedTopicNode) {
+      return undefined;
+    }
+
+    if (selectedTopicNode.graphNodeId) {
+      return selectedTopicNode.graphNodeId;
+    }
+
+    if (!selectedTopicId) {
+      return topic.id ? `topic-${topic.id}` : 'topic-root';
+    }
+
+    if ((topic.relatedTopics ?? []).some((relatedTopic) => relatedTopic.id === selectedTopicId)) {
+      return `related-topic-${selectedTopicId}`;
+    }
+
+    if (searchSuggestions.some((suggestion) => suggestion.id === selectedTopicId)) {
+      return `isolated-topic-${selectedTopicId}`;
+    }
+
+    return topic.id && selectedTopicId === topic.id ? `topic-${topic.id}` : undefined;
+  }, [searchSuggestions, selectedTopicId, selectedTopicNode, topic.id, topic.relatedTopics]);
   const isolatedTopicCount = searchSuggestions.length;
 
   const handleSuggestionsChange = useCallback((topics: ListTopicDto[], searchTerm: string) => {
@@ -385,6 +408,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       isolatedTopics: searchSuggestions,
                     }}
                     currentUsername={userService.account.username}
+                    selectedTopicId={selectedGraphTopicId}
                     onTopicClick={handleGraphTopicClick}
                     onAssociationClick={removeTopic}
                     onNodePositionChange={handleNodePositionChange}
