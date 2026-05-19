@@ -9,6 +9,7 @@ import { CONTENT_ICONS, DEFAULT_ICON_BY_TYPE } from '../../icon-picker/icons';
 import CategoryBadge from '../../category-badge.tsx';
 import { useCompleteContentElementMutation } from '../../../api/learn-progress.ts';
 import type { TopicLearnProgressDto } from '../../../schemas/learn-progress.ts';
+import { track } from '@plausible-analytics/tracker';
 
 interface ContentSidebarContentProps {
   selectedElement: AnyContentElementDto;
@@ -88,7 +89,10 @@ const ContentSidebarContent = ({
             fullWidth
             disabled={!canMarkCompleted}
             loading={isPending}
-            onClick={() => completeContentElement(selectedElement.id)}
+            onClick={() => {
+              completeContentElement(selectedElement.id);
+              track('contentElementCompleted', {props: {contentElementId: selectedElement.id}});
+              }}
             leftSection={<IconCheck size={16} />}
           >
             {t('topic.actions.markContentElementCompleted')}
