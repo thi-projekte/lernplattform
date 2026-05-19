@@ -17,7 +17,7 @@ jobs:
           token: ${{ secrets.PORTAINER_TOKEN }}
           endpoint: ${{ secrets.PORTAINER_ENDPOINT || '1' }}
           name: plausible-analytics
-          file: portainer/full/docker-compose.yml
+          file: portainer/plausible/docker-compose.yml
           pull: 'true'
           type: file
           env_data: |
