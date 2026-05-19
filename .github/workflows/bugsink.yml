@@ -1,0 +1,29 @@
+name: Deploy Bugsink
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-to-portainer:
+    name: Deploy to portainer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Deploy stack
+        uses: cssnr/portainer-stack-deploy-action@v1
+        with:
+          url: ${{ secrets.PORTAINER_URL }}
+          token: ${{ secrets.PORTAINER_TOKEN }}
+          endpoint: ${{ secrets.PORTAINER_ENDPOINT || '1' }}
+          name: bugsink
+          file: portainer/bugsink/docker-compose.yml
+          pull: 'true'
+          type: file
+          env_data: |
+            {
+              "BUGSINK_DB_PASSWORD": "${{ secrets.BUGSINK_DB_PASSWORD }}",
+              "BUGSINK_SECRET_KEY": "${{ secrets.BUGSINK_SECRET_KEY }}",
+              "BUGSINK_USER_CREATION": "${{ secrets.BUGSINK_USER_CREATION }}"
+            }
+          standalone: true
