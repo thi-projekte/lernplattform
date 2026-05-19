@@ -37,9 +37,9 @@ services:
       - plausible-internal-network
       - nginx-proxy-manager
     depends_on:
-      plausible-database:
+      plausible_db:
         condition: service_healthy
-      plausible-events-database:
+      plausible_events_db:
         condition: service_healthy
     volumes:
       - plausible_data:/var/lib/plausible
