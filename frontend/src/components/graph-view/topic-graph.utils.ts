@@ -859,10 +859,11 @@ export const buildSkillTreeGraph = (
         target: associatedTopicId,
         sourceHandle,
         targetHandle,
-        type: 'straight',
+        type: 'smoothstep',
         style: {
           stroke: '#cbd5e1',
-          strokeWidth: 0.8,
+          strokeWidth: 0.6,
+          opacity: 0.6,
         },
       });
     });
