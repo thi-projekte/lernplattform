@@ -13,13 +13,11 @@ import type { TopicLearnProgressDto } from '../../../schemas/learn-progress.ts';
 interface ContentSidebarContentProps {
   selectedElement: AnyContentElementDto;
   topicLearnProgress?: TopicLearnProgressDto | null;
-  topicContentElementIds?: string[];
 }
 
 const ContentSidebarContent = ({
   selectedElement,
   topicLearnProgress,
-  topicContentElementIds = [],
 }: ContentSidebarContentProps) => {
   const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
@@ -29,20 +27,11 @@ const ContentSidebarContent = ({
 
   const { mutate: completeContentElement, isPending } = useCompleteContentElementMutation();
 
-  const currentIdsSet = new Set(topicContentElementIds);
-  const completedCurrentIds = (topicLearnProgress?.completedContentElementIds ?? []).filter((id) =>
-    currentIdsSet.has(id)
-  );
-  const isManuallyCompleted = topicLearnProgress?.status === 'COMPLETED_MANUALLY';
-  const isAutoCompleted =
-    currentIdsSet.size > 0 && completedCurrentIds.length >= currentIdsSet.size;
-
   const topicStarted = !!topicLearnProgress;
-  const topicCompleted = isManuallyCompleted || isAutoCompleted;
   const isElementCompleted = !!topicLearnProgress?.completedContentElementIds.includes(
     selectedElement.id
   );
-  const canMarkCompleted = topicStarted && !topicCompleted && !isElementCompleted;
+  const canMarkCompleted = topicStarted && !isElementCompleted;
 
   return (
     <>
