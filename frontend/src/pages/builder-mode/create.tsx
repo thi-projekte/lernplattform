@@ -14,6 +14,7 @@ import AssociatedTopicsStep from '../../components/topic/associated-topics-step.
 import ContentElementsDnd from '../../components/topic/content-elements-dnd.tsx';
 import { useCreateTopicMutation } from '../../api/topic.ts';
 import { useNavigate } from 'react-router';
+import { track } from '@plausible-analytics/tracker';
 
 const CreateTopicPage = () => {
   const { t } = useTranslation();
@@ -41,8 +42,8 @@ const CreateTopicPage = () => {
   ];
 
   const onComplete = async () => {
-    const result = await mutateAsync(topic);
-    console.log(result);
+    await mutateAsync(topic);
+    track('topicCreation', {props: {topicTitle: topic.title ?? ''}});
     navigate('/builder-mode');
   };
 
