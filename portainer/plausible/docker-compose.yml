@@ -2,6 +2,8 @@ services:
   plausible-database:
     image: postgres:18
     restart: always
+    networks:
+      - plausible-internal-network
     volumes:
       - analytics_db_data:/var/lib/postgresql
     environment:
@@ -13,6 +15,8 @@ services:
   plausible-events-database:
     image: clickhouse/clickhouse-server:24.3.3.102-alpine
     restart: always
+    networks:
+      - plausible-internal-network
     volumes:
       - analytics_event_data:/var/lib/clickhouse
       - analytics_event_logs:/var/log/clickhouse-server
@@ -28,6 +32,9 @@ services:
     image: ghcr.io/plausible/community-edition:v2.1.5
     restart: always
     command: sh -c "/entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
+    networks:
+      - plausible-internal-network
+      - nginx-proxy-manager
     depends_on:
       plausible-database:
         condition: service_healthy
@@ -45,6 +52,14 @@ services:
       - BASE_URL=${BASE_URL}
       - SECRET_KEY_BASE=${SECRET_KEY_BASE}
 
+networks:
+  plausible-internal-network:
+    driver: bridge
+    name: plausible-internal-network
+
+  nginx-proxy-manager:
+    external: true
+    name: nginx-proxy-manager
 
 volumes:
   analytics_db_data:
