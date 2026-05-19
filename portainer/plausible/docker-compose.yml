@@ -1,0 +1,53 @@
+services:
+  plausible-database:
+    image: postgres:18
+    restart: always
+    volumes:
+      - analytics_db_data:/var/lib/postgresql
+    environment:
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      start_period: 1m
+
+  plausible-events-database:
+    image: clickhouse/clickhouse-server:24.3.3.102-alpine
+    restart: always
+    volumes:
+      - analytics_event_data:/var/lib/clickhouse
+      - analytics_event_logs:/var/log/clickhouse-server
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    healthcheck:
+      test: ["CMD-SHELL", "wget --no-verbose --tries=1 -O - http://127.0.0.1:8123/ping || exit 1"]
+      start_period: 1m
+
+  plausible:
+    image: ghcr.io/plausible/community-edition:v2.1.5
+    restart: always
+    command: sh -c "/entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
+    depends_on:
+      plausible-database:
+        condition: service_healthy
+      plausible-events-database:
+        condition: service_healthy
+    volumes:
+      - plausible_data:/var/lib/plausible
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    environment:
+      - TMPDIR=/var/lib/plausible/tmp
+      # required: https://github.com/plausible/community-edition/wiki/configuration#required
+      - BASE_URL=${BASE_URL}
+      - SECRET_KEY_BASE=${SECRET_KEY_BASE}
+
+
+volumes:
+  analytics_db_data:
+  analytics_event_data:
+  analytics_event_logs:
+  plausible_data:
