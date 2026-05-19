@@ -115,8 +115,14 @@ const HomePage = () => {
       newNodes.forEach((node, index) => {
         const spread = index - (newNodes.length - 1) / 2;
         newNodePositions.set(node.id, {
-          x: parentPos.x + spread * nodeSpacing * (orientation === 'horizontal' ? 0 : 1) + horizontalOffset,
-          y: parentPos.y + spread * nodeSpacing * (orientation === 'horizontal' ? 1 : 0) + verticalOffset,
+          x:
+            parentPos.x +
+            spread * nodeSpacing * (orientation === 'horizontal' ? 0 : 1) +
+            horizontalOffset,
+          y:
+            parentPos.y +
+            spread * nodeSpacing * (orientation === 'horizontal' ? 1 : 0) +
+            verticalOffset,
         });
       });
     }
