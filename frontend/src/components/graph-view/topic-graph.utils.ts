@@ -861,9 +861,9 @@ export const buildSkillTreeGraph = (
         targetHandle,
         type: 'straight',
         style: {
-          stroke: '#cbd5e1',
-          strokeWidth: 0.6,
-          opacity: 0.6,
+          stroke: '#8592a5',
+          strokeWidth: 0.9,
+          opacity: 0.8,
         },
       });
     });
