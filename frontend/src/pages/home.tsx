@@ -130,7 +130,8 @@ const HomePage = () => {
             y: isVertical ? baseY + attempt * NODE_SLOT_H : baseY,
           };
           const free = !occupied.some(
-            (o) => Math.abs(o.x - candidate.x) < NODE_SLOT_W && Math.abs(o.y - candidate.y) < NODE_SLOT_H
+            (o) =>
+              Math.abs(o.x - candidate.x) < NODE_SLOT_W && Math.abs(o.y - candidate.y) < NODE_SLOT_H
           );
           if (free) {
             occupied.push(candidate);
