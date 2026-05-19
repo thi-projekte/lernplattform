@@ -20,6 +20,7 @@
     "@mantine/modals": "^9.1",
     "@mantine/notifications": "^9.1",
     "@mantine/tiptap": "^9.1",
+    "@plausible-analytics/tracker": "^0.4.5",
     "@tabler/icons-react": "^3.41.1",
     "@tanstack/react-query": "^5.96.0",
     "@tanstack/react-table": "^8.21.3",
