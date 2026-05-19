@@ -29,7 +29,7 @@ services:
       - nginx-proxy-manager
     environment:
       SECRET_KEY: ${BUGSINK_SECRET_KEY}
-      CREATE_SUPERUSER: ${BUGSINK_USER_CREATION}email:password
+      CREATE_SUPERUSER: ${BUGSINK_USER_CREATION}
       PORT: 8000
       DATABASE_URL: postgresql://bugsinkuser:${BUGSINK_DB_PASSWORD}@db:5432/bugsink
       BEHIND_HTTPS_PROXY: "true"
