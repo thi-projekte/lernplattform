@@ -1,0 +1,39 @@
+services:
+  db:
+    image: postgres:18
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: bugsinkuser
+      POSTGRES_PASSWORD: ${BUGSINK_DB_PASSWORD}
+      POSTGRES_DB: bugsink
+    volumes:
+      - db-data:/var/lib/postgresql
+    healthcheck:
+      test: pg_isready -h db
+      retries: 5
+      start_period: 10s
+      interval: 5s
+      timeout: 5s
+
+  web:
+    image: bugsink/bugsink:2
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+    environment:
+      SECRET_KEY: ${BUGSINK_SECRET_KEY}
+      CREATE_SUPERUSER: ${BUGSINK_USER_CREATION}email:password
+      PORT: 8000
+      DATABASE_URL: postgresql://bugsinkuser:${BUGSINK_DB_PASSWORD}@db:5432/bugsink
+      BEHIND_HTTPS_PROXY: "true"
+      USE_X_FORWARDED_HOST: "true"
+      BASE_URL: ${BUGSINK_BASE_URL}
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import requests; requests.get(\"http://localhost:8000/\").raise_for_status()'"]
+      interval: 5s
+      timeout: 20s
+      retries: 10
+
+volumes:
+  db-data:
