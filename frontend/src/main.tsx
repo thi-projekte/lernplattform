@@ -12,8 +12,6 @@ init({
   //captureOnLocalhost: true,
 });
 
-
-
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const kcContext = (window as any).kcContext as KcContext | undefined;
 

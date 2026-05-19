@@ -27,7 +27,7 @@ function App() {
   for (const role of roles) {
     track('role', { props: { role: role } });
   }
-  throw new Error('skdjhfldkshfksl')
+  throw new Error('skdjhfldkshfksl');
   return (
     <MantineProvider theme={theme}>
       <ModalsProvider>
