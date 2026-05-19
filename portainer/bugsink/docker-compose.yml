@@ -19,6 +19,7 @@ services:
 
   web:
     image: bugsink/bugsink:2
+    container_name: bugsink-web
     depends_on:
       db:
         condition: service_healthy
