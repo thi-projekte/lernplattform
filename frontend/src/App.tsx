@@ -19,7 +19,7 @@ const queryClient = new QueryClient();
 
 function App() {
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider theme={theme} forceColorScheme="light">
       <ModalsProvider>
         <QueryClientProvider client={queryClient}>
           <UserProvider>
