@@ -861,7 +861,7 @@ export const buildSkillTreeGraph = (
         targetHandle,
         type: 'smoothstep',
         style: {
-          stroke: '#cbd5e1',
+          stroke: '#8592a5',
           strokeWidth: 0.6,
           opacity: 0.6,
         },
