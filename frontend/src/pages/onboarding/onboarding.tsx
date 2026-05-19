@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Card, Select, Button, Title, Stack, Group } from '@mantine/core';
 import { useMakeUserBuilder, useMakeUserLearner } from '../../api/auth.ts';
 import type { AxiosResponse } from 'axios';
+import { track } from '@plausible-analytics/tracker';
 
 const Onboarding = () => {
   const { t } = useTranslation();
@@ -23,6 +24,7 @@ const Onboarding = () => {
     }
 
     if (result?.status === 201) {
+      track('successfulRoleOnboarding', {props: {role}});
       window.location.reload();
     }
   };

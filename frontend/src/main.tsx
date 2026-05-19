@@ -7,7 +7,7 @@ import { init } from '@plausible-analytics/tracker';
 init({
   domain: import.meta.env.VITE_ANALYTICS_URI,
   endpoint: `${import.meta.env.VITE_ANALYTICS_INSTANCE}/api/event`,
-  // captureOnLocalhost: true
+  captureOnLocalhost: true
 });
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
