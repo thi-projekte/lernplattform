@@ -29,6 +29,7 @@ services:
       start_period: 1m
 
   plausible:
+    container_name: plausible-analytics
     image: ghcr.io/plausible/community-edition:v2.1.5
     restart: always
     command: sh -c "/entrypoint.sh db createdb && /entrypoint.sh db migrate && /entrypoint.sh run"
