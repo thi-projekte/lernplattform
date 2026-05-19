@@ -1,0 +1,28 @@
+name: Deploy Plausible
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy-to-portainer:
+    name: Deploy to portainer
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+      - name: Deploy stack
+        uses: cssnr/portainer-stack-deploy-action@v1
+        with:
+          url: ${{ secrets.PORTAINER_URL }}
+          token: ${{ secrets.PORTAINER_TOKEN }}
+          endpoint: ${{ secrets.PORTAINER_ENDPOINT || '1' }}
+          name: plausible-analytics
+          file: portainer/full/docker-compose.yml
+          pull: 'true'
+          type: file
+          env_data: |
+            {
+              "BASE_URL": "${{ secrets.PLAUSIBLE_BASE_URL }}",
+              "SECRET_KEY_BASE": "${{ secrets.PLAUSIBLE_SECRET_KEY_BASE }}"
+            }
+          standalone: true
