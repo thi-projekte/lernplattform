@@ -101,29 +101,46 @@ const HomePage = () => {
       ? layoutNodes.filter((n) => !cached[n.id] && !currentNodePositions[n.id])
       : [];
 
-    // Place new nodes in a horizontal row below the node that was expanded,
-    // using its actual canvas position instead of the dagre-computed one.
+    // Place new nodes near the expanded node, avoiding overlap with existing nodes.
+    // Each node gets its desired spread position; if occupied, it shifts down (or
+    // right in horizontal mode) one step at a time until a free slot is found.
+    const NODE_SLOT_W = 300;
+    const NODE_SLOT_H = 160;
     const newNodePositions = new Map<string, { x: number; y: number }>();
     if (newNodes.length > 0 && lastExpandedNode) {
       const parentPos =
         currentNodePositions[lastExpandedNode.id] ??
         cached[lastExpandedNode.id] ??
         lastExpandedNode.position;
-      const nodeSpacing = 320;
-      const verticalOffset = orientation === 'horizontal' ? 0 : 280;
-      const horizontalOffset = orientation === 'horizontal' ? 320 : 0;
+      const isVertical = orientation !== 'horizontal';
+
+      const occupied: { x: number; y: number }[] = layoutNodes
+        .filter((n) => cached[n.id] || currentNodePositions[n.id])
+        .map((n) => (currentNodePositions[n.id] ?? cached[n.id])!);
+
       newNodes.forEach((node, index) => {
         const spread = index - (newNodes.length - 1) / 2;
-        newNodePositions.set(node.id, {
-          x:
-            parentPos.x +
-            spread * nodeSpacing * (orientation === 'horizontal' ? 0 : 1) +
-            horizontalOffset,
-          y:
-            parentPos.y +
-            spread * nodeSpacing * (orientation === 'horizontal' ? 1 : 0) +
-            verticalOffset,
-        });
+        const baseX = isVertical ? parentPos.x + spread * NODE_SLOT_W : parentPos.x + NODE_SLOT_W;
+        const baseY = isVertical ? parentPos.y + NODE_SLOT_H : parentPos.y + spread * NODE_SLOT_H;
+
+        let placed = false;
+        for (let attempt = 0; attempt < 20 && !placed; attempt++) {
+          const candidate = {
+            x: isVertical ? baseX : baseX + attempt * NODE_SLOT_W,
+            y: isVertical ? baseY + attempt * NODE_SLOT_H : baseY,
+          };
+          const free = !occupied.some(
+            (o) => Math.abs(o.x - candidate.x) < NODE_SLOT_W && Math.abs(o.y - candidate.y) < NODE_SLOT_H
+          );
+          if (free) {
+            occupied.push(candidate);
+            newNodePositions.set(node.id, candidate);
+            placed = true;
+          }
+        }
+        if (!placed) {
+          newNodePositions.set(node.id, { x: baseX, y: baseY });
+        }
       });
     }
 

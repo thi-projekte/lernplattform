@@ -859,7 +859,7 @@ export const buildSkillTreeGraph = (
         target: associatedTopicId,
         sourceHandle,
         targetHandle,
-        type: 'smoothstep',
+        type: 'straight',
         style: {
           stroke: '#cbd5e1',
           strokeWidth: 0.6,
