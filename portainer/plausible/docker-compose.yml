@@ -1,5 +1,5 @@
 services:
-  plausible-database:
+  plausible_db:
     image: postgres:18
     restart: always
     networks:
@@ -12,7 +12,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       start_period: 1m
 
-  plausible-events-database:
+  plausible_events_db:
     image: clickhouse/clickhouse-server:24.3.3.102-alpine
     restart: always
     networks:
