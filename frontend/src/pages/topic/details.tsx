@@ -29,12 +29,12 @@ const TopicDetailsPage = () => {
   const { topicId } = useParams<{ topicId: string }>();
   const { data: topic, isLoading } = useQueryTopic(topicId || '', false);
 
-  track('topicViews', {props: {topicId: topicId ?? ''}});
+  track('topicViews', { props: { topicId: topicId ?? '' } });
 
   if (topic) {
     const categoryNames: string[] = topic.categories.map((c: Category) => c.title);
     for (const category of categoryNames) {
-      track('topicCategory', {props: {category}});
+      track('topicCategory', { props: { category } });
     }
   }
 

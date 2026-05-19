@@ -24,7 +24,7 @@ const Onboarding = () => {
     }
 
     if (result?.status === 201) {
-      track('successfulRoleOnboarding', {props: {role}});
+      track('successfulRoleOnboarding', { props: { role } });
       window.location.reload();
     }
   };

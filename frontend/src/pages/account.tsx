@@ -54,7 +54,7 @@ const AccountPage = () => {
     if (!file) return;
     try {
       await uploadPicture(file);
-      track('profilePictureUploads', {props: {username: username ?? ''}});
+      track('profilePictureUploads', { props: { username: username ?? '' } });
     } catch {
       notifications.show({ color: 'red', message: t('common.serverError') });
     }

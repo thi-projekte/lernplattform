@@ -21,13 +21,11 @@ import { track } from '@plausible-analytics/tracker';
 const queryClient = new QueryClient();
 
 function App() {
-
-
   const resourceAccess: KeycloakResourceAccess = keycloak.tokenParsed
     ?.resource_access as KeycloakResourceAccess;
   const roles = resourceAccess['mynd']?.roles;
   for (const role of roles) {
-    track('role', {props: {role: role}});
+    track('role', { props: { role: role } });
   }
 
   return (

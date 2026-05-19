@@ -111,7 +111,7 @@ const CreateContentElementModal = ({
         file: values.file as unknown as File,
       });
 
-      track('contentElementsCreated', {props: {contentElementId: contentElement.id}});
+      track('contentElementsCreated', { props: { contentElementId: contentElement.id } });
 
       onAddContentElement(contentElement);
       form.reset();

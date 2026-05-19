@@ -43,7 +43,7 @@ const CreateTopicPage = () => {
 
   const onComplete = async () => {
     await mutateAsync(topic);
-    track('topicCreation', {props: {topicTitle: topic.title ?? ''}});
+    track('topicCreation', { props: { topicTitle: topic.title ?? '' } });
     navigate('/builder-mode');
   };
 
