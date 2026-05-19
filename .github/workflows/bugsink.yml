@@ -24,6 +24,7 @@ jobs:
             {
               "BUGSINK_DB_PASSWORD": "${{ secrets.BUGSINK_DB_PASSWORD }}",
               "BUGSINK_SECRET_KEY": "${{ secrets.BUGSINK_SECRET_KEY }}",
-              "BUGSINK_USER_CREATION": "${{ secrets.BUGSINK_USER_CREATION }}"
+              "BUGSINK_USER_CREATION": "${{ secrets.BUGSINK_USER_CREATION }}",
+              "BUGSINK_BASE_URL": "${{ secrets.BUGSINK_BASE_URL }}"
             }
           standalone: true
