@@ -1,5 +1,5 @@
 import { useParams } from 'react-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQueryTopic } from '../../api/topic.ts';
 import { type Node, type NodeMouseHandler } from '@xyflow/react';
 import { Layout } from '../../components/layout.tsx';
@@ -29,14 +29,20 @@ const TopicDetailsPage = () => {
   const { topicId } = useParams<{ topicId: string }>();
   const { data: topic, isLoading } = useQueryTopic(topicId || '', false);
 
-  track('topicViews', { props: { topicId: topicId ?? '' } });
-
-  if (topic) {
-    const categoryNames: string[] = topic.categories.map((c: Category) => c.title);
-    for (const category of categoryNames) {
-      track('topicCategory', { props: { category } });
+  useEffect(() => {
+    if (topicId) {
+      track('topicViews', { props: { topicId } });
     }
-  }
+  }, [topicId]);
+
+  useEffect(() => {
+    if (topic) {
+      const categoryNames: string[] = topic.categories.map((c: Category) => c.title);
+      for (const category of categoryNames) {
+        track('topicCategory', { props: { category } });
+      }
+    }
+  }, [topic]);
 
   const [selectedElement, setSelectedElement] = useState<
     AnyContentElementDto | Omit<Topic, 'relatedTopics'> | null

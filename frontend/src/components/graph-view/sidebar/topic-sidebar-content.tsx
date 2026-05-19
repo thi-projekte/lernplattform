@@ -109,11 +109,12 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
             fullWidth
             mt="xl"
             loading={isCompleting}
-            onClick={() =>
-              topicId &&
-              completeTopic(topicId) &&
-              track('topicLearnCompletedManually', { props: { topicId: topicId ?? '' } })
-            }
+            onClick={() => {
+              if (topicId) {
+                track('topicLearnCompletedManually', { props: { topicId: topicId ?? '' } });
+                completeTopic(topicId);
+              }
+            }}
           >
             {t('topic.actions.complete')}
           </Button>
@@ -124,11 +125,12 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           fullWidth
           mt="xl"
           loading={isStarting}
-          onClick={() =>
-            topicId &&
-            startTopic(topicId) &&
-            track('topicLearnStarted', { props: { topicId: topicId ?? '' } })
-          }
+          onClick={() => {
+            if (topicId) {
+              track('topicLearnStarted', { props: { topicId: topicId ?? '' } });
+              startTopic(topicId);
+            }
+          }}
         >
           {t('topic.actions.start')}
         </Button>
