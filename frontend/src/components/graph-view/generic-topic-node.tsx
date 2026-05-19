@@ -52,8 +52,7 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
   const isBuilderMode = data.kind === 'topic';
   const isForeign = isBuilderMode && data.isOwned === false;
   const learnProgress = data.payload?.learnProgress;
-  const isProgressCompleted =
-    !!learnProgress?.completed || learnProgress?.status === 'COMPLETED_MANUALLY';
+  const isProgressCompleted = !!learnProgress?.completed;
   const progressPercent = isProgressCompleted
     ? 100
     : Math.round((learnProgress?.percentageCompleted ?? 0) * 100);
