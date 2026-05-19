@@ -19,6 +19,7 @@ import {
   useCompleteTopicManuallyMutation,
   useStartTopicMutation,
 } from '../../../api/learn-progress.ts';
+import { track } from '@plausible-analytics/tracker';
 
 interface TopicSidebarContentProps {
   selectedElement: Topic;
@@ -108,7 +109,12 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
             fullWidth
             mt="xl"
             loading={isCompleting}
-            onClick={() => topicId && completeTopic(topicId)}
+            onClick={() => {
+              if (topicId) {
+                track('topicLearnCompletedManually', { props: { topicId: topicId ?? '' } });
+                completeTopic(topicId);
+              }
+            }}
           >
             {t('topic.actions.complete')}
           </Button>
@@ -119,7 +125,12 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           fullWidth
           mt="xl"
           loading={isStarting}
-          onClick={() => topicId && startTopic(topicId)}
+          onClick={() => {
+            if (topicId) {
+              track('topicLearnStarted', { props: { topicId: topicId ?? '' } });
+              startTopic(topicId);
+            }
+          }}
         >
           {t('topic.actions.start')}
         </Button>

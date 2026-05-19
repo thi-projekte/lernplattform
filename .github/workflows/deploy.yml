@@ -84,9 +84,9 @@ jobs:
             VITE_KEYCLOAK_REALM=master
             VITE_KEYCLOAK_CLIENT_ID=mynd
             VITE_MYND_BACKEND_URI=${{ secrets.MYND_BACKEND_URL }}
-  
-  
-
+            VITE_ANALYTICS_URI=${{ secrets.PLAUSIBLE_TRACKING_URL }}
+            VITE_ANALYTICS_INSTANCE=${{ secrets.PLAUSIBLE_BASE_URL }}
+            VITE_SENTRY_DSN=${{ secrets.SENTRY_DSN }}            
 
   build-and-push-keycloak:
     name: Build and push keycloak image to registry
