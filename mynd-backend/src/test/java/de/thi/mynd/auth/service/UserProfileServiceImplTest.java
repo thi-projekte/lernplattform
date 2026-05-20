@@ -43,7 +43,7 @@ class UserProfileServiceImplTest {
 
   @Test
   void uploadProfilePicture_createsNewProfile_whenNoneExists() throws MalformedURLException {
-    when(userProfileRepository.findByUsername("user1")).thenReturn(Optional.empty());
+    when(userProfileRepository.findByUsernameOptional("user1")).thenReturn(Optional.empty());
     when(objectStorageService.getPresignedUrlForFile(any()))
         .thenReturn(URI.create("https://example.com/pic").toURL());
 
@@ -59,7 +59,7 @@ class UserProfileServiceImplTest {
     existing.creatorId = "user1";
     existing.profilePictureKey = "old/key";
 
-    when(userProfileRepository.findByUsername("user1")).thenReturn(Optional.of(existing));
+    when(userProfileRepository.findByUsernameOptional("user1")).thenReturn(Optional.of(existing));
     when(objectStorageService.getPresignedUrlForFile(any()))
         .thenReturn(URI.create("https://example.com/pic").toURL());
 
@@ -106,7 +106,7 @@ class UserProfileServiceImplTest {
 
   @Test
   void uploadProfilePicture_storesObjectWithCorrectKey() throws MalformedURLException {
-    when(userProfileRepository.findByUsername("user1")).thenReturn(Optional.empty());
+    when(userProfileRepository.findByUsernameOptional("user1")).thenReturn(Optional.empty());
     when(objectStorageService.getPresignedUrlForFile(any()))
         .thenReturn(URI.create("https://example.com/pic").toURL());
 
@@ -121,7 +121,7 @@ class UserProfileServiceImplTest {
     profile.creatorId = "user1";
     profile.profilePictureKey = "user_profile/user1/profile-picture";
 
-    when(userProfileRepository.findByUsername("user1")).thenReturn(Optional.of(profile));
+    when(userProfileRepository.findByUsernameOptional("user1")).thenReturn(Optional.of(profile));
 
     userProfileService.deleteProfilePicture("user1");
 
@@ -131,7 +131,7 @@ class UserProfileServiceImplTest {
 
   @Test
   void deleteProfilePicture_throwsProfilePictureNotFoundException_whenNoProfile() {
-    when(userProfileRepository.findByUsername("user1")).thenReturn(Optional.empty());
+    when(userProfileRepository.findByUsernameOptional("user1")).thenReturn(Optional.empty());
 
     assertThrows(
         ProfilePictureNotFoundException.class,
@@ -144,7 +144,7 @@ class UserProfileServiceImplTest {
     profile.creatorId = "user1";
     profile.profilePictureKey = null;
 
-    when(userProfileRepository.findByUsername("user1")).thenReturn(Optional.of(profile));
+    when(userProfileRepository.findByUsernameOptional("user1")).thenReturn(Optional.of(profile));
 
     assertThrows(
         ProfilePictureNotFoundException.class,
@@ -157,7 +157,7 @@ class UserProfileServiceImplTest {
     profile.creatorId = "user1";
     profile.profilePictureKey = "user_profile/user1/profile-picture";
 
-    when(userProfileRepository.findByUsername("user1")).thenReturn(Optional.of(profile));
+    when(userProfileRepository.findByUsernameOptional("user1")).thenReturn(Optional.of(profile));
     when(objectStorageService.getPresignedUrlForFile("user_profile/user1/profile-picture"))
         .thenReturn(URI.create("https://example.com/pic").toURL());
 
@@ -168,7 +168,7 @@ class UserProfileServiceImplTest {
 
   @Test
   void getProfilePicture_throwsProfilePictureNotFoundException_whenNoProfile() {
-    when(userProfileRepository.findByUsername("user1")).thenReturn(Optional.empty());
+    when(userProfileRepository.findByUsernameOptional("user1")).thenReturn(Optional.empty());
 
     assertThrows(
         ProfilePictureNotFoundException.class, () -> userProfileService.getProfilePicture("user1"));
@@ -180,7 +180,7 @@ class UserProfileServiceImplTest {
     profile.creatorId = "user1";
     profile.profilePictureKey = null;
 
-    when(userProfileRepository.findByUsername("user1")).thenReturn(Optional.of(profile));
+    when(userProfileRepository.findByUsernameOptional("user1")).thenReturn(Optional.of(profile));
 
     assertThrows(
         ProfilePictureNotFoundException.class, () -> userProfileService.getProfilePicture("user1"));
