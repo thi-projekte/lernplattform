@@ -4,6 +4,5 @@ import jakarta.validation.constraints.NotBlank;
 
 public final class RedeemInvitationDto {
 
-    @NotBlank
-    public String secret;
+  @NotBlank public String secret;
 }
