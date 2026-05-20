@@ -17,9 +17,8 @@ import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import java.util.*;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 public final class InvitationServiceImpl implements InvitationService {
@@ -32,11 +31,9 @@ public final class InvitationServiceImpl implements InvitationService {
 
   @Inject SecurityIdentity securityIdentity;
 
-  @Inject
-  IdentityService identityService;
+  @Inject IdentityService identityService;
 
-  @Inject
-  GenericEmailService genericEmailService;
+  @Inject GenericEmailService genericEmailService;
 
   @ConfigProperty(name = "mynd.frontendUri")
   String frontendUri;
@@ -111,11 +108,16 @@ public final class InvitationServiceImpl implements InvitationService {
   }
 
   private void sendInvitationEmail(Invitation invitation) {
-    Map<String, String> parameters = Map.of(
-            "logoUrl", frontendUri+"/mynd-logo.png",
-            "invitationLink", String.format("%s/acceptInvite?id=%s&redemptionSecret=%s", frontendUri, invitation.id, invitation.redemptionSecret)
-    );
-    genericEmailService.sendEmail("invitation", "MYnd Invitation", List.of(invitation.mailSentTo), parameters);
+    Map<String, String> parameters =
+        Map.of(
+            "logoUrl",
+            frontendUri + "/mynd-logo.png",
+            "invitationLink",
+            String.format(
+                "%s/acceptInvite?id=%s&redemptionSecret=%s",
+                frontendUri, invitation.id, invitation.redemptionSecret));
+    genericEmailService.sendEmail(
+        "invitation", "MYnd Invitation", List.of(invitation.mailSentTo), parameters);
   }
 
   private Invitation getInvitationDefaultThrow(UUID id) {
@@ -129,9 +131,8 @@ public final class InvitationServiceImpl implements InvitationService {
   }
 
   private UserProfile getCurrentUsersProfile() {
-    return
-            userProfileService
-                    .getPersonalUserProfile()
-                    .orElse(userProfileService.createPersonalUserProfile());
+    return userProfileService
+        .getPersonalUserProfile()
+        .orElse(userProfileService.createPersonalUserProfile());
   }
 }
