@@ -18,19 +18,17 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @Authenticated
 public final class ImportResource {
 
-    @Inject
-    ImportService importService;
+  @Inject ImportService importService;
 
-    @POST
-    @Path("/import")
-    @RolesAllowed("builder")
-    @Operation(
-            summary = "Imports multiple topics",
-            description = "Imports multiple topics as JSON from a specific schema")
-    @APIResponse(responseCode = "400", description = "Invalid import data")
-    public Response importTopics(@Valid FullImportDto importDto) {
-        importService.importFull(importDto, false);
-        return Response.status(Response.Status.CREATED).build();
-    }
-
+  @POST
+  @Path("/import")
+  @RolesAllowed("builder")
+  @Operation(
+      summary = "Imports multiple topics",
+      description = "Imports multiple topics as JSON from a specific schema")
+  @APIResponse(responseCode = "400", description = "Invalid import data")
+  public Response importTopics(@Valid FullImportDto importDto) {
+    importService.importFull(importDto, false);
+    return Response.status(Response.Status.CREATED).build();
+  }
 }
