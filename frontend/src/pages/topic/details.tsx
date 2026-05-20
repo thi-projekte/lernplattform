@@ -109,8 +109,9 @@ const TopicDetailsPage = () => {
                       const iconComponent =
                         (el.icon ? CONTENT_ICONS[el.icon] : undefined) ??
                         CONTENT_ICONS[DEFAULT_ICON_BY_TYPE[el.type]];
-                      const isCompleted =
-                        !!learnProgress?.completedContentElementIds.includes(el.id);
+                      const isCompleted = !!learnProgress?.completedContentElementIds.includes(
+                        el.id
+                      );
                       const isSelected = selectedElement?.id === el.id;
 
                       return (
