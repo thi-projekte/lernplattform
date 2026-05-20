@@ -449,7 +449,6 @@ export const buildPersonalTopicsGraph = (
   });
 
   const seenEdges = new Set<string>();
-  const nodePositions = new Map(nodes.map((node) => [node.id, node.position]));
 
   topics.forEach((topic) => {
     topic.associatedTopics.forEach((associatedTopicId) => {
@@ -459,21 +458,10 @@ export const buildPersonalTopicsGraph = (
       if (seenEdges.has(edgeKey)) return;
       seenEdges.add(edgeKey);
 
-      const sourcePosition = nodePositions.get(topic.id);
-      const targetPosition = nodePositions.get(associatedTopicId);
-      const angle =
-        sourcePosition && targetPosition
-          ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
-          : 0;
-      const sourceHandle = getHandleForAngle(angle);
-      const targetHandle = getOppositeHandle(sourceHandle);
-
       edges.push({
         id: `personal-topic-edge-${edgeKey}`,
         source: topic.id,
         target: associatedTopicId,
-        sourceHandle,
-        targetHandle,
         type: 'straight',
         style: {
           stroke: '#cbd5e1',
@@ -489,6 +477,20 @@ export const buildPersonalTopicsGraph = (
     nodesep: 40,
     ranksep: 70,
   });
+
+  const finalPositions = new Map(layoutedNodes.map((node) => [node.id, node.position]));
+  edges.forEach((edge) => {
+    const sourcePosition = finalPositions.get(edge.source);
+    const targetPosition = finalPositions.get(edge.target);
+    if (!sourcePosition || !targetPosition) return;
+    const angle = Math.atan2(
+      targetPosition.y - sourcePosition.y,
+      targetPosition.x - sourcePosition.x
+    );
+    edge.sourceHandle = getHandleForAngle(angle);
+    edge.targetHandle = getOppositeHandle(edge.sourceHandle);
+  });
+
   return { nodes: layoutedNodes, edges };
 };
 
