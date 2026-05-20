@@ -66,12 +66,12 @@ public final class InvitationServiceImpl implements InvitationService {
 
     @Override
     public void sendInvitation(String email) {
-
+        // TODO: Implement this
     }
 
     @Override
     public void redeemInvitation(UUID id, String secret) {
-
+        // TODO: Implement this
     }
 
 
