@@ -55,7 +55,6 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
   const isProgressCompleted = !!learnProgress?.completed;
   const progressPercent = isProgressCompleted
     ? 100
-    : (learnProgress?.percentageCompleted ?? 0) * 100;
     : Math.round((learnProgress?.percentageCompleted ?? 0) * 100);
   const handleStyle: CSSProperties = isBuilderMode
     ? { opacity: 0 }
