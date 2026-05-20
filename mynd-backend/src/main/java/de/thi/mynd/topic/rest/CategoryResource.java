@@ -3,6 +3,7 @@ package de.thi.mynd.topic.rest;
 import de.thi.mynd.topic.entity.Category;
 import de.thi.mynd.topic.service.CategoryService;
 import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
@@ -17,7 +18,7 @@ import org.jboss.resteasy.reactive.RestQuery;
 
 @Path("/categories")
 @Produces(MediaType.APPLICATION_JSON)
-@Authenticated
+@RolesAllowed("authorizedUser")
 @Tag(name = "Categories")
 @SecurityRequirement(name = "keycloak")
 public final class CategoryResource {

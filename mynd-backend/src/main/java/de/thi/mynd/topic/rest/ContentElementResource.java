@@ -24,6 +24,7 @@ import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @Path("/content-elements")
+@RolesAllowed("authorizedUser")
 @Tag(name = "Content Elements")
 @SecurityRequirement(name = "keycloak")
 public final class ContentElementResource {

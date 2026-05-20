@@ -2,8 +2,8 @@ package de.thi.mynd.auth.rest;
 
 import de.thi.mynd.auth.dto.ProfilePictureDto;
 import de.thi.mynd.auth.service.UserProfileService;
-import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
@@ -15,6 +15,7 @@ import org.jboss.resteasy.reactive.RestForm;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @Path("/auth")
+@RolesAllowed("authorizedUser")
 @Tag(name = "Profile Picture")
 @SecurityRequirement(name = "keycloak")
 public final class ProfilePictureResource {
@@ -27,7 +28,6 @@ public final class ProfilePictureResource {
 
     @POST
     @Path("/profile-picture")
-    @Authenticated
     @Operation(
             summary = "Upload a profile picture",
             description = "Uploads a profile picture for the current user. Replaces any existing one.")
@@ -43,7 +43,6 @@ public final class ProfilePictureResource {
 
     @DELETE
     @Path("/profile-picture")
-    @Authenticated
     @Operation(
             summary = "Delete the profile picture",
             description = "Deletes the profile picture of the current user.")
@@ -57,7 +56,6 @@ public final class ProfilePictureResource {
 
     @GET
     @Path("/profile-picture/{username}")
-    @Authenticated
     @Operation(
             summary = "Get a profile picture",
             description = "Returns a presigned URL for the profile picture of the given user.")

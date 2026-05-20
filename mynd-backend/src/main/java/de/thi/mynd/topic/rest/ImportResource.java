@@ -2,7 +2,6 @@ package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.dto.importer.FullImportDto;
 import de.thi.mynd.topic.service.ImportService;
-import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -15,7 +14,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 @Path("/topics")
 @Tag(name = "Topics")
-@Authenticated
+@RolesAllowed("authorizedUser")
 public final class ImportResource {
 
   @Inject ImportService importService;

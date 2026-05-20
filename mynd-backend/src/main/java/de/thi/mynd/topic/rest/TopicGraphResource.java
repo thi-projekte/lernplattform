@@ -2,8 +2,8 @@ package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.service.TopicGraphService;
-import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
@@ -18,7 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestQuery;
 
 @Path("/topics/graph")
-@Authenticated
+@RolesAllowed("authorizedUser")
 @Tag(name = "Topics Graph")
 @SecurityRequirement(name = "keycloak")
 public final class TopicGraphResource {
