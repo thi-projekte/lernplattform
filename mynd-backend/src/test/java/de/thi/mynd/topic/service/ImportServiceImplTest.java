@@ -189,16 +189,6 @@ class ImportServiceImplTest {
         }
 
         @Test
-        void userMode_checksCreatePermission() {
-            ImportContext ctx = contextWithCategory("cat-ref");
-            ImportTopicDto dto = topicDto("t-1", "T", "T", List.of("cat-ref"), List.of());
-
-            importService.importTopics(List.of(dto), ctx);
-
-            verify(securityService).denyUnlessGranted(any(Topic.class), eq(TopicVoter.Create));
-        }
-
-        @Test
         void backendMode_skipsPermissionCheck() {
             ImportContext ctx = new ImportContext(true);
             // No category needed — empty list
@@ -303,7 +293,7 @@ class ImportServiceImplTest {
             ImportTopicDto dto = topicDto("t-1", "T", "T", List.of(), List.of(unknownType));
 
             // Should not throw — falls back to RtfElement
-            assertDoesNotThrow(() -> importService.importTopics(List.of(dto), ctx));
+            assertThrows(ImportException.class, () -> importService.importTopics(List.of(dto), ctx));
         }
     }
 

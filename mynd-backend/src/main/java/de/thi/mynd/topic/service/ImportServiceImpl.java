@@ -76,6 +76,7 @@ public final class ImportServiceImpl implements ImportService {
             categoryRepository.persist(category);
 
             mapping.put(model.getIdentifier(), category);
+            count++;
         }
 
         categoryRepository.flush();
@@ -195,7 +196,7 @@ public final class ImportServiceImpl implements ImportService {
             case "SPOTIFY_LINK"  -> SpotifyLinkElement.class;
             case "URI"           -> UriElement.class;
             case "YOUTUBE_LINK"  -> YouTubeLinkElement.class;
-            default              -> RtfElement.class;
+            default              -> throw new ImportException("Only Rtf, Spotify Links, Uris and YouTube Links are suppored");
         };
     }
 }
