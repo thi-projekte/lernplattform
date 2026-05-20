@@ -3,11 +3,8 @@ package de.thi.mynd.demoContent.loader;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.thi.mynd.demoContent.event.LoadedTopicsEvent;
-import de.thi.mynd.topic.entity.Topic;
-import de.thi.mynd.topic.entity.TopicAssociation;
 import de.thi.mynd.topic.repository.TopicAssociationRepository;
 import de.thi.mynd.topic.service.ImportService;
-import de.thi.mynd.topic.service.ImportServiceImpl;
 import io.quarkus.arc.lookup.LookupIfProperty;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -25,8 +22,7 @@ public final class TopicAssociationLoader {
 
   @Inject TopicAssociationRepository topicAssociationRepository;
 
-  @Inject
-  ImportService importService;
+  @Inject ImportService importService;
 
   @Inject ObjectMapper mapper;
 
@@ -39,7 +35,6 @@ public final class TopicAssociationLoader {
 
     Map<String, List<String>> associations = loadJson();
     importService.importAssociations(associations, event.ctx());
-
 
     Log.info("Successfully initialized topic associations");
   }

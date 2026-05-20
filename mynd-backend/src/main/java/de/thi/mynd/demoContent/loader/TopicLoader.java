@@ -27,8 +27,7 @@ public final class TopicLoader {
 
   @Inject TopicRepository topicRepository;
 
-  @Inject
-  ImportService importService;
+  @Inject ImportService importService;
 
   @Inject ObjectMapper mapper;
 
@@ -54,6 +53,4 @@ public final class TopicLoader {
       return mapper.readValue(is, new TypeReference<List<ImportTopicDto>>() {});
     }
   }
-
-
 }

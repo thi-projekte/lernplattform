@@ -104,7 +104,9 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     learnProgressTopic.status = LearnProgressStatus.COMPLETED_MANUALLY;
     learnProgressTopicRepository.persistAndFlush(learnProgressTopic);
 
-    Log.infof("User %s successfully completed learning topic %s manually", identity.getPrincipal().getName(), topicId);
+    Log.infof(
+        "User %s successfully completed learning topic %s manually",
+        identity.getPrincipal().getName(), topicId);
   }
 
   @Override
@@ -148,7 +150,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     }
 
     learnProgressTopicRepository.persistAndFlush(progressTopic);
-    Log.infof("User %s successfully completed learning content element %s", creatorId, contentElementId);
+    Log.infof(
+        "User %s successfully completed learning content element %s", creatorId, contentElementId);
   }
 
   @Override
@@ -163,7 +166,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     progressTopic.status = LearnProgressStatus.STARTED;
     progressTopic.contentElements.forEach((ce) -> ce.completed = false);
     learnProgressTopicRepository.persistAndFlush(progressTopic);
-    Log.infof("User %s reset topic %s learning progress", identity.getPrincipal().getName(), topicId);
+    Log.infof(
+        "User %s reset topic %s learning progress", identity.getPrincipal().getName(), topicId);
   }
 
   @Override
@@ -183,7 +187,9 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     progressContentElement.progressTopic.status = LearnProgressStatus.STARTED;
     learnProgressTopicRepository.persistAndFlush(progressContentElement.progressTopic);
 
-    Log.infof("User %s reset content element %s learning progress", identity.getPrincipal().getName(), contentElementId);
+    Log.infof(
+        "User %s reset content element %s learning progress",
+        identity.getPrincipal().getName(), contentElementId);
   }
 
   private Optional<LearnProgressTopic> getByTopicIdAndCurrentCreator(UUID topicId) {

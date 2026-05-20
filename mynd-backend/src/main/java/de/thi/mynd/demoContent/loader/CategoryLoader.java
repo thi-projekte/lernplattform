@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.thi.mynd.demoContent.event.LoadedCategoriesEvent;
 import de.thi.mynd.topic.dto.importer.ImportCategoryDto;
-import de.thi.mynd.topic.entity.Category;
 import de.thi.mynd.topic.importer.ImportContext;
 import de.thi.mynd.topic.repository.CategoryRepository;
 import de.thi.mynd.topic.service.ImportService;
@@ -18,9 +17,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @ApplicationScoped
 @LookupIfProperty(name = "mynd.loadDemoContent", stringValue = "true")
@@ -29,8 +26,7 @@ public final class CategoryLoader {
   @Inject Event<LoadedCategoriesEvent> categoriesEventEvent;
   @Inject CategoryRepository categoryRepository;
 
-  @Inject
-  ImportService importService;
+  @Inject ImportService importService;
 
   @Inject ObjectMapper mapper;
 
