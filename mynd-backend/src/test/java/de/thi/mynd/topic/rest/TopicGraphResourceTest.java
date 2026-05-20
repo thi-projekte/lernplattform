@@ -21,7 +21,7 @@ public class TopicGraphResourceTest {
   @InjectMock TopicGraphService topicGraphService;
 
   @Test
-  @TestSecurity(user = "alice", roles = "builder")
+  @TestSecurity(user = "alice", roles = {"builder", "authorizedUser"})
   public void testGetMostPopularNoCategories() {
     UUID topicId = UUID.randomUUID();
     GraphTopicDto dto = GraphTopicDto.builder().id(topicId).build();
@@ -40,7 +40,7 @@ public class TopicGraphResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice", roles = "builder")
+  @TestSecurity(user = "alice", roles = {"builder", "authorizedUser"})
   public void testGetMostPopularWithCategories() {
     UUID categoryId = UUID.randomUUID();
     List<UUID> categories = List.of(categoryId);
@@ -59,7 +59,7 @@ public class TopicGraphResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice", roles = "builder")
+  @TestSecurity(user = "alice", roles = {"builder", "authorizedUser"})
   public void testGetNeighbors() {
     UUID topicId = UUID.randomUUID();
 
@@ -76,7 +76,7 @@ public class TopicGraphResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice", roles = "builder")
+  @TestSecurity(user = "alice", roles = {"builder", "authorizedUser"})
   public void testGetMostPopularNoCategoriesPersonalFails() {
     UUID topicId = UUID.randomUUID();
 
@@ -94,7 +94,7 @@ public class TopicGraphResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice", roles = "builder")
+  @TestSecurity(user = "alice", roles = {"builder", "authorizedUser"})
   public void testGetMostPopularNoCategoriesPersonalSuccess() {
     UUID topicId = UUID.randomUUID();
     GraphTopicDto dto = GraphTopicDto.builder().id(topicId).build();
@@ -115,7 +115,7 @@ public class TopicGraphResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice", roles = "builder")
+  @TestSecurity(user = "alice", roles = {"builder", "authorizedUser"})
   public void testGetMostPopularWithCategoriesPersonalFails() {
     UUID categoryId = UUID.randomUUID();
     List<UUID> categories = List.of(categoryId);
@@ -135,7 +135,7 @@ public class TopicGraphResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice", roles = "builder")
+  @TestSecurity(user = "alice", roles = {"builder", "authorizedUser"})
   public void testGetMostPopularWithCategoriesPersonalSuccess() {
     UUID categoryId = UUID.randomUUID();
     List<UUID> categories = List.of(categoryId);
@@ -155,7 +155,7 @@ public class TopicGraphResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice", roles = "builder")
+  @TestSecurity(user = "alice", roles = {"builder", "authorizedUser"})
   public void testGetNeighborsPersonalFails() {
     UUID topicId = UUID.randomUUID();
 
@@ -173,7 +173,7 @@ public class TopicGraphResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice", roles = "builder")
+  @TestSecurity(user = "alice", roles = {"builder", "authorizedUser"})
   public void testGetNeighborsPersonalSuccess() {
     UUID topicId = UUID.randomUUID();
 

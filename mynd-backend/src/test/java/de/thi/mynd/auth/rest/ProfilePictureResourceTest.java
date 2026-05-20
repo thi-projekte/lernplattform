@@ -33,7 +33,7 @@ class ProfilePictureResourceTest {
   // ==========================================
 
   @Test
-  @TestSecurity(user = "user-jane")
+  @TestSecurity(user = "user-jane", roles = "authorizedUser")
   void shouldUploadProfilePictureSuccessfully() {
     // Arrange
     when(userProfileService.uploadProfilePicture(eq("user-jane"), any(FileUpload.class)))
@@ -69,7 +69,7 @@ class ProfilePictureResourceTest {
    whatever exception maps to those status codes in your ExceptionMappers.
   */
   @Test
-  @TestSecurity(user = "user-jane")
+  @TestSecurity(user = "user-jane", roles = "authorizedUser")
   void shouldReturnUnsupportedMediaTypeWhenServiceRejectsFileType() {
     // Arrange: Simulate your service throwing an exception mapped to 415 Unsupported Media Type
     when(userProfileService.uploadProfilePicture(eq("user-jane"), any(FileUpload.class)))
@@ -89,7 +89,7 @@ class ProfilePictureResourceTest {
   // ==========================================
 
   @Test
-  @TestSecurity(user = "user-jane")
+  @TestSecurity(user = "user-jane", roles = "authorizedUser")
   void shouldDeleteProfilePictureSuccessfully() {
     // Act & Assert
     given().when().delete("/auth/profile-picture").then().statusCode(200);
@@ -98,7 +98,7 @@ class ProfilePictureResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "user-jane")
+  @TestSecurity(user = "user-jane", roles = "authorizedUser")
   void shouldReturnNotFoundWhenDeletingNonExistentPicture() {
     // Arrange
     Mockito.doThrow(new WebApplicationException("No profile picture found", 404))
@@ -114,7 +114,7 @@ class ProfilePictureResourceTest {
   // ==========================================
 
   @Test
-  @TestSecurity(user = "any-authenticated-user")
+  @TestSecurity(user = "any-authenticated-user", roles = "authorizedUser")
   void shouldReturnProfilePictureDataForGivenUser() {
     // Arrange
     when(userProfileService.getProfilePicture("target-user")).thenReturn(mockDto);
@@ -131,7 +131,7 @@ class ProfilePictureResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "any-authenticated-user")
+  @TestSecurity(user = "any-authenticated-user", roles = "authorizedUser")
   void shouldReturnNotFoundWhenTargetUserHasNoPicture() {
     // Arrange
     when(userProfileService.getProfilePicture("ghost-user"))
