@@ -24,7 +24,9 @@ class ContentElementResourceTest {
   @InjectMock ContentElementService contentElementService;
 
   @Test
-  @TestSecurity(user = "test-builder", roles = {"builder","authorizedUser"})
+  @TestSecurity(
+      user = "test-builder",
+      roles = {"builder", "authorizedUser"})
   void testCreateContentElement() {
     // Arrange
     String jsonBody =
@@ -56,7 +58,9 @@ class ContentElementResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "test-builder", roles = {"builder", "authorizedUser"})
+  @TestSecurity(
+      user = "test-builder",
+      roles = {"builder", "authorizedUser"})
   void testDeleteContentElement() {
     // Arrange
     UUID elementId = UUID.randomUUID();

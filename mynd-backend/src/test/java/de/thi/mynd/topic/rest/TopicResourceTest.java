@@ -30,7 +30,9 @@ public class TopicResourceTest {
   @InjectMock TopicService topicService;
 
   @Test
-  @TestSecurity(user = "alice", roles = {"builder", "authorizedUser"})
+  @TestSecurity(
+      user = "alice",
+      roles = {"builder", "authorizedUser"})
   public void testGetPersonalTopicsSuccess() {
     ListTopicDto dto =
         ListTopicDto.builder()
@@ -63,7 +65,9 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "bob", roles = {"builder", "authorizedUser"})
+  @TestSecurity(
+      user = "bob",
+      roles = {"builder", "authorizedUser"})
   public void testPaginationParameters() {
     given()
         .queryParam("page", 5)
@@ -94,7 +98,9 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "builder-user", roles = {"builder", "authorizedUser"})
+  @TestSecurity(
+      user = "builder-user",
+      roles = {"builder", "authorizedUser"})
   public void testCreateTopicAsBuilderWithInvalidRequestBody() {
     TopicRequest request = new TopicRequest();
     request.title = "New Title";
@@ -113,7 +119,9 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "builder-user", roles = {"builder", "authorizedUser"})
+  @TestSecurity(
+      user = "builder-user",
+      roles = {"builder", "authorizedUser"})
   public void testCreateTopicAsBuilderWithValidRequestBody() {
 
     AssociatedContentElementRequest contentElementRequest = new AssociatedContentElementRequest();
@@ -165,7 +173,9 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "builder-user", roles = {"builder", "authorizedUser"})
+  @TestSecurity(
+      user = "builder-user",
+      roles = {"builder", "authorizedUser"})
   public void testUpdateTopicAsBuilderWithValidRequestBody()
       throws EntityInstanceNotFoundException {
 
@@ -221,7 +231,9 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "builder-user", roles = {"builder", "authorizedUser"})
+  @TestSecurity(
+      user = "builder-user",
+      roles = {"builder", "authorizedUser"})
   public void testDeleteTopic() {
 
     given().when().delete("/topics/" + UUID.randomUUID()).then().statusCode(200);
