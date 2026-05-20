@@ -13,6 +13,7 @@ import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.service.IdentityService;
 import de.thi.mynd.common.utility.TokenGenerator;
 import de.thi.mynd.notification.service.GenericEmailService;
+import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -71,7 +72,6 @@ public final class InvitationServiceImpl implements InvitationService {
   @Override
   @Transactional
   public void sendInvitation(String email) {
-    String creatorId = securityIdentity.getPrincipal().getName();
     UserProfile userProfile = getCurrentUsersProfile();
 
     if (userProfile.invitationsLeft == 0) {
@@ -82,10 +82,12 @@ public final class InvitationServiceImpl implements InvitationService {
     userProfileService.updateUserProfile(userProfile);
 
     Invitation invitation = new Invitation();
-    invitation.creatorId = "creatorId";
+    invitation.creatorId = userProfile.creatorId;
     invitation.mailSentTo = email;
     invitation.redemptionSecret = TokenGenerator.generateRandomString(64);
     invitationRepository.persistAndFlush(invitation);
+
+    Log.infof("Successfully created invitation for email %s as user %s", email, userProfile.creatorId);
 
     sendInvitationEmail(invitation);
   }
@@ -104,10 +106,16 @@ public final class InvitationServiceImpl implements InvitationService {
       throw new CannotAcceptInvitationException("Invalid redemption secret supplied");
     }
 
+    if (invitation.acceptedBy != null) {
+      throw new CannotAcceptInvitationException("This invitation expired. It has already been accepted");
+    }
+
     invitation.acceptedBy = creatorId;
     invitationRepository.persistAndFlush(invitation);
 
     identityService.addRolesToUser(creatorId, List.of("authorizedUser"));
+
+    Log.infof("Redeemed invitation for user %s", creatorId);
   }
 
   private void sendInvitationEmail(Invitation invitation) {

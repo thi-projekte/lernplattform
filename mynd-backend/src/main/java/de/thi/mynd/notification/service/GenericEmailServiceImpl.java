@@ -1,5 +1,6 @@
 package de.thi.mynd.notification.service;
 
+import io.quarkus.logging.Log;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.qute.Engine;
@@ -36,5 +37,7 @@ public final class GenericEmailServiceImpl implements GenericEmailService {
     mail.setHtml(renderedHtml);
 
     mailer.send(mail);
+
+      Log.infof("Sent email with subject %s to %s of template %s", subject, String.join(", ", recipients), templateName);
   }
 }
