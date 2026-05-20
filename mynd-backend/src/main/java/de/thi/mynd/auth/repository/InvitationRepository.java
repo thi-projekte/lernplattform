@@ -8,11 +8,12 @@ import jakarta.enterprise.context.ApplicationScoped;
 @ApplicationScoped
 public final class InvitationRepository extends MyndBaseRepository<Invitation> {
 
-    public PaginationDto<Invitation> getInvitationsForCreatorPaginated(String creatorId, int page, int pageSize) {
-        return buildPaginationFromQuery(find("creatorId = ?1", creatorId), page, pageSize);
-    }
+  public PaginationDto<Invitation> getInvitationsForCreatorPaginated(
+      String creatorId, int page, int pageSize) {
+    return buildPaginationFromQuery(find("creatorId = ?1", creatorId), page, pageSize);
+  }
 
-    public long getAmountInvitationsSubmittedPerUser(String username) {
-        return find("creatorId = ?1", username).count();
-    }
+  public long getAmountInvitationsSubmittedPerUser(String username) {
+    return find("creatorId = ?1", username).count();
+  }
 }

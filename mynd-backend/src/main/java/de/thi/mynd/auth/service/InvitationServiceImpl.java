@@ -11,68 +11,65 @@ import de.thi.mynd.common.processor.MappingRegistry;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
 public final class InvitationServiceImpl implements InvitationService {
 
-    @Inject
-    InvitationRepository invitationRepository;
+  @Inject InvitationRepository invitationRepository;
 
-    @Inject
-    MappingRegistry mappingRegistry;
+  @Inject MappingRegistry mappingRegistry;
 
-    @Inject UserProfileService userProfileService;
+  @Inject UserProfileService userProfileService;
 
-    @Inject
-    SecurityIdentity securityIdentity;
+  @Inject SecurityIdentity securityIdentity;
 
-    @Override
-    public InvitationDto getInvitation(UUID invitationId) {
-        Optional<Invitation> invitationOptional = invitationRepository.findByIdOptional(invitationId);
+  @Override
+  public InvitationDto getInvitation(UUID invitationId) {
+    Optional<Invitation> invitationOptional = invitationRepository.findByIdOptional(invitationId);
 
-        if (invitationOptional.isEmpty()) {
-            throw new EntityInstanceNotFoundException("There is no invitation with this ID");
-        }
-
-        return mappingRegistry.map(invitationOptional.get(), InvitationDto.class);
+    if (invitationOptional.isEmpty()) {
+      throw new EntityInstanceNotFoundException("There is no invitation with this ID");
     }
 
-    @Override
-    public PaginationDto<InvitationDto> getSentInvitations(int page, int pageSize) {
-        String creatorId = securityIdentity.getPrincipal().getName();
-        PaginationDto<Invitation> invitationPagination = invitationRepository.getInvitationsForCreatorPaginated(creatorId, page, pageSize);
+    return mappingRegistry.map(invitationOptional.get(), InvitationDto.class);
+  }
 
-        return PaginationDto.<InvitationDto>builder()
-                .results(mappingRegistry.mapList(invitationPagination.results, InvitationDto.class))
-                .totalPages(invitationPagination.totalPages)
-                .build();
-    }
+  @Override
+  public PaginationDto<InvitationDto> getSentInvitations(int page, int pageSize) {
+    String creatorId = securityIdentity.getPrincipal().getName();
+    PaginationDto<Invitation> invitationPagination =
+        invitationRepository.getInvitationsForCreatorPaginated(creatorId, page, pageSize);
 
-    @Override
-    public PersonalInvitationStatusDto getPersonalInvitationStatus() {
-        String creatorId = securityIdentity.getPrincipal().getName();
-        long alreadySent = invitationRepository.getAmountInvitationsSubmittedPerUser(creatorId);
-        UserProfile userProfile = userProfileService.getPersonalUserProfile().orElse(userProfileService.createPersonalUserProfile());
+    return PaginationDto.<InvitationDto>builder()
+        .results(mappingRegistry.mapList(invitationPagination.results, InvitationDto.class))
+        .totalPages(invitationPagination.totalPages)
+        .build();
+  }
 
-        return PersonalInvitationStatusDto.builder()
-                .invitationsLeft(userProfile.invitationsLeft)
-                .invitationsAlreadySent(alreadySent)
-                .build();
-    }
+  @Override
+  public PersonalInvitationStatusDto getPersonalInvitationStatus() {
+    String creatorId = securityIdentity.getPrincipal().getName();
+    long alreadySent = invitationRepository.getAmountInvitationsSubmittedPerUser(creatorId);
+    UserProfile userProfile =
+        userProfileService
+            .getPersonalUserProfile()
+            .orElse(userProfileService.createPersonalUserProfile());
 
-    @Override
-    public void sendInvitation(String email) {
-        // TODO: Implement this
-    }
+    return PersonalInvitationStatusDto.builder()
+        .invitationsLeft(userProfile.invitationsLeft)
+        .invitationsAlreadySent(alreadySent)
+        .build();
+  }
 
-    @Override
-    public void redeemInvitation(UUID id, String secret) {
-        // TODO: Implement this
-    }
+  @Override
+  public void sendInvitation(String email) {
+    // TODO: Implement this
+  }
 
-
+  @Override
+  public void redeemInvitation(UUID id, String secret) {
+    // TODO: Implement this
+  }
 }

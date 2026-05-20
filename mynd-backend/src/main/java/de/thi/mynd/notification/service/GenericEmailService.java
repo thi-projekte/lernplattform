@@ -5,5 +5,6 @@ import java.util.Map;
 
 public interface GenericEmailService {
 
-    void sendEmail(String template, String subject, List<String> recipients, Map<String, String> parameters);
+  void sendEmail(
+      String template, String subject, List<String> recipients, Map<String, String> parameters);
 }
