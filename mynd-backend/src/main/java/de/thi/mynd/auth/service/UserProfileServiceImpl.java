@@ -9,6 +9,7 @@ import de.thi.mynd.common.exception.FileTooLargeException;
 import de.thi.mynd.common.exception.InvalidFileTypeException;
 import de.thi.mynd.common.exception.NoFileProvidedException;
 import de.thi.mynd.common.service.ObjectStorageService;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -47,6 +48,8 @@ public final class UserProfileServiceImpl implements UserProfileService {
 
     userProfileRepository.persistAndFlush(profile);
 
+    Log.infof("User %s successfully uploaded new profile picture", username);
+
     return new ProfilePictureDto(objectStorageService.getPresignedUrlForFile(objectKey).toString());
   }
 
@@ -62,6 +65,9 @@ public final class UserProfileServiceImpl implements UserProfileService {
 
     objectStorageService.tryDeleteObject(profile.profilePictureKey);
     profile.profilePictureKey = null;
+    userProfileRepository.persistAndFlush(profile);
+
+    Log.infof("User % deleted his profile picture", username);
   }
 
   @Override
