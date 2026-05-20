@@ -316,11 +316,11 @@ class LearnProgressResourceTest {
     doNothing().when(learnProgressService).resetTopicLearningProgress(topicId);
 
     given()
-            .pathParam("topicId", topicId)
-            .when()
-            .post("/learn-progress/topics/{topicId}/reset")
-            .then()
-            .statusCode(200);
+        .pathParam("topicId", topicId)
+        .when()
+        .post("/learn-progress/topics/{topicId}/reset")
+        .then()
+        .statusCode(200);
 
     verify(learnProgressService).resetTopicLearningProgress(topicId);
   }
@@ -330,14 +330,15 @@ class LearnProgressResourceTest {
   void resetTopicLearningProgress_shouldReturn409_whenProgressNotStarted() {
     UUID topicId = UUID.randomUUID();
     doThrow(new TopicLearnProgressNotStartedException("This topic has not been started yet"))
-            .when(learnProgressService).resetTopicLearningProgress(topicId);
+        .when(learnProgressService)
+        .resetTopicLearningProgress(topicId);
 
     given()
-            .pathParam("topicId", topicId)
-            .when()
-            .post("/learn-progress/topics/{topicId}/reset")
-            .then()
-            .statusCode(409);
+        .pathParam("topicId", topicId)
+        .when()
+        .post("/learn-progress/topics/{topicId}/reset")
+        .then()
+        .statusCode(409);
   }
 
   @Test
@@ -345,11 +346,11 @@ class LearnProgressResourceTest {
     UUID topicId = UUID.randomUUID();
 
     given()
-            .pathParam("topicId", topicId)
-            .when()
-            .post("/learn-progress/topics/{topicId}/reset")
-            .then()
-            .statusCode(401);
+        .pathParam("topicId", topicId)
+        .when()
+        .post("/learn-progress/topics/{topicId}/reset")
+        .then()
+        .statusCode(401);
 
     verifyNoInteractions(learnProgressService);
   }
@@ -363,11 +364,11 @@ class LearnProgressResourceTest {
     doNothing().when(learnProgressService).resetContentElementLearningProgress(contentElementId);
 
     given()
-            .pathParam("contentElementId", contentElementId)
-            .when()
-            .post("/learn-progress/content-elements/{contentElementId}/reset")
-            .then()
-            .statusCode(200);
+        .pathParam("contentElementId", contentElementId)
+        .when()
+        .post("/learn-progress/content-elements/{contentElementId}/reset")
+        .then()
+        .statusCode(200);
 
     verify(learnProgressService).resetContentElementLearningProgress(contentElementId);
   }
@@ -376,15 +377,18 @@ class LearnProgressResourceTest {
   @TestSecurity(user = "user-123", roles = "user")
   void resetContentElementLearningProgress_shouldReturn409_whenProgressNotStarted() {
     UUID contentElementId = UUID.randomUUID();
-    doThrow(new TopicLearnProgressNotStartedException("This content element has not been started yet"))
-            .when(learnProgressService).resetContentElementLearningProgress(contentElementId);
+    doThrow(
+            new TopicLearnProgressNotStartedException(
+                "This content element has not been started yet"))
+        .when(learnProgressService)
+        .resetContentElementLearningProgress(contentElementId);
 
     given()
-            .pathParam("contentElementId", contentElementId)
-            .when()
-            .post("/learn-progress/content-elements/{contentElementId}/reset")
-            .then()
-            .statusCode(409);
+        .pathParam("contentElementId", contentElementId)
+        .when()
+        .post("/learn-progress/content-elements/{contentElementId}/reset")
+        .then()
+        .statusCode(409);
   }
 
   @Test
@@ -392,11 +396,11 @@ class LearnProgressResourceTest {
     UUID contentElementId = UUID.randomUUID();
 
     given()
-            .pathParam("contentElementId", contentElementId)
-            .when()
-            .post("/learn-progress/content-elements/{contentElementId}/reset")
-            .then()
-            .statusCode(401);
+        .pathParam("contentElementId", contentElementId)
+        .when()
+        .post("/learn-progress/content-elements/{contentElementId}/reset")
+        .then()
+        .statusCode(401);
 
     verifyNoInteractions(learnProgressService);
   }
