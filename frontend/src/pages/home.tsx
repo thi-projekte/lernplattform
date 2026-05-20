@@ -105,8 +105,8 @@ const HomePage = () => {
     // Place new nodes near the expanded node, avoiding overlap with existing nodes.
     // Each node gets its desired spread position; if occupied, it shifts down (or
     // right in horizontal mode) one step at a time until a free slot is found.
-    const NODE_SLOT_W = 300;
-    const NODE_SLOT_H = 160;
+    const NODE_SLOT_W = 180;
+    const NODE_SLOT_H = 120;
     const newNodePositions = new Map<string, { x: number; y: number }>();
     if (newNodes.length > 0 && lastExpandedNode) {
       const parentPos =

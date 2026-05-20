@@ -19,26 +19,38 @@ const TOPIC_NODE_VERTICAL_GAP = 56;
 // Wraps a set of nodes + edges with dagre to compute non-overlapping positions.
 // React Flow expects top-left corner coordinates; dagre returns node centers,
 // so we offset by half the node size.
+interface DagreConfig {
+  nodeWidth?: number;
+  nodeHeight?: number;
+  nodesep?: number;
+  ranksep?: number;
+}
+
 const applyDagreLayout = <T extends { id: string; position: { x: number; y: number } }>(
   nodes: T[],
   edges: Edge[],
-  orientation: SkillTreeOrientation
+  orientation: SkillTreeOrientation,
+  config: DagreConfig = {}
 ): T[] => {
   if (nodes.length === 0) return nodes;
+
+  const {
+    nodeWidth = SKILL_NODE_WIDTH,
+    nodeHeight = SKILL_NODE_HEIGHT,
+    nodesep = 40,
+    ranksep = 80,
+  } = config;
 
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
     rankdir: orientation === 'horizontal' ? 'LR' : 'TB',
-    nodesep: 40,
-    ranksep: 80,
+    nodesep,
+    ranksep,
   });
 
   nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, {
-      width: SKILL_NODE_WIDTH,
-      height: SKILL_NODE_HEIGHT,
-    });
+    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
   });
 
   edges.forEach((edge) => {
@@ -55,8 +67,8 @@ const applyDagreLayout = <T extends { id: string; position: { x: number; y: numb
     return {
       ...node,
       position: {
-        x: layouted.x - SKILL_NODE_WIDTH / 2,
-        y: layouted.y - SKILL_NODE_HEIGHT / 2,
+        x: layouted.x - nodeWidth / 2,
+        y: layouted.y - nodeHeight / 2,
       },
     };
   });
@@ -869,6 +881,11 @@ export const buildSkillTreeGraph = (
     });
   });
 
-  const layoutedNodes = applyDagreLayout(nodes, edges, orientation);
+  const layoutedNodes = applyDagreLayout(nodes, edges, orientation, {
+    nodeWidth: 160,
+    nodeHeight: 100,
+    nodesep: 40,
+    ranksep: 80,
+  });
   return { nodes: layoutedNodes, edges };
 };
