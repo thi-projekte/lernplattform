@@ -1,6 +1,8 @@
 package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.dto.importer.FullImportDto;
+import de.thi.mynd.topic.dto.importer.ImportTopicDto;
+import de.thi.mynd.topic.entity.RtfElement;
 import de.thi.mynd.topic.service.ImportService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
@@ -9,6 +11,9 @@ import io.restassured.http.ContentType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+
+import java.util.List;
+import java.util.Map;
 
 import static io.restassured.RestAssured.given;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,10 +29,27 @@ class ImportResourceTest {
 
     @BeforeEach
     void setUp() {
-        // Initialize a minimal DTO for testing
+        Map<String, Object> rtfElement = Map.of(
+                "type", "RTF",
+                "title", "Introduction Block",
+                "rtfText", "<p>Welcome to this training module text</p>"
+        );
+
+        // 2. Setup a valid single topic item structure
+        ImportTopicDto topicDto = new ImportTopicDto();
+        topicDto.setIdentifier("topic-1");
+        topicDto.setTitle("Deep Learning Fundamentals");
+        topicDto.setTeaser("An introductory guide to complex architectures.");
+        topicDto.setDuration(45);
+        topicDto.setCategories(List.of("Tech-Category-UUID-Or-Title", "Machine Learning"));
+        topicDto.setContentElements(List.of(rtfElement));
+
+        // 3. Build top level request schema wrapper
         validImportDto = new FullImportDto();
-        // Set required fields here if your FullImportDto has @NotNull/validation constraints
-        // e.g., validImportDto.setTopics(List.of(...));
+        validImportDto.setTopics(List.of(topicDto));
+        validImportDto.setAssociations(Map.of(
+                "topic-1", List.of("associated-topic-key-xyz")
+        ));
     }
 
     @Test
