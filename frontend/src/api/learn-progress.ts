@@ -16,6 +16,16 @@ const completeContentElement = async (contentElementId: string) =>
     validateStatus: (status) => status === 200,
   });
 
+const resetTopic = async (topicId: string) =>
+  await apiClient.post(`/learn-progress/topics/${topicId}/reset`, undefined, {
+    validateStatus: (status) => status === 200,
+  });
+
+const resetContentElement = async (contentElementId: string) =>
+  await apiClient.post(`/learn-progress/content-elements/${contentElementId}/reset`, undefined, {
+    validateStatus: (status) => status === 200,
+  });
+
 const invalidateProgressQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
   queryClient.invalidateQueries({ queryKey: ['topic'] });
   queryClient.invalidateQueries({ queryKey: ['personalTopics'] });
@@ -46,6 +56,24 @@ export const useCompleteContentElementMutation = () => {
   return useMutation({
     mutationKey: ['completeContentElement'],
     mutationFn: completeContentElement,
+    onSuccess: () => invalidateProgressQueries(queryClient),
+  });
+};
+
+export const useResetTopicMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['resetTopic'],
+    mutationFn: resetTopic,
+    onSuccess: () => invalidateProgressQueries(queryClient),
+  });
+};
+
+export const useResetContentElementMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['resetContentElement'],
+    mutationFn: resetContentElement,
     onSuccess: () => invalidateProgressQueries(queryClient),
   });
 };

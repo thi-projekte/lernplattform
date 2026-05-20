@@ -104,7 +104,8 @@
       "completeBlockedHint": "Markiere zuerst alle Inhalte als abgeschlossen.",
       "completed": "Abgeschlossen",
       "markContentElementCompleted": "Als abgeschlossen markieren",
-      "contentElementCompleted": "Abgeschlossen"
+      "contentElementCompleted": "Abgeschlossen",
+      "resetProgress": "Fortschritt zurücksetzen"
     },
     "progress": {
       "label": "Fortschritt"
