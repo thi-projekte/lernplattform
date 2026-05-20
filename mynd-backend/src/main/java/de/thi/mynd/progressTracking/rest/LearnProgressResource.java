@@ -102,4 +102,41 @@ public final class LearnProgressResource {
     learnProgressService.completeLearningContentElementAsCurrentUser(contentElementId);
     return Response.ok().build();
   }
+
+  @POST
+  @Path("/topics/{topicId}/reset")
+  @Operation(
+          summary = "Reset learning progress for a topic",
+          description =
+                  "Resets the learning progress of the authenticated user for the given topic. "
+                          + "The topic status is set back to STARTED and all content elements are marked as incomplete. "
+                          + "The topic must have been started first.")
+  @Parameter(name = "topicId", description = "ID of the topic to reset progress for", required = true)
+  @APIResponse(responseCode = "200", description = "Topic progress successfully reset")
+  @APIResponse(responseCode = "409", description = "The user has not started this topic yet")
+  @APIResponse(responseCode = "401", description = "User is not authenticated")
+  public Response resetTopicLearningProgress(UUID topicId) {
+    learnProgressService.resetTopicLearningProgress(topicId);
+    return Response.ok().build();
+  }
+
+  @POST
+  @Path("/content-elements/{contentElementId}/reset")
+  @Operation(
+          summary = "Reset learning progress for a content element",
+          description =
+                  "Resets the completion status of a single content element for the authenticated user "
+                          + "and sets the parent topic status back to STARTED. "
+                          + "The content element must have been started first.")
+  @Parameter(
+          name = "contentElementId",
+          description = "ID of the content element to reset progress for",
+          required = true)
+  @APIResponse(responseCode = "200", description = "Content element progress successfully reset")
+  @APIResponse(responseCode = "409", description = "This content element has not been started yet")
+  @APIResponse(responseCode = "401", description = "User is not authenticated")
+  public Response resetContentElementLearningProgress(UUID contentElementId) {
+    learnProgressService.resetContentElementLearningProgress(contentElementId);
+    return Response.ok().build();
+  }
 }
