@@ -10,6 +10,7 @@ import de.thi.mynd.progressTracking.repository.LearnProgressContentElementReposi
 import de.thi.mynd.progressTracking.repository.LearnProgressTopicRepository;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.service.ContentElementService;
+import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -84,6 +85,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     progressTopic.contentElementsToComplete = contentElementCount;
     progressTopic.status = LearnProgressStatus.STARTED;
 
+    Log.infof("User %s successfully started learning topic %s", creatorId, topicId);
+
     learnProgressTopicRepository.persistAndFlush(progressTopic);
   }
 
@@ -100,6 +103,10 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     LearnProgressTopic learnProgressTopic = learnProgressTopicOptional.get();
     learnProgressTopic.status = LearnProgressStatus.COMPLETED_MANUALLY;
     learnProgressTopicRepository.persistAndFlush(learnProgressTopic);
+
+    Log.infof(
+        "User %s successfully completed learning topic %s manually",
+        identity.getPrincipal().getName(), topicId);
   }
 
   @Override
@@ -123,11 +130,12 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     }
 
     LearnProgressTopic progressTopic = learnProgressTopicOptional.get();
+    String creatorId = identity.getPrincipal().getName();
 
     LearnProgressContentElementId id = new LearnProgressContentElementId();
     id.topicId = contentElement.topic.id;
     id.contentElementId = contentElementId;
-    id.creatorId = identity.getPrincipal().getName();
+    id.creatorId = creatorId;
 
     LearnProgressContentElement progressElement = new LearnProgressContentElement();
     progressElement.id = id;
@@ -138,9 +146,12 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
 
     if (progressTopic.contentElements.size() == progressTopic.contentElementsToComplete) {
       progressTopic.status = LearnProgressStatus.ALL_CONTENT_ELEMENTS_COMPLETED;
+      Log.infof("User %s successfully completed topic %s", creatorId, progressTopic.id.topicId);
     }
 
     learnProgressTopicRepository.persistAndFlush(progressTopic);
+    Log.infof(
+        "User %s successfully completed learning content element %s", creatorId, contentElementId);
   }
 
   @Override
@@ -155,6 +166,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     progressTopic.status = LearnProgressStatus.STARTED;
     progressTopic.contentElements.forEach((ce) -> ce.completed = false);
     learnProgressTopicRepository.persistAndFlush(progressTopic);
+    Log.infof(
+        "User %s reset topic %s learning progress", identity.getPrincipal().getName(), topicId);
   }
 
   @Override
@@ -173,6 +186,10 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
 
     progressContentElement.progressTopic.status = LearnProgressStatus.STARTED;
     learnProgressTopicRepository.persistAndFlush(progressContentElement.progressTopic);
+
+    Log.infof(
+        "User %s reset content element %s learning progress",
+        identity.getPrincipal().getName(), contentElementId);
   }
 
   private Optional<LearnProgressTopic> getByTopicIdAndCurrentCreator(UUID topicId) {
