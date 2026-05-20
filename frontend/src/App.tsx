@@ -28,7 +28,7 @@ function App() {
     track('role', { props: { role: role } });
   }
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider theme={theme} forceColorScheme="light">
       <ModalsProvider>
         <QueryClientProvider client={queryClient}>
           <UserProvider>
