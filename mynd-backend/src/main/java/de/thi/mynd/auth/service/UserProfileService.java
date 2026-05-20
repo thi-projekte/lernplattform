@@ -10,6 +10,8 @@ public interface UserProfileService {
 
   void deleteProfilePicture(String username);
 
+  void updateUserProfile(UserProfile userProfile);
+
   ProfilePictureDto getProfilePicture(String username);
 
   UserProfile createPersonalUserProfile();

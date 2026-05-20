@@ -76,6 +76,12 @@ public final class UserProfileServiceImpl implements UserProfileService {
   }
 
   @Override
+  @Transactional
+  public void updateUserProfile(UserProfile userProfile) {
+    userProfileRepository.persistAndFlush(userProfile);
+  }
+
+  @Override
   public ProfilePictureDto getProfilePicture(String username) {
     UserProfile profile =
         userProfileRepository

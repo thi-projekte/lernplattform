@@ -78,8 +78,11 @@ public final class InvitationServiceImpl implements InvitationService {
       throw new NoInvitationsLeftException("You do not have any invitations left");
     }
 
+    userProfile.invitationsLeft--;
+    userProfileService.updateUserProfile(userProfile);
+
     Invitation invitation = new Invitation();
-    invitation.creatorId = creatorId;
+    invitation.creatorId = "creatorId";
     invitation.mailSentTo = email;
     invitation.redemptionSecret = TokenGenerator.generateRandomString(64);
     invitationRepository.persistAndFlush(invitation);
