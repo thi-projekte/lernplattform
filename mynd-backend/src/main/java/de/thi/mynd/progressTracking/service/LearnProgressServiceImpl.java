@@ -143,6 +143,38 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     learnProgressTopicRepository.persistAndFlush(progressTopic);
   }
 
+  @Override
+  @Transactional
+  public void resetTopicLearningProgress(UUID topicId) {
+    Optional<LearnProgressTopic> topicOptional = getByTopicIdAndCurrentCreator(topicId);
+    if (topicOptional.isEmpty()) {
+      throw new TopicLearnProgressNotStartedException("This topic has not been started yet");
+    }
+
+    LearnProgressTopic progressTopic = topicOptional.get();
+    progressTopic.status = LearnProgressStatus.STARTED;
+    progressTopic.contentElements.forEach((ce) -> ce.completed = false);
+    learnProgressTopicRepository.persistAndFlush(progressTopic);
+  }
+
+  @Override
+  @Transactional
+  public void resetContentElementLearningProgress(UUID contentElementId) {
+    Optional<LearnProgressContentElement> contentElementOptional =
+        getByContentElementIdAndCurrentCreator(contentElementId);
+    if (contentElementOptional.isEmpty()) {
+      throw new TopicLearnProgressNotStartedException(
+          "This content element has not been started yet");
+    }
+
+    LearnProgressContentElement progressContentElement = contentElementOptional.get();
+    progressContentElement.completed = false;
+    learnProgressContentElementRepository.persistAndFlush(progressContentElement);
+
+    progressContentElement.progressTopic.status = LearnProgressStatus.STARTED;
+    learnProgressTopicRepository.persistAndFlush(progressContentElement.progressTopic);
+  }
+
   private Optional<LearnProgressTopic> getByTopicIdAndCurrentCreator(UUID topicId) {
     String creatorId = identity.getPrincipal().getName();
     LearnProgressTopicId id = new LearnProgressTopicId();
