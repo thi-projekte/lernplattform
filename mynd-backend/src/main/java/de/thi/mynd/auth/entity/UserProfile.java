@@ -9,4 +9,7 @@ public class UserProfile extends BaseEntityWithCreatorIdPk {
 
   @Column(nullable = true)
   public String profilePictureKey;
+
+  @Column(nullable = false, name = "invitations_left")
+  public int invitationsLeft;
 }
