@@ -16,7 +16,7 @@ export const ImportableContentElementTypeSchema = z.enum([
   'YOUTUBE_LINK',
   'SPOTIFY_LINK',
   'RTF',
-  'URI'
+  'URI',
 ]);
 
 export type ContentElementType = z.infer<typeof ContentElementTypeSchema>;
