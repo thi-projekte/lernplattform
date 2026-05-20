@@ -62,8 +62,12 @@ const HomePage = () => {
   const [expandedTopicIds, setExpandedTopicIds] = useState<string[]>(cachedExpandedTopicIds);
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(cachedSelectedTopicId);
 
-  useEffect(() => { cachedExpandedTopicIds = expandedTopicIds; }, [expandedTopicIds]);
-  useEffect(() => { cachedSelectedTopicId = selectedTopicId; }, [selectedTopicId]);
+  useEffect(() => {
+    cachedExpandedTopicIds = expandedTopicIds;
+  }, [expandedTopicIds]);
+  useEffect(() => {
+    cachedSelectedTopicId = selectedTopicId;
+  }, [selectedTopicId]);
   const [nodePositionsByOrientation, setNodePositionsByOrientation] = useState<
     Record<SkillTreeOrientation, TopicGraphNodePositions>
   >({
