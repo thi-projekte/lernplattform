@@ -13,6 +13,7 @@ import de.thi.mynd.common.exception.NoFileProvidedException;
 import de.thi.mynd.common.service.ObjectStorageService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -21,6 +22,7 @@ import java.util.Optional;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 @QuarkusTest
 class UserProfileServiceImplTest {
@@ -184,5 +186,83 @@ class UserProfileServiceImplTest {
 
     assertThrows(
         ProfilePictureNotFoundException.class, () -> userProfileService.getProfilePicture("user1"));
+  }
+
+  @Test
+  @TestSecurity(user = "user-abc-123")
+  void shouldCreatePersonalUserProfileSuccessfully() {
+    // Arrange: Simulate that no profile exists yet for this user
+    when(userProfileRepository.findByUsernameOptional("user-abc-123"))
+            .thenReturn(Optional.empty());
+
+    // Act
+    UserProfile result = userProfileService.createPersonalUserProfile();
+
+    // Assert
+    assertNotNull(result);
+    assertEquals("user-abc-123", result.creatorId);
+    assertNotNull(result.id);
+    assertEquals("user-abc-123", result.id.creatorId);
+
+    // Verify it was correctly flushed down to database storage layer
+    ArgumentCaptor<UserProfile> profileCaptor = ArgumentCaptor.forClass(UserProfile.class);
+    verify(userProfileRepository, times(1)).persistAndFlush(profileCaptor.capture());
+
+    UserProfile savedProfile = profileCaptor.getValue();
+    assertEquals("user-abc-123", savedProfile.creatorId);
+  }
+
+  @Test
+  @TestSecurity(user = "user-abc-123")
+  void shouldThrowExceptionWhenProfileAlreadyExists() {
+    // Arrange: Simulate an existing profile footprint
+    UserProfile existingProfile = new UserProfile();
+    when(userProfileRepository.findByUsernameOptional("user-abc-123"))
+            .thenReturn(Optional.of(existingProfile));
+
+    // Act & Assert
+    // (Replace with your exact package exception if it's custom)
+    Exception exception = assertThrows(RuntimeException.class, () -> {
+      userProfileService.createPersonalUserProfile();
+    });
+
+    assertTrue(exception.getMessage().contains("You already have a user profile"));
+
+    // Verify we blocked database corruption and never triggered persist mechanics
+    verify(userProfileRepository, never()).persistAndFlush(any(UserProfile.class));
+  }
+
+  @Test
+  @TestSecurity(user = "user-abc-123")
+  void shouldReturnProfileWhenGetPersonalUserProfileIsCalled() {
+    // Arrange
+    UserProfile expectedProfile = new UserProfile();
+    expectedProfile.creatorId = "user-abc-123";
+
+    when(userProfileRepository.findByUsernameOptional("user-abc-123"))
+            .thenReturn(Optional.of(expectedProfile));
+
+    // Act
+    Optional<UserProfile> result = userProfileService.getPersonalUserProfile();
+
+    // Assert
+    assertTrue(result.isPresent());
+    assertEquals("user-abc-123", result.get().creatorId);
+    verify(userProfileRepository, times(1)).findByUsernameOptional("user-abc-123");
+  }
+
+  @Test
+  @TestSecurity(user = "user-abc-123")
+  void shouldReturnEmptyOptionalWhenNoProfileExists() {
+    // Arrange
+    when(userProfileRepository.findByUsernameOptional("user-abc-123"))
+            .thenReturn(Optional.empty());
+
+    // Act
+    Optional<UserProfile> result = userProfileService.getPersonalUserProfile();
+
+    // Assert
+    assertTrue(result.isEmpty());
+    verify(userProfileRepository, times(1)).findByUsernameOptional("user-abc-123");
   }
 }
