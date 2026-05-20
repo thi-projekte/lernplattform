@@ -9,4 +9,9 @@ public final class AuthExceptionMapper {
   public Response mapProfilePictureNotFoundException(ProfilePictureNotFoundException e) {
     return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
   }
+
+  @ServerExceptionMapper
+  public Response mapNoInvitationsLeftException(NoInvitationsLeftException e) {
+    return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+  }
 }
