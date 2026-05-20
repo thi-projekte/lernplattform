@@ -10,7 +10,7 @@ import {
   Text,
   useMantineTheme,
 } from '@mantine/core';
-import { IconCheck, IconEye, IconLink } from '@tabler/icons-react';
+import { IconCheck, IconEye, IconEyeOff, IconLink } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import CategoryBadge from '../category-badge.tsx';
@@ -31,6 +31,7 @@ interface GenericTopicNodeData extends Record<string, unknown> {
   isOwned?: boolean;
   onExpand?: () => void;
   isExpanded?: boolean;
+  onHide?: () => void;
   payload?: {
     id?: string;
     categories?: NodeCategory[];
@@ -48,7 +49,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
 
   const categories = data.categories ?? data.payload?.categories ?? [];
   const singleCategoryColor = categories.length === 1 ? `#${categories[0].color}` : undefined;
-  const accentColor = singleCategoryColor ?? '#8b5cf6';
+  const accentColor = singleCategoryColor ?? '#08224da4';
   const categoryLabels = categories.slice(0, 3);
   const topicId = data.payload?.id;
 
@@ -210,6 +211,22 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
               </ActionIcon>
             </Group>
           ))}
+
+        {data.onHide && (
+          <Button
+            leftSection={<IconEyeOff size={14} />}
+            variant="subtle"
+            color="gray"
+            size="xs"
+            fullWidth
+            onClick={(event) => {
+              event.stopPropagation();
+              data.onHide?.();
+            }}
+          >
+            {t('journey.hideNode')}
+          </Button>
+        )}
 
         {data.onExpand && !data.isExpanded && (
           <Button

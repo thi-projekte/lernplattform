@@ -1,5 +1,6 @@
-import { Group, Paper, SegmentedControl, Stack, Text, Title, useMantineTheme } from '@mantine/core';
+import { Button, Group, Paper, SegmentedControl, Stack, Text, Title, useMantineTheme } from '@mantine/core';
 import type { Node, NodeMouseHandler } from '@xyflow/react';
+import { IconEye } from '@tabler/icons-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -29,6 +30,7 @@ const cachedDagrePositions: Record<SkillTreeOrientation, TopicGraphNodePositions
 };
 let cachedExpandedTopicIds: string[] = [];
 let cachedSelectedTopicId: string | null = null;
+let cachedHiddenTopicIds: string[] = [];
 
 const mergeGraphTopics = (current: GraphTopicDto[], incoming: GraphTopicDto[]) => {
   const merged = new Map<string, GraphTopicDto>();
@@ -68,6 +70,10 @@ const HomePage = () => {
   useEffect(() => {
     cachedSelectedTopicId = selectedTopicId;
   }, [selectedTopicId]);
+  const [hiddenTopicIds, setHiddenTopicIds] = useState<string[]>(cachedHiddenTopicIds);
+  useEffect(() => {
+    cachedHiddenTopicIds = hiddenTopicIds;
+  }, [hiddenTopicIds]);
   const [nodePositionsByOrientation, setNodePositionsByOrientation] = useState<
     Record<SkillTreeOrientation, TopicGraphNodePositions>
   >({
@@ -98,8 +104,20 @@ const HomePage = () => {
     [nodePositionsByOrientation, orientation]
   );
 
+  const visibleEdges = useMemo(
+    () =>
+      edges.filter(
+        (e) => !hiddenTopicIds.includes(e.source) && !hiddenTopicIds.includes(e.target)
+      ),
+    [edges, hiddenTopicIds]
+  );
+
   const nodes = useMemo(() => {
     const cached = cachedDagrePositions[orientation];
+    const filteredNodes =
+      hiddenTopicIds.length > 0
+        ? layoutNodes.filter((n) => !hiddenTopicIds.includes(n.data.payload.id))
+        : layoutNodes;
 
     // Identify nodes that have no position yet (arriving after an expansion click).
     // We only treat nodes as "new" when there are already pinned nodes on the canvas
@@ -108,7 +126,7 @@ const HomePage = () => {
       Object.keys(currentNodePositions).length > 0 || Object.keys(cached).length > 0;
 
     const newNodes = hasPinnedNodes
-      ? layoutNodes.filter((n) => !cached[n.id] && !currentNodePositions[n.id])
+      ? filteredNodes.filter((n) => !cached[n.id] && !currentNodePositions[n.id])
       : [];
 
     // Place new nodes near the expanded node, avoiding overlap with existing nodes.
@@ -124,7 +142,7 @@ const HomePage = () => {
         lastExpandedNode.position;
       const isVertical = orientation !== 'horizontal';
 
-      const occupied: { x: number; y: number }[] = layoutNodes
+      const occupied: { x: number; y: number }[] = filteredNodes
         .filter((n) => cached[n.id] || currentNodePositions[n.id])
         .map((n) => (currentNodePositions[n.id] ?? cached[n.id])!);
 
@@ -155,7 +173,7 @@ const HomePage = () => {
       });
     }
 
-    return layoutNodes.map((node) => {
+    return filteredNodes.map((node) => {
       const userPosition = currentNodePositions[node.id];
       const selected = node.data.payload.id === selectedTopicId;
       const topicId = node.data.payload.id;
@@ -169,7 +187,11 @@ const HomePage = () => {
         setSelectedTopicId(null);
       };
 
-      const enrichData = (base: typeof node.data) => ({ ...base, onExpand, isExpanded });
+      const onHide = () => {
+        setHiddenTopicIds((current) => [...current, topicId]);
+        setSelectedTopicId(null);
+      };
+      const enrichData = (base: typeof node.data) => ({ ...base, onExpand, isExpanded, onHide });
 
       if (userPosition)
         return { ...node, position: userPosition, selected, data: enrichData(node.data) };
@@ -183,6 +205,7 @@ const HomePage = () => {
   }, [
     currentNodePositions,
     expandedTopicIds,
+    hiddenTopicIds,
     lastExpandedNode,
     layoutNodes,
     orientation,
@@ -292,7 +315,7 @@ const HomePage = () => {
               <TopicGraphView
                 key={orientation}
                 nodes={nodes}
-                edges={edges}
+                edges={visibleEdges}
                 nodeTypes={nodeTypes}
                 onNodeClick={onNodeClick}
                 onNodeDragStop={(_event, node) => handleNodePositionChange(node.id, node.position)}
@@ -308,6 +331,27 @@ const HomePage = () => {
                 backgroundColor={theme.other.graphDots}
                 backgroundGap={20}
               />
+              {hiddenTopicIds.length > 0 && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    bottom: 12,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    zIndex: 10,
+                  }}
+                >
+                  <Button
+                    size="xs"
+                    variant="light"
+                    color="gray"
+                    leftSection={<IconEye size={14} />}
+                    onClick={() => setHiddenTopicIds([])}
+                  >
+                    {t('journey.showHidden', { count: hiddenTopicIds.length })}
+                  </Button>
+                </div>
+              )}
             </div>
           </Stack>
         </Paper>

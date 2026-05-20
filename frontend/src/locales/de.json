@@ -54,7 +54,9 @@
     "unknownCreator": "Unbekannter Ersteller",
     "loadingNeighbors": "Verbundene Themen werden geladen...",
     "openDetails": "Detailansicht öffnen",
-    "expandNeighbors": "Verbindungen laden"
+    "expandNeighbors": "Verbindungen laden",
+    "hideNode": "Node ausblenden",
+    "showHidden": "{{count}} ausgeblendet anzeigen"
   },
   "common": {
     "rowsPerPage": "Einträge pro Seite",
