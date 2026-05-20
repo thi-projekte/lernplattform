@@ -114,7 +114,6 @@ services:
       S3_SECRET: ${S3_SECRET_KEY}
       CORS_ORIGIN: ${CORS_ORIGIN}
       APP_VERSION: ${MYND_IMAGE_TAG}
-      QUARKUS_LOG_CATEGORY__SOFTWARE_AMAZON_AWSSDK__LEVEL: DEBUG
 
   mynd-frontend:
     container_name: mynd-lernplattform-frontend

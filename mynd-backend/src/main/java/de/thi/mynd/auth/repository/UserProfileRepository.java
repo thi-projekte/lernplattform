@@ -10,7 +10,7 @@ import java.util.Optional;
 public final class UserProfileRepository
     extends MyndBaseCustomIdRepository<UserProfile, CreatorIdKey> {
 
-  public Optional<UserProfile> findByUsername(String username) {
+  public Optional<UserProfile> findByUsernameOptional(String username) {
     return find("id.creatorId = ?1", username).singleResultOptional();
   }
 }

@@ -3,6 +3,7 @@ package de.thi.mynd.auth.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import de.thi.mynd.auth.entity.UserProfile;
 import de.thi.mynd.common.exception.UserNotFoundException;
 import de.thi.mynd.common.service.IdentityService;
 import io.quarkus.test.InjectMock;
@@ -10,6 +11,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.keycloak.representations.idm.UserRepresentation;
@@ -20,6 +22,8 @@ class AuthServiceImplTest {
   @Inject AuthServiceImpl authService;
 
   @InjectMock IdentityService identityService; // Wir mocken das Interface/Service
+
+  @InjectMock UserProfileService userProfileService;
 
   private static final String USERNAME = "test.user";
   private static final String CLIENT_UUID = "uuid-12345";
@@ -46,9 +50,14 @@ class AuthServiceImplTest {
   @Test
   void testMakeUserABuilder_AlreadyIsBuilder() throws UserNotFoundException {
     // Setup: User ist bereits Builder
+    UserProfile up = new UserProfile();
+    up.invitationsLeft = 0;
+    up.creatorId = USERNAME;
+
     UserRepresentation user = new UserRepresentation();
     user.setClientRoles(Map.of(CLIENT_UUID, List.of("builder")));
     when(identityService.getUser(USERNAME)).thenReturn(user);
+    when(userProfileService.getPersonalUserProfile()).thenReturn(Optional.of(up));
 
     authService.makeUserABuilder(USERNAME);
 
@@ -58,9 +67,13 @@ class AuthServiceImplTest {
   @Test
   void testMakeUserABuilder_Success() throws UserNotFoundException {
     // Setup: User ist noch KEIN Builder
+    UserProfile up = new UserProfile();
+    up.invitationsLeft = 0;
+    up.creatorId = USERNAME;
     UserRepresentation user = new UserRepresentation();
     user.setClientRoles(Map.of(CLIENT_UUID, List.of("viewer")));
     when(identityService.getUser(USERNAME)).thenReturn(user);
+    when(userProfileService.getPersonalUserProfile()).thenReturn(Optional.of(up));
 
     authService.makeUserABuilder(USERNAME);
 

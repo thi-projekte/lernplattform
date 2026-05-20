@@ -50,7 +50,7 @@ class ImportResourceTest {
   @Test
   @TestSecurity(
       user = "test-builder",
-      roles = {"builder"})
+      roles = {"builder", "authorizedUser"})
   void shouldImportTopicsSuccessfullyWhenUserHasBuilderRole() {
     // Act & Assert
     given()
@@ -68,7 +68,7 @@ class ImportResourceTest {
   @Test
   @TestSecurity(
       user = "test-user",
-      roles = {"user"}) // Authenticated, but wrong role
+      roles = {"user", "authorizedUser"}) // Authenticated, but wrong role
   void shouldReturnForbiddenWhenUserLacksBuilderRole() {
     given()
         .contentType(ContentType.JSON)
@@ -98,7 +98,7 @@ class ImportResourceTest {
   @Test
   @TestSecurity(
       user = "test-builder",
-      roles = {"builder"})
+      roles = {"builder", "authorizedUser"})
   void shouldReturnBadRequestWhenDtoIsInvalid() {
     // If your FullImportDto has Jakarta Validation rules (like @NotNull, @Size),
     // passing an empty/invalid object should be caught by @Valid
