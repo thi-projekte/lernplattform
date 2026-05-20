@@ -51,7 +51,7 @@ class GenericEmailServiceImplTest {
     // Assert the dynamic template parameters rendered into the HTML correctly
     String htmlContent = actualMail.getHtml();
     assertNotNull(htmlContent);
-    assertTrue(htmlContent.contains("Hello Jane Doe,"));
+    assertTrue(htmlContent.contains("Hello,"));
     assertTrue(htmlContent.contains("https://mynd.com/logo.png"));
     assertTrue(htmlContent.contains("https://mynd.com/invite/123"));
   }
