@@ -318,7 +318,7 @@ class LearnProgressResourceTest {
     given()
             .pathParam("topicId", topicId)
             .when()
-            .post("/topics/{topicId}/reset")
+            .post("/learn-progress/topics/{topicId}/reset")
             .then()
             .statusCode(200);
 
@@ -335,7 +335,7 @@ class LearnProgressResourceTest {
     given()
             .pathParam("topicId", topicId)
             .when()
-            .post("/topics/{topicId}/reset")
+            .post("/learn-progress/topics/{topicId}/reset")
             .then()
             .statusCode(409);
   }
@@ -347,7 +347,7 @@ class LearnProgressResourceTest {
     given()
             .pathParam("topicId", topicId)
             .when()
-            .post("/topics/{topicId}/reset")
+            .post("/learn-progress/topics/{topicId}/reset")
             .then()
             .statusCode(401);
 
@@ -365,7 +365,7 @@ class LearnProgressResourceTest {
     given()
             .pathParam("contentElementId", contentElementId)
             .when()
-            .post("/content-elements/{contentElementId}/reset")
+            .post("/learn-progress/content-elements/{contentElementId}/reset")
             .then()
             .statusCode(200);
 
@@ -382,7 +382,7 @@ class LearnProgressResourceTest {
     given()
             .pathParam("contentElementId", contentElementId)
             .when()
-            .post("/content-elements/{contentElementId}/reset")
+            .post("/learn-progress/content-elements/{contentElementId}/reset")
             .then()
             .statusCode(409);
   }
@@ -394,7 +394,7 @@ class LearnProgressResourceTest {
     given()
             .pathParam("contentElementId", contentElementId)
             .when()
-            .post("/content-elements/{contentElementId}/reset")
+            .post("/learn-progress/content-elements/{contentElementId}/reset")
             .then()
             .statusCode(401);
 
