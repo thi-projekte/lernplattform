@@ -483,7 +483,12 @@ export const buildPersonalTopicsGraph = (
     });
   });
 
-  const layoutedNodes = applyDagreLayout(nodes, edges, 'vertical');
+  const layoutedNodes = applyDagreLayout(nodes, edges, 'vertical', {
+    nodeWidth: 160,
+    nodeHeight: 90,
+    nodesep: 40,
+    ranksep: 70,
+  });
   return { nodes: layoutedNodes, edges };
 };
 

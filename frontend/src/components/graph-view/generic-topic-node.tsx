@@ -49,7 +49,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
 
   const categories = data.categories ?? data.payload?.categories ?? [];
   const singleCategoryColor = categories.length === 1 ? `#${categories[0].color}` : undefined;
-  const accentColor = singleCategoryColor ?? '#08224da4';
+  const accentColor = singleCategoryColor ?? '#00aaff';
   const categoryLabels = categories.slice(0, 3);
   const topicId = data.payload?.id;
 
@@ -87,6 +87,8 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
     </>
   );
 
+  const collapsedColor = isProgressCompleted ? '#000000' : accentColor;
+
   if (!selected) {
     return (
       <div
@@ -96,6 +98,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
           alignItems: 'center',
           gap: 8,
           cursor: 'pointer',
+          opacity: isProgressCompleted ? 0.55 : 1,
         }}
       >
         <div
@@ -103,15 +106,17 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
             width: 32,
             height: 32,
             borderRadius: '50%',
-            background: accentColor,
-            boxShadow: `0 0 0 18px color-mix(in srgb, ${accentColor} 14%, transparent), 0 2px 6px rgba(0,0,0,0.1)`,
+            background: collapsedColor,
+            boxShadow: isProgressCompleted
+              ? `0 0 0 10px color-mix(in srgb, #94a3b8 8%, transparent), 0 1px 3px rgba(0,0,0,0.08)`
+              : `0 0 0 18px color-mix(in srgb, ${accentColor} 14%, transparent), 0 2px 6px rgba(0,0,0,0.1)`,
             position: 'relative',
           }}
         >
           {handles}
         </div>
         <Text
-          fw={600}
+          fw={isProgressCompleted ? 400 : 600}
           size="sm"
           ta="center"
           lineClamp={2}
@@ -212,22 +217,6 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
             </Group>
           ))}
 
-        {data.onHide && (
-          <Button
-            leftSection={<IconEyeOff size={14} />}
-            variant="subtle"
-            color="gray"
-            size="xs"
-            fullWidth
-            onClick={(event) => {
-              event.stopPropagation();
-              data.onHide?.();
-            }}
-          >
-            {t('journey.hideNode')}
-          </Button>
-        )}
-
         {data.onExpand && !data.isExpanded && (
           <Button
             leftSection={<IconLink size={14} />}
@@ -241,6 +230,22 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
             }}
           >
             {t('journey.expandNeighbors')}
+          </Button>
+        )}
+
+        {data.onHide && (
+          <Button
+            leftSection={<IconEyeOff size={14} />}
+            variant="subtle"
+            color="gray"
+            size="xs"
+            fullWidth
+            onClick={(event) => {
+              event.stopPropagation();
+              data.onHide?.();
+            }}
+          >
+            {t('journey.hideNode')}
           </Button>
         )}
 
