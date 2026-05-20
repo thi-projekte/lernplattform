@@ -7,6 +7,7 @@ import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.entity.TopicAssociation;
 import de.thi.mynd.topic.repository.TopicAssociationRepository;
 import de.thi.mynd.topic.service.ImportService;
+import de.thi.mynd.topic.service.ImportServiceImpl;
 import io.quarkus.arc.lookup.LookupIfProperty;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -37,8 +38,12 @@ public final class TopicAssociationLoader {
     }
 
     Map<String, List<String>> associations = loadJson();
-    importService.setBackendMode(true);
-    importService.importTopicAssociations(associations);
+    if (importService instanceof ImportServiceImpl impl) {
+      impl.setTopicMapping(event.mapping());
+      importService.setBackendMode(true);
+      importService.importTopicAssociations(associations);
+    }
+
 
     Log.info("Successfully initialized topic associations");
   }

@@ -10,7 +10,7 @@ import java.util.Map;
 
 public interface ImportService {
 
-    void setBackendMode(Boolean backendMode);
+    void setBackendMode(Boolean mode);
 
     void importTopicJson(FullImportDto importDto);
 

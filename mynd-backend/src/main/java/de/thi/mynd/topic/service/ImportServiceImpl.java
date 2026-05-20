@@ -45,7 +45,6 @@ public final class ImportServiceImpl implements ImportService {
     private Map<String, Topic> topicMapping;
 
 
-    @Override
     public void setBackendMode(Boolean backendMode) {
         this.isBackendMode = backendMode;
     }
