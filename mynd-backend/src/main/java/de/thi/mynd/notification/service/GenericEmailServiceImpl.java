@@ -1,7 +1,7 @@
 package de.thi.mynd.notification.service;
 
 import io.quarkus.mailer.Mail;
-import io.quarkus.mailer.reactive.ReactiveMailer;
+import io.quarkus.mailer.Mailer;
 import io.quarkus.qute.Engine;
 import io.quarkus.qute.Template;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -14,7 +14,8 @@ public final class GenericEmailServiceImpl implements GenericEmailService {
 
   @Inject Engine quteEngine;
 
-  @Inject ReactiveMailer mailer;
+  @Inject
+  Mailer mailer;
 
   @Override
   public void sendEmail(
