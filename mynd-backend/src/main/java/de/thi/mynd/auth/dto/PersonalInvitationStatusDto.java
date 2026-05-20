@@ -5,5 +5,5 @@ import lombok.Builder;
 @Builder
 public final class PersonalInvitationStatusDto {
     public int invitationsLeft;
-    public int invitationsAlreadySent;
+    public long invitationsAlreadySent;
 }

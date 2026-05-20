@@ -13,7 +13,7 @@ public interface InvitationService {
 
   PersonalInvitationStatusDto getPersonalInvitationStatus();
 
-  void redeemInvitation(UUID id, String secret);
-
   void sendInvitation(String email);
+
+  void redeemInvitation(UUID id, String secret);
 }
