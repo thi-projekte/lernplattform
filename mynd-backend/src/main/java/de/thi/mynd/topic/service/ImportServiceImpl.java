@@ -164,9 +164,12 @@ public final class ImportServiceImpl implements ImportService {
       UUID id = UUID.fromString(key);
       return categoryRepository
           .findByIdOptional(id)
-          .orElseThrow(() -> new ImportException("Category not found: " + key));
+          .orElseThrow(() -> new ImportException("Category not found by ID: " + key));
     } catch (IllegalArgumentException e) {
-      throw new ImportException("Invalid category key: " + key);
+      // If it's not a UUID, treat the key as a title instead
+      return categoryRepository
+          .findByTitleOptional(key)
+          .orElseThrow(() -> new ImportException("Category not found by ID or title: " + key));
     }
   }
 
@@ -178,9 +181,12 @@ public final class ImportServiceImpl implements ImportService {
       UUID id = UUID.fromString(key);
       return topicRepository
           .findByIdOptional(id)
-          .orElseThrow(() -> new ImportException("Topic not found: " + key));
+          .orElseThrow(() -> new ImportException("Topic not found by ID: " + key));
     } catch (IllegalArgumentException e) {
-      throw new ImportException("Invalid topic key: " + key);
+      // If it's not a UUID, treat the key as a title instead
+      return topicRepository
+          .findByTitleOptional(key)
+          .orElseThrow(() -> new ImportException("Topic not found by ID or title: " + key));
     }
   }
 
