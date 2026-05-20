@@ -1,12 +1,15 @@
 package de.thi.mynd.topic.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import de.thi.mynd.common.security.SecurityService;
-import de.thi.mynd.topic.dto.loader.FullImportDto;
-import de.thi.mynd.topic.dto.loader.ImportCategoryDto;
-import de.thi.mynd.topic.dto.loader.ImportTopicDto;
-import de.thi.mynd.topic.entity.Topic;
-import de.thi.mynd.topic.entity.TopicAssociation;
+import de.thi.mynd.topic.dto.importer.FullImportDto;
+import de.thi.mynd.topic.dto.importer.ImportCategoryDto;
+import de.thi.mynd.topic.dto.importer.ImportTopicDto;
+import de.thi.mynd.topic.entity.*;
 import de.thi.mynd.topic.exception.ImportException;
+import de.thi.mynd.topic.importer.ImportContext;
+import de.thi.mynd.topic.repository.CategoryRepository;
+import de.thi.mynd.topic.repository.ContentElementRepository;
 import de.thi.mynd.topic.repository.TopicAssociationRepository;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.security.TopicVoter;
@@ -15,81 +18,125 @@ import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import lombok.Getter;
-import lombok.Setter;
 
-import java.io.InputStream;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @ApplicationScoped
 public final class ImportServiceImpl implements ImportService {
 
-    @Inject
-    TopicRepository topicRepository;
+    @Inject TopicRepository topicRepository;
+    @Inject CategoryRepository categoryRepository;
+    @Inject TopicAssociationRepository topicAssociationRepository;
+    @Inject ContentElementRepository contentElementRepository;
+    @Inject SecurityIdentity identity;
+    @Inject SecurityService securityService;
+    @Inject ObjectMapper mapper;
 
-    @Inject
-    TopicAssociationRepository topicAssociationRepository;
-
-    @Inject
-    SecurityIdentity identity;
-
-    @Inject
-    SecurityService securityService;
-
-    private Boolean isBackendMode;
-
-    @Setter
-    private Map<String, Topic> topicMapping;
-
-
-    public void setBackendMode(Boolean backendMode) {
-        this.isBackendMode = backendMode;
-    }
 
     @Override
-    public void importTopicJson(FullImportDto importDto) {
-
-    }
-
-    @Override
-    public void importTopicJsonFromRequest(InputStream inputStream) {
-
-    }
-
-    @Override
-    public void importCategories(List<ImportCategoryDto> categoryDtos) {
-
-    }
-
-    @Override
-    public void importTopics(List<ImportTopicDto> topicDtos) {
-
+    @Transactional
+    public void importFull(FullImportDto dto, boolean backendMode) {
+        ImportContext ctx = new ImportContext(backendMode);
+        ctx = doImportTopics(dto.getTopics(), ctx);
+        doImportAssociations(dto.getAssociations(), ctx);
     }
 
     @Override
     @Transactional
-    public void importTopicAssociations(Map<String, List<String>> topicAssociations) {
-        checkBackendMode();
-        int count = 0;
+    public ImportContext importCategories(List<ImportCategoryDto> dtos, ImportContext ctx) {
+        return doImportCategories(dtos, ctx);
+    }
 
-        String creatorId = "admin";
-        if (!isBackendMode) {
-            creatorId = identity.getPrincipal().getName();
+    @Override
+    @Transactional
+    public ImportContext importTopics(List<ImportTopicDto> dtos, ImportContext ctx) {
+        return doImportTopics(dtos, ctx);
+    }
+
+    @Override
+    @Transactional
+    public void importAssociations(Map<String, List<String>> associations, ImportContext ctx) {
+        doImportAssociations(associations, ctx);
+    }
+
+
+    private ImportContext doImportCategories(List<ImportCategoryDto> dtos, ImportContext ctx) {
+        int count = 0;
+        Map<String, Category> mapping = new HashMap<>();
+        String creatorId = resolveCreatorId(ctx);
+
+        for (ImportCategoryDto model : dtos) {
+            Category category = new Category();
+            category.creatorId = creatorId;
+            category.title = model.getTitle();
+            category.color = model.getColor();
+
+            // TODO: Add checks here later.
+
+            categoryRepository.persist(category);
+
+            mapping.put(model.getIdentifier(), category);
         }
 
-        for (var entry : topicAssociations.entrySet()) {
+        categoryRepository.flush();
 
-            Topic owningTopic = getTopicFromMappingOrDatabase(entry.getKey());
-            if (!isBackendMode) {
+        Log.infof("The user %s successfully imported %d categories", creatorId, count);
+
+        return ctx.withCategoryMapping(mapping);
+    }
+
+    private ImportContext doImportTopics(List<ImportTopicDto> dtos, ImportContext ctx) {
+        int count = 0;
+        Map<String, Topic> mapping = new HashMap<>();
+        String creatorId = resolveCreatorId(ctx);
+
+        for (ImportTopicDto dto : dtos) {
+            Topic topic = new Topic();
+            topic.title = dto.getTitle();
+            topic.teaser = dto.getTeaser();
+            topic.creatorId = creatorId;
+            topic.estimatedLearningDuration = dto.getDuration();
+            topic.categories = dto.getCategories().stream()
+                    .map(key -> resolveCategory(key, ctx))
+                    .toList();
+
+            if (!ctx.isBackendMode()) {
+                securityService.denyUnlessGranted(topic, TopicVoter.Create);
+            }
+
+            topicRepository.persist(topic);
+            mapping.put(dto.getIdentifier(), topic);
+
+            dto.getContentElements().stream()
+                    .map(this::mapToContentElement)
+                    .forEach(ce -> {
+                        ce.topic = topic;
+                        contentElementRepository.persist(ce);
+                    });
+
+            count++;
+        }
+
+        topicRepository.flush();
+
+        Log.infof("The user %s successfully imported %d topics", creatorId, count);
+        return ctx.withTopicMapping(mapping);
+    }
+
+    private void doImportAssociations(Map<String, List<String>> associations, ImportContext ctx) {
+        int count = 0;
+        String creatorId = resolveCreatorId(ctx);
+
+        for (var entry : associations.entrySet()) {
+            Topic owningTopic = resolveTopic(entry.getKey(), ctx);
+
+            if (!ctx.isBackendMode()) {
                 securityService.denyUnlessGranted(owningTopic, TopicVoter.AssignForeignTopics);
             }
 
-            for (String foreignId : entry.getValue()) {
+            for (String foreignKey : entry.getValue()) {
+                Topic foreignTopic = resolveTopic(foreignKey, ctx);
 
-                Topic foreignTopic = getTopicFromMappingOrDatabase(foreignId);
                 if (topicAssociationRepository.associationExists(owningTopic, foreignTopic)) {
                     continue;
                 }
@@ -98,39 +145,57 @@ public final class ImportServiceImpl implements ImportService {
                 association.creatorId = creatorId;
                 association.owningTopic = owningTopic;
                 association.foreignTopic = foreignTopic;
-
                 topicAssociationRepository.persist(association);
                 count++;
             }
         }
 
         topicAssociationRepository.flush();
-
         Log.infof("User %s created %d new associations", creatorId, count);
-        setBackendMode(null);
     }
 
-    private void checkBackendMode() {
-        if (isBackendMode == null) {
-            throw new IllegalArgumentException("The backend mode needs to be explicitly set");
-        }
+
+    private String resolveCreatorId(ImportContext ctx) {
+        return ctx.isBackendMode() ? "admin" : identity.getPrincipal().getName();
     }
 
-    private Topic getTopicFromMappingOrDatabase(String key) {
-        if (topicMapping.containsKey(key)) {
-            return topicMapping.get(key);
+    private Category resolveCategory(String key, ImportContext ctx) {
+        if (ctx.getCategoryMapping().containsKey(key)) {
+            return ctx.getCategoryMapping().get(key);
         }
-
         try {
-            UUID topicId = UUID.fromString(key);
-            Optional<Topic> topicOptional = topicRepository.findByIdOptional(topicId);
-
-            if (topicOptional.isEmpty()) {
-                throw new ImportException("Topic with ID " + key + " not found");
-            }
-            return topicOptional.get();
+            UUID id = UUID.fromString(key);
+            return categoryRepository.findByIdOptional(id)
+                    .orElseThrow(() -> new ImportException("Category not found: " + key));
         } catch (IllegalArgumentException e) {
-            throw new ImportException("The topic ID " + key + " is not a valid UUID and the reference key does not exist either");
+            throw new ImportException("Invalid category key: " + key);
         }
+    }
+
+    private Topic resolveTopic(String key, ImportContext ctx) {
+        if (ctx.getTopicMapping().containsKey(key)) {
+            return ctx.getTopicMapping().get(key);
+        }
+        try {
+            UUID id = UUID.fromString(key);
+            return topicRepository.findByIdOptional(id)
+                    .orElseThrow(() -> new ImportException("Topic not found: " + key));
+        } catch (IllegalArgumentException e) {
+            throw new ImportException("Invalid topic key: " + key);
+        }
+    }
+
+    private ContentElement mapToContentElement(Map<String, Object> generic) {
+        return (ContentElement) mapper.convertValue(generic, resolveContentElementClass((String) generic.get("type")));
+    }
+
+    private Class<?> resolveContentElementClass(String type) {
+        return switch (type) {
+            case "RTF"           -> RtfElement.class;
+            case "SPOTIFY_LINK"  -> SpotifyLinkElement.class;
+            case "URI"           -> UriElement.class;
+            case "YOUTUBE_LINK"  -> YouTubeLinkElement.class;
+            default              -> RtfElement.class;
+        };
     }
 }

@@ -1,24 +1,21 @@
 package de.thi.mynd.topic.service;
 
-import de.thi.mynd.topic.dto.loader.FullImportDto;
-import de.thi.mynd.topic.dto.loader.ImportCategoryDto;
-import de.thi.mynd.topic.dto.loader.ImportTopicDto;
+import de.thi.mynd.topic.dto.importer.FullImportDto;
+import de.thi.mynd.topic.dto.importer.ImportCategoryDto;
+import de.thi.mynd.topic.dto.importer.ImportTopicDto;
+import de.thi.mynd.topic.importer.ImportContext;
 
-import java.io.InputStream;
 import java.util.List;
 import java.util.Map;
 
 public interface ImportService {
 
-    void setBackendMode(Boolean mode);
 
-    void importTopicJson(FullImportDto importDto);
+    void importFull(FullImportDto importDto, boolean backendMode);
 
-    void importTopicJsonFromRequest(InputStream inputStream);
+    ImportContext importCategories(List<ImportCategoryDto> categoryDtos, ImportContext ctx);
 
-    void importCategories(List<ImportCategoryDto> categoryDtos);
+    ImportContext importTopics(List<ImportTopicDto> topicDtos, ImportContext context);
 
-    void importTopics(List<ImportTopicDto> topicDtos);
-
-    void importTopicAssociations(Map<String, List<String>> topicAssociations);
+    void importAssociations(Map<String, List<String>> topicAssociations, ImportContext context);
 }
