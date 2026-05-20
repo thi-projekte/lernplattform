@@ -1,4 +1,13 @@
-import { Button, Group, Paper, SegmentedControl, Stack, Text, Title, useMantineTheme } from '@mantine/core';
+import {
+  Button,
+  Group,
+  Paper,
+  SegmentedControl,
+  Stack,
+  Text,
+  Title,
+  useMantineTheme,
+} from '@mantine/core';
 import type { Node, NodeMouseHandler } from '@xyflow/react';
 import { IconEye } from '@tabler/icons-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -106,9 +115,7 @@ const HomePage = () => {
 
   const visibleEdges = useMemo(
     () =>
-      edges.filter(
-        (e) => !hiddenTopicIds.includes(e.source) && !hiddenTopicIds.includes(e.target)
-      ),
+      edges.filter((e) => !hiddenTopicIds.includes(e.source) && !hiddenTopicIds.includes(e.target)),
     [edges, hiddenTopicIds]
   );
 
