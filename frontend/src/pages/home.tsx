@@ -58,6 +58,7 @@ const HomePage = () => {
 
   const [orientation, setOrientation] = useState<SkillTreeOrientation>('vertical');
   const [expandedTopicIds, setExpandedTopicIds] = useState<string[]>([]);
+  const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
   const [nodePositionsByOrientation, setNodePositionsByOrientation] = useState<
     Record<SkillTreeOrientation, TopicGraphNodePositions>
   >({
@@ -65,6 +66,10 @@ const HomePage = () => {
     horizontal: {},
   });
   const [isViewportLocked, setIsViewportLocked] = useState(false);
+  const [lastExpandedNode, setLastExpandedNode] = useState<{
+    id: string;
+    position: { x: number; y: number };
+  } | null>(null);
   const directNeighborQueries = useFetchDirectNeighborQueries(expandedTopicIds);
 
   const graphTopics = useMemo(() => {
@@ -86,22 +91,80 @@ const HomePage = () => {
 
   const nodes = useMemo(() => {
     const cached = cachedDagrePositions[orientation];
+
+    // Identify nodes that have no position yet (arriving after an expansion click).
+    // We only treat nodes as "new" when there are already pinned nodes on the canvas
+    // (i.e. not during the initial load), so the initial dagre layout is used as-is.
+    const hasPinnedNodes =
+      Object.keys(currentNodePositions).length > 0 || Object.keys(cached).length > 0;
+
+    const newNodes = hasPinnedNodes
+      ? layoutNodes.filter((n) => !cached[n.id] && !currentNodePositions[n.id])
+      : [];
+
+    // Place new nodes near the expanded node, avoiding overlap with existing nodes.
+    // Each node gets its desired spread position; if occupied, it shifts down (or
+    // right in horizontal mode) one step at a time until a free slot is found.
+    const NODE_SLOT_W = 300;
+    const NODE_SLOT_H = 160;
+    const newNodePositions = new Map<string, { x: number; y: number }>();
+    if (newNodes.length > 0 && lastExpandedNode) {
+      const parentPos =
+        currentNodePositions[lastExpandedNode.id] ??
+        cached[lastExpandedNode.id] ??
+        lastExpandedNode.position;
+      const isVertical = orientation !== 'horizontal';
+
+      const occupied: { x: number; y: number }[] = layoutNodes
+        .filter((n) => cached[n.id] || currentNodePositions[n.id])
+        .map((n) => (currentNodePositions[n.id] ?? cached[n.id])!);
+
+      newNodes.forEach((node, index) => {
+        const spread = index - (newNodes.length - 1) / 2;
+        const baseX = isVertical ? parentPos.x + spread * NODE_SLOT_W : parentPos.x + NODE_SLOT_W;
+        const baseY = isVertical ? parentPos.y + NODE_SLOT_H : parentPos.y + spread * NODE_SLOT_H;
+
+        let placed = false;
+        for (let attempt = 0; attempt < 20 && !placed; attempt++) {
+          const candidate = {
+            x: isVertical ? baseX : baseX + attempt * NODE_SLOT_W,
+            y: isVertical ? baseY + attempt * NODE_SLOT_H : baseY,
+          };
+          const free = !occupied.some(
+            (o) =>
+              Math.abs(o.x - candidate.x) < NODE_SLOT_W && Math.abs(o.y - candidate.y) < NODE_SLOT_H
+          );
+          if (free) {
+            occupied.push(candidate);
+            newNodePositions.set(node.id, candidate);
+            placed = true;
+          }
+        }
+        if (!placed) {
+          newNodePositions.set(node.id, { x: baseX, y: baseY });
+        }
+      });
+    }
+
     return layoutNodes.map((node) => {
       const userPosition = currentNodePositions[node.id];
-      if (userPosition) {
-        return { ...node, position: userPosition };
-      }
-      if (cached[node.id]) {
-        return { ...node, position: cached[node.id] };
-      }
-      cached[node.id] = node.position;
-      return node;
+      const selected = node.data.payload.id === selectedTopicId;
+
+      if (userPosition) return { ...node, position: userPosition, selected };
+      if (cached[node.id]) return { ...node, position: cached[node.id], selected };
+
+      const newPos = newNodePositions.get(node.id) ?? node.position;
+      cached[node.id] = newPos;
+      return { ...node, position: newPos, selected };
     });
-  }, [currentNodePositions, layoutNodes, orientation]);
+  }, [currentNodePositions, lastExpandedNode, layoutNodes, orientation, selectedTopicId]);
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
     const graphNode = node as Node<SkillTreeNodeData>;
     const topic = graphNode.data.payload;
+    setSelectedTopicId(topic.id);
+
+    setLastExpandedNode({ id: graphNode.id, position: node.position });
 
     setNodePositionsByOrientation((current) => {
       const currentOrientationPositions = current[orientation] ?? {};

@@ -15,11 +15,11 @@ const CategoryBadge = ({ title, color, style, ...props }: CategoryBadgeProps) =>
       radius="xl"
       variant="light"
       style={{
-        color: categoryColor,
-        background: `color-mix(in srgb, ${categoryColor} 14%, white)`,
-        border: `1px solid color-mix(in srgb, ${categoryColor} 20%, white)`,
+        color: `color-mix(in srgb, ${categoryColor} 85%, black)`,
+        background: `color-mix(in srgb, ${categoryColor} 22%, white)`,
+        border: `1px solid color-mix(in srgb, ${categoryColor} 45%, white)`,
         textTransform: 'none',
-        fontWeight: 600,
+        fontWeight: 700,
         ...style,
       }}
       {...props}

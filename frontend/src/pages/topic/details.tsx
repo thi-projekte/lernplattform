@@ -1,10 +1,10 @@
 import { useParams } from 'react-router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useQueryTopic } from '../../api/topic.ts';
 import { type Node, type NodeMouseHandler } from '@xyflow/react';
 import { Layout } from '../../components/layout.tsx';
 import { Paper, Text, Stack, Tabs, useMantineTheme } from '@mantine/core';
-import type { Topic } from '../../schemas/topic.ts';
+import type { Category, Topic } from '../../schemas/topic.ts';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import TopicNode from '../../components/graph-view/topic-node.tsx';
 import ContentNode from '../../components/graph-view/content-node.tsx';
@@ -15,6 +15,7 @@ import LayoutLoader from '../../components/layout-loader.tsx';
 import TopicGraphView from '../../components/graph-view/topic-graph.tsx';
 import { buildTopicDetailsGraph } from '../../components/graph-view/topic-graph.utils.ts';
 import type { TopicGraphNodeData } from '../../components/graph-view/topic-graph.types.ts';
+import { track } from '@plausible-analytics/tracker';
 
 const nodeTypes = {
   topic: TopicNode,
@@ -27,6 +28,21 @@ const TopicDetailsPage = () => {
 
   const { topicId } = useParams<{ topicId: string }>();
   const { data: topic, isLoading } = useQueryTopic(topicId || '', false);
+
+  useEffect(() => {
+    if (topicId) {
+      track('topicViews', { props: { topicId } });
+    }
+  }, [topicId]);
+
+  useEffect(() => {
+    if (topic) {
+      const categoryNames: string[] = topic.categories.map((c: Category) => c.title);
+      for (const category of categoryNames) {
+        track('topicCategory', { props: { category } });
+      }
+    }
+  }, [topic]);
 
   const [selectedElement, setSelectedElement] = useState<
     AnyContentElementDto | Omit<Topic, 'relatedTopics'> | null
@@ -118,9 +134,6 @@ const TopicDetailsPage = () => {
                   <ContentSidebarContent
                     selectedElement={displayedElement as AnyContentElementDto}
                     topicLearnProgress={topic?.learnProgress}
-                    topicContentElementIds={
-                      topic?.contentElements?.map((el: AnyContentElementDto) => el.id) ?? []
-                    }
                   />
                 )}
               </Stack>

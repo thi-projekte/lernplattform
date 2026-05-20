@@ -23,6 +23,7 @@ import type {
   GraphTopicNodeData,
   TopicGraphNodePositions,
 } from '../graph-view/topic-graph.types.ts';
+import { buildTopicAssociationsGraph } from '../graph-view/topic-graph.utils.ts';
 import type { ListTopicDto } from '../../schemas/topic.ts';
 import { useUserService } from '../../provider/user-provider.tsx';
 import CategoryBadge from '../category-badge.tsx';
@@ -45,31 +46,75 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
   const removeTopic = (topicId: string) => {
     setTopic((prev) => ({
       ...prev,
-      relatedTopics: (topic.relatedTopics ?? []).filter((ass) => ass.id !== topicId),
+      relatedTopics: (prev.relatedTopics ?? []).filter((ass) => ass.id !== topicId),
     }));
 
     setSelectedTopicNode((current) => (current && current.payload.id === topicId ? null : current));
   };
 
-  const createAssociation = (topicId: string) => {
-    const topicToAdd = searchSuggestions.find((topic) => topic.id === topicId);
+  const createAssociation = useCallback(
+    (topicId: string) => {
+      const topicToAdd = searchSuggestions.find((topic) => topic.id === topicId);
 
-    if (!topicToAdd) {
-      return;
-    }
+      if (!topicToAdd) {
+        return;
+      }
 
-    setTopic((prev) => ({
-      ...prev,
-      relatedTopics: [...(topic.relatedTopics ?? []), topicToAdd],
-    }));
+      const currentGraph = buildTopicAssociationsGraph(
+        {
+          id: topic.id,
+          title: topic.title,
+          categories: topic.categories,
+          relatedTopics: topic.relatedTopics,
+          isolatedTopics: searchSuggestions,
+        },
+        nodePositions,
+        userService.account.username
+      );
 
-    setSelectedTopicNode({
-      kind: 'topic',
-      title: topicToAdd.title,
-      creatorFullName: topicToAdd.creatorFullName,
-      payload: topicToAdd,
-    });
-  };
+      setNodePositions((current) => {
+        const next = { ...current };
+
+        currentGraph.nodes.forEach((node) => {
+          next[node.id] = node.position;
+        });
+
+        const isolatedNodeId = `isolated-topic-${topicId}`;
+        const relatedNodeId = `related-topic-${topicId}`;
+
+        if (next[isolatedNodeId]) {
+          next[relatedNodeId] = next[isolatedNodeId];
+          delete next[isolatedNodeId];
+        }
+
+        return next;
+      });
+
+      setTopic((prev) => ({
+        ...prev,
+        relatedTopics: [...(prev.relatedTopics ?? []), topicToAdd],
+      }));
+
+      setSearchSuggestions((current) => current.filter((suggestion) => suggestion.id !== topicId));
+
+      setSelectedTopicNode({
+        kind: 'topic',
+        title: topicToAdd.title,
+        creatorFullName: topicToAdd.creatorFullName,
+        payload: topicToAdd,
+      });
+    },
+    [
+      nodePositions,
+      searchSuggestions,
+      setTopic,
+      topic.categories,
+      topic.id,
+      topic.relatedTopics,
+      topic.title,
+      userService.account.username,
+    ]
+  );
 
   const hideIsolatedTopic = (topicId: string) => {
     setSearchSuggestions((current) => current.filter((topic) => topic.id !== topicId));
@@ -90,6 +135,29 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
     selectedTopicNode && typeof selectedTopicNode.payload.id === 'string'
       ? selectedTopicNode.payload.id
       : null;
+  const selectedGraphTopicId = useMemo(() => {
+    if (!selectedTopicNode) {
+      return undefined;
+    }
+
+    if (selectedTopicNode.graphNodeId) {
+      return selectedTopicNode.graphNodeId;
+    }
+
+    if (!selectedTopicId) {
+      return topic.id ? `topic-${topic.id}` : 'topic-root';
+    }
+
+    if ((topic.relatedTopics ?? []).some((relatedTopic) => relatedTopic.id === selectedTopicId)) {
+      return `related-topic-${selectedTopicId}`;
+    }
+
+    if (searchSuggestions.some((suggestion) => suggestion.id === selectedTopicId)) {
+      return `isolated-topic-${selectedTopicId}`;
+    }
+
+    return topic.id && selectedTopicId === topic.id ? `topic-${topic.id}` : undefined;
+  }, [searchSuggestions, selectedTopicId, selectedTopicNode, topic.id, topic.relatedTopics]);
   const isolatedTopicCount = searchSuggestions.length;
 
   const handleSuggestionsChange = useCallback((topics: ListTopicDto[], searchTerm: string) => {
@@ -122,6 +190,20 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
       });
     },
     []
+  );
+
+  const handleGraphTopicClick = useCallback(
+    (graphNode: GraphTopicNodeData) => {
+      const topicId = typeof graphNode.payload.id === 'string' ? graphNode.payload.id : null;
+
+      if (graphNode.isIsolated && topicId) {
+        createAssociation(topicId);
+        return;
+      }
+
+      setSelectedTopicNode(graphNode);
+    },
+    [createAssociation]
   );
 
   return (
@@ -340,7 +422,8 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       isolatedTopics: searchSuggestions,
                     }}
                     currentUsername={userService.account.username}
-                    onTopicClick={setSelectedTopicNode}
+                    selectedTopicId={selectedGraphTopicId}
+                    onTopicClick={handleGraphTopicClick}
                     onAssociationClick={removeTopic}
                     onNodePositionChange={handleNodePositionChange}
                     canEditAssociations
