@@ -2,7 +2,6 @@ package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.entity.Category;
 import de.thi.mynd.topic.service.CategoryService;
-import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
