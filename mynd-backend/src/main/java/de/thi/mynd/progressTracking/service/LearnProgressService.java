@@ -16,4 +16,8 @@ public interface LearnProgressService {
   void manuallyCompleteTopicAsCurrentUser(UUID topicId);
 
   void completeLearningContentElementAsCurrentUser(UUID contentElementId);
+
+  void resetTopicLearningProgress(UUID topicId);
+
+  void resetContentElementLearningProgress(UUID contentElementId);
 }
