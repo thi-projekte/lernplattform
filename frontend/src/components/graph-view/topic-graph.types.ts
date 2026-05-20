@@ -14,6 +14,7 @@ export interface TopicAssociationsGraphInput extends Record<string, unknown> {
 
 export interface GraphTopicNodeData extends Record<string, unknown> {
   kind: 'topic';
+  graphNodeId?: string;
   title: string;
   creatorFullName?: string;
   isRoot?: boolean;

@@ -24,6 +24,7 @@ const nodeTypes: NodeTypes = {
 interface TopicAssociationsGraphProps {
   topic?: TopicAssociationsGraphInput;
   currentUsername?: string;
+  selectedTopicId?: string;
   onTopicClick?: (topic: GraphTopicNodeData) => void;
   onAssociationClick?: (relatedTopicId: string) => void;
   onMoveEnd?: OnMoveEnd;
@@ -49,6 +50,7 @@ interface TopicAssociationsGraphProps {
 const TopicAssociationsGraph = ({
   topic,
   currentUsername,
+  selectedTopicId,
   onTopicClick,
   onAssociationClick,
   onMoveEnd,
@@ -70,14 +72,27 @@ const TopicAssociationsGraph = ({
   backgroundGap = 16,
   nodePositions,
 }: TopicAssociationsGraphProps) => {
-  const { nodes, edges } = useMemo(
+  const { nodes: builtNodes, edges } = useMemo(
     () => buildTopicAssociationsGraph(topic, nodePositions, currentUsername),
     [currentUsername, nodePositions, topic]
   );
 
+  const nodes = useMemo(() => {
+    if (!selectedTopicId) {
+      return builtNodes;
+    }
+
+    return builtNodes.map((node) =>
+      node.id === selectedTopicId ? { ...node, selected: true } : node
+    );
+  }, [builtNodes, selectedTopicId]);
+
   const handleNodeClick: NodeMouseHandler = (_event, node) => {
     const graphNode = node as Node<GraphTopicNodeData>;
-    onTopicClick?.(graphNode.data);
+    onTopicClick?.({
+      ...graphNode.data,
+      graphNodeId: graphNode.id,
+    });
   };
 
   const handleEdgeClick: EdgeMouseHandler = (_event, edge) => {
