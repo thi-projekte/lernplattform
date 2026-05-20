@@ -1,4 +1,4 @@
-package de.thi.mynd.demoContent.models;
+package de.thi.mynd.topic.dto.importer;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
 import java.util.List;
@@ -7,11 +7,10 @@ import lombok.Getter;
 
 @RegisterForReflection
 @Getter
-public final class TopicModel {
+public final class ImportTopicDto {
 
   public String identifier;
   public String title;
-  public String creatorId;
   public String teaser;
   public List<String> categories;
   public int duration;
