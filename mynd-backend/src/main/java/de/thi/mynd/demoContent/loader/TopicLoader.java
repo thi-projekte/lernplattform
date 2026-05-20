@@ -4,10 +4,10 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import de.thi.mynd.demoContent.event.LoadedCategoriesEvent;
 import de.thi.mynd.demoContent.event.LoadedTopicsEvent;
-import de.thi.mynd.demoContent.models.TopicModel;
-import de.thi.mynd.topic.entity.*;
-import de.thi.mynd.topic.repository.ContentElementRepository;
+import de.thi.mynd.topic.dto.importer.ImportTopicDto;
+import de.thi.mynd.topic.importer.ImportContext;
 import de.thi.mynd.topic.repository.TopicRepository;
+import de.thi.mynd.topic.service.ImportService;
 import io.quarkus.arc.lookup.LookupIfProperty;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,9 +17,7 @@ import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @ApplicationScoped
 @LookupIfProperty(name = "mynd.loadDemoContent", stringValue = "true")
@@ -29,7 +27,8 @@ public final class TopicLoader {
 
   @Inject TopicRepository topicRepository;
 
-  @Inject ContentElementRepository contentElementRepository;
+  @Inject
+  ImportService importService;
 
   @Inject ObjectMapper mapper;
 
@@ -40,55 +39,21 @@ public final class TopicLoader {
       return;
     }
 
-    List<TopicModel> topics = loadJson();
-    Map<String, Topic> mapping = new HashMap<>();
-
-    for (TopicModel model : topics) {
-      Topic topic = new Topic();
-      topic.title = model.getTitle();
-      topic.teaser = model.getTeaser();
-      topic.creatorId = model.getCreatorId();
-      topic.estimatedLearningDuration = model.getDuration();
-      topic.categories = model.getCategories().stream().map(c -> event.mapping().get(c)).toList();
-      topicRepository.persist(topic);
-
-      mapping.put(model.getIdentifier(), topic);
-
-      List<ContentElement> contentElements =
-          model.getContentElements().stream().map(ce -> mapToContentElement(ce)).toList();
-      for (ContentElement ce : contentElements) {
-        ce.topic = topic;
-        contentElementRepository.persist(ce);
-      }
-    }
-
-    topicRepository.flush();
+    List<ImportTopicDto> topics = loadJson();
+    ImportContext ctx = importService.importTopics(topics, event.ctx());
 
     Log.info("Successfully initialized topics");
-    topicsEventEvent.fire(new LoadedTopicsEvent(mapping));
+    topicsEventEvent.fire(new LoadedTopicsEvent(ctx));
   }
 
-  private List<TopicModel> loadJson() throws IOException {
+  private List<ImportTopicDto> loadJson() throws IOException {
     try (InputStream is =
         Thread.currentThread()
             .getContextClassLoader()
             .getResourceAsStream("demo-content/topics.json")) {
-      return mapper.readValue(is, new TypeReference<List<TopicModel>>() {});
+      return mapper.readValue(is, new TypeReference<List<ImportTopicDto>>() {});
     }
   }
 
-  private ContentElement mapToContentElement(Map<String, Object> generic) {
-    return (ContentElement)
-        mapper.convertValue(generic, getContentElementClass((String) generic.get("type")));
-  }
 
-  private Class getContentElementClass(String type) {
-    return switch (type) {
-      case "RTF" -> RtfElement.class;
-      case "SPOTIFY_LINK" -> SpotifyLinkElement.class;
-      case "URI" -> UriElement.class;
-      case "YOUTUBE_LINK" -> YouTubeLinkElement.class;
-      default -> RtfElement.class;
-    };
-  }
 }

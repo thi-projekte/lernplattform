@@ -38,11 +38,7 @@ public final class TopicAssociationLoader {
     }
 
     Map<String, List<String>> associations = loadJson();
-    if (importService instanceof ImportServiceImpl impl) {
-      impl.setTopicMapping(event.mapping());
-      importService.setBackendMode(true);
-      importService.importTopicAssociations(associations);
-    }
+    importService.importAssociations(associations, event.ctx());
 
 
     Log.info("Successfully initialized topic associations");
