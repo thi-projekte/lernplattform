@@ -192,8 +192,7 @@ class UserProfileServiceImplTest {
   @TestSecurity(user = "user-abc-123")
   void shouldCreatePersonalUserProfileSuccessfully() {
     // Arrange: Simulate that no profile exists yet for this user
-    when(userProfileRepository.findByUsernameOptional("user-abc-123"))
-            .thenReturn(Optional.empty());
+    when(userProfileRepository.findByUsernameOptional("user-abc-123")).thenReturn(Optional.empty());
 
     // Act
     UserProfile result = userProfileService.createPersonalUserProfile();
@@ -218,13 +217,16 @@ class UserProfileServiceImplTest {
     // Arrange: Simulate an existing profile footprint
     UserProfile existingProfile = new UserProfile();
     when(userProfileRepository.findByUsernameOptional("user-abc-123"))
-            .thenReturn(Optional.of(existingProfile));
+        .thenReturn(Optional.of(existingProfile));
 
     // Act & Assert
     // (Replace with your exact package exception if it's custom)
-    Exception exception = assertThrows(RuntimeException.class, () -> {
-      userProfileService.createPersonalUserProfile();
-    });
+    Exception exception =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              userProfileService.createPersonalUserProfile();
+            });
 
     assertTrue(exception.getMessage().contains("You already have a user profile"));
 
@@ -240,7 +242,7 @@ class UserProfileServiceImplTest {
     expectedProfile.creatorId = "user-abc-123";
 
     when(userProfileRepository.findByUsernameOptional("user-abc-123"))
-            .thenReturn(Optional.of(expectedProfile));
+        .thenReturn(Optional.of(expectedProfile));
 
     // Act
     Optional<UserProfile> result = userProfileService.getPersonalUserProfile();
@@ -255,8 +257,7 @@ class UserProfileServiceImplTest {
   @TestSecurity(user = "user-abc-123")
   void shouldReturnEmptyOptionalWhenNoProfileExists() {
     // Arrange
-    when(userProfileRepository.findByUsernameOptional("user-abc-123"))
-            .thenReturn(Optional.empty());
+    when(userProfileRepository.findByUsernameOptional("user-abc-123")).thenReturn(Optional.empty());
 
     // Act
     Optional<UserProfile> result = userProfileService.getPersonalUserProfile();

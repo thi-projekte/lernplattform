@@ -15,9 +15,8 @@ import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-import org.jboss.resteasy.reactive.multipart.FileUpload;
-
 import java.util.Optional;
+import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
 public final class UserProfileServiceImpl implements UserProfileService {
@@ -28,8 +27,7 @@ public final class UserProfileServiceImpl implements UserProfileService {
 
   @Inject ObjectStorageService objectStorageService;
 
-  @Inject
-  SecurityIdentity securityIdentity;
+  @Inject SecurityIdentity securityIdentity;
 
   @Override
   @Transactional

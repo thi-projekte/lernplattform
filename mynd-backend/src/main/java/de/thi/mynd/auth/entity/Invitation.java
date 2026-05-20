@@ -9,12 +9,11 @@ import jakarta.persistence.Table;
 @Table(name = "invitation")
 public class Invitation extends BaseEntityWithId {
 
-    @Column
-    public String acceptedBy;
+  @Column public String acceptedBy;
 
-    @Column(nullable = false)
-    public String mailSentTo;
+  @Column(nullable = false)
+  public String mailSentTo;
 
-    @Column(nullable = false)
-    public String redemptionSecret;
+  @Column(nullable = false)
+  public String redemptionSecret;
 }
