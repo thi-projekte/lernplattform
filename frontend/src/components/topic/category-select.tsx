@@ -56,14 +56,14 @@ const CategorySelect = ({ onChange, value, error, onFocus, onBlur }: GetInputPro
         onRemove={props.onRemove}
         styles={{
           root: {
-            background: `color-mix(in srgb, ${categoryColor} 14%, white)`,
-            color: categoryColor,
-            border: `1px solid color-mix(in srgb, ${categoryColor} 20%, white)`,
-            fontWeight: 600,
+            color: `color-mix(in srgb, ${categoryColor} 85%, black)`,
+            background: `color-mix(in srgb, ${categoryColor} 22%, white)`,
+            border: `1px solid color-mix(in srgb, ${categoryColor} 45%, white)`,
             textTransform: 'none',
+            fontWeight: 700,
           },
           remove: {
-            color: categoryColor,
+            color: `color-mix(in srgb, ${categoryColor} 85%, black)`,
           },
         }}
       >
