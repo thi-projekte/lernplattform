@@ -6,10 +6,9 @@ import de.thi.mynd.common.service.IdentityService;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 public final class AuthServiceImpl implements AuthService {
@@ -49,7 +48,8 @@ public final class AuthServiceImpl implements AuthService {
   }
 
   private UserProfile getUserProfileOfCurrentUser() {
-    return userProfileService.getPersonalUserProfile()
-            .orElse(userProfileService.createPersonalUserProfile());
+    return userProfileService
+        .getPersonalUserProfile()
+        .orElse(userProfileService.createPersonalUserProfile());
   }
 }

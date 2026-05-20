@@ -87,7 +87,8 @@ public final class InvitationServiceImpl implements InvitationService {
     invitation.redemptionSecret = TokenGenerator.generateRandomString(64);
     invitationRepository.persistAndFlush(invitation);
 
-    Log.infof("Successfully created invitation for email %s as user %s", email, userProfile.creatorId);
+    Log.infof(
+        "Successfully created invitation for email %s as user %s", email, userProfile.creatorId);
 
     sendInvitationEmail(invitation);
   }
@@ -107,7 +108,8 @@ public final class InvitationServiceImpl implements InvitationService {
     }
 
     if (invitation.acceptedBy != null) {
-      throw new CannotAcceptInvitationException("This invitation expired. It has already been accepted");
+      throw new CannotAcceptInvitationException(
+          "This invitation expired. It has already been accepted");
     }
 
     invitation.acceptedBy = creatorId;

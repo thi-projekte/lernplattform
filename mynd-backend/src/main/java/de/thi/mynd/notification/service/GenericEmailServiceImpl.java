@@ -38,6 +38,8 @@ public final class GenericEmailServiceImpl implements GenericEmailService {
 
     mailer.send(mail);
 
-      Log.infof("Sent email with subject %s to %s of template %s", subject, String.join(", ", recipients), templateName);
+    Log.infof(
+        "Sent email with subject %s to %s of template %s",
+        subject, String.join(", ", recipients), templateName);
   }
 }
