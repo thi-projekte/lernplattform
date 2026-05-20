@@ -86,7 +86,15 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
 
   if (!selected) {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: 8,
+          cursor: 'pointer',
+        }}
+      >
         <div
           style={{
             width: 32,
@@ -99,7 +107,13 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
         >
           {handles}
         </div>
-        <Text fw={600} size="xs" ta="center" style={{ maxWidth: 120, lineHeight: 1.3 }} lineClamp={2}>
+        <Text
+          fw={600}
+          size="xs"
+          ta="center"
+          style={{ maxWidth: 120, lineHeight: 1.3 }}
+          lineClamp={2}
+        >
           {data.title}
         </Text>
       </div>
