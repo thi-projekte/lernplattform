@@ -1,6 +1,6 @@
 import { Group, Paper, SegmentedControl, Stack, Text, Title, useMantineTheme } from '@mantine/core';
 import type { Node, NodeMouseHandler } from '@xyflow/react';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useFetchDirectNeighborQueries,
@@ -27,6 +27,8 @@ const cachedDagrePositions: Record<SkillTreeOrientation, TopicGraphNodePositions
   vertical: {},
   horizontal: {},
 };
+let cachedExpandedTopicIds: string[] = [];
+let cachedSelectedTopicId: string | null = null;
 
 const mergeGraphTopics = (current: GraphTopicDto[], incoming: GraphTopicDto[]) => {
   const merged = new Map<string, GraphTopicDto>();
@@ -57,8 +59,11 @@ const HomePage = () => {
   const { data, isLoading } = useFetchMostPopularTopicsWithNeighbors();
 
   const [orientation, setOrientation] = useState<SkillTreeOrientation>('vertical');
-  const [expandedTopicIds, setExpandedTopicIds] = useState<string[]>([]);
-  const [selectedTopicId, setSelectedTopicId] = useState<string | null>(null);
+  const [expandedTopicIds, setExpandedTopicIds] = useState<string[]>(cachedExpandedTopicIds);
+  const [selectedTopicId, setSelectedTopicId] = useState<string | null>(cachedSelectedTopicId);
+
+  useEffect(() => { cachedExpandedTopicIds = expandedTopicIds; }, [expandedTopicIds]);
+  useEffect(() => { cachedSelectedTopicId = selectedTopicId; }, [selectedTopicId]);
   const [nodePositionsByOrientation, setNodePositionsByOrientation] = useState<
     Record<SkillTreeOrientation, TopicGraphNodePositions>
   >({
