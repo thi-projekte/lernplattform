@@ -14,4 +14,9 @@ public final class AuthExceptionMapper {
   public Response mapNoInvitationsLeftException(NoInvitationsLeftException e) {
     return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
   }
+
+  @ServerExceptionMapper
+  public Response mapCannotAcceptInvitationException(CannotAcceptInvitationException e) {
+    return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+  }
 }
