@@ -10,7 +10,7 @@ import {
   Text,
   useMantineTheme,
 } from '@mantine/core';
-import { IconCheck, IconEye } from '@tabler/icons-react';
+import { IconCheck, IconEye, IconLink } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import CategoryBadge from '../category-badge.tsx';
@@ -29,6 +29,8 @@ interface GenericTopicNodeData extends Record<string, unknown> {
   title: string;
   categories?: NodeCategory[];
   isOwned?: boolean;
+  onExpand?: () => void;
+  isExpanded?: boolean;
   payload?: {
     id?: string;
     categories?: NodeCategory[];
@@ -109,10 +111,10 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
         </div>
         <Text
           fw={600}
-          size="xs"
+          size="sm"
           ta="center"
-          style={{ maxWidth: 120, lineHeight: 1.3 }}
           lineClamp={2}
+          style={{ maxWidth: 150, lineHeight: 1.3 }}
         >
           {data.title}
         </Text>
@@ -208,6 +210,22 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
               </ActionIcon>
             </Group>
           ))}
+
+        {data.onExpand && !data.isExpanded && (
+          <Button
+            leftSection={<IconLink size={14} />}
+            variant="light"
+            color="gray"
+            size="xs"
+            fullWidth
+            onClick={(event) => {
+              event.stopPropagation();
+              data.onExpand?.();
+            }}
+          >
+            {t('journey.expandNeighbors')}
+          </Button>
+        )}
 
         {learnProgress && (
           <Group gap="xs" align="center" wrap="nowrap">

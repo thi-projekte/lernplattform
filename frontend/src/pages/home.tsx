@@ -149,15 +149,27 @@ const HomePage = () => {
     return layoutNodes.map((node) => {
       const userPosition = currentNodePositions[node.id];
       const selected = node.data.payload.id === selectedTopicId;
+      const topicId = node.data.payload.id;
+      const isExpanded = expandedTopicIds.includes(topicId);
+      const onExpand = () => {
+        const pos = userPosition ?? cached[node.id] ?? node.position;
+        setLastExpandedNode({ id: node.id, position: pos });
+        setExpandedTopicIds((current) =>
+          current.includes(topicId) ? current : [...current, topicId]
+        );
+        setSelectedTopicId(null);
+      };
 
-      if (userPosition) return { ...node, position: userPosition, selected };
-      if (cached[node.id]) return { ...node, position: cached[node.id], selected };
+      const enrichData = (base: typeof node.data) => ({ ...base, onExpand, isExpanded });
+
+      if (userPosition) return { ...node, position: userPosition, selected, data: enrichData(node.data) };
+      if (cached[node.id]) return { ...node, position: cached[node.id], selected, data: enrichData(node.data) };
 
       const newPos = newNodePositions.get(node.id) ?? node.position;
       cached[node.id] = newPos;
-      return { ...node, position: newPos, selected };
+      return { ...node, position: newPos, selected, data: enrichData(node.data) };
     });
-  }, [currentNodePositions, lastExpandedNode, layoutNodes, orientation, selectedTopicId]);
+  }, [currentNodePositions, expandedTopicIds, lastExpandedNode, layoutNodes, orientation, selectedTopicId]);
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
     const graphNode = node as Node<SkillTreeNodeData>;
@@ -194,9 +206,6 @@ const HomePage = () => {
         [orientation]: nextOrientationPositions,
       };
     });
-    setExpandedTopicIds((current) =>
-      current.includes(topic.id) ? current : [...current, topic.id]
-    );
   };
 
   const handleNodePositionChange = useCallback(

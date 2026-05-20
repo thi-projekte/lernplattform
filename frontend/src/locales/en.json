@@ -53,7 +53,8 @@
     "selectedTopic": "Selected topic",
     "unknownCreator": "Unknown creator",
     "loadingNeighbors": "Loading connected topics...",
-    "openDetails": "Open detail view"
+    "openDetails": "Open detail view",
+    "expandNeighbors": "Load connections"
   },
   "common": {
     "rowsPerPage": "Rows per page",
