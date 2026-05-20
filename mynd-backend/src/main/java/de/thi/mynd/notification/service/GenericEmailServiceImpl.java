@@ -14,8 +14,7 @@ public final class GenericEmailServiceImpl implements GenericEmailService {
 
   @Inject Engine quteEngine;
 
-  @Inject
-  Mailer mailer;
+  @Inject Mailer mailer;
 
   @Override
   public void sendEmail(
