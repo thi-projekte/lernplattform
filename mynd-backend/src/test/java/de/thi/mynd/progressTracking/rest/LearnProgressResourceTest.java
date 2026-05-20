@@ -308,4 +308,96 @@ class LearnProgressResourceTest {
     verify(learnProgressService, times(1))
         .completeLearningContentElementAsCurrentUser(contentElementId);
   }
+
+  @Test
+  @TestSecurity(user = "user-123", roles = "user")
+  void resetTopicLearningProgress_shouldReturn200_whenProgressExists() {
+    UUID topicId = UUID.randomUUID();
+    doNothing().when(learnProgressService).resetTopicLearningProgress(topicId);
+
+    given()
+            .pathParam("topicId", topicId)
+            .when()
+            .post("/topics/{topicId}/reset")
+            .then()
+            .statusCode(200);
+
+    verify(learnProgressService).resetTopicLearningProgress(topicId);
+  }
+
+  @Test
+  @TestSecurity(user = "user-123", roles = "user")
+  void resetTopicLearningProgress_shouldReturn409_whenProgressNotStarted() {
+    UUID topicId = UUID.randomUUID();
+    doThrow(new TopicLearnProgressNotStartedException("This topic has not been started yet"))
+            .when(learnProgressService).resetTopicLearningProgress(topicId);
+
+    given()
+            .pathParam("topicId", topicId)
+            .when()
+            .post("/topics/{topicId}/reset")
+            .then()
+            .statusCode(409);
+  }
+
+  @Test
+  void resetTopicLearningProgress_shouldReturn401_whenUnauthenticated() {
+    UUID topicId = UUID.randomUUID();
+
+    given()
+            .pathParam("topicId", topicId)
+            .when()
+            .post("/topics/{topicId}/reset")
+            .then()
+            .statusCode(401);
+
+    verifyNoInteractions(learnProgressService);
+  }
+
+  // ── resetContentElementLearningProgress ────────────────────────────────
+
+  @Test
+  @TestSecurity(user = "user-123", roles = "user")
+  void resetContentElementLearningProgress_shouldReturn200_whenProgressExists() {
+    UUID contentElementId = UUID.randomUUID();
+    doNothing().when(learnProgressService).resetContentElementLearningProgress(contentElementId);
+
+    given()
+            .pathParam("contentElementId", contentElementId)
+            .when()
+            .post("/content-elements/{contentElementId}/reset")
+            .then()
+            .statusCode(200);
+
+    verify(learnProgressService).resetContentElementLearningProgress(contentElementId);
+  }
+
+  @Test
+  @TestSecurity(user = "user-123", roles = "user")
+  void resetContentElementLearningProgress_shouldReturn409_whenProgressNotStarted() {
+    UUID contentElementId = UUID.randomUUID();
+    doThrow(new TopicLearnProgressNotStartedException("This content element has not been started yet"))
+            .when(learnProgressService).resetContentElementLearningProgress(contentElementId);
+
+    given()
+            .pathParam("contentElementId", contentElementId)
+            .when()
+            .post("/content-elements/{contentElementId}/reset")
+            .then()
+            .statusCode(409);
+  }
+
+  @Test
+  void resetContentElementLearningProgress_shouldReturn401_whenUnauthenticated() {
+    UUID contentElementId = UUID.randomUUID();
+
+    given()
+            .pathParam("contentElementId", contentElementId)
+            .when()
+            .post("/content-elements/{contentElementId}/reset")
+            .then()
+            .statusCode(401);
+
+    verifyNoInteractions(learnProgressService);
+  }
 }
