@@ -21,7 +21,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.security.Principal;
 import java.util.*;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -364,7 +363,7 @@ class LearnProgressServiceImplTest {
     expectedId.creatorId = CREATOR_ID;
 
     when(learnProgressTopicRepository.findByIdOptional(any(LearnProgressTopicId.class)))
-            .thenReturn(Optional.of(progressTopic));
+        .thenReturn(Optional.of(progressTopic));
 
     // Act
     learnProgressService.resetTopicLearningProgress(TOPIC_ID);
@@ -379,12 +378,11 @@ class LearnProgressServiceImplTest {
   @Test
   void resetTopicLearningProgress_shouldThrow_whenProgressNotFound() {
     when(learnProgressTopicRepository.findByIdOptional(any(LearnProgressTopicId.class)))
-            .thenReturn(Optional.empty());
+        .thenReturn(Optional.empty());
 
     assertThrows(
-            TopicLearnProgressNotStartedException.class,
-            () -> learnProgressService.resetTopicLearningProgress(TOPIC_ID)
-    );
+        TopicLearnProgressNotStartedException.class,
+        () -> learnProgressService.resetTopicLearningProgress(TOPIC_ID));
 
     verify(learnProgressTopicRepository, never()).persistAndFlush(any());
   }
@@ -396,7 +394,7 @@ class LearnProgressServiceImplTest {
     progressTopic.contentElements = Collections.emptyList();
 
     when(learnProgressTopicRepository.findByIdOptional(any(LearnProgressTopicId.class)))
-            .thenReturn(Optional.of(progressTopic));
+        .thenReturn(Optional.of(progressTopic));
 
     learnProgressService.resetTopicLearningProgress(TOPIC_ID);
 
@@ -416,9 +414,9 @@ class LearnProgressServiceImplTest {
     progressCE.completed = true;
     progressCE.progressTopic = progressTopic;
 
-    when(learnProgressContentElementRepository
-            .findByContentElementIdAndCreatorId(CONTENT_ELEMENT_ID, CREATOR_ID))
-            .thenReturn(Optional.of(progressCE));
+    when(learnProgressContentElementRepository.findByContentElementIdAndCreatorId(
+            CONTENT_ELEMENT_ID, CREATOR_ID))
+        .thenReturn(Optional.of(progressCE));
 
     // Act
     learnProgressService.resetContentElementLearningProgress(CONTENT_ELEMENT_ID);
@@ -432,14 +430,13 @@ class LearnProgressServiceImplTest {
 
   @Test
   void resetContentElementLearningProgress_shouldThrow_whenProgressNotFound() {
-    when(learnProgressContentElementRepository
-            .findByContentElementIdAndCreatorId(CONTENT_ELEMENT_ID, CREATOR_ID))
-            .thenReturn(Optional.empty());
+    when(learnProgressContentElementRepository.findByContentElementIdAndCreatorId(
+            CONTENT_ELEMENT_ID, CREATOR_ID))
+        .thenReturn(Optional.empty());
 
     assertThrows(
-            TopicLearnProgressNotStartedException.class,
-            () -> learnProgressService.resetContentElementLearningProgress(CONTENT_ELEMENT_ID)
-    );
+        TopicLearnProgressNotStartedException.class,
+        () -> learnProgressService.resetContentElementLearningProgress(CONTENT_ELEMENT_ID));
 
     verify(learnProgressContentElementRepository, never()).persistAndFlush(any());
     verify(learnProgressTopicRepository, never()).persistAndFlush(any());
@@ -454,9 +451,9 @@ class LearnProgressServiceImplTest {
     progressCE.completed = true;
     progressCE.progressTopic = progressTopic;
 
-    when(learnProgressContentElementRepository
-            .findByContentElementIdAndCreatorId(CONTENT_ELEMENT_ID, CREATOR_ID))
-            .thenReturn(Optional.of(progressCE));
+    when(learnProgressContentElementRepository.findByContentElementIdAndCreatorId(
+            CONTENT_ELEMENT_ID, CREATOR_ID))
+        .thenReturn(Optional.of(progressCE));
 
     learnProgressService.resetContentElementLearningProgress(CONTENT_ELEMENT_ID);
 

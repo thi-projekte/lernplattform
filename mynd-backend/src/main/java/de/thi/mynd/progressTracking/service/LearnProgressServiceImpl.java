@@ -160,9 +160,11 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
   @Override
   @Transactional
   public void resetContentElementLearningProgress(UUID contentElementId) {
-    Optional<LearnProgressContentElement> contentElementOptional = getByContentElementIdAndCurrentCreator(contentElementId);
+    Optional<LearnProgressContentElement> contentElementOptional =
+        getByContentElementIdAndCurrentCreator(contentElementId);
     if (contentElementOptional.isEmpty()) {
-      throw new TopicLearnProgressNotStartedException("This content element has not been started yet");
+      throw new TopicLearnProgressNotStartedException(
+          "This content element has not been started yet");
     }
 
     LearnProgressContentElement progressContentElement = contentElementOptional.get();
