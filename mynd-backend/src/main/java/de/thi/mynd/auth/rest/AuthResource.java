@@ -22,8 +22,6 @@ public final class AuthResource {
 
   @Inject AuthService authService;
 
-  @Inject UserProfileService userProfileService;
-
   @Inject SecurityIdentity identity;
 
   @GET
@@ -70,47 +68,5 @@ public final class AuthResource {
     String username = identity.getPrincipal().getName();
     authService.makeUserALearner(username);
     return Response.status(201).build();
-  }
-
-  @POST
-  @Path("/profile-picture")
-  @Authenticated
-  @Operation(
-      summary = "Upload a profile picture",
-      description = "Uploads a profile picture for the current user. Replaces any existing one.")
-  @APIResponse(responseCode = "201", description = "Profile picture uploaded successfully")
-  @APIResponse(responseCode = "413", description = "The file is larger than 5 MB")
-  @APIResponse(responseCode = "415", description = "Image has invalid file type")
-  @APIResponse(responseCode = "400", description = "No file provided")
-  public Response uploadProfilePicture(@RestForm("file") FileUpload file) {
-    String username = identity.getPrincipal().getName();
-    ProfilePictureDto dto = userProfileService.uploadProfilePicture(username, file);
-    return Response.status(201).entity(dto).build();
-  }
-
-  @DELETE
-  @Path("/profile-picture")
-  @Authenticated
-  @Operation(
-      summary = "Delete the profile picture",
-      description = "Deletes the profile picture of the current user.")
-  @APIResponse(responseCode = "200", description = "Profile picture deleted successfully")
-  @APIResponse(responseCode = "404", description = "The user has no profile picture")
-  public Response deleteProfilePicture() {
-    String username = identity.getPrincipal().getName();
-    userProfileService.deleteProfilePicture(username);
-    return Response.ok().build();
-  }
-
-  @GET
-  @Path("/profile-picture/{username}")
-  @Authenticated
-  @Operation(
-      summary = "Get a profile picture",
-      description = "Returns a presigned URL for the profile picture of the given user.")
-  @APIResponse(responseCode = "200", description = "Presigned URL returned successfully")
-  @APIResponse(responseCode = "404", description = "The user has no profile picture")
-  public ProfilePictureDto getProfilePicture(@PathParam("username") String username) {
-    return userProfileService.getProfilePicture(username);
   }
 }
