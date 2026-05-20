@@ -14,7 +14,7 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import type { Category, Topic } from '../../schemas/topic.ts';
+import type { Category } from '../../schemas/topic.ts';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import { useTranslation } from 'react-i18next';
 import ContentSidebarContent from '../../components/graph-view/sidebar/content-sidebar-content.tsx';
@@ -51,7 +51,7 @@ const TopicDetailsPage = () => {
     return <LayoutLoader />;
   }
 
-  const contentElements = topic?.contentElements ?? [];
+  const contentElements: AnyContentElementDto[] = topic?.contentElements ?? [];
   const learnProgress = topic?.learnProgress;
 
   return (
