@@ -11,7 +11,13 @@ import {
 } from '@mantine/core';
 import type { Topic } from '../../../schemas/topic';
 import { useTranslation } from 'react-i18next';
-import { IconCheck, IconEdit, IconMessageCircle, IconRefresh, IconRobot } from '@tabler/icons-react';
+import {
+  IconCheck,
+  IconEdit,
+  IconMessageCircle,
+  IconRefresh,
+  IconRobot,
+} from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
 import CategoryBadge from '../../category-badge.tsx';
