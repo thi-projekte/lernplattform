@@ -20,11 +20,8 @@ import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,6 +37,8 @@ class LearnProgressServiceImplTest {
   @InjectMock ContentElementService contentElementService;
 
   private static final String CREATOR_ID = "user-123";
+  private static final UUID TOPIC_ID = UUID.randomUUID();
+  private static final UUID CONTENT_ELEMENT_ID = UUID.randomUUID();
 
   @BeforeEach
   void setupIdentity() {
@@ -346,6 +345,124 @@ class LearnProgressServiceImplTest {
     verify(learnProgressTopicRepository)
         .persistAndFlush(
             argThat(topic -> topic.contentElements.get(0).id.creatorId.equals(CREATOR_ID)));
+  }
+
+  @Test
+  void resetTopicLearningProgress_shouldResetStatusAndContentElements() {
+    // Arrange
+    LearnProgressContentElement ce1 = new LearnProgressContentElement();
+    ce1.completed = true;
+    LearnProgressContentElement ce2 = new LearnProgressContentElement();
+    ce2.completed = true;
+
+    LearnProgressTopic progressTopic = new LearnProgressTopic();
+    progressTopic.status = LearnProgressStatus.COMPLETED_MANUALLY;
+    progressTopic.contentElements = List.of(ce1, ce2);
+
+    LearnProgressTopicId expectedId = new LearnProgressTopicId();
+    expectedId.topicId = TOPIC_ID;
+    expectedId.creatorId = CREATOR_ID;
+
+    when(learnProgressTopicRepository.findByIdOptional(any(LearnProgressTopicId.class)))
+            .thenReturn(Optional.of(progressTopic));
+
+    // Act
+    learnProgressService.resetTopicLearningProgress(TOPIC_ID);
+
+    // Assert
+    assertEquals(LearnProgressStatus.STARTED, progressTopic.status);
+    assertFalse(ce1.completed);
+    assertFalse(ce2.completed);
+    verify(learnProgressTopicRepository).persistAndFlush(progressTopic);
+  }
+
+  @Test
+  void resetTopicLearningProgress_shouldThrow_whenProgressNotFound() {
+    when(learnProgressTopicRepository.findByIdOptional(any(LearnProgressTopicId.class)))
+            .thenReturn(Optional.empty());
+
+    assertThrows(
+            TopicLearnProgressNotStartedException.class,
+            () -> learnProgressService.resetTopicLearningProgress(TOPIC_ID)
+    );
+
+    verify(learnProgressTopicRepository, never()).persistAndFlush(any());
+  }
+
+  @Test
+  void resetTopicLearningProgress_shouldWork_whenNoContentElements() {
+    LearnProgressTopic progressTopic = new LearnProgressTopic();
+    progressTopic.status = LearnProgressStatus.COMPLETED_MANUALLY;
+    progressTopic.contentElements = Collections.emptyList();
+
+    when(learnProgressTopicRepository.findByIdOptional(any(LearnProgressTopicId.class)))
+            .thenReturn(Optional.of(progressTopic));
+
+    learnProgressService.resetTopicLearningProgress(TOPIC_ID);
+
+    assertEquals(LearnProgressStatus.STARTED, progressTopic.status);
+    verify(learnProgressTopicRepository).persistAndFlush(progressTopic);
+  }
+
+  // ── resetContentElementLearningProgress ────────────────────────────────
+
+  @Test
+  void resetContentElementLearningProgress_shouldResetElementAndTopicStatus() {
+    // Arrange
+    LearnProgressTopic progressTopic = new LearnProgressTopic();
+    progressTopic.status = LearnProgressStatus.COMPLETED_MANUALLY;
+
+    LearnProgressContentElement progressCE = new LearnProgressContentElement();
+    progressCE.completed = true;
+    progressCE.progressTopic = progressTopic;
+
+    when(learnProgressContentElementRepository
+            .findByContentElementIdAndCreatorId(CONTENT_ELEMENT_ID, CREATOR_ID))
+            .thenReturn(Optional.of(progressCE));
+
+    // Act
+    learnProgressService.resetContentElementLearningProgress(CONTENT_ELEMENT_ID);
+
+    // Assert
+    assertFalse(progressCE.completed);
+    assertEquals(LearnProgressStatus.STARTED, progressTopic.status);
+    verify(learnProgressContentElementRepository).persistAndFlush(progressCE);
+    verify(learnProgressTopicRepository).persistAndFlush(progressTopic);
+  }
+
+  @Test
+  void resetContentElementLearningProgress_shouldThrow_whenProgressNotFound() {
+    when(learnProgressContentElementRepository
+            .findByContentElementIdAndCreatorId(CONTENT_ELEMENT_ID, CREATOR_ID))
+            .thenReturn(Optional.empty());
+
+    assertThrows(
+            TopicLearnProgressNotStartedException.class,
+            () -> learnProgressService.resetContentElementLearningProgress(CONTENT_ELEMENT_ID)
+    );
+
+    verify(learnProgressContentElementRepository, never()).persistAndFlush(any());
+    verify(learnProgressTopicRepository, never()).persistAndFlush(any());
+  }
+
+  @Test
+  void resetContentElementLearningProgress_shouldPersistBothRepositories() {
+    LearnProgressTopic progressTopic = new LearnProgressTopic();
+    progressTopic.status = LearnProgressStatus.STARTED; // already STARTED
+
+    LearnProgressContentElement progressCE = new LearnProgressContentElement();
+    progressCE.completed = true;
+    progressCE.progressTopic = progressTopic;
+
+    when(learnProgressContentElementRepository
+            .findByContentElementIdAndCreatorId(CONTENT_ELEMENT_ID, CREATOR_ID))
+            .thenReturn(Optional.of(progressCE));
+
+    learnProgressService.resetContentElementLearningProgress(CONTENT_ELEMENT_ID);
+
+    // Both repos must be flushed regardless of prior topic status
+    verify(learnProgressContentElementRepository, times(1)).persistAndFlush(progressCE);
+    verify(learnProgressTopicRepository, times(1)).persistAndFlush(progressTopic);
   }
 
   // ---------------------------------------------------------------------------
