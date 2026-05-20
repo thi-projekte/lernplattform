@@ -162,14 +162,23 @@ const HomePage = () => {
 
       const enrichData = (base: typeof node.data) => ({ ...base, onExpand, isExpanded });
 
-      if (userPosition) return { ...node, position: userPosition, selected, data: enrichData(node.data) };
-      if (cached[node.id]) return { ...node, position: cached[node.id], selected, data: enrichData(node.data) };
+      if (userPosition)
+        return { ...node, position: userPosition, selected, data: enrichData(node.data) };
+      if (cached[node.id])
+        return { ...node, position: cached[node.id], selected, data: enrichData(node.data) };
 
       const newPos = newNodePositions.get(node.id) ?? node.position;
       cached[node.id] = newPos;
       return { ...node, position: newPos, selected, data: enrichData(node.data) };
     });
-  }, [currentNodePositions, expandedTopicIds, lastExpandedNode, layoutNodes, orientation, selectedTopicId]);
+  }, [
+    currentNodePositions,
+    expandedTopicIds,
+    lastExpandedNode,
+    layoutNodes,
+    orientation,
+    selectedTopicId,
+  ]);
 
   const onNodeClick: NodeMouseHandler = async (_event, node) => {
     const graphNode = node as Node<SkillTreeNodeData>;
