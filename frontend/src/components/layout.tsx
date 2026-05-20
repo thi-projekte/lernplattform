@@ -1,4 +1,14 @@
-import { AppShell, Avatar, Box, Burger, Button, Group, Image, NavLink } from '@mantine/core';
+import {
+  AppShell,
+  Avatar,
+  Box,
+  Burger,
+  Button,
+  Group,
+  Image,
+  NavLink,
+  useMantineTheme,
+} from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronLeft, IconUser } from '@tabler/icons-react';
 import { useQueryProfilePicture } from '../api/profile-picture.ts';
@@ -22,6 +32,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const { t } = useTranslation();
   const userService = useUserService();
   const { data: profilePicture } = useQueryProfilePicture(userService.account.username);
+  const theme = useMantineTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const matches = useMatches();
@@ -67,7 +78,12 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       }}
       padding={0}
     >
-      <AppShell.Header>
+      <AppShell.Header
+        style={{
+          background: theme.other.layoutHeaderBg,
+          borderBottom: `1px solid ${theme.other.layoutBorder}`,
+        }}
+      >
         <Group h="100%" justify="space-between" wrap="nowrap">
           <Box
             visibleFrom="sm"
@@ -101,6 +117,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         onMouseEnter={() => setDesktopExpanded(true)}
         onMouseLeave={() => setDesktopExpanded(false)}
         style={{
+          background: theme.other.layoutNavbarBg,
+          borderRight: `1px solid ${theme.other.layoutBorder}`,
           transition: 'width 150ms ease',
           overflowX: 'hidden',
           display: 'flex',
@@ -197,6 +215,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           py="md"
           style={{
             minHeight: 'calc(100vh - 104px)',
+            background: theme.other.layoutMainBg,
           }}
         >
           {pathname !== '/' && (

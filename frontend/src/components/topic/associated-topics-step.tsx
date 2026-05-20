@@ -10,6 +10,7 @@ import {
   Text,
   Title,
   Tooltip,
+  useMantineTheme,
 } from '@mantine/core';
 import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -34,6 +35,7 @@ interface AssociatedTopicsStepProps {
 
 const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) => {
   const { t } = useTranslation();
+  const theme = useMantineTheme();
   const userService = useUserService();
   const [editorMode, setEditorMode] = useState<'list' | 'graph'>('graph');
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
@@ -408,7 +410,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                     overflow: 'hidden',
                     border: '1px dashed #ced4da',
                     borderRadius: 12,
-                    background: '#f1f3f5e0',
+                    background: theme.other.graphBg,
                   }}
                 >
                   <TopicAssociationsGraph

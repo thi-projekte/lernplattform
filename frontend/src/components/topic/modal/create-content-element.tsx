@@ -25,6 +25,7 @@ import { useForm } from '@mantine/form';
 import { useCreateContentElementMutation } from '../../../api/topic.ts';
 import IconPicker from '../../icon-picker/icon-picker.tsx';
 import { DEFAULT_ICON_BY_TYPE } from '../../icon-picker/icons.ts';
+import { track } from '@plausible-analytics/tracker';
 
 interface CreateContentElementModalProps {
   opened: boolean;
@@ -109,6 +110,8 @@ const CreateContentElementModal = ({
         request: values as AnyContentElementRequest,
         file: values.file as unknown as File,
       });
+
+      track('contentElementsCreated', { props: { contentElementId: contentElement.id } });
 
       onAddContentElement(contentElement);
       form.reset();
