@@ -3,27 +3,27 @@ import { apiClient } from './common.ts';
 
 const startTopic = async (topicId: string) =>
   await apiClient.post(`/learn-progress/topics/${topicId}/start`, undefined, {
-    validateStatus: (status) => status === 200,
+    validateStatus: (status) => status >= 200 && status < 300,
   });
 
 const completeTopicManually = async (topicId: string) =>
   await apiClient.post(`/learn-progress/topics/${topicId}/complete`, undefined, {
-    validateStatus: (status) => status === 200,
+    validateStatus: (status) => status >= 200 && status < 300,
   });
 
 const completeContentElement = async (contentElementId: string) =>
   await apiClient.post(`/learn-progress/content-elements/${contentElementId}/complete`, undefined, {
-    validateStatus: (status) => status === 200,
+    validateStatus: (status) => status >= 200 && status < 300,
   });
 
 const resetTopic = async (topicId: string) =>
   await apiClient.post(`/learn-progress/topics/${topicId}/reset`, undefined, {
-    validateStatus: (status) => status === 200,
+    validateStatus: (status) => status >= 200 && status < 300,
   });
 
 const resetContentElement = async (contentElementId: string) =>
   await apiClient.post(`/learn-progress/content-elements/${contentElementId}/reset`, undefined, {
-    validateStatus: (status) => status === 200,
+    validateStatus: (status) => status >= 200 && status < 300,
   });
 
 const invalidateProgressQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
