@@ -1,5 +1,5 @@
-import type { CSSProperties } from 'react';
-import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
+import { type CSSProperties, useEffect } from 'react';
+import { Handle, Position, useUpdateNodeInternals, type Node, type NodeProps } from '@xyflow/react';
 import { ActionIcon, Button, Group, Paper, Progress, Stack, Text } from '@mantine/core';
 import { IconEye } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
@@ -29,9 +29,10 @@ interface GenericTopicNodeData extends Record<string, unknown> {
 
 type GenericTopicNodeProps = NodeProps<Node<GenericTopicNodeData>>;
 
-const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
+const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
+  const updateNodeInternals = useUpdateNodeInternals();
 
   const categories = data.categories ?? data.payload?.categories ?? [];
   const singleCategoryColor = categories.length === 1 ? `#${categories[0].color}` : undefined;
@@ -48,36 +49,18 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
     ? { opacity: 0 }
     : { opacity: 0, pointerEvents: 'none' };
 
-  const baseBackground = isBuilderMode
-    ? isForeign
-      ? 'linear-gradient(135deg, #f4f9fe 0%, #e8f1f9 100%)'
-      : 'linear-gradient(135deg, #fffbf2 0%, #fff5e0 100%)'
-    : 'linear-gradient(135deg, #e7f2ff 0%, #fff9e6 100%)';
-
   const selectedBackground = isBuilderMode
     ? isForeign
       ? 'linear-gradient(135deg, #e6f0fa 0%, #d4e4f3 100%)'
       : 'linear-gradient(135deg, #fff5e0 0%, #ffecc4 100%)'
     : `linear-gradient(135deg, color-mix(in srgb, ${accentColor} 10%, #d4e7fc) 0%, color-mix(in srgb, ${accentColor} 10%, #fff2b8) 100%)`;
 
-  return (
-    <Paper
-      radius="lg"
-      shadow={selected ? 'xl' : 'sm'}
-      p="md"
-      style={{
-        minWidth: 220,
-        maxWidth: 280,
-        background: selected ? selectedBackground : baseBackground,
-        border: selected ? `2px solid ${accentColor}` : '2px solid transparent',
-        outline: selected
-          ? `4px solid color-mix(in srgb, ${accentColor} 22%, transparent)`
-          : 'none',
-        outlineOffset: selected ? '2px' : '0',
-        transition:
-          'box-shadow 150ms ease, background 150ms ease, border-color 150ms ease, outline 150ms ease',
-      }}
-    >
+  useEffect(() => {
+    updateNodeInternals(id);
+  }, [selected, id, updateNodeInternals]);
+
+  const handles = (
+    <>
       <Handle type="target" position={Position.Top} id="top" style={handleStyle} />
       <Handle type="target" position={Position.Right} id="right" style={handleStyle} />
       <Handle type="target" position={Position.Bottom} id="bottom" style={handleStyle} />
@@ -86,6 +69,48 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
       <Handle type="source" position={Position.Right} id="right" style={handleStyle} />
       <Handle type="source" position={Position.Bottom} id="bottom" style={handleStyle} />
       <Handle type="source" position={Position.Left} id="left" style={handleStyle} />
+    </>
+  );
+
+  if (!selected) {
+    return (
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8, cursor: 'pointer' }}>
+        <div
+          style={{
+            width: 32,
+            height: 32,
+            borderRadius: '50%',
+            background: accentColor,
+            boxShadow: `0 0 0 18px color-mix(in srgb, ${accentColor} 14%, transparent), 0 2px 6px rgba(0,0,0,0.1)`,
+            position: 'relative',
+          }}
+        >
+          {handles}
+        </div>
+        <Text fw={600} size="xs" ta="center" style={{ maxWidth: 120, lineHeight: 1.3 }} lineClamp={2}>
+          {data.title}
+        </Text>
+      </div>
+    );
+  }
+
+  return (
+    <Paper
+      radius="lg"
+      shadow="xl"
+      p="md"
+      style={{
+        minWidth: 220,
+        maxWidth: 280,
+        background: selectedBackground,
+        border: `2px solid ${accentColor}`,
+        outline: `4px solid color-mix(in srgb, ${accentColor} 22%, transparent)`,
+        outlineOffset: '2px',
+        transition:
+          'box-shadow 150ms ease, background 150ms ease, border-color 150ms ease, outline 150ms ease',
+      }}
+    >
+      {handles}
 
       <Stack gap="xs">
         <Group gap="sm" align="flex-start" wrap="nowrap">
@@ -119,8 +144,7 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
           </Stack>
         </Group>
 
-        {selected &&
-          topicId &&
+        {topicId &&
           (DETAIL_BUTTON_VARIANT === 'icon-text' ? (
             <Button
               leftSection={<IconEye size={14} />}
