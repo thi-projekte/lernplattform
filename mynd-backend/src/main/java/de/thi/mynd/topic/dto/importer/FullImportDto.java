@@ -6,6 +6,8 @@ import java.util.Map;
 
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +15,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public final class FullImportDto {
-
+  @NotNull
   private List<@Valid ImportTopicDto> topics;
-  private Map<@NotBlank String, List<@NotBlank String>> associations;
+  @NotNull
+  private Map<@NotBlank String, @Size(min = 1, max = 3) List<@NotBlank String>> associations;
 }
