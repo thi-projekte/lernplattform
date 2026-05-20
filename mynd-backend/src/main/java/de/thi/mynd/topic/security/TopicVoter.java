@@ -9,12 +9,13 @@ import java.util.Arrays;
 @ApplicationScoped
 public final class TopicVoter implements Voter<Topic> {
 
+  public static final String Create = "CREATE";
   public static final String Update = "UPDATE";
   public static final String Delete = "DELETE";
   public static final String AssignForeignTopics = "ASSIGN_FOREIGN_TOPICS";
 
   private static final String[] allowedAttributes =
-      new String[] {Update, Delete, AssignForeignTopics};
+      new String[] {Create, Update, Delete, AssignForeignTopics};
 
   @Override
   public boolean supports(String attribute, Object subject) {
@@ -26,6 +27,7 @@ public final class TopicVoter implements Voter<Topic> {
     String creatorId = identity.getPrincipal().getName();
 
     return switch (attribute) {
+      case Create -> identity.getRoles().contains("builder");
       case Update, AssignForeignTopics, Delete -> creatorId.equals(subject.creatorId);
       default -> false;
     };

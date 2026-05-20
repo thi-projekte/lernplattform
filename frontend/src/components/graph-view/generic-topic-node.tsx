@@ -10,7 +10,7 @@ import {
   Text,
   useMantineTheme,
 } from '@mantine/core';
-import { IconEye } from '@tabler/icons-react';
+import { IconCheck, IconEye } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import CategoryBadge from '../category-badge.tsx';
@@ -56,6 +56,7 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
   const progressPercent = isProgressCompleted
     ? 100
     : (learnProgress?.percentageCompleted ?? 0) * 100;
+    : Math.round((learnProgress?.percentageCompleted ?? 0) * 100);
   const handleStyle: CSSProperties = isBuilderMode
     ? { opacity: 0 }
     : { opacity: 0, pointerEvents: 'none' };
@@ -110,8 +111,15 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
               flexShrink: 0,
               marginTop: 3,
               boxShadow: '0 2px 6px rgba(15, 23, 42, 0.18)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
-          />
+          >
+            {!isBuilderMode && isProgressCompleted && (
+              <IconCheck size={12} stroke={3} color="white" />
+            )}
+          </div>
           <Stack gap={6} style={{ flex: 1, minWidth: 0 }}>
             <Text fw={600} size="sm" style={{ lineHeight: 1.3 }}>
               {data.title}
@@ -165,12 +173,23 @@ const GenericTopicNode = ({ data, selected }: GenericTopicNodeProps) => {
           ))}
 
         {learnProgress && (
-          <Progress
-            value={progressPercent}
-            color={isProgressCompleted ? 'green' : 'blue'}
-            size="xs"
-            radius="xl"
-          />
+          <Group gap="xs" align="center" wrap="nowrap">
+            <Text
+              size="xs"
+              fw={700}
+              c={isProgressCompleted ? 'green.7' : 'blue.7'}
+              style={{ minWidth: 36, textAlign: 'left' }}
+            >
+              {progressPercent}%
+            </Text>
+            <Progress
+              value={progressPercent}
+              color={isProgressCompleted ? 'green' : 'blue'}
+              size="xs"
+              radius="xl"
+              style={{ flex: 1 }}
+            />
+          </Group>
         )}
       </Stack>
     </Paper>

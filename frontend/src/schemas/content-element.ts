@@ -12,6 +12,13 @@ export const ContentElementTypeSchema = z.enum([
   'IMAGE',
 ]);
 
+export const ImportableContentElementTypeSchema = z.enum([
+  'YOUTUBE_LINK',
+  'SPOTIFY_LINK',
+  'RTF',
+  'URI',
+]);
+
 export type ContentElementType = z.infer<typeof ContentElementTypeSchema>;
 
 // ---- REQUESTS ----
@@ -184,3 +191,26 @@ export const AnyContentElementDtoSchema = PdfElementDtoSchema.or(VideoFileElemen
   .or(ImageElementDtoSchema);
 
 export type AnyContentElementDto = z.infer<typeof AnyContentElementDtoSchema>;
+
+const ImportableContentElementBase = z.object({
+  title: z.string(),
+  type: ImportableContentElementTypeSchema,
+  icon: z.string().nullish(),
+  rank: z.number().optional(),
+});
+
+const ImportableRtfElementDtoSchema = z
+  .object({
+    rtfText: z.string(),
+  })
+  .extend(ImportableContentElementBase.shape);
+
+const ImportableUriBasedElementDtoSchema = z
+  .object({
+    uri: z.url(),
+  })
+  .extend(ImportableContentElementBase.shape);
+
+export const ImportableContentElements = ImportableRtfElementDtoSchema.or(
+  ImportableUriBasedElementDtoSchema
+);
