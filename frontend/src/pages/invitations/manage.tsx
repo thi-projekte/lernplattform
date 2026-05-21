@@ -142,9 +142,7 @@ const ManageInvitationsPage = () => {
                 {sent.results.map((inv) => (
                   <Table.Tr key={inv.id}>
                     <Table.Td>
-                      <Text size="sm">
-                        {new Date(inv.createdAt).toLocaleDateString()}
-                      </Text>
+                      <Text size="sm">{new Date(inv.createdAt).toLocaleDateString()}</Text>
                     </Table.Td>
                     <Table.Td>
                       <Badge

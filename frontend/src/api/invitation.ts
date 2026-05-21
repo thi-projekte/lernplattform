@@ -53,11 +53,7 @@ export const useQueryInvitation = (id: string) =>
   });
 
 const sendInvitation = async (email: string) =>
-  apiClient.post(
-    '/auth/invitations',
-    { email },
-    { validateStatus: (status) => status === 202 }
-  );
+  apiClient.post('/auth/invitations', { email }, { validateStatus: (status) => status === 202 });
 
 export const useSendInvitationMutation = () => {
   const queryClient = useQueryClient();
