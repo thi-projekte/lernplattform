@@ -81,7 +81,9 @@ const ContentSidebarContent = ({
               loading={isPending}
               onClick={() => {
                 completeContentElement(selectedElement.id);
-                track('contentElementCompleted', { props: { contentElementId: selectedElement.id } });
+                track('contentElementCompleted', {
+                  props: { contentElementId: selectedElement.id },
+                });
               }}
               leftSection={<IconCheck size={14} />}
             >

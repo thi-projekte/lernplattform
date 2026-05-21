@@ -87,12 +87,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
         )}
 
         {isCompleted ? (
-          <Button
-            color="green"
-            variant="light"
-            disabled
-            leftSection={<IconCheck size={16} />}
-          >
+          <Button color="green" variant="light" disabled leftSection={<IconCheck size={16} />}>
             {t('topic.actions.completed')}
           </Button>
         ) : isStarted ? (
@@ -157,12 +152,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           </Text>
         </div>
       </Group>
-      <Button
-        variant="outline"
-        color="blue"
-        mt="sm"
-        leftSection={<IconMessageCircle size={16} />}
-      >
+      <Button variant="outline" color="blue" mt="sm" leftSection={<IconMessageCircle size={16} />}>
         {t('topic.myna.askButton')}
       </Button>
     </>

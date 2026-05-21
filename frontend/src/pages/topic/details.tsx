@@ -207,7 +207,11 @@ const TopicDetailsPage = () => {
                         <Title order={3}>{topic.title}</Title>
                         <Group gap={6} mt={6}>
                           {topic.categories?.map((cat) => (
-                            <CategoryBadge key={cat.id} title={cat.title} color={cat.color ?? '8b5cf6'} />
+                            <CategoryBadge
+                              key={cat.id}
+                              title={cat.title}
+                              color={cat.color ?? '8b5cf6'}
+                            />
                           ))}
                         </Group>
                         {learnProgress && (
