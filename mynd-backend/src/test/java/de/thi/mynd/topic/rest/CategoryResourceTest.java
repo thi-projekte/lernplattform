@@ -25,7 +25,7 @@ public class CategoryResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice")
+  @TestSecurity(user = "alice", roles = "authorizedUser")
   public void testSearch_whenNoParamProvided_thenReturnMaxOfFiveCategories() {
 
     Category demo = new Category();
@@ -50,7 +50,7 @@ public class CategoryResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice")
+  @TestSecurity(user = "alice", roles = "authorizedUser")
   public void testSearch_whenQueryProvided_thenFilterForTitle() {
 
     Category demo = new Category();
@@ -75,7 +75,7 @@ public class CategoryResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice")
+  @TestSecurity(user = "alice", roles = "authorizedUser")
   public void testSearch_whenQueryProvided_thenFilterForTitleLowercase() {
 
     Category demo = new Category();
@@ -100,7 +100,7 @@ public class CategoryResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice")
+  @TestSecurity(user = "alice", roles = "authorizedUser")
   public void testSearch_whenQueryProvided_thenFilterNotForColor() {
 
     Mockito.when(categoryRepository.findAllWithLimit(5)).thenReturn(Collections.emptyList());

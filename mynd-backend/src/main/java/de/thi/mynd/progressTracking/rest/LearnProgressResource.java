@@ -2,7 +2,7 @@ package de.thi.mynd.progressTracking.rest;
 
 import de.thi.mynd.progressTracking.dto.TopicLearnProgressDto;
 import de.thi.mynd.progressTracking.service.LearnProgressService;
-import io.quarkus.security.Authenticated;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -18,7 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 @Path("/learn-progress")
-@Authenticated
+@RolesAllowed("authorizedUser")
 @Tag(name = "Learn Progress")
 @SecurityRequirement(name = "keycloak")
 public final class LearnProgressResource {
