@@ -1,0 +1,14 @@
+@keyframes nodeEnter {
+  from {
+    opacity: 0;
+    scale: 0.88;
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+  }
+}
+
+.react-flow__node {
+  animation: nodeEnter 0.22s ease-out both;
+}

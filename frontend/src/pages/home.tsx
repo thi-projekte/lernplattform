@@ -234,6 +234,9 @@ const HomePage = () => {
     const graphNode = node as Node<SkillTreeNodeData>;
     const topic = graphNode.data.payload;
     setSelectedTopicId(topic.id);
+    setExpandedTopicIds((current) =>
+      current.includes(topic.id) ? current : [...current, topic.id]
+    );
 
     setLastExpandedNode({ id: graphNode.id, position: node.position });
 

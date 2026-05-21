@@ -6,6 +6,7 @@ import { MantineProvider } from '@mantine/core';
 import { theme } from './theme.ts';
 
 import './i18n.ts';
+import './app.css';
 
 import '@mantine/core/styles.css';
 import '@mantine/dropzone/styles.css';
