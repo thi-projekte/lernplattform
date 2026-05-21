@@ -87,7 +87,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
     </>
   );
 
-  const collapsedColor = isProgressCompleted ? '#000000' : accentColor;
+  const collapsedColor = isProgressCompleted ? '#40c057' : accentColor;
 
   if (!selected) {
     return (
@@ -98,7 +98,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
           alignItems: 'center',
           gap: 8,
           cursor: 'pointer',
-          opacity: isProgressCompleted ? 0.55 : 1,
+          opacity: 1,
         }}
       >
         <div
@@ -108,8 +108,8 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
             borderRadius: '50%',
             background: collapsedColor,
             boxShadow: isProgressCompleted
-              ? `0 0 0 10px color-mix(in srgb, #94a3b8 8%, transparent), 0 1px 3px rgba(0,0,0,0.08)`
-              : `0 0 0 18px color-mix(in srgb, ${accentColor} 14%, transparent), 0 2px 6px rgba(0,0,0,0.1)`,
+              ? `0 2px 6px rgba(0,0,0,0.12)`
+              : `0 0 0 18px color-mix(in srgb, ${accentColor} 20%, transparent), 0 2px 6px rgba(0,0,0,0.1)`,
             position: 'relative',
           }}
         >

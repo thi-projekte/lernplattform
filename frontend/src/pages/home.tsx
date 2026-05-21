@@ -33,6 +33,16 @@ const nodeTypes = {
   skillTreeTopic: GenericTopicNode,
 };
 
+const POSITIONS_STORAGE_KEY = 'skillTree.nodePositions';
+
+const loadSavedPositions = (): Record<SkillTreeOrientation, TopicGraphNodePositions> => {
+  try {
+    const saved = localStorage.getItem(POSITIONS_STORAGE_KEY);
+    if (saved) return JSON.parse(saved) as Record<SkillTreeOrientation, TopicGraphNodePositions>;
+  } catch {}
+  return { vertical: {}, horizontal: {} };
+};
+
 const cachedDagrePositions: Record<SkillTreeOrientation, TopicGraphNodePositions> = {
   vertical: {},
   horizontal: {},
@@ -85,10 +95,10 @@ const HomePage = () => {
   }, [hiddenTopicIds]);
   const [nodePositionsByOrientation, setNodePositionsByOrientation] = useState<
     Record<SkillTreeOrientation, TopicGraphNodePositions>
-  >({
-    vertical: {},
-    horizontal: {},
-  });
+  >(loadSavedPositions);
+  useEffect(() => {
+    localStorage.setItem(POSITIONS_STORAGE_KEY, JSON.stringify(nodePositionsByOrientation));
+  }, [nodePositionsByOrientation]);
   const [isViewportLocked, setIsViewportLocked] = useState(false);
   const [lastExpandedNode, setLastExpandedNode] = useState<{
     id: string;
