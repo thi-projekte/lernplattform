@@ -93,7 +93,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: 'log
         </Box>
       )}
 
-      <Container size={520} mt="md" mb="xl">
+      <Container className="mynd-login-container" size={520} mt="md" mb="xl">
         <Paper
           className="mynd-login-card"
           p={42}
