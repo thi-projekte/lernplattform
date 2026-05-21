@@ -193,7 +193,13 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
               color="blue"
               size="xs"
               fullWidth
-              style={{'--button-bg': '#e7f5ff', '--button-hover': '#d0ebff', '--button-color': '#1971c2'} as CSSProperties}
+              style={
+                {
+                  '--button-bg': '#e7f5ff',
+                  '--button-hover': '#d0ebff',
+                  '--button-color': '#1971c2',
+                } as CSSProperties
+              }
               onClick={(event) => {
                 event.stopPropagation();
                 navigate(`/topics/${topicId}/details`);
@@ -225,7 +231,13 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
             color="gray"
             size="xs"
             fullWidth
-            style={{'--button-bg': '#f1f3f5', '--button-hover': '#e9ecef', '--button-color': '#495057'} as CSSProperties}
+            style={
+              {
+                '--button-bg': '#f1f3f5',
+                '--button-hover': '#e9ecef',
+                '--button-color': '#495057',
+              } as CSSProperties
+            }
             onClick={(event) => {
               event.stopPropagation();
               data.onExpand?.();
@@ -242,7 +254,9 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
             color="gray"
             size="xs"
             fullWidth
-            style={{'--button-color': '#868e96', '--button-hover': 'rgba(0,0,0,0.06)'} as CSSProperties}
+            style={
+              { '--button-color': '#868e96', '--button-hover': 'rgba(0,0,0,0.06)' } as CSSProperties
+            }
             onClick={(event) => {
               event.stopPropagation();
               data.onHide?.();

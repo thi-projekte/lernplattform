@@ -40,7 +40,7 @@
   --node-foreign-selected-bg: linear-gradient(135deg, #e6f0fa 0%, #d4e4f3 100%);
   --node-journey-bg: linear-gradient(135deg, #e7f2ff 0%, #fff9e6 100%);
   --card-bg: rgba(255, 255, 255, 0.04);
-  --card-border: rgba(255, 255, 255, 0.10);
+  --card-border: rgba(255, 255, 255, 0.1);
   --card-selected-bg: rgba(51, 154, 240, 0.16);
   --card-selected-border: rgba(51, 154, 240, 0.45);
   --panel-right-bg: rgba(255, 255, 255, 0.03);
