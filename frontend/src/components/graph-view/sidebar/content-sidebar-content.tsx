@@ -39,7 +39,7 @@ const ContentSidebarContent = ({
       <Group justify="space-between" align="flex-start">
         <Group gap="sm" align="flex-start" wrap="nowrap">
           {iconComponent && (
-            <ThemeIcon size={36} radius="md" variant="light" color="teal">
+            <ThemeIcon size={36} radius="md" variant="light" color="blue">
               {createElement(iconComponent, { size: 22 })}
             </ThemeIcon>
           )}
@@ -65,9 +65,10 @@ const ContentSidebarContent = ({
         <Button
           color="green"
           variant="light"
-          fullWidth
+          size="sm"
           disabled
-          leftSection={<IconCheck size={16} />}
+          leftSection={<IconCheck size={14} />}
+          style={{ alignSelf: 'flex-start' }}
         >
           {t('topic.actions.contentElementCompleted')}
         </Button>
@@ -75,14 +76,17 @@ const ContentSidebarContent = ({
         <Tooltip label={t('topic.actions.start')} disabled={topicStarted} withArrow>
           <Button
             color="blue"
-            fullWidth
+            size="sm"
             disabled={!canMarkCompleted}
             loading={isPending}
             onClick={() => {
               completeContentElement(selectedElement.id);
-              track('contentElementCompleted', { props: { contentElementId: selectedElement.id } });
+              track('contentElementCompleted', {
+                props: { contentElementId: selectedElement.id },
+              });
             }}
-            leftSection={<IconCheck size={16} />}
+            leftSection={<IconCheck size={14} />}
+            style={{ alignSelf: 'flex-start' }}
           >
             {t('topic.actions.markContentElementCompleted')}
           </Button>

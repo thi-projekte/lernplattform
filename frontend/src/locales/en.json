@@ -89,7 +89,9 @@
     "myna": {
       "subtitle": "AI Assistant",
       "description": "Myna can summarize the saved content and suggest suitable next sources.",
-      "askButton": "Ask Myna"
+      "askButton": "Ask Myna",
+      "comingSoon": "Chat coming soon",
+      "inputPlaceholder": "Ask Myna something..."
     },
     "tabs": {
       "visual": "Visual",
@@ -104,10 +106,12 @@
       "completeBlockedHint": "Mark all content elements as completed first.",
       "completed": "Completed",
       "markContentElementCompleted": "Mark as completed",
-      "contentElementCompleted": "Completed"
+      "contentElementCompleted": "Completed",
+      "overview": "Topic overview"
     },
     "progress": {
-      "label": "Progress"
+      "label": "Progress",
+      "elementsCompleted": "elements completed"
     },
     "fields": {
       "title": "Title",

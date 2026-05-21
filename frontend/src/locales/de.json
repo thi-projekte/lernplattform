@@ -89,7 +89,9 @@
     "myna": {
       "subtitle": "KI-Assistent",
       "description": "Myna kann die gespeicherten Inhalte zusammenfassen und passende nächste Quellen vorschlagen.",
-      "askButton": "Myna fragen"
+      "askButton": "Myna fragen",
+      "comingSoon": "Chat folgt in Kürze",
+      "inputPlaceholder": "Myna etwas fragen..."
     },
     "tabs": {
       "visual": "Visuell",
@@ -104,10 +106,12 @@
       "completeBlockedHint": "Markiere zuerst alle Inhalte als abgeschlossen.",
       "completed": "Abgeschlossen",
       "markContentElementCompleted": "Als abgeschlossen markieren",
-      "contentElementCompleted": "Abgeschlossen"
+      "contentElementCompleted": "Abgeschlossen",
+      "overview": "Themenübersicht"
     },
     "progress": {
-      "label": "Fortschritt"
+      "label": "Fortschritt",
+      "elementsCompleted": "Inhalte abgeschlossen"
     },
     "fields": {
       "title": "Titel",
