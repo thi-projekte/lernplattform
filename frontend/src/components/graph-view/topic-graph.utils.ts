@@ -9,8 +9,8 @@ import type {
 } from './topic-graph.types';
 import type { SkillTreeNode, SkillTreeOrientation } from './skill-tree.types.ts';
 
-// Approximate dimensions of the rendered topic card. Dagre uses these to
-// reserve space when laying out the graph so the cards don't visually overlap.
+// Approximate dimensions of the rendered topic card. Used to reserve space
+// during layout so cards don't visually overlap.
 const SKILL_NODE_WIDTH = 280;
 const SKILL_NODE_HEIGHT = 120;
 const TOPIC_NODE_HORIZONTAL_GAP = 48;
@@ -73,6 +73,7 @@ const applyDagreLayout = <T extends { id: string; position: { x: number; y: numb
     };
   });
 };
+
 
 // The edge handles are derived from node angles so arrows stay attached to the
 // most natural side of each node. Be careful when changing this mapping,
@@ -300,7 +301,7 @@ export const buildTopicAssociationsGraph = (
 export const buildPersonalTopicsGraph = (
   topics: GraphTopicDto[],
   currentUsername?: string
-): { nodes: TopicGraphNode[]; edges: Edge[] } => {
+) => {
   const nodes: TopicGraphNode[] = [];
   const edges: Edge[] = [];
 
@@ -473,9 +474,9 @@ export const buildPersonalTopicsGraph = (
 
   const layoutedNodes = applyDagreLayout(nodes, edges, 'vertical', {
     nodeWidth: 160,
-    nodeHeight: 90,
-    nodesep: 40,
-    ranksep: 70,
+    nodeHeight: 80,
+    nodesep: 60,
+    ranksep: 120,
   });
 
   const finalPositions = new Map(layoutedNodes.map((node) => [node.id, node.position]));
@@ -591,7 +592,7 @@ export const buildSkillTreeGraph = (
   topics: GraphTopicDto[] = [],
   orientation: SkillTreeOrientation = 'vertical',
   currentUsername?: string
-): { nodes: SkillTreeNode[]; edges: Edge[] } => {
+) => {
   if (topics.length === 0) {
     return { nodes: [], edges: [] };
   }
@@ -889,10 +890,10 @@ export const buildSkillTreeGraph = (
   });
 
   const layoutedNodes = applyDagreLayout(nodes, edges, orientation, {
-    nodeWidth: 160,
-    nodeHeight: 100,
-    nodesep: 40,
-    ranksep: 80,
+    nodeWidth: 280,
+    nodeHeight: 140,
+    nodesep: 60,
+    ranksep: 100,
   });
   return { nodes: layoutedNodes, edges };
 };
