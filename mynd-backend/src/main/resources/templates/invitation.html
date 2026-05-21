@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to MYnd</title>
+    <style>
+        /* Reset styles for email clients */
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            background-color: #f4f6f8;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
+        }
+        table {
+            border-collapse: collapse;
+        }
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+            background-color: #f4f6f8;
+            padding: 40px 0;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: #ffffff;
+            margin: 0 auto;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+        .header {
+            background-color: #1a1f36;
+            padding: 32px;
+            text-align: center;
+        }
+        .logo {
+            max-height: 50px;
+            width: auto;
+            margin-bottom: 8px;
+        }
+        .slogan {
+            color: #9ba4b4;
+            font-size: 14px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin: 4px 0 0 0;
+        }
+        .content {
+            padding: 40px 32px;
+            color: #333333;
+            line-height: 1.6;
+        }
+        .greeting {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1f36;
+            margin-top: 0;
+            margin-bottom: 16px;
+        }
+        .body-text {
+            font-size: 16px;
+            color: #4a5568;
+            margin-bottom: 24px;
+        }
+        .cta-container {
+            text-align: center;
+            margin: 32px 0;
+        }
+        .cta-button {
+            background-color: #4f46e5;
+            color: #ffffff !important;
+            text-decoration: none;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            display: inline-block;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.2);
+        }
+        .footer {
+            background-color: #f8fafc;
+            padding: 24px;
+            text-align: center;
+            font-size: 12px;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+        }
+    </style>
+</head>
+<body>
+<center class="wrapper">
+    <table class="container" role="presentation" cellspacing="0" cellpadding="0" border="0">
+        <!-- Header Section -->
+        <tr>
+            <td class="header">
+                <!-- Dynamic Logo URL Placeholder -->
+                <img src="{logoUrl}" alt="mynd Logo" class="logo">
+                <p class="slogan">MYnd, train your brain.</p>
+            </td>
+        </tr>
+
+        <!-- Content Section -->
+        <tr>
+            <td class="content">
+                <h1 class="greeting">Hello,</h1>
+                <p class="body-text">
+                    You have been exclusively invited to join <strong>MYnd</strong>—a specialized platform designed to sharpen your cognitive skills, boost focus, and elevate your daily mental performance.
+                </p>
+                <p class="body-text">
+                    Ready to unlock your brain's full potential? Click the personalized link below to activate your account and start training today.
+                </p>
+
+                <!-- Call To Action Button -->
+                <div class="cta-container">
+                    <a href="{invitationLink}" class="cta-button" target="_blank">Accept Invitation</a>
+                </div>
+
+                <p class="body-text" style="font-size: 14px; color: #718096;">
+                    If the button above doesn't work, copy and paste this URL into your browser:<br>
+                    <span style="color: #4f46e5; word-break: break-all;">{invitationLink}</span>
+                </p>
+            </td>
+        </tr>
+
+        <!-- Footer Section -->
+        <tr>
+            <td class="footer">
+                <p style="margin: 0 0 8px 0;">&copy; 2026 MYnd. All rights reserved.</p>
+                <p style="margin: 0;">You received this because an account was created for you on MYnd.</p>
+            </td>
+        </tr>
+    </table>
+</center>
+</body>
+</html>

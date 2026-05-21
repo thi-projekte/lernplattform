@@ -115,7 +115,7 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     Optional<LearnProgressContentElement> learnProgressContentElement =
         getByContentElementIdAndCurrentCreator(contentElementId);
 
-    if (learnProgressContentElement.isPresent()) {
+    if (learnProgressContentElement.isPresent() && learnProgressContentElement.get().completed) {
       throw new ContentElementLearnProgressAlreadyCompletedException(
           "Content element already completed");
     }
@@ -137,7 +137,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     id.contentElementId = contentElementId;
     id.creatorId = creatorId;
 
-    LearnProgressContentElement progressElement = new LearnProgressContentElement();
+    LearnProgressContentElement progressElement =
+        learnProgressContentElement.orElse(new LearnProgressContentElement());
     progressElement.id = id;
     progressElement.completed = true;
     progressElement.progressTopic = progressTopic;
