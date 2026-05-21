@@ -71,12 +71,14 @@ const ManageInvitationsPage = () => {
               thickness={10}
               sections={[{ value: usedPercent, color: 'blue' }]}
               label={
-                <Text ta="center" size="sm" fw={700}>
-                  {status?.invitationsLeft ?? 0}
+                <Stack gap={0} align="center">
+                  <Text ta="center" size="sm" fw={700}>
+                    {status?.invitationsLeft ?? 0}
+                  </Text>
                   <Text size="xs" c="dimmed" fw={400}>
                     {t('invitation.manage.left')}
                   </Text>
-                </Text>
+                </Stack>
               }
             />
             <Stack gap={4} pt={8}>
