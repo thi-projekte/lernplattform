@@ -39,7 +39,9 @@ const loadSavedPositions = (): Record<SkillTreeOrientation, TopicGraphNodePositi
   try {
     const saved = localStorage.getItem(POSITIONS_STORAGE_KEY);
     if (saved) return JSON.parse(saved) as Record<SkillTreeOrientation, TopicGraphNodePositions>;
-  } catch {}
+  } catch {
+    return { vertical: {}, horizontal: {} };
+  }
   return { vertical: {}, horizontal: {} };
 };
 
