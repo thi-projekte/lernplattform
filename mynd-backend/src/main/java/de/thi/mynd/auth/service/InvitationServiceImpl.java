@@ -146,6 +146,6 @@ public final class InvitationServiceImpl implements InvitationService {
   private UserProfile getCurrentUsersProfile() {
     return userProfileService
         .getPersonalUserProfile()
-        .orElse(userProfileService.createPersonalUserProfile());
+        .orElseGet(() -> userProfileService.createPersonalUserProfile());
   }
 }

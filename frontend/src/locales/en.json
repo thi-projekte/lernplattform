@@ -4,7 +4,8 @@
     "builderMode": "Builder Mode",
     "createTopic": "Create topic",
     "editTopic": "Edit topic",
-    "account": "My profile"
+    "account": "My profile",
+    "invitations": "Invitations"
   },
   "journey": {
     "title": "Your journey map",
@@ -226,5 +227,40 @@
     "role_selection_label": "Select role",
     "role_selection_placeholder": "Select your role",
     "submit": "Submit"
+  },
+  "invitation": {
+    "manage": {
+      "title": "Invitations",
+      "left": "left",
+      "leftDetail": "{{count}} invitation(s) remaining",
+      "sentDetail": "{{count}} invitation(s) sent",
+      "sendTitle": "Send invitation",
+      "emailPlaceholder": "Email address",
+      "send": "Send",
+      "sent": "Invitation sent to {{email}}",
+      "sendError": "Failed to send invitation. Please try again.",
+      "noInvitationsLeft": "You have no invitations left.",
+      "historyTitle": "Sent invitations",
+      "noHistory": "No invitations sent yet.",
+      "statusSent": "Sent",
+      "columns": {
+        "date": "Date",
+        "status": "Status"
+      }
+    },
+    "accept": {
+      "title": "Accept invitation",
+      "description": "You have been invited to join the platform. Click the button below to accept.",
+      "button": "Accept invitation",
+      "successMessage": "Invitation accepted! Redirecting...",
+      "errorMessage": "Could not accept the invitation. The link may be expired or already used.",
+      "invalidLink": "This invitation link is invalid or incomplete."
+    },
+    "noAccess": {
+      "title": "Access restricted",
+      "description": "You need an invitation to access this platform.",
+      "acceptButton": "Accept my invitation",
+      "contactHint": "Contact a builder to receive an invitation."
+    }
   }
 }
