@@ -78,7 +78,8 @@ public final class UserProfileServiceImpl implements UserProfileService {
   @Override
   @Transactional
   public void updateUserProfile(UserProfile userProfile) {
-    userProfileRepository.persistAndFlush(userProfile);
+    userProfileRepository.getEntityManager().merge(userProfile);
+    userProfileRepository.flush();
   }
 
   @Override
