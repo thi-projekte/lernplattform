@@ -104,7 +104,11 @@
       "completeBlockedHint": "Mark all content elements as completed first.",
       "completed": "Completed",
       "markContentElementCompleted": "Mark as completed",
-      "contentElementCompleted": "Completed"
+      "contentElementCompleted": "Completed",
+      "importJson": "Import JSON",
+      "importJsonSubmit": "Import",
+      "importJsonSuccess": "Topics imported successfully",
+      "importJsonError": "Invalid JSON format"
     },
     "progress": {
       "label": "Progress"

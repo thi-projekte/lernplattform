@@ -2,6 +2,7 @@ import { Layout } from '../../components/layout.tsx';
 import {
   useDeleteTopicMutation,
   useEditTopicMutation,
+  useImportTopicsMutation,
   useQueryPersonalTopicsPaginated,
   useQueryTopic,
 } from '../../api/topic.ts';
@@ -12,8 +13,10 @@ import EntityTable from '../../components/entity-table.tsx';
 import {
   ActionIcon,
   Button,
+  FileInput,
   Flex,
   Group,
+  Modal,
   Paper,
   SegmentedControl,
   Stack,
@@ -22,9 +25,11 @@ import {
   Tooltip,
   useMantineTheme,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
 import type { OnConnect } from '@xyflow/react';
-import { IconLink, IconPlusFilled, IconTrash } from '@tabler/icons-react';
+import { IconFileImport, IconLink, IconPlusFilled, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
 import LayoutLoader from '../../components/layout-loader.tsx';
@@ -57,6 +62,10 @@ const BuilderModeListPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { mutate } = useDeleteTopicMutation();
+  const [importOpen, { open: openImport, close: closeImport }] = useDisclosure(false);
+  const [importFile, setImportFile] = useState<File | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+  const { mutate: importTopics, isPending: isImporting } = useImportTopicsMutation();
   const { mutateAsync: createAssociation, isPending: isCreatingAssociation } =
     useCreateAssociation();
   const columns = useTopicColumns({
@@ -257,14 +266,67 @@ const BuilderModeListPage = () => {
   return (
     <Layout>
       <Title>{t('topic.headings.personalTopics')}</Title>
-      <Flex justify="flex-end" w="100%" mt={12}>
-        <Flex justify="center" w={190}>
-          <Button variant="filled" onClick={() => navigate('/builder-mode/topics/create')}>
-            <IconPlusFilled />
-            &nbsp;{t('topic.actions.create')}
-          </Button>
-        </Flex>
+      <Flex justify="flex-end" w="100%" mt={12} gap="sm">
+        <Button
+          variant="default"
+          leftSection={<IconFileImport size={16} />}
+          onClick={openImport}
+        >
+          {t('topic.actions.importJson')}
+        </Button>
+        <Button variant="filled" onClick={() => navigate('/builder-mode/topics/create')}>
+          <IconPlusFilled />
+          &nbsp;{t('topic.actions.create')}
+        </Button>
       </Flex>
+
+      <Modal
+        opened={importOpen}
+        onClose={() => { closeImport(); setImportFile(null); setImportError(null); }}
+        title={t('topic.actions.importJson')}
+        centered
+      >
+        <Stack gap="md">
+          <FileInput
+            label="JSON"
+            accept=".json,application/json"
+            value={importFile}
+            onChange={(f) => { setImportFile(f); setImportError(null); }}
+            placeholder="topics.json"
+            error={importError}
+          />
+          <Button
+            fullWidth
+            disabled={!importFile}
+            loading={isImporting}
+            onClick={() => {
+              if (!importFile) return;
+              const reader = new FileReader();
+              reader.onload = (e) => {
+                try {
+                  const parsed = JSON.parse(e.target?.result as string);
+                  importTopics(parsed, {
+                    onSuccess: () => {
+                      notifications.show({ color: 'green', message: t('topic.actions.importJsonSuccess') });
+                      closeImport();
+                      setImportFile(null);
+                      setImportError(null);
+                    },
+                    onError: () => {
+                      setImportError(t('topic.actions.importJsonError'));
+                    },
+                  });
+                } catch {
+                  setImportError(t('topic.actions.importJsonError'));
+                }
+              };
+              reader.readAsText(importFile);
+            }}
+          >
+            {t('topic.actions.importJsonSubmit')}
+          </Button>
+        </Stack>
+      </Modal>
       <Stack gap="md" mt={12}>
         <Stack gap="xs" align="center">
           <Group justify="center" w="100%">
