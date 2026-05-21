@@ -50,6 +50,6 @@ public final class AuthServiceImpl implements AuthService {
   private UserProfile getUserProfileOfCurrentUser() {
     return userProfileService
         .getPersonalUserProfile()
-        .orElse(userProfileService.createPersonalUserProfile());
+        .orElseGet(() -> userProfileService.createPersonalUserProfile());
   }
 }

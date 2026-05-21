@@ -4,7 +4,8 @@
     "builderMode": "Builder Modus",
     "createTopic": "Thema erstellen",
     "editTopic": "Thema bearbeiten",
-    "account": "Mein Profil"
+    "account": "Mein Profil",
+    "invitations": "Einladungen"
   },
   "journey": {
     "title": "Deine Journey Map",
@@ -104,10 +105,12 @@
       "completeBlockedHint": "Markiere zuerst alle Inhalte als abgeschlossen.",
       "completed": "Abgeschlossen",
       "markContentElementCompleted": "Als abgeschlossen markieren",
-      "contentElementCompleted": "Abgeschlossen"
+      "contentElementCompleted": "Abgeschlossen",
+      "overview": "Themenübersicht"
     },
     "progress": {
-      "label": "Fortschritt"
+      "label": "Fortschritt",
+      "elementsCompleted": "Inhalte abgeschlossen"
     },
     "fields": {
       "title": "Titel",
@@ -219,5 +222,40 @@
     "role_selection_label": "Rolle auswählen",
     "role_selection_placeholder": "Wähle deine Rolle",
     "submit": "Bestätigen"
+  },
+  "invitation": {
+    "manage": {
+      "title": "Einladungen",
+      "left": "übrig",
+      "leftDetail": "{{count}} Einladung(en) verbleibend",
+      "sentDetail": "{{count}} Einladung(en) verschickt",
+      "sendTitle": "Einladung versenden",
+      "emailPlaceholder": "E-Mail-Adresse",
+      "send": "Senden",
+      "sent": "Einladung an {{email}} gesendet",
+      "sendError": "Einladung konnte nicht gesendet werden. Bitte versuche es erneut.",
+      "noInvitationsLeft": "Du hast keine Einladungen mehr übrig.",
+      "historyTitle": "Gesendete Einladungen",
+      "noHistory": "Noch keine Einladungen gesendet.",
+      "statusSent": "Gesendet",
+      "columns": {
+        "date": "Datum",
+        "status": "Status"
+      }
+    },
+    "accept": {
+      "title": "Einladung annehmen",
+      "description": "Du wurdest eingeladen, der Plattform beizutreten. Klicke auf den Button, um die Einladung anzunehmen.",
+      "button": "Einladung annehmen",
+      "successMessage": "Einladung angenommen! Weiterleitung...",
+      "errorMessage": "Einladung konnte nicht angenommen werden. Der Link ist möglicherweise abgelaufen oder wurde bereits verwendet.",
+      "invalidLink": "Dieser Einladungslink ist ungültig oder unvollständig."
+    },
+    "noAccess": {
+      "title": "Zugriff gesperrt",
+      "description": "Du benötigst eine Einladung, um auf diese Plattform zuzugreifen.",
+      "acceptButton": "Einladung annehmen",
+      "contactHint": "Wende dich an einen Builder, um eine Einladung zu erhalten."
+    }
   }
 }
