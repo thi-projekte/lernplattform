@@ -61,37 +61,37 @@ const ContentSidebarContent = ({
 
       <ContentElementDisplay contentElement={selectedElement} />
 
-      <Group>
-        {isElementCompleted ? (
+      {isElementCompleted ? (
+        <Button
+          color="green"
+          variant="light"
+          size="sm"
+          disabled
+          leftSection={<IconCheck size={14} />}
+          style={{ alignSelf: 'flex-start' }}
+        >
+          {t('topic.actions.contentElementCompleted')}
+        </Button>
+      ) : (
+        <Tooltip label={t('topic.actions.start')} disabled={topicStarted} withArrow>
           <Button
-            color="green"
-            variant="light"
+            color="blue"
             size="sm"
-            disabled
+            disabled={!canMarkCompleted}
+            loading={isPending}
+            onClick={() => {
+              completeContentElement(selectedElement.id);
+              track('contentElementCompleted', {
+                props: { contentElementId: selectedElement.id },
+              });
+            }}
             leftSection={<IconCheck size={14} />}
+            style={{ alignSelf: 'flex-start' }}
           >
-            {t('topic.actions.contentElementCompleted')}
+            {t('topic.actions.markContentElementCompleted')}
           </Button>
-        ) : (
-          <Tooltip label={t('topic.actions.start')} disabled={topicStarted} withArrow>
-            <Button
-              color="blue"
-              size="sm"
-              disabled={!canMarkCompleted}
-              loading={isPending}
-              onClick={() => {
-                completeContentElement(selectedElement.id);
-                track('contentElementCompleted', {
-                  props: { contentElementId: selectedElement.id },
-                });
-              }}
-              leftSection={<IconCheck size={14} />}
-            >
-              {t('topic.actions.markContentElementCompleted')}
-            </Button>
-          </Tooltip>
-        )}
-      </Group>
+        </Tooltip>
+      )}
 
       <Modal
         opened={opened}
