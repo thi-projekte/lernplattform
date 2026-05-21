@@ -267,11 +267,7 @@ const BuilderModeListPage = () => {
     <Layout>
       <Title>{t('topic.headings.personalTopics')}</Title>
       <Flex justify="flex-end" w="100%" mt={12} gap="sm">
-        <Button
-          variant="default"
-          leftSection={<IconFileImport size={16} />}
-          onClick={openImport}
-        >
+        <Button variant="default" leftSection={<IconFileImport size={16} />} onClick={openImport}>
           {t('topic.actions.importJson')}
         </Button>
         <Button variant="filled" onClick={() => navigate('/builder-mode/topics/create')}>
@@ -282,7 +278,11 @@ const BuilderModeListPage = () => {
 
       <Modal
         opened={importOpen}
-        onClose={() => { closeImport(); setImportFile(null); setImportError(null); }}
+        onClose={() => {
+          closeImport();
+          setImportFile(null);
+          setImportError(null);
+        }}
         title={t('topic.actions.importJson')}
         centered
       >
@@ -291,7 +291,10 @@ const BuilderModeListPage = () => {
             label="JSON"
             accept=".json,application/json"
             value={importFile}
-            onChange={(f) => { setImportFile(f); setImportError(null); }}
+            onChange={(f) => {
+              setImportFile(f);
+              setImportError(null);
+            }}
             placeholder="topics.json"
             error={importError}
           />
@@ -307,7 +310,10 @@ const BuilderModeListPage = () => {
                   const parsed = JSON.parse(e.target?.result as string);
                   importTopics(parsed, {
                     onSuccess: () => {
-                      notifications.show({ color: 'green', message: t('topic.actions.importJsonSuccess') });
+                      notifications.show({
+                        color: 'green',
+                        message: t('topic.actions.importJsonSuccess'),
+                      });
                       closeImport();
                       setImportFile(null);
                       setImportError(null);
