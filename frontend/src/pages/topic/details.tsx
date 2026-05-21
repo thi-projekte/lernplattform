@@ -61,7 +61,9 @@ const TopicDetailsPage = () => {
   const contentElements: AnyContentElementDto[] = topic?.contentElements ?? [];
   const learnProgress = topic?.learnProgress;
 
-  const contentElementIds = new Set(topic?.contentElements?.map((el: AnyContentElementDto) => el.id) ?? []);
+  const contentElementIds = new Set(
+    topic?.contentElements?.map((el: AnyContentElementDto) => el.id) ?? []
+  );
   const completedIds = (learnProgress?.completedContentElementIds ?? []).filter((id: string) =>
     contentElementIds.has(id)
   );
