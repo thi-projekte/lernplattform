@@ -95,9 +95,8 @@ const HomePage = () => {
   useEffect(() => {
     cachedHiddenTopicIds = hiddenTopicIds;
   }, [hiddenTopicIds]);
-  const [nodePositionsByOrientation, setNodePositionsByOrientation] = useState<
-    Record<SkillTreeOrientation, TopicGraphNodePositions>
-  >(loadSavedPositions);
+  const [nodePositionsByOrientation, setNodePositionsByOrientation] =
+    useState<Record<SkillTreeOrientation, TopicGraphNodePositions>>(loadSavedPositions);
   useEffect(() => {
     localStorage.setItem(POSITIONS_STORAGE_KEY, JSON.stringify(nodePositionsByOrientation));
   }, [nodePositionsByOrientation]);

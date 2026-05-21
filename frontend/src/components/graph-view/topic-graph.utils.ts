@@ -74,8 +74,6 @@ const applyDagreLayout = <T extends { id: string; position: { x: number; y: numb
   });
 };
 
-
-
 const overlapsExistingTopicNode = (
   candidate: { x: number; y: number },
   occupiedPositions: { x: number; y: number }[]
