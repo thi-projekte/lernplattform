@@ -135,12 +135,22 @@ const TopicDetailsPage = () => {
                       })}
                     >
                       <Group gap="sm" wrap="nowrap">
-                        <ThemeIcon size={36} radius="md" variant="light" color="violet" style={{ flexShrink: 0 }}>
+                        <ThemeIcon
+                          size={36}
+                          radius="md"
+                          variant="light"
+                          color="violet"
+                          style={{ flexShrink: 0 }}
+                        >
                           {createElement(IconLayoutList, { size: 18 })}
                         </ThemeIcon>
                         <div style={{ flex: 1, minWidth: 0 }}>
-                          <Text size="sm" fw={600} truncate>{topic.title}</Text>
-                          <Text size="xs" c="dimmed">{t('topic.actions.overview')}</Text>
+                          <Text size="sm" fw={600} truncate>
+                            {topic.title}
+                          </Text>
+                          <Text size="xs" c="dimmed">
+                            {t('topic.actions.overview')}
+                          </Text>
                         </div>
                       </Group>
                     </UnstyledButton>
