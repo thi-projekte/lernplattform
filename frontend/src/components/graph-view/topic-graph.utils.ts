@@ -435,8 +435,8 @@ export const buildPersonalTopicsGraph = (topics: GraphTopicDto[], currentUsernam
         target: associatedTopicId,
         type: 'straight',
         style: {
-          stroke: '#cbd5e1',
-          strokeWidth: 1.25,
+          stroke: '#7a90a8',
+          strokeWidth: 0.7,
         },
       });
     });
