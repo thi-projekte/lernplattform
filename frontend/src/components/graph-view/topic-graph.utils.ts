@@ -74,7 +74,6 @@ const applyDagreLayout = <T extends { id: string; position: { x: number; y: numb
   });
 };
 
-
 // The edge handles are derived from node angles so arrows stay attached to the
 // most natural side of each node. Be careful when changing this mapping,
 // because it affects edge routing and label readability across graph variants.
@@ -298,10 +297,7 @@ export const buildTopicAssociationsGraph = (
   return { nodes: finalNodes, edges };
 };
 
-export const buildPersonalTopicsGraph = (
-  topics: GraphTopicDto[],
-  currentUsername?: string
-) => {
+export const buildPersonalTopicsGraph = (topics: GraphTopicDto[], currentUsername?: string) => {
   const nodes: TopicGraphNode[] = [];
   const edges: Edge[] = [];
 
