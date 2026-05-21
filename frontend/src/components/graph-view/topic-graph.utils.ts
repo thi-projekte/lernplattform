@@ -74,115 +74,7 @@ const applyDagreLayout = <T extends { id: string; position: { x: number; y: numb
   });
 };
 
-const applyForceLayout = <T extends { id: string; position: { x: number; y: number } }>(
-  nodes: T[],
-  edges: Edge[]
-): T[] => {
-  if (nodes.length === 0) return nodes;
 
-  const positions = new Map<string, { x: number; y: number }>(
-    nodes.map((node, i) => {
-      const angle = (i / nodes.length) * 2 * Math.PI;
-      const r = Math.max(200, nodes.length * 30);
-      return [node.id, { x: r * Math.cos(angle), y: r * Math.sin(angle) }];
-    })
-  );
-
-  const velocities = new Map<string, { vx: number; vy: number }>(
-    nodes.map((node) => [node.id, { vx: 0, vy: 0 }])
-  );
-
-  const LINK_DISTANCE = 220;
-  const LINK_STRENGTH = 0.15;
-  const REPULSION = 18000;
-  const COLLISION_RADIUS = 130;
-  const DAMPING = 0.8;
-  const ITERATIONS = 300;
-
-  const links = edges
-    .filter((e) => positions.has(e.source) && positions.has(e.target))
-    .map((e) => ({ source: e.source, target: e.target }));
-
-  for (let iter = 0; iter < ITERATIONS; iter++) {
-    const forces = new Map<string, { fx: number; fy: number }>(
-      nodes.map((n) => [n.id, { fx: 0, fy: 0 }])
-    );
-
-    for (let i = 0; i < nodes.length; i++) {
-      for (let j = i + 1; j < nodes.length; j++) {
-        const a = positions.get(nodes[i].id)!;
-        const b = positions.get(nodes[j].id)!;
-        const dx = b.x - a.x;
-        const dy = b.y - a.y;
-        const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-        const effective = Math.max(dist, COLLISION_RADIUS);
-        const f = REPULSION / (effective * effective);
-        const fx = (dx / dist) * f;
-        const fy = (dy / dist) * f;
-        forces.get(nodes[i].id)!.fx -= fx;
-        forces.get(nodes[i].id)!.fy -= fy;
-        forces.get(nodes[j].id)!.fx += fx;
-        forces.get(nodes[j].id)!.fy += fy;
-      }
-    }
-
-    links.forEach(({ source, target }) => {
-      const a = positions.get(source)!;
-      const b = positions.get(target)!;
-      const dx = b.x - a.x;
-      const dy = b.y - a.y;
-      const dist = Math.sqrt(dx * dx + dy * dy) || 1;
-      const f = (dist - LINK_DISTANCE) * LINK_STRENGTH;
-      const fx = (dx / dist) * f;
-      const fy = (dy / dist) * f;
-      forces.get(source)!.fx += fx;
-      forces.get(source)!.fy += fy;
-      forces.get(target)!.fx -= fx;
-      forces.get(target)!.fy -= fy;
-    });
-
-    nodes.forEach((node) => {
-      const vel = velocities.get(node.id)!;
-      const f = forces.get(node.id)!;
-      vel.vx = (vel.vx + f.fx) * DAMPING;
-      vel.vy = (vel.vy + f.fy) * DAMPING;
-      const pos = positions.get(node.id)!;
-      pos.x += vel.vx;
-      pos.y += vel.vy;
-    });
-  }
-
-  return nodes.map((node) => {
-    const pos = positions.get(node.id)!;
-    return { ...node, position: { x: pos.x - 75, y: pos.y - 40 } };
-  });
-};
-
-// The edge handles are derived from node angles so arrows stay attached to the
-// most natural side of each node. Be careful when changing this mapping,
-// because it affects edge routing and label readability across graph variants.
-const getHandleForAngle = (angle: number) => {
-  const a = ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-  if (a >= (7 * Math.PI) / 4 || a < Math.PI / 4) return 'right';
-  if (a >= Math.PI / 4 && a < (3 * Math.PI) / 4) return 'bottom';
-  if (a >= (3 * Math.PI) / 4 && a < (5 * Math.PI) / 4) return 'left';
-  return 'top';
-};
-
-const getOppositeHandle = (handle: string) => {
-  switch (handle) {
-    case 'right':
-      return 'left';
-    case 'left':
-      return 'right';
-    case 'top':
-      return 'bottom';
-    case 'bottom':
-      return 'top';
-    default:
-      return 'left';
-  }
-};
 
 const overlapsExistingTopicNode = (
   candidate: { x: number; y: number },
@@ -543,7 +435,7 @@ export const buildPersonalTopicsGraph = (topics: GraphTopicDto[], currentUsernam
         id: `personal-topic-edge-${edgeKey}`,
         source: topic.id,
         target: associatedTopicId,
-        type: 'default',
+        type: 'straight',
         style: {
           stroke: '#cbd5e1',
           strokeWidth: 1.25,
@@ -552,9 +444,7 @@ export const buildPersonalTopicsGraph = (topics: GraphTopicDto[], currentUsernam
     });
   });
 
-  const layoutedNodes = applyForceLayout(nodes, edges);
-
-  return { nodes: layoutedNodes, edges };
+  return { nodes, edges };
 };
 
 const buildGraphAdjacency = (topics: GraphTopicDto[]) => {
@@ -887,7 +777,6 @@ export const buildSkillTreeGraph = (
 
   const edges: Edge[] = [];
   const seenEdges = new Set<string>();
-  const nodePositions = new Map(nodes.map((node) => [node.id, node.position]));
 
   topics.forEach((topic) => {
     topic.associatedTopics.forEach((associatedTopicId) => {
@@ -897,50 +786,10 @@ export const buildSkillTreeGraph = (
       if (seenEdges.has(edgeKey)) return;
       seenEdges.add(edgeKey);
 
-      const sourcePosition = nodePositions.get(topic.id);
-      const targetPosition = nodePositions.get(associatedTopicId);
-      const sourceLevel = levels.get(topic.id) ?? 0;
-      const targetLevel = levels.get(associatedTopicId) ?? 0;
-
-      let sourceHandle: string;
-      let targetHandle: string;
-
-      if (orientation === 'vertical') {
-        if (sourceLevel < targetLevel) {
-          sourceHandle = 'bottom';
-          targetHandle = 'top';
-        } else if (sourceLevel > targetLevel) {
-          sourceHandle = 'top';
-          targetHandle = 'bottom';
-        } else {
-          const angle =
-            sourcePosition && targetPosition
-              ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
-              : 0;
-          sourceHandle = getHandleForAngle(angle);
-          targetHandle = getOppositeHandle(sourceHandle);
-        }
-      } else if (sourceLevel < targetLevel) {
-        sourceHandle = 'right';
-        targetHandle = 'left';
-      } else if (sourceLevel > targetLevel) {
-        sourceHandle = 'left';
-        targetHandle = 'right';
-      } else {
-        const angle =
-          sourcePosition && targetPosition
-            ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
-            : 0;
-        sourceHandle = getHandleForAngle(angle);
-        targetHandle = getOppositeHandle(sourceHandle);
-      }
-
       edges.push({
         id: `skill-edge-${edgeKey}`,
         source: topic.id,
         target: associatedTopicId,
-        sourceHandle,
-        targetHandle,
         type: 'straight',
         style: {
           stroke: '#8592a5',
