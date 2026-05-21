@@ -61,8 +61,8 @@ const TopicDetailsPage = () => {
   const contentElements: AnyContentElementDto[] = topic?.contentElements ?? [];
   const learnProgress = topic?.learnProgress;
 
-  const contentElementIds = new Set(topic?.contentElements?.map((el) => el.id) ?? []);
-  const completedIds = (learnProgress?.completedContentElementIds ?? []).filter((id) =>
+  const contentElementIds = new Set(topic?.contentElements?.map((el: AnyContentElementDto) => el.id) ?? []);
+  const completedIds = (learnProgress?.completedContentElementIds ?? []).filter((id: string) =>
     contentElementIds.has(id)
   );
   const totalElements = contentElementIds.size;
@@ -206,7 +206,7 @@ const TopicDetailsPage = () => {
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <Title order={3}>{topic.title}</Title>
                         <Group gap={6} mt={6}>
-                          {topic.categories?.map((cat) => (
+                          {topic.categories?.map((cat: Category) => (
                             <CategoryBadge
                               key={cat.id}
                               title={cat.title}

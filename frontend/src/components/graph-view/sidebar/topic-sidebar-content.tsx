@@ -217,7 +217,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
         </Group>
       </UnstyledButton>
 
-      <Collapse in={mynaOpen}>
+      <Collapse expanded={mynaOpen}>
         <Stack gap="xs">
           <Box
             style={(theme) => ({
