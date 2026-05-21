@@ -76,7 +76,7 @@ function EntityTable<T extends RowData>({
       </Table>
 
       {data.length === 0 && !isFetching && (
-        <Alert color= "yellow" mt={12}>
+        <Alert color="yellow" mt={12}>
           {t('common.noEntriesFound')}
         </Alert>
       )}
