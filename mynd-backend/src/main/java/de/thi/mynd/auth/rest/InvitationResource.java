@@ -79,7 +79,6 @@ public final class InvitationResource {
 
   @POST
   @Path("/{id}/redeem")
-  @RolesAllowed("authorizedUser")
   @Operation(
       summary = "Redeem an active onboarding token",
       description =
