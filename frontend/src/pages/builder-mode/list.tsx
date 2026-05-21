@@ -311,7 +311,9 @@ const BuilderModeListPage = () => {
                   const raw = JSON.parse(e.target?.result as string);
                   const result = FullImportSchema.safeParse(raw);
                   if (!result.success) {
-                    setImportError(result.error.issues[0]?.message ?? t('topic.actions.importJsonError'));
+                    setImportError(
+                      result.error.issues[0]?.message ?? t('topic.actions.importJsonError')
+                    );
                     return;
                   }
                   importTopics(result.data, {
