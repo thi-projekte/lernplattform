@@ -89,7 +89,9 @@
     "myna": {
       "subtitle": "AI Assistant",
       "description": "Myna can summarize the saved content and suggest suitable next sources.",
-      "askButton": "Ask Myna"
+      "askButton": "Ask Myna",
+      "comingSoon": "Chat coming soon",
+      "inputPlaceholder": "Ask Myna something..."
     },
     "tabs": {
       "visual": "Visual",
@@ -108,7 +110,8 @@
       "overview": "Topic overview"
     },
     "progress": {
-      "label": "Progress"
+      "label": "Progress",
+      "elementsCompleted": "elements completed"
     },
     "fields": {
       "title": "Title",
