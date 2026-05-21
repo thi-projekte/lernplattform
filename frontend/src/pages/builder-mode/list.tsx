@@ -1,4 +1,5 @@
 import { Layout } from '../../components/layout.tsx';
+import { FullImportSchema } from '../../schemas/topic.ts';
 import {
   useDeleteTopicMutation,
   useEditTopicMutation,
@@ -307,8 +308,13 @@ const BuilderModeListPage = () => {
               const reader = new FileReader();
               reader.onload = (e) => {
                 try {
-                  const parsed = JSON.parse(e.target?.result as string);
-                  importTopics(parsed, {
+                  const raw = JSON.parse(e.target?.result as string);
+                  const result = FullImportSchema.safeParse(raw);
+                  if (!result.success) {
+                    setImportError(result.error.issues[0]?.message ?? t('topic.actions.importJsonError'));
+                    return;
+                  }
+                  importTopics(result.data, {
                     onSuccess: () => {
                       notifications.show({
                         color: 'green',
