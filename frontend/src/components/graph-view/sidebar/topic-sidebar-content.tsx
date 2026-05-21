@@ -74,67 +74,61 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
       </Text>
       <Text size="sm">{selectedElement.teaser}</Text>
 
-      {isOwner && (
-        <Button
-          leftSection={<IconEdit size={16} />}
-          variant="light"
-          color="blue"
-          fullWidth
-          mt="xl"
-          onClick={() => navigate(`/builder-mode/topics/${selectedElement.id}/edit`)}
-        >
-          {t('common.edit')}
-        </Button>
-      )}
+      <Group gap="xs" mt="xl" wrap="wrap">
+        {isOwner && (
+          <Button
+            leftSection={<IconEdit size={16} />}
+            variant="light"
+            color="blue"
+            onClick={() => navigate(`/builder-mode/topics/${selectedElement.id}/edit`)}
+          >
+            {t('common.edit')}
+          </Button>
+        )}
 
-      {isCompleted ? (
-        <Button
-          color="green"
-          variant="light"
-          fullWidth
-          mt="xl"
-          disabled
-          leftSection={<IconCheck size={16} />}
-        >
-          {t('topic.actions.completed')}
-        </Button>
-      ) : isStarted ? (
-        <Tooltip
-          label={t('topic.actions.completeBlockedHint')}
-          disabled={progressPercent >= 100}
-          withArrow
-        >
+        {isCompleted ? (
           <Button
             color="green"
-            fullWidth
-            mt="xl"
-            loading={isCompleting}
+            variant="light"
+            disabled
+            leftSection={<IconCheck size={16} />}
+          >
+            {t('topic.actions.completed')}
+          </Button>
+        ) : isStarted ? (
+          <Tooltip
+            label={t('topic.actions.completeBlockedHint')}
+            disabled={progressPercent >= 100}
+            withArrow
+          >
+            <Button
+              color="green"
+              loading={isCompleting}
+              onClick={() => {
+                if (topicId) {
+                  track('topicLearnCompletedManually', { props: { topicId: topicId ?? '' } });
+                  completeTopic(topicId);
+                }
+              }}
+            >
+              {t('topic.actions.complete')}
+            </Button>
+          </Tooltip>
+        ) : (
+          <Button
+            color="blue"
+            loading={isStarting}
             onClick={() => {
               if (topicId) {
-                track('topicLearnCompletedManually', { props: { topicId: topicId ?? '' } });
-                completeTopic(topicId);
+                track('topicLearnStarted', { props: { topicId: topicId ?? '' } });
+                startTopic(topicId);
               }
             }}
           >
-            {t('topic.actions.complete')}
+            {t('topic.actions.start')}
           </Button>
-        </Tooltip>
-      ) : (
-        <Button
-          color="blue"
-          fullWidth
-          mt="xl"
-          loading={isStarting}
-          onClick={() => {
-            if (topicId) {
-              track('topicLearnStarted', { props: { topicId: topicId ?? '' } });
-              startTopic(topicId);
-            }
-          }}
-        >
-          {t('topic.actions.start')}
-        </Button>
-      )}
+        )}
+      </Group>
 
       {learnProgress && (
         <Stack gap={4} mt="md">
@@ -166,7 +160,6 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
       <Button
         variant="outline"
         color="blue"
-        fullWidth
         mt="sm"
         leftSection={<IconMessageCircle size={16} />}
       >

@@ -3,16 +3,23 @@ import { useEffect, useState, createElement } from 'react';
 import { useQueryTopic } from '../../api/topic.ts';
 import { Layout } from '../../components/layout.tsx';
 import {
+  ActionIcon,
   Badge,
+  Divider,
   Group,
   Paper,
+  Progress,
   ScrollArea,
   Stack,
   Tabs,
   Text,
   ThemeIcon,
+  Title,
+  Tooltip,
   UnstyledButton,
 } from '@mantine/core';
+import { IconInfoCircle } from '@tabler/icons-react';
+import CategoryBadge from '../../components/category-badge.tsx';
 import { useMediaQuery } from '@mantine/hooks';
 import type { Category } from '../../schemas/topic.ts';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
@@ -54,6 +61,20 @@ const TopicDetailsPage = () => {
   const contentElements: AnyContentElementDto[] = topic?.contentElements ?? [];
   const learnProgress = topic?.learnProgress;
 
+  const contentElementIds = new Set(topic?.contentElements?.map((el) => el.id) ?? []);
+  const completedIds = (learnProgress?.completedContentElementIds ?? []).filter((id) =>
+    contentElementIds.has(id)
+  );
+  const totalElements = contentElementIds.size;
+  const isTopicCompleted =
+    learnProgress?.status === 'COMPLETED_MANUALLY' ||
+    (totalElements > 0 && completedIds.length >= totalElements);
+  const topicProgressPercent = isTopicCompleted
+    ? 100
+    : totalElements > 0
+      ? Math.round((completedIds.length / totalElements) * 100)
+      : 0;
+
   return (
     <Layout>
       <Tabs
@@ -90,7 +111,7 @@ const TopicDetailsPage = () => {
               shadow="none"
               radius="md"
               style={{
-                width: isMobile ? '100%' : '40%',
+                width: isMobile ? '100%' : '30%',
                 flexShrink: 0,
                 display: 'flex',
                 flexDirection: 'column',
@@ -133,7 +154,7 @@ const TopicDetailsPage = () => {
                               size={36}
                               radius="md"
                               variant="light"
-                              color={isCompleted ? 'green' : 'teal'}
+                              color={isCompleted ? 'green' : 'blue'}
                               style={{ flexShrink: 0 }}
                             >
                               {isCompleted
@@ -179,6 +200,44 @@ const TopicDetailsPage = () => {
               }}
             >
               <Stack gap="md">
+                {selectedElement && topic && (
+                  <>
+                    <Group justify="space-between" align="flex-start" wrap="nowrap">
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <Title order={3}>{topic.title}</Title>
+                        <Group gap={6} mt={6}>
+                          {topic.categories?.map((cat) => (
+                            <CategoryBadge key={cat.id} title={cat.title} color={cat.color ?? '8b5cf6'} />
+                          ))}
+                        </Group>
+                        {learnProgress && (
+                          <Group gap={8} mt={8} align="center" wrap="nowrap">
+                            <Progress
+                              value={topicProgressPercent}
+                              color={isTopicCompleted ? 'green' : 'blue'}
+                              size="sm"
+                              style={{ flex: 1 }}
+                            />
+                            <Text size="xs" fw={600} style={{ flexShrink: 0 }}>
+                              {topicProgressPercent}%
+                            </Text>
+                          </Group>
+                        )}
+                      </div>
+                      <Tooltip label={t('topic.actions.overview')} withArrow>
+                        <ActionIcon
+                          variant="subtle"
+                          color="gray"
+                          size="lg"
+                          onClick={() => setSelectedElement(null)}
+                        >
+                          <IconInfoCircle size={20} />
+                        </ActionIcon>
+                      </Tooltip>
+                    </Group>
+                    <Divider />
+                  </>
+                )}
                 {selectedElement ? (
                   <ContentSidebarContent
                     selectedElement={selectedElement}

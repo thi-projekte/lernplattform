@@ -39,7 +39,7 @@ const ContentSidebarContent = ({
       <Group justify="space-between" align="flex-start">
         <Group gap="sm" align="flex-start" wrap="nowrap">
           {iconComponent && (
-            <ThemeIcon size={36} radius="md" variant="light" color="teal">
+            <ThemeIcon size={36} radius="md" variant="light" color="blue">
               {createElement(iconComponent, { size: 22 })}
             </ThemeIcon>
           )}
@@ -61,33 +61,35 @@ const ContentSidebarContent = ({
 
       <ContentElementDisplay contentElement={selectedElement} />
 
-      {isElementCompleted ? (
-        <Button
-          color="green"
-          variant="light"
-          fullWidth
-          disabled
-          leftSection={<IconCheck size={16} />}
-        >
-          {t('topic.actions.contentElementCompleted')}
-        </Button>
-      ) : (
-        <Tooltip label={t('topic.actions.start')} disabled={topicStarted} withArrow>
+      <Group>
+        {isElementCompleted ? (
           <Button
-            color="blue"
-            fullWidth
-            disabled={!canMarkCompleted}
-            loading={isPending}
-            onClick={() => {
-              completeContentElement(selectedElement.id);
-              track('contentElementCompleted', { props: { contentElementId: selectedElement.id } });
-            }}
-            leftSection={<IconCheck size={16} />}
+            color="green"
+            variant="light"
+            size="sm"
+            disabled
+            leftSection={<IconCheck size={14} />}
           >
-            {t('topic.actions.markContentElementCompleted')}
+            {t('topic.actions.contentElementCompleted')}
           </Button>
-        </Tooltip>
-      )}
+        ) : (
+          <Tooltip label={t('topic.actions.start')} disabled={topicStarted} withArrow>
+            <Button
+              color="blue"
+              size="sm"
+              disabled={!canMarkCompleted}
+              loading={isPending}
+              onClick={() => {
+                completeContentElement(selectedElement.id);
+                track('contentElementCompleted', { props: { contentElementId: selectedElement.id } });
+              }}
+              leftSection={<IconCheck size={14} />}
+            >
+              {t('topic.actions.markContentElementCompleted')}
+            </Button>
+          </Tooltip>
+        )}
+      </Group>
 
       <Modal
         opened={opened}
