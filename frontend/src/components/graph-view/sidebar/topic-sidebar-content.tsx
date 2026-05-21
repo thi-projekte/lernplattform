@@ -121,7 +121,13 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
         )}
 
         {isCompleted ? (
-          <Button size="sm" color="green" variant="light" disabled leftSection={<IconCheck size={15} />}>
+          <Button
+            size="sm"
+            color="green"
+            variant="light"
+            disabled
+            leftSection={<IconCheck size={15} />}
+          >
             {t('topic.actions.completed')}
           </Button>
         ) : isStarted ? (
@@ -171,7 +177,12 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
               {Math.round(progressPercent)}%
             </Text>
           </Group>
-          <Progress value={progressPercent} color={isCompleted ? 'green' : 'blue'} size="sm" radius="xl" />
+          <Progress
+            value={progressPercent}
+            color={isCompleted ? 'green' : 'blue'}
+            size="sm"
+            radius="xl"
+          />
           {totalContentElements > 0 && (
             <Text size="xs" c="dimmed" mt={6}>
               {completedCurrentIds.length} / {totalContentElements}{' '}
