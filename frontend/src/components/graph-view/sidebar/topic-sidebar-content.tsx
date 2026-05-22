@@ -1,4 +1,5 @@
 import {
+  Avatar,
   Button,
   Divider,
   Group,
@@ -9,12 +10,14 @@ import {
   Stack,
   Tooltip,
 } from '@mantine/core';
+
 import type { Topic } from '../../../schemas/topic';
 import { useTranslation } from 'react-i18next';
-import { IconCheck, IconEdit, IconMessageCircle, IconRobot } from '@tabler/icons-react';
+import { IconCheck, IconEdit, IconMessageCircle, IconRobot, IconUser } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
 import CategoryBadge from '../../category-badge.tsx';
+import { useQueryProfilePicture } from '../../../api/profile-picture.ts';
 import {
   useCompleteTopicManuallyMutation,
   useStartTopicMutation,
@@ -34,6 +37,8 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
     !!selectedElement.creatorId &&
     !!currentUsername &&
     selectedElement.creatorId.toLowerCase() === currentUsername;
+
+  const { data: creatorPicture } = useQueryProfilePicture(selectedElement.creatorId);
 
   const { mutate: startTopic, isPending: isStarting } = useStartTopicMutation();
   const { mutate: completeTopic, isPending: isCompleting } = useCompleteTopicManuallyMutation();
@@ -60,9 +65,14 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
   return (
     <>
       <Title order={3}>{selectedElement.title}</Title>
-      <Text size="sm" c="dimmed">
-        {t('topic.fields.author')}: {selectedElement.creatorFullName}
-      </Text>
+        <Group gap="xs" align="center">
+            <Avatar src={creatorPicture?.url ?? null} size={24} radius="xl">
+                <IconUser size={14} />
+            </Avatar>
+            <Text size="sm" c="dimmed">
+                {t('topic.fields.author')}: {selectedElement.creatorFullName}
+            </Text>
+        </Group>
       <Group gap={6}>
         {selectedElement.categories?.map((cat) => (
           <CategoryBadge key={cat.id} title={cat.title} color={cat.color ?? '8b5cf6'} />
