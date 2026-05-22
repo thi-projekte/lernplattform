@@ -106,6 +106,7 @@
       "completed": "Completed",
       "markContentElementCompleted": "Mark as completed",
       "contentElementCompleted": "Completed",
+      "resetProgress": "Reset progress",
       "overview": "Topic overview"
     },
     "progress": {
