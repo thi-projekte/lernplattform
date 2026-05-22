@@ -65,14 +65,14 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
   return (
     <>
       <Title order={3}>{selectedElement.title}</Title>
-        <Group gap="xs" align="center">
-            <Avatar src={creatorPicture?.url ?? null} size={24} radius="xl">
-                <IconUser size={14} />
-            </Avatar>
-            <Text size="sm" c="dimmed">
-                {t('topic.fields.author')}: {selectedElement.creatorFullName}
-            </Text>
-        </Group>
+      <Group gap="xs" align="center">
+        <Avatar src={creatorPicture?.url ?? null} size={24} radius="xl">
+          <IconUser size={14} />
+        </Avatar>
+        <Text size="sm" c="dimmed">
+          {t('topic.fields.author')}: {selectedElement.creatorFullName}
+        </Text>
+      </Group>
       <Group gap={6}>
         {selectedElement.categories?.map((cat) => (
           <CategoryBadge key={cat.id} title={cat.title} color={cat.color ?? '8b5cf6'} />
