@@ -37,7 +37,14 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const { pathname } = useLocation();
   const matches = useMatches();
 
-  const sidebarRoutes = routes.filter((r) => r.isSidebar && r.path);
+  const isBuilder = userService.roles.includes('builder');
+
+  const sidebarRoutes = routes.filter((r) => {
+    if (r.path === '/become-builder' && isBuilder) {
+      return false;
+    }
+    return r.isSidebar && r.path;
+  });
   const userDisplayName =
     [userService.account.firstName, userService.account.lastName].filter(Boolean).join(' ') ||
     userService.account.username ||
