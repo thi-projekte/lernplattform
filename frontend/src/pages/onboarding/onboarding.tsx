@@ -48,7 +48,7 @@ const Onboarding = () => {
   // Optionen für das Dropdown (nur relevant für komplett neue Nutzer beim allerersten Login)
   const roleOptions = [
     { value: 'builder', label: t('auth.role_builder') },
-    { value: 'learner', label: t('auth.role_learner') }
+    { value: 'learner', label: t('auth.role_learner') },
   ];
 
   return (
@@ -61,7 +61,8 @@ const Onboarding = () => {
             {/* 3. Dropdown komplett ausblenden, wenn der User den Builder-Link geklickt hat */}
             {isUpgradeMode ? (
               <Text size="sm" style={{ lineHeight: 1.5 }}>
-                Klicke auf den Button unten, um dein Konto auf <strong>Builder</strong> hochzustufen und eigene Lerninhalte zu erstellen.
+                Klicke auf den Button unten, um dein Konto auf <strong>Builder</strong> hochzustufen
+                und eigene Lerninhalte zu erstellen.
               </Text>
             ) : (
               // Klassisches Dropdown bleibt NUR für neue User auf der Haupt-Route
