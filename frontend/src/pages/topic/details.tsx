@@ -62,8 +62,9 @@ const TopicDetailsPage = () => {
     }
   }, [topic]);
 
-  const [selectedContentElement, setSelectedContentElement] =
-    useState<AnyContentElementDto | null>(null);
+  const [selectedContentElement, setSelectedContentElement] = useState<AnyContentElementDto | null>(
+    null
+  );
   const [drawerOpen, setDrawerOpen] = useState(false);
 
   const [selectedGraphElement, setSelectedGraphElement] = useState<
@@ -194,11 +195,25 @@ const TopicDetailsPage = () => {
       >
         {/* Compact topic header: title + teaser + categories | Myna widget */}
         {topic && (
-          <Paper withBorder shadow="none" radius="lg" p="lg" bg="transparent" style={{ flexShrink: 0 }}>
-            <Group justify="space-between" align="flex-start" wrap={isMobile ? 'wrap' : 'nowrap'} gap="lg">
+          <Paper
+            withBorder
+            shadow="none"
+            radius="lg"
+            p="lg"
+            bg="transparent"
+            style={{ flexShrink: 0 }}
+          >
+            <Group
+              justify="space-between"
+              align="flex-start"
+              wrap={isMobile ? 'wrap' : 'nowrap'}
+              gap="lg"
+            >
               <Stack gap="xs" style={{ flex: 1, minWidth: 0 }}>
                 <Title order={2}>{topic.title}</Title>
-                <Text size="sm" c="dimmed" lineClamp={2}>{topic.teaser}</Text>
+                <Text size="sm" c="dimmed" lineClamp={2}>
+                  {topic.teaser}
+                </Text>
                 <Group gap={6}>
                   {topic.categories?.map((cat: Category) => (
                     <CategoryBadge key={cat.id} title={cat.title} color={cat.color ?? '8b5cf6'} />
@@ -222,8 +237,12 @@ const TopicDetailsPage = () => {
                     <IconRobot size={16} />
                   </ThemeIcon>
                   <div>
-                    <Text fw={600} size="sm">Myna</Text>
-                    <Text size="xs" c="dimmed">{t('topic.myna.subtitle')}</Text>
+                    <Text fw={600} size="sm">
+                      Myna
+                    </Text>
+                    <Text size="xs" c="dimmed">
+                      {t('topic.myna.subtitle')}
+                    </Text>
                   </div>
                 </Group>
                 <Button
