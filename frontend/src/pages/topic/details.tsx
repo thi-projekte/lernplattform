@@ -3,7 +3,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { useQueryTopic } from '../../api/topic.ts';
 import { type Node, type NodeMouseHandler } from '@xyflow/react';
 import { Layout } from '../../components/layout.tsx';
-import { Paper, Text, Stack, Tabs, useMantineTheme } from '@mantine/core';
+import { Drawer, Paper, Text, Stack, Tabs, useMantineTheme } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import type { Category, Topic } from '../../schemas/topic.ts';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import TopicNode from '../../components/graph-view/topic-node.tsx';
@@ -25,6 +26,7 @@ const nodeTypes = {
 const TopicDetailsPage = () => {
   const { t } = useTranslation();
   const theme = useMantineTheme();
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const { topicId } = useParams<{ topicId: string }>();
   const { data: topic, isLoading } = useQueryTopic(topicId || '', false);
@@ -47,6 +49,7 @@ const TopicDetailsPage = () => {
   const [selectedElement, setSelectedElement] = useState<
     AnyContentElementDto | Omit<Topic, 'relatedTopics'> | null
   >(null);
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   const displayedElement = selectedElement ?? topic ?? null;
 
@@ -59,10 +62,13 @@ const TopicDetailsPage = () => {
 
     if (graphNode.data.kind === 'topic') {
       setSelectedElement(graphNode.data.payload as Omit<Topic, 'relatedTopics'>);
-      return;
+    } else {
+      setSelectedElement(graphNode.data.payload as AnyContentElementDto);
     }
 
-    setSelectedElement(graphNode.data.payload as AnyContentElementDto);
+    if (isMobile) {
+      setDrawerOpen(true);
+    }
   };
 
   if (isLoading) {
@@ -70,6 +76,23 @@ const TopicDetailsPage = () => {
   }
 
   const isTopic = displayedElement && 'teaser' in displayedElement;
+
+  const sidebarContent = (
+    <Stack gap="md">
+      {displayedElement ? (
+        isTopic ? (
+          <TopicSidebarContent selectedElement={displayedElement as Topic} />
+        ) : (
+          <ContentSidebarContent
+            selectedElement={displayedElement as AnyContentElementDto}
+            topicLearnProgress={topic?.learnProgress}
+          />
+        )
+      ) : (
+        <Text c="dimmed">{t('common.clickOnANodeToSeeContent')}</Text>
+      )}
+    </Stack>
+  );
 
   return (
     <Layout>
@@ -85,7 +108,7 @@ const TopicDetailsPage = () => {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'minmax(0, 1fr) 360px',
+            gridTemplateColumns: isMobile ? '1fr' : 'minmax(0, 1fr) 360px',
             gap: 16,
             width: '100%',
             flex: 1,
@@ -115,34 +138,39 @@ const TopicDetailsPage = () => {
             <Text c="dimmed">{t('topic.tabs.notesPlaceholder')}</Text>
           </Tabs.Panel>
 
-          <Paper
-            withBorder
-            shadow="none"
-            radius="md"
-            p="lg"
-            style={{
-              width: '100%',
-              height: '100%',
-              overflowY: 'auto',
-            }}
-          >
-            {displayedElement ? (
-              <Stack gap="md">
-                {isTopic ? (
-                  <TopicSidebarContent selectedElement={displayedElement as Topic} />
-                ) : (
-                  <ContentSidebarContent
-                    selectedElement={displayedElement as AnyContentElementDto}
-                    topicLearnProgress={topic?.learnProgress}
-                  />
-                )}
-              </Stack>
-            ) : (
-              <Text c="dimmed">{t('common.clickOnANodeToSeeContent')}</Text>
-            )}
-          </Paper>
+          {!isMobile && (
+            <Paper
+              withBorder
+              shadow="none"
+              radius="md"
+              p="lg"
+              style={{
+                width: '100%',
+                height: '100%',
+                overflowY: 'auto',
+              }}
+            >
+              {sidebarContent}
+            </Paper>
+          )}
         </div>
       </Tabs>
+
+      <Drawer
+        opened={isMobile ? drawerOpen : false}
+        onClose={() => setDrawerOpen(false)}
+        position="bottom"
+        size="auto"
+        radius="md"
+        title={null}
+        withCloseButton={false}
+        styles={{
+          content: { maxHeight: '75vh', overflowY: 'auto' },
+          body: { paddingBottom: 'env(safe-area-inset-bottom, 16px)' },
+        }}
+      >
+        {sidebarContent}
+      </Drawer>
     </Layout>
   );
 };
