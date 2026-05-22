@@ -40,8 +40,8 @@ const Onboarding = () => {
             label={t('onboarding.role_selection_label')}
             placeholder={t('onboarding.role_selection_placeholder')}
             data={[
-              { value: 'builder', label: t('auth.role_builder') },
               { value: 'learner', label: t('auth.role_learner') },
+              { value: 'builder', label: t('auth.role_builder') },
             ]}
             value={role}
             onChange={setRole}
