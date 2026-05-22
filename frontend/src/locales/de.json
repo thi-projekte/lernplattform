@@ -93,6 +93,7 @@
       "askButton": "Myna fragen"
     },
     "tabs": {
+      "content": "Inhalte",
       "visual": "Visuell",
       "notes": "Notizen",
       "notesPlaceholder": "Noch keine Notizen vorhanden."
