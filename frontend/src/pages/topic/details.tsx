@@ -134,9 +134,6 @@ const TopicDetailsPage = () => {
                   <ContentSidebarContent
                     selectedElement={displayedElement as AnyContentElementDto}
                     topicLearnProgress={topic?.learnProgress}
-                    topicContentElementIds={
-                      topic?.contentElements?.map((el: AnyContentElementDto) => el.id) ?? []
-                    }
                   />
                 )}
               </Stack>

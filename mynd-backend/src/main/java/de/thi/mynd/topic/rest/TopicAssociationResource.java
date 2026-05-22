@@ -2,7 +2,6 @@ package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.dto.CreateTopicAssociationRequest;
 import de.thi.mynd.topic.service.TopicAssociationService;
-import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -19,7 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 @Path("/topic-associations")
-@Authenticated
+@RolesAllowed("authorizedUser")
 @Tag(name = "Topic Associations")
 @SecurityRequirement(name = "keycloak")
 public final class TopicAssociationResource {
