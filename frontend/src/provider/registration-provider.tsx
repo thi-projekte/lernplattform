@@ -63,7 +63,7 @@ const RegistrationProvider = ({ children }: { children: ReactNode }) => {
 
   // Authorized but hasn't selected a role yet → onboarding
   if (!hasAppRole) {
-    return <Onboarding />;
+    return <Onboarding withoutLayout />;
   }
 
   return <>{children}</>;
