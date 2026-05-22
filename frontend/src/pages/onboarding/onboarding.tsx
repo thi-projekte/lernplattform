@@ -6,21 +6,18 @@ import type { AxiosResponse } from 'axios';
 import { track } from '@plausible-analytics/tracker';
 import { useUserService } from '../../provider/user-provider.tsx';
 import { Layout } from '../../components/layout.tsx';
-import { useLocation } from 'react-router'; // HINZUGEFÜGT
+import { useLocation } from 'react-router';
 
 const Onboarding = () => {
   const { t } = useTranslation();
   const userService = useUserService();
-  const location = useLocation(); // HINZUGEFÜGT
+  const location = useLocation();
 
-  // 1. Prüfen, ob der Nutzer bereits "Learner" ist ODER über den neuen Sidebar-Link kommt
   const hasLearnerRole = userService.roles.includes('learner');
   const isBecomeBuilderRoute = location.pathname === '/become-builder';
 
-  // 2. Wenn eins von beidem zutrifft, zwingen wir das UI in den "Upgrade zum Builder"-Modus
   const isUpgradeMode = hasLearnerRole || isBecomeBuilderRoute;
 
-  // Im Upgrade-Modus ist 'builder' fest im Hintergrund vorausgewählt
   const [role, setRole] = useState<string | null>(isUpgradeMode ? 'builder' : null);
 
   const { mutateAsync: makeBuilder, isPending: isBuilderLoading } = useMakeUserBuilder();
@@ -45,7 +42,6 @@ const Onboarding = () => {
 
   const isSubmitting = isBuilderLoading || isLearnerLoading;
 
-  // Optionen für das Dropdown (nur relevant für komplett neue Nutzer beim allerersten Login)
   const roleOptions = [
     { value: 'builder', label: t('auth.role_builder') },
     { value: 'learner', label: t('auth.role_learner') },

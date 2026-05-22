@@ -37,12 +37,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const { pathname } = useLocation();
   const matches = useMatches();
 
-  // Prüfen, ob der aktuelle Nutzer bereits die Builder-Rolle hat
   const isBuilder = userService.roles.includes('builder');
 
-  // Sidebar-Routen filtern
   const sidebarRoutes = routes.filter((r) => {
-    // Wenn es die Become-Builder-Route ist und der Nutzer schon Builder ist -> Link ausblenden!
     if (r.path === '/become-builder' && isBuilder) {
       return false;
     }

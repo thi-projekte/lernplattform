@@ -2,8 +2,7 @@ import { type BaseRouteObject, createBrowserRouter } from 'react-router';
 import Homepage from './pages/home.tsx';
 import BuilderModeListPage from './pages/builder-mode/list.tsx';
 import type { ComponentType } from 'react';
-// Icon für den neuen Eintrag importieren
-import { IconHammer, IconHome, IconUser, type IconProps } from '@tabler/icons-react';
+import { IconHammer, IconHome, type IconProps } from '@tabler/icons-react';
 import CreateTopicPage from './pages/builder-mode/create.tsx';
 import EditTopicPage from './pages/builder-mode/edit.tsx';
 import TopicDetailsPage from './pages/topic/details.tsx';
@@ -34,15 +33,13 @@ export const routes: TypedMyndRoute[] = [
     translation: 'builderMode',
     roles: [Role.Builder],
   },
-  // --- NEUER EINTRAG FÜR DAS ONBOARDING IN DER SIDEBAR ---
   {
     path: '/become-builder',
     Component: OnboardingPage,
     isSidebar: true,
-    icon: IconUser,
-    translation: 'becomeBuilder', // Den Key 'routes.becomeBuilder' musst du noch in deine locales (z.B. de.json) aufnehmen!
+    icon: IconHammer,
+    translation: 'becomeBuilder',
   },
-  // --------------------------------------------------------
   {
     path: '/builder-mode/topics/create',
     Component: CreateTopicPage,
