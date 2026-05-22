@@ -18,7 +18,7 @@ const TopicNode = ({ data, selected }: TopicNodeProps) => {
         : 'rgba(240, 140, 0, 0.10)';
 
     // Ersteller-ID entweder direkt aus data oder aus dem zugrundeliegenden Payload holen
-    const creatorId = data.creatorId || (data.payload as any)?.creatorId;
+    const creatorId = data.creatorId || (data.payload as { creatorId?: string })?.creatorId;
     const { data: profilePicture } = useQueryProfilePicture(creatorId);
 
     return (
