@@ -790,9 +790,9 @@ export const buildSkillTreeGraph = (
         target: associatedTopicId,
         type: 'straight',
         style: {
-          stroke: '#8592a5',
-          strokeWidth: 0.9,
-          opacity: 0.8,
+          stroke: '#94a3b8',
+          strokeWidth: 1.4,
+          opacity: 0.65,
         },
       });
     });

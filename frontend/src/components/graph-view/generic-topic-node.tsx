@@ -111,6 +111,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
               ? `0 2px 6px rgba(0,0,0,0.12)`
               : `0 0 0 18px color-mix(in srgb, ${accentColor} 20%, transparent), 0 2px 6px rgba(0,0,0,0.1)`,
             position: 'relative',
+            transition: 'box-shadow 0.25s ease, background 0.25s ease',
           }}
         >
           {handles}
@@ -148,7 +149,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
           border: `2px solid ${accentColor}`,
           outline: `4px solid color-mix(in srgb, ${accentColor} 22%, transparent)`,
           outlineOffset: '2px',
-          animation: 'cardEntrance 0.18s ease-out both',
+          animation: 'cardEntrance 0.26s cubic-bezier(0.34, 1.4, 0.64, 1) both',
         }}
       >
         <Stack gap="xs">
@@ -263,6 +264,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
           height: 10,
           background: `color-mix(in srgb, ${accentColor} 55%, transparent)`,
           flexShrink: 0,
+          transition: 'background 0.25s ease',
         }}
       />
 
@@ -279,6 +281,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
           alignItems: 'center',
           justifyContent: 'center',
           position: 'relative',
+          transition: 'box-shadow 0.25s ease, background 0.25s ease',
         }}
       >
         {handles}
