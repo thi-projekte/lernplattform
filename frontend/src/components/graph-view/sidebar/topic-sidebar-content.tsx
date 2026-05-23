@@ -22,6 +22,7 @@ import {
   IconChevronDown,
   IconChevronUp,
   IconEdit,
+  IconRefresh,
   IconRobot,
   IconSend,
 } from '@tabler/icons-react';
@@ -30,6 +31,7 @@ import { useUserService } from '../../../provider/user-provider';
 import CategoryBadge from '../../category-badge.tsx';
 import {
   useCompleteTopicManuallyMutation,
+  useResetTopicMutation,
   useStartTopicMutation,
 } from '../../../api/learn-progress.ts';
 import { track } from '@plausible-analytics/tracker';
@@ -52,6 +54,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
 
   const { mutate: startTopic, isPending: isStarting } = useStartTopicMutation();
   const { mutate: completeTopic, isPending: isCompleting } = useCompleteTopicManuallyMutation();
+  const { mutate: resetTopic, isPending: isResetting } = useResetTopicMutation();
 
   const learnProgress = selectedElement.learnProgress;
   const topicId = selectedElement.id;
@@ -189,6 +192,17 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
               {t('topic.progress.elementsCompleted')}
             </Text>
           )}
+          <Button
+            variant="subtle"
+            color="gray"
+            size="xs"
+            fullWidth
+            leftSection={<IconRefresh size={14} />}
+            loading={isResetting}
+            onClick={() => topicId && resetTopic(topicId)}
+          >
+            {t('topic.actions.resetProgress')}
+          </Button>
         </Paper>
       )}
 

@@ -5,7 +5,6 @@ import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.requests.TopicRequest;
 import de.thi.mynd.topic.service.TopicService;
-import io.quarkus.security.Authenticated;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -23,7 +22,7 @@ import org.jboss.resteasy.reactive.RestQuery;
 
 @Path("/topics")
 @Produces(MediaType.APPLICATION_JSON)
-@Authenticated
+@RolesAllowed("authorizedUser")
 @Tag(name = "Topics")
 @SecurityRequirement(name = "keycloak")
 public final class TopicResource {

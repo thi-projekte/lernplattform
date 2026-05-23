@@ -223,6 +223,7 @@ class LearnProgressServiceImplTest {
   void completeContentElement_throws_whenAlreadyCompleted() {
     UUID contentElementId = UUID.randomUUID();
     LearnProgressContentElement existing = new LearnProgressContentElement();
+    existing.completed = true;
 
     when(learnProgressContentElementRepository.findByContentElementIdAndCreatorId(
             contentElementId, CREATOR_ID))
@@ -233,6 +234,27 @@ class LearnProgressServiceImplTest {
         () -> learnProgressService.completeLearningContentElementAsCurrentUser(contentElementId));
 
     verify(learnProgressTopicRepository, never()).persistAndFlush(any());
+  }
+
+  @Test
+  void completeContentElement_doesNotThrow_whenAlreadyCompleted() {
+    UUID contentElementId = UUID.randomUUID();
+    UUID topicId = UUID.randomUUID();
+    LearnProgressContentElement existing = new LearnProgressContentElement();
+    existing.completed = false;
+    ContentElement contentElement = buildContentElement(contentElementId, topicId);
+    LearnProgressTopic progressTopic = buildProgressTopic(topicId, LearnProgressStatus.STARTED, 3);
+
+    when(learnProgressContentElementRepository.findByContentElementIdAndCreatorId(
+            contentElementId, CREATOR_ID))
+        .thenReturn(Optional.of(existing));
+    when(contentElementService.getContentElementEntityById(contentElementId))
+        .thenReturn(contentElement);
+    when(learnProgressTopicRepository.findByIdOptional(any()))
+        .thenReturn(Optional.of(progressTopic));
+
+    assertDoesNotThrow(
+        () -> learnProgressService.completeLearningContentElementAsCurrentUser(contentElementId));
   }
 
   @Test

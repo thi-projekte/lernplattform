@@ -5,14 +5,17 @@ import de.thi.mynd.auth.entity.UserProfile;
 import de.thi.mynd.auth.exception.ProfilePictureNotFoundException;
 import de.thi.mynd.auth.repository.UserProfileRepository;
 import de.thi.mynd.common.entity.CreatorIdKey;
+import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.exception.FileTooLargeException;
 import de.thi.mynd.common.exception.InvalidFileTypeException;
 import de.thi.mynd.common.exception.NoFileProvidedException;
 import de.thi.mynd.common.service.ObjectStorageService;
 import io.quarkus.logging.Log;
+import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import java.util.Optional;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 @ApplicationScoped
@@ -24,13 +27,15 @@ public final class UserProfileServiceImpl implements UserProfileService {
 
   @Inject ObjectStorageService objectStorageService;
 
+  @Inject SecurityIdentity securityIdentity;
+
   @Override
   @Transactional
   public ProfilePictureDto uploadProfilePicture(String username, FileUpload file) {
 
     validateFile(file);
 
-    var existing = userProfileRepository.findByUsername(username);
+    var existing = userProfileRepository.findByUsernameOptional(username);
     UserProfile profile =
         existing.orElseGet(
             () -> {
@@ -58,7 +63,7 @@ public final class UserProfileServiceImpl implements UserProfileService {
   public void deleteProfilePicture(String username) {
     UserProfile profile =
         userProfileRepository
-            .findByUsername(username)
+            .findByUsernameOptional(username)
             .filter(p -> p.profilePictureKey != null)
             .orElseThrow(
                 () -> new ProfilePictureNotFoundException("No profile picture found for user"));
@@ -71,16 +76,49 @@ public final class UserProfileServiceImpl implements UserProfileService {
   }
 
   @Override
+  @Transactional
+  public void updateUserProfile(UserProfile userProfile) {
+    userProfileRepository.getEntityManager().merge(userProfile);
+    userProfileRepository.flush();
+  }
+
+  @Override
   public ProfilePictureDto getProfilePicture(String username) {
     UserProfile profile =
         userProfileRepository
-            .findByUsername(username)
+            .findByUsernameOptional(username)
             .filter(p -> p.profilePictureKey != null)
             .orElseThrow(
                 () -> new ProfilePictureNotFoundException("No profile picture found for user"));
 
     return new ProfilePictureDto(
         objectStorageService.getPresignedUrlForFile(profile.profilePictureKey).toString());
+  }
+
+  @Override
+  @Transactional
+  public UserProfile createPersonalUserProfile() {
+    String userId = securityIdentity.getPrincipal().getName();
+
+    if (getPersonalUserProfile().isPresent()) {
+      throw new EntityInstanceNotFoundException("You already have a user profile");
+    }
+
+    UserProfile newProfile = new UserProfile();
+    newProfile.creatorId = userId;
+    CreatorIdKey id = new CreatorIdKey();
+    id.creatorId = userId;
+    newProfile.id = id;
+
+    userProfileRepository.persistAndFlush(newProfile);
+
+    return newProfile;
+  }
+
+  @Override
+  public Optional<UserProfile> getPersonalUserProfile() {
+    String userId = securityIdentity.getPrincipal().getName();
+    return userProfileRepository.findByUsernameOptional(userId);
   }
 
   private void validateFile(FileUpload file) {

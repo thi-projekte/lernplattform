@@ -16,7 +16,7 @@ class AuthResourceTest {
   @InjectMock AuthService authService;
 
   @Test
-  @TestSecurity(user = "test-user")
+  @TestSecurity(user = "test-user", roles = "authorizedUser")
   void testCheckUserIsBuilder_True() {
     // Mocking: Service sagt, User ist ein Builder
     when(authService.checkUserIsBuilder("test-user")).thenReturn(true);
@@ -27,7 +27,7 @@ class AuthResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "test-user")
+  @TestSecurity(user = "test-user", roles = "authorizedUser")
   void testCheckUserIsBuilder_False() {
     // Mocking: Service sagt, User ist KEIN Builder
     when(authService.checkUserIsBuilder("test-user")).thenReturn(false);
@@ -36,7 +36,7 @@ class AuthResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "builder-candidate")
+  @TestSecurity(user = "builder-candidate", roles = "authorizedUser")
   void testMakeUserBuilder_Success() {
     // Hier rufen wir POST auf
     given()
@@ -51,7 +51,7 @@ class AuthResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "builder-candidate")
+  @TestSecurity(user = "builder-candidate", roles = "authorizedUser")
   void testMakeUserLearner_Success() {
     // Hier rufen wir POST auf
     given()
