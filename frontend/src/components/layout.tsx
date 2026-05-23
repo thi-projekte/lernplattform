@@ -8,7 +8,6 @@ import {
   Image,
   NavLink,
   UnstyledButton,
-  useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronLeft, IconUser, IconLogout2 } from '@tabler/icons-react';
