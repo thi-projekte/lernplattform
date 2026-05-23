@@ -1,6 +1,6 @@
 import {
-  ActionIcon,
   AppShell,
+  Avatar,
   Box,
   Burger,
   Button,
@@ -8,17 +8,18 @@ import {
   Image,
   NavLink,
   UnstyledButton,
+  useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconChevronLeft, IconUser, IconLogout2 } from '@tabler/icons-react';
+import { IconChevronLeft, IconUser } from '@tabler/icons-react';
+import { useQueryProfilePicture } from '../api/profile-picture.ts';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import { useTranslation } from 'react-i18next';
 
-import keycloak from '../keycloak.ts';
 import { routes, type TypedMyndRoute } from '../routing.ts';
 import { useLocation, useMatches, useNavigate } from 'react-router';
-import { isGranted, logout } from '../auth.ts';
+import { isGranted } from '../auth.ts';
 import AccessDenied from './access-denied.tsx';
 import { useUserService } from '../provider/user-provider.tsx';
 
@@ -31,6 +32,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const [desktopExpanded, setDesktopExpanded] = useState(false);
   const { t } = useTranslation();
   const userService = useUserService();
+  const { data: profilePicture } = useQueryProfilePicture(userService.account.username);
+  const theme = useMantineTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const matches = useMatches();
@@ -40,7 +43,14 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
     close();
   };
 
-  const sidebarRoutes = routes.filter((r) => r.isSidebar && r.path);
+  const isBuilder = userService.roles.includes('builder');
+
+  const sidebarRoutes = routes.filter((r) => {
+    if (r.path === '/become-builder' && isBuilder) {
+      return false;
+    }
+    return r.isSidebar && r.path;
+  });
   const userDisplayName =
     [userService.account.firstName, userService.account.lastName].filter(Boolean).join(' ') ||
     userService.account.username ||
@@ -52,13 +62,10 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       ? t('auth.role_learner')
       : undefined;
 
-  const longestActiveTarget = sidebarRoutes
-    .filter((route) => pathname.indexOf(route.path ?? '') > -1)
-    .reduce((longest, current) => {
-      return (current.path?.length || 0) > (longest.path?.length || 0) ? current : longest;
-    }, {});
-
-  const isActive = (path: string) => longestActiveTarget.path === path;
+  const isActive = (path: string) => {
+    if (path === '/') return pathname === '/';
+    return pathname === path || pathname.startsWith(path + '/');
+  };
 
   const matchingRoute = useMemo<TypedMyndRoute | null>(() => {
     if (matches.length > 0) {
@@ -84,7 +91,12 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       }}
       padding={0}
     >
-      <AppShell.Header>
+      <AppShell.Header
+        style={{
+          background: theme.other.layoutHeaderBg,
+          borderBottom: `1px solid ${theme.other.layoutBorder}`,
+        }}
+      >
         <Group h="100%" justify="space-between" wrap="nowrap">
           <Box
             visibleFrom="sm"
@@ -121,12 +133,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               <Image src="/mynd-logo.png" alt="MYnd Logo" h={58} w="auto" fit="contain" />
             </UnstyledButton>
           </Group>
-
           <Group px="md">
             <LanguagePicker />
-            <ActionIcon variant="default" size="xl" onClick={logout}>
-              <IconLogout2 size={32} stroke={1.5} />
-            </ActionIcon>
           </Group>
         </Group>
       </AppShell.Header>
@@ -136,6 +144,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         onMouseEnter={() => setDesktopExpanded(true)}
         onMouseLeave={() => setDesktopExpanded(false)}
         style={{
+          background: theme.other.layoutNavbarBg,
+          borderRight: `1px solid ${theme.other.layoutBorder}`,
           transition: 'width 150ms ease',
           overflowX: 'hidden',
           display: 'flex',
@@ -176,7 +186,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
         <Box mt="auto">
           <NavLink
-            onClick={() => keycloak.accountManagement()}
+            onClick={() => navigate('/account')}
+            active={pathname === '/account'}
             title={t('layout.openAccount')}
             aria-label={t('layout.openAccount')}
             label={desktopExpanded ? userDisplayName : undefined}
@@ -192,7 +203,11 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                   flexShrink: 0,
                 }}
               >
-                <IconUser size={32} stroke={1.5} />
+                {profilePicture?.url ? (
+                  <Avatar src={profilePicture.url} size={40} radius="50%" />
+                ) : (
+                  <IconUser size={32} stroke={1.5} />
+                )}
               </Box>
             }
             styles={{
@@ -227,6 +242,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           py="md"
           style={{
             minHeight: 'calc(100vh - 104px)',
+            background: theme.other.layoutMainBg,
           }}
         >
           {pathname !== '/' && (
