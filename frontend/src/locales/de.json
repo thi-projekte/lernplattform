@@ -3,6 +3,7 @@
     "dashboard": "Dashboard",
     "builderMode": "Builder Modus",
     "createTopic": "Thema erstellen",
+    "becomeBuilder": "Zum Builder werden",
     "editTopic": "Thema bearbeiten",
     "account": "Mein Profil",
     "invitations": "Einladungen"
@@ -111,6 +112,7 @@
       "completed": "Abgeschlossen",
       "markContentElementCompleted": "Als abgeschlossen markieren",
       "contentElementCompleted": "Abgeschlossen",
+      "resetProgress": "Fortschritt zurücksetzen",
       "overview": "Themenübersicht"
     },
     "progress": {
@@ -226,7 +228,8 @@
     "title": "Onboarding",
     "role_selection_label": "Rolle auswählen",
     "role_selection_placeholder": "Wähle deine Rolle",
-    "submit": "Bestätigen"
+    "submit": "Bestätigen",
+    "upgradeToBuilderText": "Klicke auf den Button unten, um dein Konto auf Builder hochzustufen und eigene Lerninhalte zu erstellen."
   },
   "invitation": {
     "manage": {
