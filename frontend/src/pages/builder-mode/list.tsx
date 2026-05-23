@@ -1,9 +1,7 @@
 import { Layout } from '../../components/layout.tsx';
-import { FullImportSchema } from '../../schemas/topic.ts';
 import {
   useDeleteTopicMutation,
   useEditTopicMutation,
-  useImportTopicsMutation,
   useQueryPersonalTopicsPaginated,
   useQueryTopic,
 } from '../../api/topic.ts';
@@ -14,10 +12,8 @@ import EntityTable from '../../components/entity-table.tsx';
 import {
   ActionIcon,
   Button,
-  FileInput,
   Flex,
   Group,
-  Modal,
   Paper,
   SegmentedControl,
   Stack,
@@ -27,7 +23,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { notifications } from '@mantine/notifications';
+import ImportTopicsModal from '../../components/topic/import-topics-modal.tsx';
 import { useTranslation } from 'react-i18next';
 import type { OnConnect } from '@xyflow/react';
 import { IconFileImport, IconLink, IconPlusFilled, IconTrash } from '@tabler/icons-react';
@@ -64,9 +60,6 @@ const BuilderModeListPage = () => {
   const navigate = useNavigate();
   const { mutate } = useDeleteTopicMutation();
   const [importOpen, { open: openImport, close: closeImport }] = useDisclosure(false);
-  const [importFile, setImportFile] = useState<File | null>(null);
-  const [importError, setImportError] = useState<string | null>(null);
-  const { mutate: importTopics, isPending: isImporting } = useImportTopicsMutation();
   const { mutateAsync: createAssociation, isPending: isCreatingAssociation } =
     useCreateAssociation();
   const columns = useTopicColumns({
@@ -277,70 +270,7 @@ const BuilderModeListPage = () => {
         </Button>
       </Flex>
 
-      <Modal
-        opened={importOpen}
-        onClose={() => {
-          closeImport();
-          setImportFile(null);
-          setImportError(null);
-        }}
-        title={t('topic.actions.importJson')}
-        centered
-      >
-        <Stack gap="md">
-          <FileInput
-            label="JSON"
-            accept=".json,application/json"
-            value={importFile}
-            onChange={(f) => {
-              setImportFile(f);
-              setImportError(null);
-            }}
-            placeholder="topics.json"
-            error={importError}
-          />
-          <Button
-            fullWidth
-            disabled={!importFile}
-            loading={isImporting}
-            onClick={() => {
-              if (!importFile) return;
-              const reader = new FileReader();
-              reader.onload = (e) => {
-                try {
-                  const raw = JSON.parse(e.target?.result as string);
-                  const result = FullImportSchema.safeParse(raw);
-                  if (!result.success) {
-                    setImportError(
-                      result.error.issues[0]?.message ?? t('topic.actions.importJsonError')
-                    );
-                    return;
-                  }
-                  importTopics(result.data, {
-                    onSuccess: () => {
-                      notifications.show({
-                        color: 'green',
-                        message: t('topic.actions.importJsonSuccess'),
-                      });
-                      closeImport();
-                      setImportFile(null);
-                      setImportError(null);
-                    },
-                    onError: () => {
-                      setImportError(t('topic.actions.importJsonError'));
-                    },
-                  });
-                } catch {
-                  setImportError(t('topic.actions.importJsonError'));
-                }
-              };
-              reader.readAsText(importFile);
-            }}
-          >
-            {t('topic.actions.importJsonSubmit')}
-          </Button>
-        </Stack>
-      </Modal>
+      <ImportTopicsModal opened={importOpen} onClose={closeImport} />
       <Stack gap="md" mt={12}>
         <Stack gap="xs" align="center">
           <Group justify="center" w="100%">
