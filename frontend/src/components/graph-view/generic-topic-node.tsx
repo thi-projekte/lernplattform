@@ -151,8 +151,8 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
           animation: 'cardEntrance 0.18s ease-out both',
         }}
       >
-      <Stack gap="xs">
-        <Stack gap={6}>
+        <Stack gap="xs">
+          <Stack gap={6}>
             <Text fw={600} size="sm" style={{ lineHeight: 1.3 }}>
               {data.title}
             </Text>
@@ -170,91 +170,91 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
             )}
           </Stack>
 
-        {topicId &&
-          (DETAIL_BUTTON_VARIANT === 'icon-text' ? (
-            <Button
-              leftSection={<IconEye size={14} />}
-              variant="light"
-              color="blue"
-              size="xs"
-              fullWidth
-              onClick={(event) => {
-                event.stopPropagation();
-                navigate(`/topics/${topicId}/details`);
-              }}
-            >
-              {t('journey.openDetails')}
-            </Button>
-          ) : (
-            <Group justify="flex-end">
-              <ActionIcon
+          {topicId &&
+            (DETAIL_BUTTON_VARIANT === 'icon-text' ? (
+              <Button
+                leftSection={<IconEye size={14} />}
                 variant="light"
                 color="blue"
-                size="md"
+                size="xs"
+                fullWidth
                 onClick={(event) => {
                   event.stopPropagation();
                   navigate(`/topics/${topicId}/details`);
                 }}
-                aria-label={t('journey.openDetails')}
               >
-                <IconEye size={16} />
-              </ActionIcon>
-            </Group>
-          ))}
+                {t('journey.openDetails')}
+              </Button>
+            ) : (
+              <Group justify="flex-end">
+                <ActionIcon
+                  variant="light"
+                  color="blue"
+                  size="md"
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    navigate(`/topics/${topicId}/details`);
+                  }}
+                  aria-label={t('journey.openDetails')}
+                >
+                  <IconEye size={16} />
+                </ActionIcon>
+              </Group>
+            ))}
 
-        {data.onExpand && !data.isExpanded && (
-          <Button
-            leftSection={<IconLink size={14} />}
-            variant="light"
-            color="gray"
-            size="xs"
-            fullWidth
-            onClick={(event) => {
-              event.stopPropagation();
-              data.onExpand?.();
-            }}
-          >
-            {t('journey.expandNeighbors')}
-          </Button>
-        )}
-
-        {data.onHide && (
-          <Button
-            leftSection={<IconEyeOff size={14} />}
-            variant="subtle"
-            color="gray"
-            size="xs"
-            fullWidth
-            onClick={(event) => {
-              event.stopPropagation();
-              data.onHide?.();
-            }}
-          >
-            {t('journey.hideNode')}
-          </Button>
-        )}
-
-        {learnProgress && (
-          <Group gap="xs" align="center" wrap="nowrap">
-            <Text
+          {data.onExpand && !data.isExpanded && (
+            <Button
+              leftSection={<IconLink size={14} />}
+              variant="light"
+              color="gray"
               size="xs"
-              fw={700}
-              c={isProgressCompleted ? 'green.7' : 'blue.7'}
-              style={{ minWidth: 36, textAlign: 'left' }}
+              fullWidth
+              onClick={(event) => {
+                event.stopPropagation();
+                data.onExpand?.();
+              }}
             >
-              {progressPercent}%
-            </Text>
-            <Progress
-              value={progressPercent}
-              color={isProgressCompleted ? 'green' : 'blue'}
+              {t('journey.expandNeighbors')}
+            </Button>
+          )}
+
+          {data.onHide && (
+            <Button
+              leftSection={<IconEyeOff size={14} />}
+              variant="subtle"
+              color="gray"
               size="xs"
-              radius="xl"
-              style={{ flex: 1 }}
-            />
-          </Group>
-        )}
-      </Stack>
-    </Paper>
+              fullWidth
+              onClick={(event) => {
+                event.stopPropagation();
+                data.onHide?.();
+              }}
+            >
+              {t('journey.hideNode')}
+            </Button>
+          )}
+
+          {learnProgress && (
+            <Group gap="xs" align="center" wrap="nowrap">
+              <Text
+                size="xs"
+                fw={700}
+                c={isProgressCompleted ? 'green.7' : 'blue.7'}
+                style={{ minWidth: 36, textAlign: 'left' }}
+              >
+                {progressPercent}%
+              </Text>
+              <Progress
+                value={progressPercent}
+                color={isProgressCompleted ? 'green' : 'blue'}
+                size="xs"
+                radius="xl"
+                style={{ flex: 1 }}
+              />
+            </Group>
+          )}
+        </Stack>
+      </Paper>
 
       {/* Connector line */}
       <div
