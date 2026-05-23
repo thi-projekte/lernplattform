@@ -1,13 +1,16 @@
-import { ActionIcon, Button, Group, Modal, ThemeIcon, Title, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, Group, Modal, Stack, ThemeIcon, Title, Tooltip } from '@mantine/core';
 import { createElement } from 'react';
 import type { AnyContentElementDto } from '../../../schemas/content-element';
 import ContentElementDisplay from '../../topic/content-element-display';
 import { useTranslation } from 'react-i18next';
 import { useDisclosure } from '@mantine/hooks';
-import { IconCheck, IconMaximize } from '@tabler/icons-react';
+import { IconCheck, IconMaximize, IconRefresh } from '@tabler/icons-react';
 import { CONTENT_ICONS, DEFAULT_ICON_BY_TYPE } from '../../icon-picker/icons';
 import CategoryBadge from '../../category-badge.tsx';
-import { useCompleteContentElementMutation } from '../../../api/learn-progress.ts';
+import {
+  useCompleteContentElementMutation,
+  useResetContentElementMutation,
+} from '../../../api/learn-progress.ts';
 import type { TopicLearnProgressDto } from '../../../schemas/learn-progress.ts';
 import { track } from '@plausible-analytics/tracker';
 
@@ -27,6 +30,7 @@ const ContentSidebarContent = ({
     CONTENT_ICONS[DEFAULT_ICON_BY_TYPE[selectedElement.type]];
 
   const { mutate: completeContentElement, isPending } = useCompleteContentElementMutation();
+  const { mutate: resetContentElement, isPending: isResetting } = useResetContentElementMutation();
 
   const topicStarted = !!topicLearnProgress;
   const isElementCompleted = !!topicLearnProgress?.completedContentElementIds.includes(
@@ -62,15 +66,28 @@ const ContentSidebarContent = ({
       <ContentElementDisplay contentElement={selectedElement} />
 
       {isElementCompleted ? (
-        <Button
-          color="green"
-          variant="light"
-          fullWidth
-          disabled
-          leftSection={<IconCheck size={16} />}
-        >
-          {t('topic.actions.contentElementCompleted')}
-        </Button>
+        <Stack gap="xs">
+          <Button
+            color="green"
+            variant="light"
+            fullWidth
+            disabled
+            leftSection={<IconCheck size={16} />}
+          >
+            {t('topic.actions.contentElementCompleted')}
+          </Button>
+          <Button
+            variant="subtle"
+            color="gray"
+            size="xs"
+            fullWidth
+            leftSection={<IconRefresh size={14} />}
+            loading={isResetting}
+            onClick={() => resetContentElement(selectedElement.id)}
+          >
+            {t('topic.actions.resetProgress')}
+          </Button>
+        </Stack>
       ) : (
         <Tooltip label={t('topic.actions.start')} disabled={topicStarted} withArrow>
           <Button

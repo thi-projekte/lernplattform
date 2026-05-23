@@ -166,7 +166,7 @@ export default function Register(props: RegisterProps) {
         </Box>
       )}
 
-      <Container size={520} mt="md" mb="xl">
+      <Container className="mynd-register-container" size={520}>
         <Paper
           className="mynd-register-card"
           p={42}

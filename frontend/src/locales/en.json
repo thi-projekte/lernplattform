@@ -2,6 +2,7 @@
   "routes": {
     "dashboard": "Dashboard",
     "builderMode": "Builder Mode",
+    "becomeBuilder": "Become a Builder",
     "createTopic": "Create topic",
     "editTopic": "Edit topic",
     "account": "My profile",
@@ -106,6 +107,7 @@
       "completed": "Completed",
       "markContentElementCompleted": "Mark as completed",
       "contentElementCompleted": "Completed",
+      "resetProgress": "Reset progress",
       "overview": "Topic overview",
       "importJson": "Import JSON",
       "importJsonSubmit": "Import",
