@@ -108,7 +108,11 @@
       "markContentElementCompleted": "Als abgeschlossen markieren",
       "contentElementCompleted": "Abgeschlossen",
       "resetProgress": "Fortschritt zurücksetzen",
-      "overview": "Themenübersicht"
+      "overview": "Themenübersicht",
+      "importJson": "JSON importieren",
+      "importJsonSubmit": "Importieren",
+      "importJsonSuccess": "Themen erfolgreich importiert",
+      "importJsonError": "Ungültiges JSON-Format"
     },
     "progress": {
       "label": "Fortschritt",

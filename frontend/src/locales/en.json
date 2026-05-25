@@ -108,7 +108,11 @@
       "markContentElementCompleted": "Mark as completed",
       "contentElementCompleted": "Completed",
       "resetProgress": "Reset progress",
-      "overview": "Topic overview"
+      "overview": "Topic overview",
+      "importJson": "Import JSON",
+      "importJsonSubmit": "Import",
+      "importJsonSuccess": "Topics imported successfully",
+      "importJsonError": "Invalid JSON format"
     },
     "progress": {
       "label": "Progress",
