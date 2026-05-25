@@ -176,10 +176,8 @@ const TopicDetailsPage = () => {
                           p="sm"
                           style={(theme) => ({
                             borderRadius: theme.radius.md,
-                            background: isSelected ? theme.colors.blue[0] : undefined,
-                            border: `1px solid ${
-                              isSelected ? theme.colors.blue[3] : theme.colors.gray[2]
-                            }`,
+                            background: isSelected ? 'var(--card-selected-bg)' : 'var(--card-bg)',
+                            border: `1px solid ${isSelected ? 'var(--card-selected-border)' : 'var(--card-border)'}`,
                             transition: 'background 0.15s, border-color 0.15s',
                           })}
                         >
@@ -231,6 +229,7 @@ const TopicDetailsPage = () => {
                 flex: 1,
                 minWidth: 0,
                 overflowY: 'auto',
+                background: 'var(--panel-right-bg)',
               }}
             >
               <Stack gap="md">

@@ -141,7 +141,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           >
             <Button
               size="sm"
-              color="green"
+              color="green.7"
               loading={isCompleting}
               onClick={() => {
                 if (topicId) {
@@ -182,7 +182,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           </Group>
           <Progress
             value={progressPercent}
-            color={isCompleted ? 'green' : 'blue'}
+            color={isCompleted ? 'green.7' : 'blue'}
             size="sm"
             radius="xl"
           />

@@ -9,6 +9,17 @@ interface ViewportToolbarProps {
   onToggleViewportLock?: () => void;
 }
 
+const toolbarActionIconProps = {
+  variant: 'subtle',
+  radius: 0,
+  size: 36,
+  style: {
+    ['--ai-color' as string]: '#495057',
+    ['--ai-hover' as string]: 'rgba(0, 0, 0, 0.06)',
+    ['--ai-hover-color' as string]: '#495057',
+  },
+} as const;
+
 const ViewportToolbar = ({
   fitViewPadding,
   fitViewMaxZoom,
@@ -23,15 +34,16 @@ const ViewportToolbar = ({
         withBorder
         radius="md"
         shadow="sm"
-        style={{ overflow: 'hidden', background: 'rgba(255, 255, 255, 0.94)' }}
+        style={{
+          overflow: 'hidden',
+          background: 'rgba(255, 255, 255, 0.94)',
+          borderColor: '#dee2e6',
+        }}
       >
         <Stack gap={0}>
           <Tooltip label="Zoom in" position="right">
             <ActionIcon
-              variant="subtle"
-              color="gray"
-              radius={0}
-              size={36}
+              {...toolbarActionIconProps}
               aria-label="Zoom in"
               onClick={() => zoomIn({ duration: 180 })}
             >
@@ -41,10 +53,7 @@ const ViewportToolbar = ({
 
           <Tooltip label="Zoom out" position="right">
             <ActionIcon
-              variant="subtle"
-              color="gray"
-              radius={0}
-              size={36}
+              {...toolbarActionIconProps}
               aria-label="Zoom out"
               onClick={() => zoomOut({ duration: 180 })}
             >
@@ -54,10 +63,7 @@ const ViewportToolbar = ({
 
           <Tooltip label="Fit view" position="right">
             <ActionIcon
-              variant="subtle"
-              color="gray"
-              radius={0}
-              size={36}
+              {...toolbarActionIconProps}
               aria-label="Fit view"
               onClick={() =>
                 fitView({ padding: fitViewPadding, maxZoom: fitViewMaxZoom, duration: 220 })
@@ -69,10 +75,17 @@ const ViewportToolbar = ({
 
           <Tooltip label={viewportLocked ? 'Unlock graph' : 'Lock graph'} position="right">
             <ActionIcon
+              {...toolbarActionIconProps}
               variant={viewportLocked ? 'filled' : 'subtle'}
-              color={viewportLocked ? 'dark' : 'gray'}
-              radius={0}
-              size={36}
+              style={{
+                ...toolbarActionIconProps.style,
+                ...(viewportLocked && {
+                  ['--ai-bg' as string]: '#495057',
+                  ['--ai-hover' as string]: '#5c6370',
+                  ['--ai-color' as string]: '#ffffff',
+                  ['--ai-hover-color' as string]: '#ffffff',
+                }),
+              }}
               aria-label={viewportLocked ? 'Unlock graph' : 'Lock graph'}
               onClick={onToggleViewportLock}
             >

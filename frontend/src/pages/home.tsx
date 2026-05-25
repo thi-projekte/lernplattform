@@ -307,7 +307,7 @@ const HomePage = () => {
           </Text>
         </Stack>
 
-        <Paper withBorder radius="lg" p="lg" bg="transparent" style={{ overflow: 'hidden' }}>
+        <Paper withBorder radius="lg" p="lg" style={{ overflow: 'hidden' }}>
           <Stack gap="md">
             <Group justify="space-between" align="center">
               <Text size="sm" c="dimmed">

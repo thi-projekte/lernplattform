@@ -15,6 +15,7 @@ import { IconChevronLeft, IconUser } from '@tabler/icons-react';
 import { useQueryProfilePicture } from '../api/profile-picture.ts';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
+import ColorSchemeToggle from './color-scheme-toggle.tsx';
 import { useTranslation } from 'react-i18next';
 
 import { routes, type TypedMyndRoute } from '../routing.ts';
@@ -133,7 +134,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               <Image src="/mynd-logo.png" alt="MYnd Logo" h={58} w="auto" fit="contain" />
             </UnstyledButton>
           </Group>
-          <Group px="md">
+          <Group px="md" gap="xs">
+            <ColorSchemeToggle />
             <LanguagePicker />
           </Group>
         </Group>

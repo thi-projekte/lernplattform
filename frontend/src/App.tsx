@@ -6,6 +6,7 @@ import { MantineProvider } from '@mantine/core';
 import { theme } from './theme.ts';
 
 import './i18n.ts';
+import './index.css';
 import './app.css';
 
 import '@mantine/core/styles.css';
@@ -31,7 +32,7 @@ function App() {
     }
   }
   return (
-    <MantineProvider theme={theme} forceColorScheme="light">
+    <MantineProvider theme={theme} defaultColorScheme="auto">
       <ModalsProvider>
         <QueryClientProvider client={queryClient}>
           <UserProvider>
