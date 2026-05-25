@@ -7,10 +7,9 @@ public final class TokenGenerator {
 
   private static final String CHARACTERS =
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  private static final SecureRandom RANDOM = new SecureRandom();
 
   public static String generateRandomString(int length) {
-    return RANDOM
+    return new SecureRandom()
         .ints(length, 0, CHARACTERS.length())
         .mapToObj(CHARACTERS::charAt)
         .map(Object::toString)
