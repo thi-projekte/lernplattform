@@ -8,6 +8,5 @@ public class StreakPreferenceDto {
 
     public String creatorId;
     public StreakType type;
-    public int allowedCheatUnits;
     public boolean isPublic;
 }
