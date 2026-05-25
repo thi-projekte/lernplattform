@@ -114,6 +114,12 @@ services:
       S3_SECRET: ${S3_SECRET_KEY}
       CORS_ORIGIN: ${CORS_ORIGIN}
       APP_VERSION: ${MYND_IMAGE_TAG}
+      FRONTEND_URI: ${FRONTEND_URI}
+      MAILER_HOST: ${MAILER_HOST}
+      MAILER_PORT: ${MAILER_PORT}
+      MAILER_USERNAME: ${MAILER_USERNAME}
+      MAILER_FROM: ${MAILER_FROM}
+      MAILER_PASSWORD: ${MAILER_PASSWORD}
 
   mynd-frontend:
     container_name: mynd-lernplattform-frontend
