@@ -1,25 +1,40 @@
 import {
   Avatar,
+  Box,
   Button,
+  Collapse,
   Divider,
   Group,
+  Paper,
   Progress,
-  ThemeIcon,
   Text,
+  TextInput,
+  ThemeIcon,
   Title,
   Stack,
   Tooltip,
+  UnstyledButton,
 } from '@mantine/core';
-
+import { useDisclosure } from '@mantine/hooks'; // ← aus dev
 import type { Topic } from '../../../schemas/topic';
 import { useTranslation } from 'react-i18next';
-import { IconCheck, IconEdit, IconMessageCircle, IconRobot, IconUser } from '@tabler/icons-react';
+import {
+  IconCheck,
+  IconChevronDown, // ← aus dev
+  IconChevronUp, // ← aus dev
+  IconEdit,
+  IconRefresh, // ← aus dev
+  IconRobot,
+  IconSend, // ← aus dev
+  IconUser, // ← aus profilbild
+} from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
 import CategoryBadge from '../../category-badge.tsx';
 import { useQueryProfilePicture } from '../../../api/profile-picture.ts';
 import {
   useCompleteTopicManuallyMutation,
+  useResetTopicMutation,
   useStartTopicMutation,
 } from '../../../api/learn-progress.ts';
 import { track } from '@plausible-analytics/tracker';
@@ -38,10 +53,14 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
     !!currentUsername &&
     selectedElement.creatorId.toLowerCase() === currentUsername;
 
+  // Profilbild-Hook (aus dem profilbild-Branch)
   const { data: creatorPicture } = useQueryProfilePicture(selectedElement.creatorId);
+  // Myna-Toggle (aus dem dev-Branch)
+  const [mynaOpen, { toggle: toggleMyna }] = useDisclosure(false);
 
   const { mutate: startTopic, isPending: isStarting } = useStartTopicMutation();
   const { mutate: completeTopic, isPending: isCompleting } = useCompleteTopicManuallyMutation();
+  const { mutate: resetTopic, isPending: isResetting } = useResetTopicMutation();
 
   const learnProgress = selectedElement.learnProgress;
   const topicId = selectedElement.id;
@@ -63,126 +82,203 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
       : 0;
 
   return (
-    <>
-      <Title order={3}>{selectedElement.title}</Title>
-      <Group gap="xs" align="center">
-        <Avatar src={creatorPicture?.url ?? null} size={24} radius="xl">
-          <IconUser size={14} />
-        </Avatar>
-        <Text size="sm" c="dimmed">
-          {t('topic.fields.author')}: {selectedElement.creatorFullName}
-        </Text>
-      </Group>
-      <Group gap={6}>
-        {selectedElement.categories?.map((cat) => (
-          <CategoryBadge key={cat.id} title={cat.title} color={cat.color ?? '8b5cf6'} />
-        ))}
-      </Group>
-      <Text size="sm" c="dimmed">
-        {t('topic.fields.estimatedLearningDuration')}: {selectedElement.estimatedLearningDuration}{' '}
-        {t('topic.fields.estimatedLearningDurationSuffix')}
-      </Text>
-      <Text size="sm">{selectedElement.teaser}</Text>
+    <Stack gap="sm">
+      <div>
+        <Title order={3} mb={6}>
+          {selectedElement.title}
+        </Title>
+        {/* Hier haben wir das Profilbild elegant in das neue Layout integriert */}
+        <Group gap={6} c="dimmed" align="center">
+          <Avatar src={creatorPicture?.url ?? null} size={20} radius="xl">
+            <IconUser size={12} />
+          </Avatar>
+          <Text size="xs">{selectedElement.creatorFullName}</Text>
+          {selectedElement.estimatedLearningDuration && (
+            <>
+              <Text size="xs">·</Text>
+              <Text size="xs">
+                {selectedElement.estimatedLearningDuration}{' '}
+                {t('topic.fields.estimatedLearningDurationSuffix')}
+              </Text>
+            </>
+          )}
+        </Group>
+        {selectedElement.categories && selectedElement.categories.length > 0 && (
+          <Group gap={6} mt={8}>
+            {selectedElement.categories.map((cat) => (
+              <CategoryBadge key={cat.id} title={cat.title} color={cat.color ?? '8b5cf6'} />
+            ))}
+          </Group>
+        )}
+      </div>
 
-      {isOwner && (
-        <Button
-          leftSection={<IconEdit size={16} />}
-          variant="light"
-          color="blue"
-          fullWidth
-          mt="xl"
-          onClick={() => navigate(`/builder-mode/topics/${selectedElement.id}/edit`)}
-        >
-          {t('common.edit')}
-        </Button>
+      {selectedElement.teaser && (
+        <Text size="sm" c="dimmed" style={{ lineHeight: 1.6 }}>
+          {selectedElement.teaser}
+        </Text>
       )}
 
-      {isCompleted ? (
-        <Button
-          color="green"
-          variant="light"
-          fullWidth
-          mt="xl"
-          disabled
-          leftSection={<IconCheck size={16} />}
-        >
-          {t('topic.actions.completed')}
-        </Button>
-      ) : isStarted ? (
-        <Tooltip
-          label={t('topic.actions.completeBlockedHint')}
-          disabled={progressPercent >= 100}
-          withArrow
-        >
+      <Divider />
+
+      <Group gap="xs" wrap="wrap">
+        {isOwner && (
           <Button
+            leftSection={<IconEdit size={15} />}
+            variant="light"
+            color="blue"
+            size="sm"
+            onClick={() => navigate(`/builder-mode/topics/${selectedElement.id}/edit`)}
+          >
+            {t('common.edit')}
+          </Button>
+        )}
+
+        {isCompleted ? (
+          <Button
+            size="sm"
             color="green"
-            fullWidth
-            mt="xl"
-            loading={isCompleting}
+            variant="light"
+            disabled
+            leftSection={<IconCheck size={15} />}
+          >
+            {t('topic.actions.completed')}
+          </Button>
+        ) : isStarted ? (
+          <Tooltip
+            label={t('topic.actions.completeBlockedHint')}
+            disabled={progressPercent >= 100}
+            withArrow
+          >
+            <Button
+              size="sm"
+              color="green.7"
+              loading={isCompleting}
+              onClick={() => {
+                if (topicId) {
+                  track('topicLearnCompletedManually', { props: { topicId } });
+                  completeTopic(topicId);
+                }
+              }}
+            >
+              {t('topic.actions.complete')}
+            </Button>
+          </Tooltip>
+        ) : (
+          <Button
+            size="sm"
+            color="blue"
+            loading={isStarting}
             onClick={() => {
               if (topicId) {
-                track('topicLearnCompletedManually', { props: { topicId: topicId ?? '' } });
-                completeTopic(topicId);
+                track('topicLearnStarted', { props: { topicId } });
+                startTopic(topicId);
               }
             }}
           >
-            {t('topic.actions.complete')}
+            {t('topic.actions.start')}
           </Button>
-        </Tooltip>
-      ) : (
-        <Button
-          color="blue"
-          fullWidth
-          mt="xl"
-          loading={isStarting}
-          onClick={() => {
-            if (topicId) {
-              track('topicLearnStarted', { props: { topicId: topicId ?? '' } });
-              startTopic(topicId);
-            }
-          }}
-        >
-          {t('topic.actions.start')}
-        </Button>
-      )}
+        )}
+      </Group>
 
       {learnProgress && (
-        <Stack gap={4} mt="md">
-          <Group justify="space-between">
-            <Text size="xs" c="dimmed">
+        <Paper withBorder radius="md" p="sm" bg="gray.0">
+          <Group justify="space-between" mb={6}>
+            <Text size="xs" c="dimmed" fw={500}>
               {t('topic.progress.label')}
             </Text>
-            <Text size="xs" fw={600}>
+            <Text size="xs" fw={700} c={isCompleted ? 'green.7' : 'blue.7'}>
               {Math.round(progressPercent)}%
             </Text>
           </Group>
-          <Progress value={progressPercent} color={isCompleted ? 'green' : 'blue'} />
-        </Stack>
+          <Progress
+            value={progressPercent}
+            color={isCompleted ? 'green.7' : 'blue'}
+            size="sm"
+            radius="xl"
+          />
+          {totalContentElements > 0 && (
+            <Text size="xs" c="dimmed" mt={6}>
+              {completedCurrentIds.length} / {totalContentElements}{' '}
+              {t('topic.progress.elementsCompleted')}
+            </Text>
+          )}
+          <Button
+            variant="subtle"
+            color="gray"
+            size="xs"
+            fullWidth
+            leftSection={<IconRefresh size={14} />}
+            loading={isResetting}
+            onClick={() => topicId && resetTopic(topicId)}
+          >
+            {t('topic.actions.resetProgress')}
+          </Button>
+        </Paper>
       )}
 
-      <Divider mt="lg" />
+      <Divider />
 
-      <Group gap="sm" mt="md">
-        <ThemeIcon color="blue" radius="xl" variant="light">
-          <IconRobot size={16} />
-        </ThemeIcon>
-        <div>
-          <Text fw={600}>Myna</Text>
-          <Text size="xs" c="dimmed">
-            {t('topic.myna.subtitle')}
-          </Text>
-        </div>
-      </Group>
-      <Button
-        variant="outline"
-        color="blue"
-        fullWidth
-        mt="sm"
-        leftSection={<IconMessageCircle size={16} />}
-      >
-        {t('topic.myna.askButton')}
-      </Button>
-    </>
+      <UnstyledButton onClick={toggleMyna} style={{ borderRadius: 8 }}>
+        <Group justify="space-between" align="center" p={4}>
+          <Group gap="sm">
+            <ThemeIcon color="blue" radius="xl" variant="light" size="md">
+              <IconRobot size={15} />
+            </ThemeIcon>
+            <div>
+              <Text fw={600} size="sm">
+                Myna
+              </Text>
+              <Text size="xs" c="dimmed">
+                {t('topic.myna.subtitle')}
+              </Text>
+            </div>
+          </Group>
+          {mynaOpen ? (
+            <IconChevronUp size={16} color="gray" />
+          ) : (
+            <IconChevronDown size={16} color="gray" />
+          )}
+        </Group>
+      </UnstyledButton>
+
+      <Collapse expanded={mynaOpen}>
+        <Stack gap="xs">
+          <Box
+            style={(theme) => ({
+              background: theme.colors.gray[0],
+              border: `1px solid ${theme.colors.gray[2]}`,
+              borderRadius: theme.radius.md,
+              minHeight: 110,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            })}
+            p="md"
+          >
+            <Stack align="center" gap={6}>
+              <ThemeIcon color="blue" variant="light" size="xl" radius="xl">
+                <IconRobot size={22} />
+              </ThemeIcon>
+              <Text size="xs" c="dimmed" ta="center">
+                {t('topic.myna.comingSoon')}
+              </Text>
+            </Stack>
+          </Box>
+          <Group gap="xs" wrap="nowrap">
+            <TextInput
+              placeholder={t('topic.myna.inputPlaceholder')}
+              disabled
+              style={{ flex: 1 }}
+              size="sm"
+              radius="md"
+            />
+            <Button size="sm" variant="light" color="blue" disabled px="sm" radius="md">
+              <IconSend size={15} />
+            </Button>
+          </Group>
+        </Stack>
+      </Collapse>
+    </Stack>
   );
 };
 
