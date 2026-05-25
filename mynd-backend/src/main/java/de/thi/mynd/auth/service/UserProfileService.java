@@ -1,6 +1,8 @@
 package de.thi.mynd.auth.service;
 
 import de.thi.mynd.auth.dto.ProfilePictureDto;
+import de.thi.mynd.auth.entity.UserProfile;
+import java.util.Optional;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 
 public interface UserProfileService {
@@ -8,5 +10,11 @@ public interface UserProfileService {
 
   void deleteProfilePicture(String username);
 
+  void updateUserProfile(UserProfile userProfile);
+
   ProfilePictureDto getProfilePicture(String username);
+
+  UserProfile createPersonalUserProfile();
+
+  Optional<UserProfile> getPersonalUserProfile();
 }

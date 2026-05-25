@@ -9,34 +9,48 @@ import type {
 } from './topic-graph.types';
 import type { SkillTreeNode, SkillTreeOrientation } from './skill-tree.types.ts';
 
-// Approximate dimensions of the rendered topic card. Dagre uses these to
-// reserve space when laying out the graph so the cards don't visually overlap.
+// Approximate dimensions of the rendered topic card. Used to reserve space
+// during layout so cards don't visually overlap.
 const SKILL_NODE_WIDTH = 280;
 const SKILL_NODE_HEIGHT = 120;
+const TOPIC_NODE_HORIZONTAL_GAP = 48;
+const TOPIC_NODE_VERTICAL_GAP = 56;
 
 // Wraps a set of nodes + edges with dagre to compute non-overlapping positions.
 // React Flow expects top-left corner coordinates; dagre returns node centers,
 // so we offset by half the node size.
+interface DagreConfig {
+  nodeWidth?: number;
+  nodeHeight?: number;
+  nodesep?: number;
+  ranksep?: number;
+}
+
 const applyDagreLayout = <T extends { id: string; position: { x: number; y: number } }>(
   nodes: T[],
   edges: Edge[],
-  orientation: SkillTreeOrientation
+  orientation: SkillTreeOrientation,
+  config: DagreConfig = {}
 ): T[] => {
   if (nodes.length === 0) return nodes;
+
+  const {
+    nodeWidth = SKILL_NODE_WIDTH,
+    nodeHeight = SKILL_NODE_HEIGHT,
+    nodesep = 40,
+    ranksep = 80,
+  } = config;
 
   const dagreGraph = new dagre.graphlib.Graph();
   dagreGraph.setDefaultEdgeLabel(() => ({}));
   dagreGraph.setGraph({
     rankdir: orientation === 'horizontal' ? 'LR' : 'TB',
-    nodesep: 40,
-    ranksep: 80,
+    nodesep,
+    ranksep,
   });
 
   nodes.forEach((node) => {
-    dagreGraph.setNode(node.id, {
-      width: SKILL_NODE_WIDTH,
-      height: SKILL_NODE_HEIGHT,
-    });
+    dagreGraph.setNode(node.id, { width: nodeWidth, height: nodeHeight });
   });
 
   edges.forEach((edge) => {
@@ -53,37 +67,49 @@ const applyDagreLayout = <T extends { id: string; position: { x: number; y: numb
     return {
       ...node,
       position: {
-        x: layouted.x - SKILL_NODE_WIDTH / 2,
-        y: layouted.y - SKILL_NODE_HEIGHT / 2,
+        x: layouted.x - nodeWidth / 2,
+        y: layouted.y - nodeHeight / 2,
       },
     };
   });
 };
 
-// The edge handles are derived from node angles so arrows stay attached to the
-// most natural side of each node. Be careful when changing this mapping,
-// because it affects edge routing and label readability across graph variants.
-const getHandleForAngle = (angle: number) => {
-  const a = ((angle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
-  if (a >= (7 * Math.PI) / 4 || a < Math.PI / 4) return 'right';
-  if (a >= Math.PI / 4 && a < (3 * Math.PI) / 4) return 'bottom';
-  if (a >= (3 * Math.PI) / 4 && a < (5 * Math.PI) / 4) return 'left';
-  return 'top';
-};
+const overlapsExistingTopicNode = (
+  candidate: { x: number; y: number },
+  occupiedPositions: { x: number; y: number }[]
+) =>
+  occupiedPositions.some(
+    (position) =>
+      Math.abs(position.x - candidate.x) < SKILL_NODE_WIDTH + TOPIC_NODE_HORIZONTAL_GAP &&
+      Math.abs(position.y - candidate.y) < SKILL_NODE_HEIGHT + TOPIC_NODE_VERTICAL_GAP
+  );
 
-const getOppositeHandle = (handle: string) => {
-  switch (handle) {
-    case 'right':
-      return 'left';
-    case 'left':
-      return 'right';
-    case 'top':
-      return 'bottom';
-    case 'bottom':
-      return 'top';
-    default:
-      return 'left';
+const getNextIsolatedTopicPosition = (
+  occupiedPositions: { x: number; y: number }[],
+  startX: number,
+  startY: number
+) => {
+  let row = 0;
+  let column = 0;
+
+  while (row < 32) {
+    const candidate = {
+      x: startX + column * (SKILL_NODE_WIDTH + TOPIC_NODE_HORIZONTAL_GAP),
+      y: startY + row * (SKILL_NODE_HEIGHT + TOPIC_NODE_VERTICAL_GAP),
+    };
+
+    if (!overlapsExistingTopicNode(candidate, occupiedPositions)) {
+      return candidate;
+    }
+
+    column += 1;
+    if (column === 2) {
+      column = 0;
+      row += 1;
+    }
   }
+
+  return { x: startX, y: startY };
 };
 
 export const buildTopicDetailsGraph = (
@@ -202,13 +228,35 @@ export const buildTopicAssociationsGraph = (
     });
   });
 
+  const layoutedNodes = applyDagreLayout(nodes, edges, 'vertical');
+
+  const finalNodes = layoutedNodes.map((node) => ({
+    ...node,
+    position: nodePositions[node.id] ?? node.position,
+  }));
+
+  const occupiedPositions = finalNodes.map((node) => node.position);
+  const maxConnectedX = finalNodes.length
+    ? Math.max(...finalNodes.map((node) => node.position.x))
+    : 0;
+  const minConnectedY = finalNodes.length
+    ? Math.min(...finalNodes.map((node) => node.position.y))
+    : 0;
+  const isolatedStartX = maxConnectedX + SKILL_NODE_WIDTH + 120;
+  const isolatedStartY = minConnectedY;
+
   isolatedTopics.forEach((isolatedTopic) => {
     const nodeId = `isolated-topic-${isolatedTopic.id}`;
+    const position =
+      nodePositions[nodeId] ??
+      getNextIsolatedTopicPosition(occupiedPositions, isolatedStartX, isolatedStartY);
 
-    nodes.push({
+    occupiedPositions.push(position);
+
+    finalNodes.push({
       id: nodeId,
       type: 'topic',
-      position: { x: 0, y: 0 },
+      position,
       data: {
         kind: 'topic',
         title: isolatedTopic.title,
@@ -220,20 +268,10 @@ export const buildTopicAssociationsGraph = (
     });
   });
 
-  const layoutedNodes = applyDagreLayout(nodes, edges, 'vertical');
-
-  const finalNodes = layoutedNodes.map((node) => ({
-    ...node,
-    position: nodePositions[node.id] ?? node.position,
-  }));
-
   return { nodes: finalNodes, edges };
 };
 
-export const buildPersonalTopicsGraph = (
-  topics: GraphTopicDto[],
-  currentUsername?: string
-): { nodes: TopicGraphNode[]; edges: Edge[] } => {
+export const buildPersonalTopicsGraph = (topics: GraphTopicDto[], currentUsername?: string) => {
   const nodes: TopicGraphNode[] = [];
   const edges: Edge[] = [];
 
@@ -382,7 +420,6 @@ export const buildPersonalTopicsGraph = (
   });
 
   const seenEdges = new Set<string>();
-  const nodePositions = new Map(nodes.map((node) => [node.id, node.position]));
 
   topics.forEach((topic) => {
     topic.associatedTopics.forEach((associatedTopicId) => {
@@ -392,32 +429,20 @@ export const buildPersonalTopicsGraph = (
       if (seenEdges.has(edgeKey)) return;
       seenEdges.add(edgeKey);
 
-      const sourcePosition = nodePositions.get(topic.id);
-      const targetPosition = nodePositions.get(associatedTopicId);
-      const angle =
-        sourcePosition && targetPosition
-          ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
-          : 0;
-      const sourceHandle = getHandleForAngle(angle);
-      const targetHandle = getOppositeHandle(sourceHandle);
-
       edges.push({
         id: `personal-topic-edge-${edgeKey}`,
         source: topic.id,
         target: associatedTopicId,
-        sourceHandle,
-        targetHandle,
         type: 'straight',
         style: {
-          stroke: '#cbd5e1',
-          strokeWidth: 1.25,
+          stroke: '#7a90a8',
+          strokeWidth: 0.7,
         },
       });
     });
   });
 
-  const layoutedNodes = applyDagreLayout(nodes, edges, 'vertical');
-  return { nodes: layoutedNodes, edges };
+  return { nodes, edges };
 };
 
 const buildGraphAdjacency = (topics: GraphTopicDto[]) => {
@@ -517,7 +542,7 @@ export const buildSkillTreeGraph = (
   topics: GraphTopicDto[] = [],
   orientation: SkillTreeOrientation = 'vertical',
   currentUsername?: string
-): { nodes: SkillTreeNode[]; edges: Edge[] } => {
+) => {
   if (topics.length === 0) {
     return { nodes: [], edges: [] };
   }
@@ -750,7 +775,6 @@ export const buildSkillTreeGraph = (
 
   const edges: Edge[] = [];
   const seenEdges = new Set<string>();
-  const nodePositions = new Map(nodes.map((node) => [node.id, node.position]));
 
   topics.forEach((topic) => {
     topic.associatedTopics.forEach((associatedTopicId) => {
@@ -760,59 +784,25 @@ export const buildSkillTreeGraph = (
       if (seenEdges.has(edgeKey)) return;
       seenEdges.add(edgeKey);
 
-      const sourcePosition = nodePositions.get(topic.id);
-      const targetPosition = nodePositions.get(associatedTopicId);
-      const sourceLevel = levels.get(topic.id) ?? 0;
-      const targetLevel = levels.get(associatedTopicId) ?? 0;
-
-      let sourceHandle: string;
-      let targetHandle: string;
-
-      if (orientation === 'vertical') {
-        if (sourceLevel < targetLevel) {
-          sourceHandle = 'bottom';
-          targetHandle = 'top';
-        } else if (sourceLevel > targetLevel) {
-          sourceHandle = 'top';
-          targetHandle = 'bottom';
-        } else {
-          const angle =
-            sourcePosition && targetPosition
-              ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
-              : 0;
-          sourceHandle = getHandleForAngle(angle);
-          targetHandle = getOppositeHandle(sourceHandle);
-        }
-      } else if (sourceLevel < targetLevel) {
-        sourceHandle = 'right';
-        targetHandle = 'left';
-      } else if (sourceLevel > targetLevel) {
-        sourceHandle = 'left';
-        targetHandle = 'right';
-      } else {
-        const angle =
-          sourcePosition && targetPosition
-            ? Math.atan2(targetPosition.y - sourcePosition.y, targetPosition.x - sourcePosition.x)
-            : 0;
-        sourceHandle = getHandleForAngle(angle);
-        targetHandle = getOppositeHandle(sourceHandle);
-      }
-
       edges.push({
         id: `skill-edge-${edgeKey}`,
         source: topic.id,
         target: associatedTopicId,
-        sourceHandle,
-        targetHandle,
         type: 'straight',
         style: {
-          stroke: '#cbd5e1',
-          strokeWidth: 0.8,
+          stroke: '#94a3b8',
+          strokeWidth: 1.4,
+          opacity: 0.65,
         },
       });
     });
   });
 
-  const layoutedNodes = applyDagreLayout(nodes, edges, orientation);
+  const layoutedNodes = applyDagreLayout(nodes, edges, orientation, {
+    nodeWidth: 280,
+    nodeHeight: 140,
+    nodesep: 60,
+    ranksep: 100,
+  });
   return { nodes: layoutedNodes, edges };
 };

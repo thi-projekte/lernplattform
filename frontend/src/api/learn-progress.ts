@@ -3,17 +3,27 @@ import { apiClient } from './common.ts';
 
 const startTopic = async (topicId: string) =>
   await apiClient.post(`/learn-progress/topics/${topicId}/start`, undefined, {
-    validateStatus: (status) => status === 200,
+    validateStatus: (status) => status >= 200 && status < 300,
   });
 
 const completeTopicManually = async (topicId: string) =>
   await apiClient.post(`/learn-progress/topics/${topicId}/complete`, undefined, {
-    validateStatus: (status) => status === 200,
+    validateStatus: (status) => status >= 200 && status < 300,
   });
 
 const completeContentElement = async (contentElementId: string) =>
   await apiClient.post(`/learn-progress/content-elements/${contentElementId}/complete`, undefined, {
-    validateStatus: (status) => status === 200,
+    validateStatus: (status) => status >= 200 && status < 300,
+  });
+
+const resetTopic = async (topicId: string) =>
+  await apiClient.post(`/learn-progress/topics/${topicId}/reset`, undefined, {
+    validateStatus: (status) => status >= 200 && status < 300,
+  });
+
+const resetContentElement = async (contentElementId: string) =>
+  await apiClient.post(`/learn-progress/content-elements/${contentElementId}/reset`, undefined, {
+    validateStatus: (status) => status >= 200 && status < 300,
   });
 
 const invalidateProgressQueries = (queryClient: ReturnType<typeof useQueryClient>) => {
@@ -49,15 +59,21 @@ export const useCompleteContentElementMutation = () => {
     onSuccess: () => invalidateProgressQueries(queryClient),
   });
 };
+
 export const useResetTopicMutation = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ['resetTopic'],
-    mutationFn: async (topicId: string) => {
-      // Jetzt nutzen wir die topicId im Text, damit TypeScript/ESLint glücklich ist!
-      console.warn(`Reset progress for topic ${topicId} is not yet implemented in the backend`);
-      return null;
-    },
+    mutationFn: resetTopic,
+    onSuccess: () => invalidateProgressQueries(queryClient),
+  });
+};
+
+export const useResetContentElementMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ['resetContentElement'],
+    mutationFn: resetContentElement,
     onSuccess: () => invalidateProgressQueries(queryClient),
   });
 };

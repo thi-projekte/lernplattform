@@ -1,5 +1,4 @@
 import {
-  Avatar,
   Box,
   Button,
   Collapse,
@@ -15,23 +14,21 @@ import {
   Tooltip,
   UnstyledButton,
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks'; // ← aus dev
+import { useDisclosure } from '@mantine/hooks';
 import type { Topic } from '../../../schemas/topic';
 import { useTranslation } from 'react-i18next';
 import {
   IconCheck,
-  IconChevronDown, // ← aus dev
-  IconChevronUp, // ← aus dev
+  IconChevronDown,
+  IconChevronUp,
   IconEdit,
-  IconRefresh, // ← aus dev
+  IconRefresh,
   IconRobot,
-  IconSend, // ← aus dev
-  IconUser, // ← aus profilbild
+  IconSend,
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
 import CategoryBadge from '../../category-badge.tsx';
-import { useQueryProfilePicture } from '../../../api/profile-picture.ts';
 import {
   useCompleteTopicManuallyMutation,
   useResetTopicMutation,
@@ -53,9 +50,6 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
     !!currentUsername &&
     selectedElement.creatorId.toLowerCase() === currentUsername;
 
-  // Profilbild-Hook (aus dem profilbild-Branch)
-  const { data: creatorPicture } = useQueryProfilePicture(selectedElement.creatorId);
-  // Myna-Toggle (aus dem dev-Branch)
   const [mynaOpen, { toggle: toggleMyna }] = useDisclosure(false);
 
   const { mutate: startTopic, isPending: isStarting } = useStartTopicMutation();
@@ -87,11 +81,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
         <Title order={3} mb={6}>
           {selectedElement.title}
         </Title>
-        {/* Hier haben wir das Profilbild elegant in das neue Layout integriert */}
-        <Group gap={6} c="dimmed" align="center">
-          <Avatar src={creatorPicture?.url ?? null} size={20} radius="xl">
-            <IconUser size={12} />
-          </Avatar>
+        <Group gap={6} c="dimmed">
           <Text size="xs">{selectedElement.creatorFullName}</Text>
           {selectedElement.estimatedLearningDuration && (
             <>

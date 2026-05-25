@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "category")
 public class Category extends BaseEntityWithId {
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   public String title;
 
   @Column public String color;

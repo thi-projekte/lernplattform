@@ -6,6 +6,8 @@ import { MantineProvider } from '@mantine/core';
 import { theme } from './theme.ts';
 
 import './i18n.ts';
+import './index.css';
+import './app.css';
 
 import '@mantine/core/styles.css';
 import '@mantine/dropzone/styles.css';
@@ -23,12 +25,14 @@ const queryClient = new QueryClient();
 function App() {
   const resourceAccess: KeycloakResourceAccess = keycloak.tokenParsed
     ?.resource_access as KeycloakResourceAccess;
-  const roles = resourceAccess['mynd']?.roles;
+  const roles = resourceAccess['mynd']?.roles ?? [];
   for (const role of roles) {
-    track('role', { props: { role: role } });
+    if (role) {
+      track('role', { props: { role: role } });
+    }
   }
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider theme={theme} defaultColorScheme="auto">
       <ModalsProvider>
         <QueryClientProvider client={queryClient}>
           <UserProvider>

@@ -1,6 +1,5 @@
 package de.thi.mynd.demoContent.event;
 
-import de.thi.mynd.topic.entity.Topic;
-import java.util.Map;
+import de.thi.mynd.topic.importer.ImportContext;
 
-public record LoadedTopicsEvent(Map<String, Topic> mapping) {}
+public record LoadedTopicsEvent(ImportContext ctx) {}

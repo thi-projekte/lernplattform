@@ -10,7 +10,7 @@ import org.hibernate.annotations.BatchSize;
 @Table(name = "topic")
 public class Topic extends BaseEntityWithId {
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   public String title;
 
   @Column(nullable = false, columnDefinition = "TEXT")
