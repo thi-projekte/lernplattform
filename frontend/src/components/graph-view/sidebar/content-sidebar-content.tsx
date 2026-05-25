@@ -1,26 +1,27 @@
-import { ActionIcon, Button, Group, Modal, ThemeIcon, Title, Tooltip } from '@mantine/core';
+import { ActionIcon, Button, Group, Modal, Stack, ThemeIcon, Title, Tooltip } from '@mantine/core';
 import { createElement } from 'react';
 import type { AnyContentElementDto } from '../../../schemas/content-element';
 import ContentElementDisplay from '../../topic/content-element-display';
 import { useTranslation } from 'react-i18next';
 import { useDisclosure } from '@mantine/hooks';
-import { IconCheck, IconMaximize } from '@tabler/icons-react';
+import { IconCheck, IconMaximize, IconRefresh } from '@tabler/icons-react';
 import { CONTENT_ICONS, DEFAULT_ICON_BY_TYPE } from '../../icon-picker/icons';
 import CategoryBadge from '../../category-badge.tsx';
-import { useCompleteContentElementMutation } from '../../../api/learn-progress.ts';
+import {
+  useCompleteContentElementMutation,
+  useResetContentElementMutation,
+} from '../../../api/learn-progress.ts';
 import type { TopicLearnProgressDto } from '../../../schemas/learn-progress.ts';
 import { track } from '@plausible-analytics/tracker';
 
 interface ContentSidebarContentProps {
   selectedElement: AnyContentElementDto;
   topicLearnProgress?: TopicLearnProgressDto | null;
-  topicContentElementIds?: string[];
 }
 
 const ContentSidebarContent = ({
   selectedElement,
   topicLearnProgress,
-  topicContentElementIds = [],
 }: ContentSidebarContentProps) => {
   const { t } = useTranslation();
   const [opened, { open, close }] = useDisclosure(false);
@@ -29,28 +30,20 @@ const ContentSidebarContent = ({
     CONTENT_ICONS[DEFAULT_ICON_BY_TYPE[selectedElement.type]];
 
   const { mutate: completeContentElement, isPending } = useCompleteContentElementMutation();
-
-  const currentIdsSet = new Set(topicContentElementIds);
-  const completedCurrentIds = (topicLearnProgress?.completedContentElementIds ?? []).filter((id) =>
-    currentIdsSet.has(id)
-  );
-  const isManuallyCompleted = topicLearnProgress?.status === 'COMPLETED_MANUALLY';
-  const isAutoCompleted =
-    currentIdsSet.size > 0 && completedCurrentIds.length >= currentIdsSet.size;
+  const { mutate: resetContentElement, isPending: isResetting } = useResetContentElementMutation();
 
   const topicStarted = !!topicLearnProgress;
-  const topicCompleted = isManuallyCompleted || isAutoCompleted;
   const isElementCompleted = !!topicLearnProgress?.completedContentElementIds.includes(
     selectedElement.id
   );
-  const canMarkCompleted = topicStarted && !topicCompleted && !isElementCompleted;
+  const canMarkCompleted = topicStarted && !isElementCompleted;
 
   return (
     <>
       <Group justify="space-between" align="flex-start">
         <Group gap="sm" align="flex-start" wrap="nowrap">
           {iconComponent && (
-            <ThemeIcon size={36} radius="md" variant="light" color="teal">
+            <ThemeIcon size={36} radius="md" variant="light" color="blue">
               {createElement(iconComponent, { size: 22 })}
             </ThemeIcon>
           )}
@@ -73,27 +66,44 @@ const ContentSidebarContent = ({
       <ContentElementDisplay contentElement={selectedElement} />
 
       {isElementCompleted ? (
-        <Button
-          color="green"
-          variant="light"
-          fullWidth
-          disabled
-          leftSection={<IconCheck size={16} />}
-        >
-          {t('topic.actions.contentElementCompleted')}
-        </Button>
+        <Stack gap="xs">
+          <Button
+            color="green"
+            variant="light"
+            size="sm"
+            disabled
+            leftSection={<IconCheck size={14} />}
+            style={{ alignSelf: 'flex-start' }}
+          >
+            {t('topic.actions.contentElementCompleted')}
+          </Button>
+          <Button
+            variant="subtle"
+            color="gray"
+            size="xs"
+            fullWidth
+            leftSection={<IconRefresh size={14} />}
+            loading={isResetting}
+            onClick={() => resetContentElement(selectedElement.id)}
+          >
+            {t('topic.actions.resetProgress')}
+          </Button>
+        </Stack>
       ) : (
         <Tooltip label={t('topic.actions.start')} disabled={topicStarted} withArrow>
           <Button
             color="blue"
-            fullWidth
+            size="sm"
             disabled={!canMarkCompleted}
             loading={isPending}
             onClick={() => {
               completeContentElement(selectedElement.id);
-              track('contentElementCompleted', { props: { contentElementId: selectedElement.id } });
+              track('contentElementCompleted', {
+                props: { contentElementId: selectedElement.id },
+              });
             }}
-            leftSection={<IconCheck size={16} />}
+            leftSection={<IconCheck size={14} />}
+            style={{ alignSelf: 'flex-start' }}
           >
             {t('topic.actions.markContentElementCompleted')}
           </Button>

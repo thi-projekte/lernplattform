@@ -43,6 +43,12 @@ jobs:
               "S3_HOST_PUBLIC": "${{ secrets.S3_HOST_PUBLIC }}",
               "MYND_DB_PASSWORD": "${{ secrets.MYND_DB_PASSWORD }}",
               "MYND_KC_BACKEND_SECRET": "${{ secrets.MYND_KC_BACKEND_SECRET }}",
-              "CORS_ORIGIN": "${{ secrets.CORS_ORIGIN }}"
+              "CORS_ORIGIN": "${{ secrets.CORS_ORIGIN }}",
+              "FRONTEND_URI": "${{ secrets.FRONTEND_URI }}",
+              "MAILER_HOST": "${{ secrets.MAILER_HOST }}",
+              "MAILER_PORT": "${{ secrets.MAILER_PORT }}",
+              "MAILER_USERNAME": "${{ secrets.MAILER_USERNAME }}",
+              "MAILER_FROM": "${{ secrets.MAILER_FROM }}",
+              "MAILER_PASSWORD": "${{ secrets.MAILER_PASSWORD }}"
             }
           standalone: true

@@ -26,7 +26,7 @@ class LearnProgressResourceTest {
   // ---------------------------------------------------------------------------
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void getPersonalProgressForTopic_returns200_whenTopicStarted() {
     UUID topicId = UUID.randomUUID();
     TopicLearnProgressDto dto = TopicLearnProgressDto.builder().build();
@@ -42,7 +42,7 @@ class LearnProgressResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void getPersonalProgressForTopic_returns404_whenTopicNotStarted() {
     UUID topicId = UUID.randomUUID();
 
@@ -69,7 +69,7 @@ class LearnProgressResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void getPersonalProgressForTopic_passesCorrectTopicId() {
     UUID topicId = UUID.randomUUID();
 
@@ -91,7 +91,7 @@ class LearnProgressResourceTest {
   // ---------------------------------------------------------------------------
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void startLearningTopic_returns200_whenNotYetStarted() {
     UUID topicId = UUID.randomUUID();
     doNothing().when(learnProgressService).startLearningTopicAsCurrentUser(topicId);
@@ -105,7 +105,7 @@ class LearnProgressResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void startLearningTopic_returns409_whenAlreadyStarted() {
     UUID topicId = UUID.randomUUID();
 
@@ -132,7 +132,7 @@ class LearnProgressResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void startLearningTopic_passesCorrectTopicId() {
     UUID topicId = UUID.randomUUID();
     doNothing().when(learnProgressService).startLearningTopicAsCurrentUser(topicId);
@@ -152,7 +152,7 @@ class LearnProgressResourceTest {
   // ---------------------------------------------------------------------------
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void manuallyCompleteTopic_returns200_whenTopicStarted() {
     UUID topicId = UUID.randomUUID();
     doNothing().when(learnProgressService).manuallyCompleteTopicAsCurrentUser(topicId);
@@ -166,7 +166,7 @@ class LearnProgressResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void manuallyCompleteTopic_returns404_whenTopicNotStarted() {
     UUID topicId = UUID.randomUUID();
 
@@ -193,7 +193,7 @@ class LearnProgressResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void manuallyCompleteTopic_passesCorrectTopicId() {
     UUID topicId = UUID.randomUUID();
     doNothing().when(learnProgressService).manuallyCompleteTopicAsCurrentUser(topicId);
@@ -213,7 +213,7 @@ class LearnProgressResourceTest {
   // ---------------------------------------------------------------------------
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void completeContentElement_returns200_whenValid() {
     UUID contentElementId = UUID.randomUUID();
     doNothing()
@@ -229,7 +229,7 @@ class LearnProgressResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void completeContentElement_returns409_whenAlreadyCompleted() {
     UUID contentElementId = UUID.randomUUID();
 
@@ -248,7 +248,7 @@ class LearnProgressResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void completeContentElement_returns404_whenTopicNotStarted() {
     UUID contentElementId = UUID.randomUUID();
 
@@ -275,7 +275,7 @@ class LearnProgressResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void completeContentElement_passesCorrectContentElementId() {
     UUID contentElementId = UUID.randomUUID();
     doNothing()
@@ -293,7 +293,7 @@ class LearnProgressResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "testuser", roles = "user")
+  @TestSecurity(user = "testuser", roles = "authorizedUser")
   void completeContentElement_serviceCalledExactlyOnce() {
     UUID contentElementId = UUID.randomUUID();
     doNothing().when(learnProgressService).completeLearningContentElementAsCurrentUser(any());
@@ -307,5 +307,101 @@ class LearnProgressResourceTest {
 
     verify(learnProgressService, times(1))
         .completeLearningContentElementAsCurrentUser(contentElementId);
+  }
+
+  @Test
+  @TestSecurity(user = "user-123", roles = "authorizedUser")
+  void resetTopicLearningProgress_shouldReturn200_whenProgressExists() {
+    UUID topicId = UUID.randomUUID();
+    doNothing().when(learnProgressService).resetTopicLearningProgress(topicId);
+
+    given()
+        .pathParam("topicId", topicId)
+        .when()
+        .post("/learn-progress/topics/{topicId}/reset")
+        .then()
+        .statusCode(200);
+
+    verify(learnProgressService).resetTopicLearningProgress(topicId);
+  }
+
+  @Test
+  @TestSecurity(user = "user-123", roles = "authorizedUser")
+  void resetTopicLearningProgress_shouldReturn409_whenProgressNotStarted() {
+    UUID topicId = UUID.randomUUID();
+    doThrow(new TopicLearnProgressNotStartedException("This topic has not been started yet"))
+        .when(learnProgressService)
+        .resetTopicLearningProgress(topicId);
+
+    given()
+        .pathParam("topicId", topicId)
+        .when()
+        .post("/learn-progress/topics/{topicId}/reset")
+        .then()
+        .statusCode(409);
+  }
+
+  @Test
+  void resetTopicLearningProgress_shouldReturn401_whenUnauthenticated() {
+    UUID topicId = UUID.randomUUID();
+
+    given()
+        .pathParam("topicId", topicId)
+        .when()
+        .post("/learn-progress/topics/{topicId}/reset")
+        .then()
+        .statusCode(401);
+
+    verifyNoInteractions(learnProgressService);
+  }
+
+  // ── resetContentElementLearningProgress ────────────────────────────────
+
+  @Test
+  @TestSecurity(user = "user-123", roles = "authorizedUser")
+  void resetContentElementLearningProgress_shouldReturn200_whenProgressExists() {
+    UUID contentElementId = UUID.randomUUID();
+    doNothing().when(learnProgressService).resetContentElementLearningProgress(contentElementId);
+
+    given()
+        .pathParam("contentElementId", contentElementId)
+        .when()
+        .post("/learn-progress/content-elements/{contentElementId}/reset")
+        .then()
+        .statusCode(200);
+
+    verify(learnProgressService).resetContentElementLearningProgress(contentElementId);
+  }
+
+  @Test
+  @TestSecurity(user = "user-123", roles = "authorizedUser")
+  void resetContentElementLearningProgress_shouldReturn409_whenProgressNotStarted() {
+    UUID contentElementId = UUID.randomUUID();
+    doThrow(
+            new TopicLearnProgressNotStartedException(
+                "This content element has not been started yet"))
+        .when(learnProgressService)
+        .resetContentElementLearningProgress(contentElementId);
+
+    given()
+        .pathParam("contentElementId", contentElementId)
+        .when()
+        .post("/learn-progress/content-elements/{contentElementId}/reset")
+        .then()
+        .statusCode(409);
+  }
+
+  @Test
+  void resetContentElementLearningProgress_shouldReturn401_whenUnauthenticated() {
+    UUID contentElementId = UUID.randomUUID();
+
+    given()
+        .pathParam("contentElementId", contentElementId)
+        .when()
+        .post("/learn-progress/content-elements/{contentElementId}/reset")
+        .then()
+        .statusCode(401);
+
+    verifyNoInteractions(learnProgressService);
   }
 }

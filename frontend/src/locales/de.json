@@ -3,8 +3,10 @@
     "dashboard": "Dashboard",
     "builderMode": "Builder Modus",
     "createTopic": "Thema erstellen",
+    "becomeBuilder": "Zum Builder werden",
     "editTopic": "Thema bearbeiten",
-    "account": "Mein Profil"
+    "account": "Mein Profil",
+    "invitations": "Einladungen"
   },
   "journey": {
     "title": "Deine Journey Map",
@@ -53,7 +55,10 @@
     "selectedTopic": "Ausgewählte Node",
     "unknownCreator": "Unbekannter Ersteller",
     "loadingNeighbors": "Verbundene Themen werden geladen...",
-    "openDetails": "Detailansicht öffnen"
+    "openDetails": "Detailansicht öffnen",
+    "expandNeighbors": "Verbindungen laden",
+    "hideNode": "Node ausblenden",
+    "showHidden": "{{count}} ausgeblendet anzeigen"
   },
   "common": {
     "rowsPerPage": "Einträge pro Seite",
@@ -89,7 +94,9 @@
     "myna": {
       "subtitle": "KI-Assistent",
       "description": "Myna kann die gespeicherten Inhalte zusammenfassen und passende nächste Quellen vorschlagen.",
-      "askButton": "Myna fragen"
+      "askButton": "Myna fragen",
+      "comingSoon": "Chat folgt in Kürze",
+      "inputPlaceholder": "Myna etwas fragen..."
     },
     "tabs": {
       "visual": "Visuell",
@@ -104,10 +111,17 @@
       "completeBlockedHint": "Markiere zuerst alle Inhalte als abgeschlossen.",
       "completed": "Abgeschlossen",
       "markContentElementCompleted": "Als abgeschlossen markieren",
-      "contentElementCompleted": "Abgeschlossen"
+      "contentElementCompleted": "Abgeschlossen",
+      "resetProgress": "Fortschritt zurücksetzen",
+      "overview": "Themenübersicht",
+      "importJson": "JSON importieren",
+      "importJsonSubmit": "Importieren",
+      "importJsonSuccess": "Themen erfolgreich importiert",
+      "importJsonError": "Ungültiges JSON-Format"
     },
     "progress": {
-      "label": "Fortschritt"
+      "label": "Fortschritt",
+      "elementsCompleted": "Inhalte abgeschlossen"
     },
     "fields": {
       "title": "Titel",
@@ -218,6 +232,42 @@
     "title": "Onboarding",
     "role_selection_label": "Rolle auswählen",
     "role_selection_placeholder": "Wähle deine Rolle",
-    "submit": "Bestätigen"
+    "submit": "Bestätigen",
+    "upgradeToBuilderText": "Klicke auf den Button unten, um dein Konto auf Builder hochzustufen und eigene Lerninhalte zu erstellen."
+  },
+  "invitation": {
+    "manage": {
+      "title": "Einladungen",
+      "left": "übrig",
+      "leftDetail": "{{count}} Einladung(en) verbleibend",
+      "sentDetail": "{{count}} Einladung(en) verschickt",
+      "sendTitle": "Einladung versenden",
+      "emailPlaceholder": "E-Mail-Adresse",
+      "send": "Senden",
+      "sent": "Einladung an {{email}} gesendet",
+      "sendError": "Einladung konnte nicht gesendet werden. Bitte versuche es erneut.",
+      "noInvitationsLeft": "Du hast keine Einladungen mehr übrig.",
+      "historyTitle": "Gesendete Einladungen",
+      "noHistory": "Noch keine Einladungen gesendet.",
+      "statusSent": "Gesendet",
+      "columns": {
+        "date": "Datum",
+        "status": "Status"
+      }
+    },
+    "accept": {
+      "title": "Einladung annehmen",
+      "description": "Du wurdest eingeladen, der Plattform beizutreten. Klicke auf den Button, um die Einladung anzunehmen.",
+      "button": "Einladung annehmen",
+      "successMessage": "Einladung angenommen! Weiterleitung...",
+      "errorMessage": "Einladung konnte nicht angenommen werden. Der Link ist möglicherweise abgelaufen oder wurde bereits verwendet.",
+      "invalidLink": "Dieser Einladungslink ist ungültig oder unvollständig."
+    },
+    "noAccess": {
+      "title": "Zugriff gesperrt",
+      "description": "Du benötigst eine Einladung, um auf diese Plattform zuzugreifen.",
+      "acceptButton": "Einladung annehmen",
+      "contactHint": "Wende dich an einen Builder, um eine Einladung zu erhalten."
+    }
   }
 }

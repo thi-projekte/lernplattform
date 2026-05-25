@@ -22,9 +22,11 @@ import {
   Tooltip,
   useMantineTheme,
 } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import ImportTopicsModal from '../../components/topic/import-topics-modal.tsx';
 import { useTranslation } from 'react-i18next';
 import type { OnConnect } from '@xyflow/react';
-import { IconLink, IconPlusFilled, IconTrash } from '@tabler/icons-react';
+import { IconFileImport, IconLink, IconPlusFilled, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
 import LayoutLoader from '../../components/layout-loader.tsx';
@@ -57,6 +59,7 @@ const BuilderModeListPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { mutate } = useDeleteTopicMutation();
+  const [importOpen, { open: openImport, close: closeImport }] = useDisclosure(false);
   const { mutateAsync: createAssociation, isPending: isCreatingAssociation } =
     useCreateAssociation();
   const columns = useTopicColumns({
@@ -257,14 +260,17 @@ const BuilderModeListPage = () => {
   return (
     <Layout>
       <Title>{t('topic.headings.personalTopics')}</Title>
-      <Flex justify="flex-end" w="100%" mt={12}>
-        <Flex justify="center" w={190}>
-          <Button variant="filled" onClick={() => navigate('/builder-mode/topics/create')}>
-            <IconPlusFilled />
-            &nbsp;{t('topic.actions.create')}
-          </Button>
-        </Flex>
+      <Flex justify="flex-end" w="100%" mt={12} gap="sm">
+        <Button variant="default" leftSection={<IconFileImport size={16} />} onClick={openImport}>
+          {t('topic.actions.importJson')}
+        </Button>
+        <Button variant="filled" onClick={() => navigate('/builder-mode/topics/create')}>
+          <IconPlusFilled />
+          &nbsp;{t('topic.actions.create')}
+        </Button>
       </Flex>
+
+      <ImportTopicsModal opened={importOpen} onClose={closeImport} />
       <Stack gap="md" mt={12}>
         <Stack gap="xs" align="center">
           <Group justify="center" w="100%">

@@ -95,12 +95,14 @@ const TopicGraphView = ({
       nodesConnectable={canEditAssociations}
       nodeDragThreshold={6}
       connectOnClick={false}
-      panOnDrag={allowCanvasPanning ? (allowNodeDragging ? [1, 2] : true) : false}
+      panOnDrag={allowCanvasPanning}
       panOnScroll={allowPanOnScroll}
       panOnScrollMode={PanOnScrollMode.Free}
       zoomOnScroll={!allowPanOnScroll}
       selectionOnDrag={false}
       elementsSelectable
+      elevateEdgesOnSelect
+      zoomActivationKeyCode={null}
     >
       {showViewportToolbar && (
         <ViewportToolbar

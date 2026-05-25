@@ -7,6 +7,8 @@ import jakarta.persistence.*;
 @Table(name = "user_profile")
 public class UserProfile extends BaseEntityWithCreatorIdPk {
 
-  @Column(nullable = true)
-  public String profilePictureKey;
+  @Column public String profilePictureKey;
+
+  @Column(nullable = false)
+  public int invitationsLeft;
 }
