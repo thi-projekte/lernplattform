@@ -55,7 +55,10 @@
     "selectedTopic": "Selected topic",
     "unknownCreator": "Unknown creator",
     "loadingNeighbors": "Loading connected topics...",
-    "openDetails": "Open detail view"
+    "openDetails": "Open detail view",
+    "expandNeighbors": "Load connections",
+    "hideNode": "Hide node",
+    "showHidden": "Show {{count}} hidden"
   },
   "common": {
     "rowsPerPage": "Rows per page",

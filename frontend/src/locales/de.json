@@ -55,7 +55,10 @@
     "selectedTopic": "Ausgewählte Node",
     "unknownCreator": "Unbekannter Ersteller",
     "loadingNeighbors": "Verbundene Themen werden geladen...",
-    "openDetails": "Detailansicht öffnen"
+    "openDetails": "Detailansicht öffnen",
+    "expandNeighbors": "Verbindungen laden",
+    "hideNode": "Node ausblenden",
+    "showHidden": "{{count}} ausgeblendet anzeigen"
   },
   "common": {
     "rowsPerPage": "Einträge pro Seite",

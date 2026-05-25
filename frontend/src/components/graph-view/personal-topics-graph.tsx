@@ -61,7 +61,7 @@ const PersonalTopicsGraph = ({
 }: PersonalTopicsGraphProps) => {
   const built = useMemo(
     () => buildPersonalTopicsGraph(topics, currentUsername),
-    [currentUsername, topics]
+    [topics, currentUsername]
   );
 
   const nodes = useMemo(() => {

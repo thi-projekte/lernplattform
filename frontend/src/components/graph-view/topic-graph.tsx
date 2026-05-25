@@ -101,6 +101,8 @@ const TopicGraphView = ({
       zoomOnScroll={!allowPanOnScroll}
       selectionOnDrag={false}
       elementsSelectable
+      elevateEdgesOnSelect
+      zoomActivationKeyCode={null}
     >
       {showViewportToolbar && (
         <ViewportToolbar
