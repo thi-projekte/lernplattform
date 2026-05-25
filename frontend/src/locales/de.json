@@ -55,7 +55,10 @@
     "selectedTopic": "Ausgewählte Node",
     "unknownCreator": "Unbekannter Ersteller",
     "loadingNeighbors": "Verbundene Themen werden geladen...",
-    "openDetails": "Detailansicht öffnen"
+    "openDetails": "Detailansicht öffnen",
+    "expandNeighbors": "Verbindungen laden",
+    "hideNode": "Node ausblenden",
+    "showHidden": "{{count}} ausgeblendet anzeigen"
   },
   "common": {
     "rowsPerPage": "Einträge pro Seite",
@@ -91,7 +94,9 @@
     "myna": {
       "subtitle": "KI-Assistent",
       "description": "Myna kann die gespeicherten Inhalte zusammenfassen und passende nächste Quellen vorschlagen.",
-      "askButton": "Myna fragen"
+      "askButton": "Myna fragen",
+      "comingSoon": "Chat folgt in Kürze",
+      "inputPlaceholder": "Myna etwas fragen..."
     },
     "tabs": {
       "visual": "Visuell",
@@ -108,7 +113,11 @@
       "markContentElementCompleted": "Als abgeschlossen markieren",
       "contentElementCompleted": "Abgeschlossen",
       "resetProgress": "Fortschritt zurücksetzen",
-      "overview": "Themenübersicht"
+      "overview": "Themenübersicht",
+      "importJson": "JSON importieren",
+      "importJsonSubmit": "Importieren",
+      "importJsonSuccess": "Themen erfolgreich importiert",
+      "importJsonError": "Ungültiges JSON-Format"
     },
     "progress": {
       "label": "Fortschritt",

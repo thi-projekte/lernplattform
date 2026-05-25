@@ -55,7 +55,10 @@
     "selectedTopic": "Selected topic",
     "unknownCreator": "Unknown creator",
     "loadingNeighbors": "Loading connected topics...",
-    "openDetails": "Open detail view"
+    "openDetails": "Open detail view",
+    "expandNeighbors": "Load connections",
+    "hideNode": "Hide node",
+    "showHidden": "Show {{count}} hidden"
   },
   "common": {
     "rowsPerPage": "Rows per page",
@@ -91,7 +94,9 @@
     "myna": {
       "subtitle": "AI Assistant",
       "description": "Myna can summarize the saved content and suggest suitable next sources.",
-      "askButton": "Ask Myna"
+      "askButton": "Ask Myna",
+      "comingSoon": "Chat coming soon",
+      "inputPlaceholder": "Ask Myna something..."
     },
     "tabs": {
       "visual": "Visual",
@@ -108,7 +113,11 @@
       "markContentElementCompleted": "Mark as completed",
       "contentElementCompleted": "Completed",
       "resetProgress": "Reset progress",
-      "overview": "Topic overview"
+      "overview": "Topic overview",
+      "importJson": "Import JSON",
+      "importJsonSubmit": "Import",
+      "importJsonSuccess": "Topics imported successfully",
+      "importJsonError": "Invalid JSON format"
     },
     "progress": {
       "label": "Progress",
