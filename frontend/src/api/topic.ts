@@ -181,3 +181,20 @@ export const useEditTopicMutation = (topicId: string) => {
     },
   });
 };
+
+const importTopics = async (payload: unknown) =>
+  await apiClient.post('/topics/import', payload, {
+    validateStatus: (status) => status === 201,
+  });
+
+export const useImportTopicsMutation = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationKey: ['importTopics'],
+    mutationFn: importTopics,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['personalTopics'] });
+    },
+  });
+};

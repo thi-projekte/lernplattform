@@ -18,7 +18,7 @@ import {
   Tooltip,
   UnstyledButton,
 } from '@mantine/core';
-import { IconInfoCircle } from '@tabler/icons-react';
+import { IconInfoCircle, IconLayoutList } from '@tabler/icons-react';
 import CategoryBadge from '../../components/category-badge.tsx';
 import { useMediaQuery } from '@mantine/hooks';
 import type { Category } from '../../schemas/topic.ts';
@@ -123,6 +123,38 @@ const TopicDetailsPage = () => {
             >
               <ScrollArea style={{ flex: 1 }} p="sm">
                 <Stack gap="xs">
+                  {topic && (
+                    <UnstyledButton
+                      onClick={() => setSelectedElement(null)}
+                      p="sm"
+                      style={(theme) => ({
+                        borderRadius: theme.radius.md,
+                        background: !selectedElement ? 'var(--card-selected-bg)' : 'var(--card-bg)',
+                        border: `1px solid ${!selectedElement ? 'var(--card-selected-border)' : 'var(--card-border)'}`,
+                        transition: 'background 0.15s, border-color 0.15s',
+                      })}
+                    >
+                      <Group gap="sm" wrap="nowrap">
+                        <ThemeIcon
+                          size={36}
+                          radius="md"
+                          variant="light"
+                          color="violet"
+                          style={{ flexShrink: 0 }}
+                        >
+                          {createElement(IconLayoutList, { size: 18 })}
+                        </ThemeIcon>
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <Text size="sm" fw={600} truncate>
+                            {topic.title}
+                          </Text>
+                          <Text size="xs" c="dimmed">
+                            {t('topic.actions.overview')}
+                          </Text>
+                        </div>
+                      </Group>
+                    </UnstyledButton>
+                  )}
                   {contentElements.length === 0 ? (
                     <Text c="dimmed" size="sm" p="xs">
                       {t('common.noEntriesFound')}

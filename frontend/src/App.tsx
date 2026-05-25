@@ -7,6 +7,7 @@ import { theme } from './theme.ts';
 
 import './i18n.ts';
 import './index.css';
+import './app.css';
 
 import '@mantine/core/styles.css';
 import '@mantine/dropzone/styles.css';

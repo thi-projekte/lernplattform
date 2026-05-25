@@ -7,6 +7,7 @@ import {
   Group,
   Image,
   NavLink,
+  UnstyledButton,
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
@@ -28,7 +29,7 @@ interface LayoutProps {
 }
 
 export const Layout: FC<LayoutProps> = ({ children }) => {
-  const [opened, { toggle }] = useDisclosure();
+  const [opened, { toggle, close }] = useDisclosure();
   const [desktopExpanded, setDesktopExpanded] = useState(false);
   const { t } = useTranslation();
   const userService = useUserService();
@@ -37,6 +38,11 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const matches = useMatches();
+
+  const handleLogoClick = () => {
+    navigate('/');
+    close();
+  };
 
   const isBuilder = userService.roles.includes('builder');
 
@@ -107,12 +113,26 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               transition: 'width 150ms ease',
             }}
           >
-            <Image src="/mynd-logo.png" alt="MYnd Logo" w={250} h="auto" fit="contain" />
+            <UnstyledButton
+              onClick={handleLogoClick}
+              aria-label={t('routes.dashboard')}
+              title={t('routes.dashboard')}
+              style={{ display: 'flex', alignItems: 'center' }}
+            >
+              <Image src="/mynd-logo.png" alt="MYnd Logo" w={250} h="auto" fit="contain" />
+            </UnstyledButton>
           </Box>
 
           <Group hiddenFrom="sm" gap="sm" h="100%" px="md">
             <Burger opened={opened} onClick={toggle} size="sm" />
-            <Image src="/mynd-logo.png" alt="MYnd Logo" h={58} w="auto" fit="contain" />
+            <UnstyledButton
+              onClick={handleLogoClick}
+              aria-label={t('routes.dashboard')}
+              title={t('routes.dashboard')}
+              style={{ display: 'flex', alignItems: 'center' }}
+            >
+              <Image src="/mynd-logo.png" alt="MYnd Logo" h={58} w="auto" fit="contain" />
+            </UnstyledButton>
           </Group>
           <Group px="md" gap="xs">
             <ColorSchemeToggle />
