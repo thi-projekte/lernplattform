@@ -54,7 +54,7 @@ public final class StreakServiceImpl implements StreakService {
     StreakContinuation newContinuation = new StreakContinuation();
     newContinuation.creatorId = creatorId;
     for (Streak streak : latestStreaks) {
-      if (isStreakActive(streak)) {
+      if (isStreakActive(streak) && !isStreakSatisfied(streak)) {
         streak.lastContinuedAt = LocalDateTime.now();
         streak.continuations.add(newContinuation);
         streakRepository.persist(streak);
