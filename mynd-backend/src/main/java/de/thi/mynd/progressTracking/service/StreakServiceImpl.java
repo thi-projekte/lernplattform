@@ -11,6 +11,7 @@ import de.thi.mynd.progressTracking.entity.StreakType;
 import de.thi.mynd.progressTracking.repository.StreakPreferenceRepository;
 import de.thi.mynd.progressTracking.repository.StreakRepository;
 import de.thi.mynd.progressTracking.request.StreakPreferenceRequest;
+import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -54,11 +55,14 @@ public final class StreakServiceImpl implements StreakService {
     StreakContinuation newContinuation = new StreakContinuation();
     newContinuation.creatorId = creatorId;
     for (Streak streak : latestStreaks) {
+      if (isStreakActive(streak)) {
+        typesToCreate.remove(streak.type);
+      }
       if (isStreakActive(streak) && !isStreakSatisfied(streak)) {
         streak.lastContinuedAt = LocalDateTime.now();
         streak.continuations.add(newContinuation);
         streakRepository.persist(streak);
-        typesToCreate.remove(streak.type);
+        Log.infof("Continued streak %s for user %s", streak.id, streak.creatorId);
       }
     }
 
@@ -71,6 +75,7 @@ public final class StreakServiceImpl implements StreakService {
       newStreak.continuations.add(newContinuation);
 
       streakRepository.persist(newStreak);
+      Log.infof("Started streak %s for user %s", newStreak.id, newStreak.creatorId);
     }
 
     streakRepository.flush();
@@ -83,6 +88,7 @@ public final class StreakServiceImpl implements StreakService {
       if (!isStreakActive(streak)) {
         streak.endedAt = streak.lastContinuedAt;
         streakRepository.persist(streak);
+        Log.infof("The streak %s of the user %s ended", streak.id, streak.creatorId);
       }
     }
     streakRepository.flush();
@@ -115,6 +121,8 @@ public final class StreakServiceImpl implements StreakService {
     preference.isPublic = request.isPublic;
 
     streakPreferenceRepository.persistAndFlush(preference);
+
+    Log.infof("Updated streak preferences for user %s", id.creatorId);
   }
 
   @Override
@@ -175,6 +183,8 @@ public final class StreakServiceImpl implements StreakService {
     preference.isPublic = false;
     preference.type = StreakType.DAILY;
     streakPreferenceRepository.persistAndFlush(preference);
+
+    Log.infof("Created streak preferences for user %s", preference.creatorId);
 
     return preference;
   }
