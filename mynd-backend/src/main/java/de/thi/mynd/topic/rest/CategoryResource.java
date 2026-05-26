@@ -9,10 +9,9 @@ import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.util.List;
 import java.util.UUID;
-
-import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
@@ -47,17 +46,15 @@ public final class CategoryResource {
   @Path("/tree")
   @RolesAllowed("admin")
   @Operation(
-          summary = "Gets the whole tree",
-          description = "Loads the whole category tree from the database")
+      summary = "Gets the whole tree",
+      description = "Loads the whole category tree from the database")
   public List<CategoryTreeDto> getFullTree() {
     return categoryService.getFullTree();
   }
 
   @POST
   @RolesAllowed("admin")
-  @Operation(
-          summary = "Creates a new category",
-          description = "Creates a completely new category")
+  @Operation(summary = "Creates a new category", description = "Creates a completely new category")
   public Response createCategory(@Valid CategoryRequest request) {
     categoryService.createCategory(request);
     return Response.ok().build();
@@ -67,8 +64,8 @@ public final class CategoryResource {
   @Path("/{categoryId}")
   @RolesAllowed("admin")
   @Operation(
-          summary = "Updates an existing category",
-          description = "Sets all values of an existing category")
+      summary = "Updates an existing category",
+      description = "Sets all values of an existing category")
   public Response updateCategory(UUID categoryId, @Valid CategoryRequest request) {
     categoryService.updateCategory(categoryId, request);
     return Response.ok().build();

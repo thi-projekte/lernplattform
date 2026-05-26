@@ -6,11 +6,8 @@ import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
-import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.topic.dto.CategoryDto;
 import de.thi.mynd.topic.dto.CategoryTreeDto;
-import de.thi.mynd.topic.entity.Category;
-import de.thi.mynd.topic.repository.CategoryRepository;
 import de.thi.mynd.topic.request.CategoryRequest;
 import de.thi.mynd.topic.service.CategoryServiceImpl;
 import io.quarkus.test.InjectMock;
@@ -21,7 +18,6 @@ import jakarta.ws.rs.core.MediaType;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -31,8 +27,7 @@ import org.mockito.Mockito;
 @QuarkusTest
 public class CategoryResourceTest {
 
-  @InjectMock
-  CategoryServiceImpl categoryService;
+  @InjectMock CategoryServiceImpl categoryService;
 
   @Test
   public void testSearch_whenAnonymous_thenIsUnauthorized() {
@@ -48,12 +43,12 @@ public class CategoryResourceTest {
 
     Mockito.when(categoryService.searchMax5(null)).thenReturn(expected);
 
-        given()
-            .when()
-            .get("/categories/search")
-            .then()
-            .statusCode(200)
-            .body("[0].title", is(demo.title));
+    given()
+        .when()
+        .get("/categories/search")
+        .then()
+        .statusCode(200)
+        .body("[0].title", is(demo.title));
   }
 
   @Test
@@ -65,13 +60,13 @@ public class CategoryResourceTest {
 
     Mockito.when(categoryService.searchMax5("techn")).thenReturn(expected);
 
-        given()
-            .when()
-            .get("/categories/search?query=techn")
-            .then()
-            .statusCode(200)
-            .contentType(MediaType.APPLICATION_JSON)
-                .body("[0].title", is(demo.title));
+    given()
+        .when()
+        .get("/categories/search?query=techn")
+        .then()
+        .statusCode(200)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body("[0].title", is(demo.title));
   }
 
   @Test
@@ -83,13 +78,13 @@ public class CategoryResourceTest {
 
     Mockito.when(categoryService.searchMax5("TecHn")).thenReturn(expected);
 
-        given()
-            .when()
-            .get("/categories/search?query=TecHn")
-            .then()
-            .statusCode(200)
-            .contentType(MediaType.APPLICATION_JSON)
-                .body("[0].title", is(demo.title));
+    given()
+        .when()
+        .get("/categories/search?query=TecHn")
+        .then()
+        .statusCode(200)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body("[0].title", is(demo.title));
   }
 
   @Test
@@ -117,18 +112,21 @@ public class CategoryResourceTest {
   class GetFullTreeTests {
 
     @Test
-    @TestSecurity(user = "admin", roles = {"authorizedUser", "admin"})
+    @TestSecurity(
+        user = "admin",
+        roles = {"authorizedUser", "admin"})
     @DisplayName("Should return full tree for admin user")
     void getFullTreeSuccess() {
       CategoryTreeDto treeDto = CategoryTreeDto.builder().build();
       Mockito.when(categoryService.getFullTree()).thenReturn(List.of(treeDto));
 
       given()
-              .when().get("/categories/tree")
-              .then()
-              .statusCode(200)
-              .contentType(ContentType.JSON)
-              .body("$", hasSize(1));
+          .when()
+          .get("/categories/tree")
+          .then()
+          .statusCode(200)
+          .contentType(ContentType.JSON)
+          .body("$", hasSize(1));
     }
   }
 
@@ -137,7 +135,9 @@ public class CategoryResourceTest {
   class CreateCategoryTests {
 
     @Test
-    @TestSecurity(user = "admin", roles = {"authorizedUser", "admin"})
+    @TestSecurity(
+        user = "admin",
+        roles = {"authorizedUser", "admin"})
     @DisplayName("Should successfully create a valid category")
     void createCategorySuccess() {
       CategoryRequest request = new CategoryRequest();
@@ -147,11 +147,12 @@ public class CategoryResourceTest {
       Mockito.doNothing().when(categoryService).createCategory(any(CategoryRequest.class));
 
       given()
-              .contentType(ContentType.JSON)
-              .body(request)
-              .when().post("/categories")
-              .then()
-              .statusCode(200);
+          .contentType(ContentType.JSON)
+          .body(request)
+          .when()
+          .post("/categories")
+          .then()
+          .statusCode(200);
 
       Mockito.verify(categoryService, Mockito.times(1)).createCategory(any(CategoryRequest.class));
     }
@@ -162,7 +163,9 @@ public class CategoryResourceTest {
   class UpdateCategoryTests {
 
     @Test
-    @TestSecurity(user = "admin", roles = {"authorizedUser", "admin"})
+    @TestSecurity(
+        user = "admin",
+        roles = {"authorizedUser", "admin"})
     @DisplayName("Should successfully update an existing category")
     void updateCategorySuccess() {
       UUID categoryId = UUID.randomUUID();
@@ -170,17 +173,21 @@ public class CategoryResourceTest {
       request.title = "new title";
       request.color = "111111";
 
-      Mockito.doNothing().when(categoryService).updateCategory(eq(categoryId), any(CategoryRequest.class));
+      Mockito.doNothing()
+          .when(categoryService)
+          .updateCategory(eq(categoryId), any(CategoryRequest.class));
 
       given()
-              .pathParam("categoryId", categoryId.toString())
-              .contentType(ContentType.JSON)
-              .body(request)
-              .when().put("/categories/{categoryId}")
-              .then()
-              .statusCode(200);
+          .pathParam("categoryId", categoryId.toString())
+          .contentType(ContentType.JSON)
+          .body(request)
+          .when()
+          .put("/categories/{categoryId}")
+          .then()
+          .statusCode(200);
 
-      Mockito.verify(categoryService, Mockito.times(1)).updateCategory(eq(categoryId), any(CategoryRequest.class));
+      Mockito.verify(categoryService, Mockito.times(1))
+          .updateCategory(eq(categoryId), any(CategoryRequest.class));
     }
   }
 }
