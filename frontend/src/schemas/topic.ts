@@ -1,10 +1,11 @@
 import { z } from 'zod';
 import i18n from '../i18n.ts';
-import { BaseEntitySchema, createPaginatedSchema } from './common.ts';
+import { createPaginatedSchema } from './common.ts';
 import { AnyContentElementDtoSchema, ImportableContentElements } from './content-element.ts';
 import { TopicLearnProgressDtoSchema } from './learn-progress.ts';
 
-export const CategorySchema = BaseEntitySchema.extend({
+export const CategorySchema = z.object({
+  id: z.string().uuid(),
   title: z.string(),
   color: z.string().optional(),
 });
