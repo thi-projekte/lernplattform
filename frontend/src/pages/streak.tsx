@@ -6,10 +6,13 @@ import { useFetchStreaks } from '../api/streak.ts';
 import LayoutLoader from '../components/layout-loader.tsx';
 import type { StreakDto, StreakType } from '../schemas/streak.ts';
 
-const streakDurationDays = (streak: StreakDto): number => {
+const streakCount = (streak: StreakDto): number => {
   const end = streak.endedAt ? new Date(streak.endedAt) : new Date();
   const start = new Date(streak.startedAt);
-  return Math.max(1, Math.round((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24)));
+  const ms = end.getTime() - start.getTime();
+  if (streak.type === 'WEEKLY') return Math.max(1, Math.round(ms / (1000 * 60 * 60 * 24 * 7)));
+  if (streak.type === 'MONTHLY') return Math.max(1, Math.round(ms / (1000 * 60 * 60 * 24 * 30)));
+  return Math.max(1, Math.round(ms / (1000 * 60 * 60 * 24)));
 };
 
 const StreakPage = () => {
@@ -41,7 +44,7 @@ const StreakPage = () => {
                 </Text>
                 <Group gap={6} align="baseline">
                   <Title order={2} c="orange">
-                    {streakDurationDays(activeStreak)}
+                    {streakCount(activeStreak)}
                   </Title>
                   <Text c="dimmed">{t(`streak.type.${activeStreak.type}`)}</Text>
                 </Group>
@@ -76,7 +79,7 @@ const StreakPage = () => {
                     </ThemeIcon>
                     <div>
                       <Text fw={600} size="sm">
-                        {streakDurationDays(streak)} {t(`streak.type.${streak.type as StreakType}`)}
+                        {streakCount(streak)} {t(`streak.type.${streak.type as StreakType}`)}
                       </Text>
                       <Text size="xs" c="dimmed">
                         {new Date(streak.startedAt).toLocaleDateString()} –{' '}

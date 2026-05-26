@@ -44,11 +44,11 @@ const StreakBadge = () => {
   return (
     <Tooltip label={t('streak.currentStreak')} withArrow>
       <UnstyledButton onClick={() => navigate('/streaks')}>
-        <Group gap={4} align="center">
-          <ThemeIcon size="sm" radius="xl" color="orange" variant="light">
-            <IconFlame size={12} />
+        <Group gap={6} align="center">
+          <ThemeIcon size="md" radius="xl" color="orange" variant="light">
+            <IconFlame size={16} />
           </ThemeIcon>
-          <Text size="sm" fw={600} c="orange">
+          <Text size="md" fw={700} c="orange">
             {days}
           </Text>
         </Group>
