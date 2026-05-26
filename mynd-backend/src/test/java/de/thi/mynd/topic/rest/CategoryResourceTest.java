@@ -2,9 +2,11 @@ package de.thi.mynd.topic.rest;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 
+import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.topic.dto.CategoryDto;
 import de.thi.mynd.topic.dto.CategoryTreeDto;
 import de.thi.mynd.topic.entity.Category;
@@ -29,8 +31,6 @@ import org.mockito.Mockito;
 @QuarkusTest
 public class CategoryResourceTest {
 
-  @InjectMock CategoryRepository categoryRepository;
-
   @InjectMock
   CategoryServiceImpl categoryService;
 
@@ -43,82 +43,60 @@ public class CategoryResourceTest {
   @TestSecurity(user = "alice", roles = "authorizedUser")
   public void testSearch_whenNoParamProvided_thenReturnMaxOfFiveCategories() {
 
-    Category demo = new Category();
-    demo.title = "Technology";
-    List<Category> expected = Collections.singletonList(demo);
+    CategoryDto demo = CategoryDto.builder().title("Technology").build();
+    List<CategoryDto> expected = Collections.singletonList(demo);
 
-    Mockito.when(categoryRepository.findAllWithLimit(5)).thenReturn(expected);
+    Mockito.when(categoryService.searchMax5(null)).thenReturn(expected);
 
-    List<CategoryDto> actual =
         given()
             .when()
             .get("/categories/search")
             .then()
             .statusCode(200)
-            .contentType(MediaType.APPLICATION_JSON)
-            .extract()
-            .body()
-            .jsonPath()
-            .getList(".", CategoryDto.class);
-
-    Assertions.assertEquals(demo.title, actual.get(0).title);
+            .body("[0].title", is(demo.title));
   }
 
   @Test
   @TestSecurity(user = "alice", roles = "authorizedUser")
   public void testSearch_whenQueryProvided_thenFilterForTitle() {
 
-    Category demo = new Category();
-    demo.title = "Technology";
-    List<Category> expected = Collections.singletonList(demo);
+    CategoryDto demo = CategoryDto.builder().title("Technology").build();
+    List<CategoryDto> expected = Collections.singletonList(demo);
 
-    Mockito.when(categoryRepository.findByTitleWithLimit("techn", 5)).thenReturn(expected);
+    Mockito.when(categoryService.searchMax5("techn")).thenReturn(expected);
 
-    List<CategoryDto> actual =
         given()
             .when()
             .get("/categories/search?query=techn")
             .then()
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
-            .extract()
-            .body()
-            .jsonPath()
-            .getList(".", CategoryDto.class);
-
-    Assertions.assertEquals(demo.title, actual.get(0).title);
+                .body("[0].title", is(demo.title));
   }
 
   @Test
   @TestSecurity(user = "alice", roles = "authorizedUser")
   public void testSearch_whenQueryProvided_thenFilterForTitleLowercase() {
 
-    Category demo = new Category();
-    demo.title = "Technology";
-    List<Category> expected = Collections.singletonList(demo);
+    CategoryDto demo = CategoryDto.builder().title("Technology").build();
+    List<CategoryDto> expected = Collections.singletonList(demo);
 
-    Mockito.when(categoryRepository.findByTitleWithLimit("TecHn", 5)).thenReturn(expected);
+    Mockito.when(categoryService.searchMax5("TecHn")).thenReturn(expected);
 
-    List<CategoryDto> actual =
         given()
             .when()
             .get("/categories/search?query=TecHn")
             .then()
             .statusCode(200)
             .contentType(MediaType.APPLICATION_JSON)
-            .extract()
-            .body()
-            .jsonPath()
-            .getList(".", CategoryDto.class);
-
-    Assertions.assertEquals(demo.title, actual.get(0).title);
+                .body("[0].title", is(demo.title));
   }
 
   @Test
   @TestSecurity(user = "alice", roles = "authorizedUser")
   public void testSearch_whenQueryProvided_thenFilterNotForColor() {
 
-    Mockito.when(categoryRepository.findAllWithLimit(5)).thenReturn(Collections.emptyList());
+    Mockito.when(categoryService.searchMax5(null)).thenReturn(Collections.emptyList());
     List<CategoryDto> actual =
         given()
             .when()
