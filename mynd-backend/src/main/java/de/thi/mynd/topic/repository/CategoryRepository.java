@@ -26,4 +26,20 @@ public final class CategoryRepository extends MyndBaseRepository<Category> {
   public List<Category> fetchAllFlat() {
     return list("ORDER BY path");
   }
+
+  public boolean existsByTitle(String title) {
+    return find("title = ?1", title).count() > 0;
+  }
+
+  public void updateDescendantPaths(String oldPath, String newPath) {
+    em.createNativeQuery("""
+            UPDATE category
+            SET path = CAST(:newPath AS ltree) || subpath(path, nlevel(CAST(:oldPath AS ltree)))
+            WHERE path <@ CAST(:oldPath AS ltree)
+            AND path != CAST(:oldPath AS ltree)
+            """)
+            .setParameter("oldPath", oldPath)
+            .setParameter("newPath", newPath)
+            .executeUpdate();
+  }
 }
