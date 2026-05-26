@@ -1,7 +1,6 @@
 package de.thi.mynd.topic.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
@@ -9,14 +8,20 @@ import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.dto.CategoryDto;
 import de.thi.mynd.topic.dto.CategoryTreeDto;
 import de.thi.mynd.topic.entity.Category;
+import de.thi.mynd.topic.exception.CategoryAlreadyExistsException;
+import de.thi.mynd.topic.exception.CategoryMoveException;
+import de.thi.mynd.topic.exception.CategoryNotFoundException;
 import de.thi.mynd.topic.repository.CategoryRepository;
+import de.thi.mynd.topic.request.CategoryRequest;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 @QuarkusTest
 class CategoryServiceImplTest {
@@ -208,4 +213,211 @@ class CategoryServiceImplTest {
     assertTrue(result.get(0).children.isEmpty());
   }
 
+  // ── createCategory ───────────────────────────────────────────────────────
+
+  @Test
+  void createCategory_titleAlreadyExists_throwsCategoryAlreadyExistsException() {
+    when(categoryRepository.existsByTitle("Electronics")).thenReturn(true);
+
+    CategoryRequest request = new CategoryRequest();
+    request.title = "Electronics";
+    request.color = "#000000";
+
+    assertThrows(CategoryAlreadyExistsException.class,
+            () -> categoryService.createCategory(request));
+
+    verify(categoryRepository, never()).persistAndFlush(any());
+  }
+
+  @Test
+  void createCategory_noParent_createsRootNode() {
+    when(categoryRepository.existsByTitle("Electronics")).thenReturn(false);
+
+    UUID id = UUID.randomUUID();
+    doAnswer(invocation -> {
+      Category c = invocation.getArgument(0);
+      c.id = id;
+      return null;
+    }).when(categoryRepository).persistAndFlush(any());
+
+    CategoryRequest request = new CategoryRequest();
+    request.title = "Electronics";
+    request.color = "#000000";
+    request.parentId = null;
+
+    categoryService.createCategory(request);
+
+    ArgumentCaptor<Category> captor = ArgumentCaptor.forClass(Category.class);
+    verify(categoryRepository, times(2)).persistAndFlush(captor.capture());
+
+    Category saved = captor.getValue();
+    assertEquals("Electronics", saved.title);
+    assertEquals("#000000", saved.color);
+    assertEquals(id.toString().replace("-", ""), saved.path);
+  }
+
+  @Test
+  void createCategory_withParent_appendsToParentPath() {
+    UUID parentId = UUID.randomUUID();
+    UUID childId  = UUID.randomUUID();
+    Category parent = cat(parentId, "Electronics", parentId.toString().replace("-", ""));
+
+    when(categoryRepository.existsByTitle("Phones")).thenReturn(false);
+    when(categoryRepository.findByIdOptional(parentId)).thenReturn(Optional.of(parent));
+    doAnswer(invocation -> {
+      Category c = invocation.getArgument(0);
+      c.id = childId;
+      return null;
+    }).when(categoryRepository).persistAndFlush(any());
+
+    CategoryRequest request = new CategoryRequest();
+    request.title = "Phones";
+    request.color = "#ffffff";
+    request.parentId = parentId;
+
+    categoryService.createCategory(request);
+
+    ArgumentCaptor<Category> captor = ArgumentCaptor.forClass(Category.class);
+    verify(categoryRepository, times(2)).persistAndFlush(captor.capture());
+
+    Category saved = captor.getValue();
+    assertEquals(parent.path + "." + childId.toString().replace("-", ""), saved.path);
+  }
+
+  @Test
+  void createCategory_parentNotFound_throwsCategoryNotFoundException() {
+    UUID parentId = UUID.randomUUID();
+
+    when(categoryRepository.existsByTitle("Phones")).thenReturn(false);
+    when(categoryRepository.findByIdOptional(parentId)).thenReturn(Optional.empty());
+    doAnswer(invocation -> {
+      Category c = invocation.getArgument(0);
+      c.id = UUID.randomUUID();
+      return null;
+    }).when(categoryRepository).persistAndFlush(any());
+
+    CategoryRequest request = new CategoryRequest();
+    request.title = "Phones";
+    request.color = "#ffffff";
+    request.parentId = parentId;
+
+    assertThrows(CategoryNotFoundException.class,
+            () -> categoryService.createCategory(request));
+  }
+
+  // ── updateCategory ───────────────────────────────────────────────────────
+
+  @Test
+  void updateCategory_categoryNotFound_throwsCategoryNotFoundException() {
+    UUID id = UUID.randomUUID();
+    when(categoryRepository.findByIdOptional(id)).thenReturn(Optional.empty());
+
+    CategoryRequest request = new CategoryRequest();
+    request.title = "Electronics";
+    request.color = "#000000";
+
+    assertThrows(CategoryNotFoundException.class,
+            () -> categoryService.updateCategory(id, request));
+  }
+
+  @Test
+  void updateCategory_titleTakenByOtherCategory_throwsCategoryAlreadyExistsException() {
+    UUID id = UUID.randomUUID();
+    Category existing = cat(id, "Electronics", id.toString().replace("-", ""));
+
+    when(categoryRepository.findByIdOptional(id)).thenReturn(Optional.of(existing));
+    when(categoryRepository.existsByTitle("Phones")).thenReturn(true);
+
+    CategoryRequest request = new CategoryRequest();
+    request.title = "Phones"; // different from current title
+    request.color = "#000000";
+
+    assertThrows(CategoryAlreadyExistsException.class,
+            () -> categoryService.updateCategory(id, request));
+  }
+
+  @Test
+  void updateCategory_sameTitle_doesNotCheckUniqueness() {
+    UUID id = UUID.randomUUID();
+    Category existing = cat(id, "Electronics", id.toString().replace("-", ""));
+
+    when(categoryRepository.findByIdOptional(id)).thenReturn(Optional.of(existing));
+
+    CategoryRequest request = new CategoryRequest();
+    request.title = "Electronics"; // same title — no uniqueness check
+    request.color = "#ff0000";
+
+    categoryService.updateCategory(id, request);
+
+    verify(categoryRepository, never()).existsByTitle(any());
+    assertEquals("#ff0000", existing.color);
+  }
+
+  @Test
+  void updateCategory_noParent_setsRootPath() {
+    UUID id = UUID.randomUUID();
+    Category existing = cat(id, "Electronics", "oldpath");
+
+    when(categoryRepository.findByIdOptional(id)).thenReturn(Optional.of(existing));
+
+    CategoryRequest request = new CategoryRequest();
+    request.title = "Electronics";
+    request.color = "#000000";
+    request.parentId = null;
+
+    categoryService.updateCategory(id, request);
+
+    assertEquals(id.toString().replace("-", ""), existing.path);
+  }
+
+  @Test
+  void updateCategory_withParent_updatesPathAndDescendants() {
+    UUID categoryId = UUID.randomUUID();
+    UUID parentId   = UUID.randomUUID();
+
+    String categoryStrId = categoryId.toString().replace("-", "");
+    String parentStrId   = parentId.toString().replace("-", "");
+
+    Category existing = cat(categoryId, "Phones", "oldpath");
+    Category parent   = cat(parentId,   "Electronics", parentStrId);
+
+    when(categoryRepository.findByIdOptional(categoryId)).thenReturn(Optional.of(existing));
+    when(categoryRepository.findByIdOptional(parentId)).thenReturn(Optional.of(parent));
+
+    CategoryRequest request = new CategoryRequest();
+    request.title    = "Phones";
+    request.color    = "#000000";
+    request.parentId = parentId;
+
+    categoryService.updateCategory(categoryId, request);
+
+    String expectedPath = parentStrId + "." + categoryStrId;
+    assertEquals(expectedPath, existing.path);
+    verify(categoryRepository).updateDescendantPaths("oldpath", expectedPath);
+  }
+
+  @Test
+  void updateCategory_moveIntoDescendant_throwsCategoryMoveException() {
+    UUID categoryId  = UUID.randomUUID();
+    UUID descendantId = UUID.randomUUID();
+
+    String categoryStrId   = categoryId.toString().replace("-", "");
+    String descendantStrId = descendantId.toString().replace("-", "");
+
+    Category existing   = cat(categoryId,   "Electronics", categoryStrId);
+    Category descendant = cat(descendantId, "Phones",      categoryStrId + "." + descendantStrId);
+
+    when(categoryRepository.findByIdOptional(categoryId)).thenReturn(Optional.of(existing));
+    when(categoryRepository.findByIdOptional(descendantId)).thenReturn(Optional.of(descendant));
+
+    CategoryRequest request = new CategoryRequest();
+    request.title    = "Electronics";
+    request.color    = "#000000";
+    request.parentId = descendantId;
+
+    assertThrows(CategoryMoveException.class,
+            () -> categoryService.updateCategory(categoryId, request));
+
+    verify(categoryRepository, never()).updateDescendantPaths(any(), any());
+  }
 }
