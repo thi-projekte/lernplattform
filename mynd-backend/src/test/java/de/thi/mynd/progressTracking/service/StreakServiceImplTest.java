@@ -32,7 +32,7 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 class StreakServiceImplTest {
 
-  @Inject StreakService streakService;
+  @Inject StreakServiceImpl streakService;
 
   @InjectMock SecurityIdentity identity;
 
@@ -262,7 +262,7 @@ class StreakServiceImplTest {
 
     @Test
     void continuesActiveStreaks_andCreatesOnlyMissingTypes() {
-      Streak activeDaily = buildStreak(StreakType.DAILY, LocalDateTime.now());
+      Streak activeDaily = buildStreak(StreakType.DAILY, LocalDateTime.now().minusDays(1));
 
       when(streakRepository.findNotEndedByCreatorId(CREATOR_ID)).thenReturn(List.of(activeDaily));
 
@@ -274,9 +274,9 @@ class StreakServiceImplTest {
 
     @Test
     void doesNotCreateNewStreak_whenAllTypesAreActive() {
-      Streak daily = buildStreak(StreakType.DAILY, LocalDateTime.now());
-      Streak weekly = buildStreak(StreakType.WEEKLY, LocalDateTime.now());
-      Streak monthly = buildStreak(StreakType.MONTHLY, LocalDateTime.now());
+      Streak daily = buildStreak(StreakType.DAILY, LocalDateTime.now().minusDays(1));
+      Streak weekly = buildStreak(StreakType.WEEKLY, LocalDateTime.now().minusWeeks(1));
+      Streak monthly = buildStreak(StreakType.MONTHLY, LocalDateTime.now().minusMonths(1));
 
       when(streakRepository.findNotEndedByCreatorId(CREATOR_ID))
           .thenReturn(List.of(daily, weekly, monthly));
