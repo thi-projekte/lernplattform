@@ -1,14 +1,18 @@
 package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.dto.CategoryDto;
+import de.thi.mynd.topic.dto.CategoryTreeDto;
+import de.thi.mynd.topic.request.CategoryRequest;
 import de.thi.mynd.topic.service.CategoryService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.Path;
-import jakarta.ws.rs.Produces;
+import jakarta.validation.Valid;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import java.util.List;
+import java.util.UUID;
+
+import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.parameters.Parameter;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
@@ -37,5 +41,36 @@ public final class CategoryResource {
   public List<CategoryDto> searchCategories(@RestQuery String query) {
 
     return categoryService.searchMax5(query);
+  }
+
+  @GET
+  @Path("/tree")
+  @RolesAllowed("admin")
+  @Operation(
+          summary = "Gets the whole tree",
+          description = "Loads the whole category tree from the database")
+  public List<CategoryTreeDto> getFullTree() {
+    return categoryService.getFullTree();
+  }
+
+  @POST
+  @RolesAllowed("admin")
+  @Operation(
+          summary = "Creates a new category",
+          description = "Creates a completely new category")
+  public Response createCategory(@Valid CategoryRequest request) {
+    categoryService.createCategory(request);
+    return Response.ok().build();
+  }
+
+  @PUT
+  @Path("/{categoryId}")
+  @RolesAllowed("admin")
+  @Operation(
+          summary = "Updates an existing category",
+          description = "Sets all values of an existing category")
+  public Response updateCategory(UUID categoryId, @Valid CategoryRequest request) {
+    categoryService.updateCategory(categoryId, request);
+    return Response.ok().build();
   }
 }
