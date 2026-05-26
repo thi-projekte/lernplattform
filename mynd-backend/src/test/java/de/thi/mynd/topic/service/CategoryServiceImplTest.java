@@ -71,7 +71,7 @@ class CategoryServiceImplTest {
         .thenReturn(List.of(new Category(), new Category()));
 
     // Act
-    List<CategoryDto> results = categoryService.findByAssociatedEntities(requests);
+    List<Category> results = categoryService.findByAssociatedEntities(requests);
 
     // Assert
     Assertions.assertEquals(2, results.size());
