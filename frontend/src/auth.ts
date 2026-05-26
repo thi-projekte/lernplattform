@@ -4,6 +4,7 @@ import type { KeycloakResourceAccess } from 'keycloak-js';
 // @ts-expect-error Idk why the fuck this does not work
 export enum Role {
   Builder = 'builder',
+  Admin = 'admin',
 }
 
 export const isGranted = (roles: Role[]) => {
