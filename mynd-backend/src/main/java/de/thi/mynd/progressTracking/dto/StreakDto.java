@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Builder
-public class StreakDto {
+public final class StreakDto {
     public UUID id;
     public String creatorId;
     public LocalDateTime startedAt;

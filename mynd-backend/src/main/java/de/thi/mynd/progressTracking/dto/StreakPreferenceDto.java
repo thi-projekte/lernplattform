@@ -4,7 +4,7 @@ import de.thi.mynd.progressTracking.entity.StreakType;
 import lombok.Builder;
 
 @Builder
-public class StreakPreferenceDto {
+public final class StreakPreferenceDto {
 
     public String creatorId;
     public StreakType type;
