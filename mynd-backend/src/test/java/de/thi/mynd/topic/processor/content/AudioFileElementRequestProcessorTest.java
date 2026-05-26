@@ -12,7 +12,7 @@ import de.thi.mynd.topic.entity.AudioFileElement;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.ContentType;
 import de.thi.mynd.topic.repository.ContentElementRepository;
-import de.thi.mynd.topic.requests.content.AudioFileElementRequest;
+import de.thi.mynd.topic.request.content.AudioFileElementRequest;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -100,6 +100,6 @@ class AudioFileElementRequestProcessorTest {
   void testSupports() {
     assertTrue(processor.supports(new AudioFileElementRequest()));
     assertFalse(
-        processor.supports(mock(de.thi.mynd.topic.requests.content.ContentElementRequest.class)));
+        processor.supports(mock(de.thi.mynd.topic.request.content.ContentElementRequest.class)));
   }
 }

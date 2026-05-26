@@ -1,4 +1,4 @@
-package de.thi.mynd.topic.requests;
+package de.thi.mynd.topic.request;
 
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import jakarta.validation.Valid;

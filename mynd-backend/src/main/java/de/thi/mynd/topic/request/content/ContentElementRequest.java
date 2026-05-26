@@ -1,4 +1,4 @@
-package de.thi.mynd.topic.requests.content;
+package de.thi.mynd.topic.request.content;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

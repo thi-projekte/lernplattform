@@ -1,7 +1,7 @@
 package de.thi.mynd.topic.processor.content;
 
 import de.thi.mynd.topic.entity.ContentElement;
-import de.thi.mynd.topic.requests.content.ContentElementRequest;
+import de.thi.mynd.topic.request.content.ContentElementRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;

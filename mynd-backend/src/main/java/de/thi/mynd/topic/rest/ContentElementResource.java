@@ -1,7 +1,7 @@
 package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.dto.content.ContentElementDto;
-import de.thi.mynd.topic.requests.content.ContentElementRequest;
+import de.thi.mynd.topic.request.content.ContentElementRequest;
 import de.thi.mynd.topic.service.ContentElementService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;

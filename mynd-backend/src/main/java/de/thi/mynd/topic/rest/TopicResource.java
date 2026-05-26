@@ -3,7 +3,7 @@ package de.thi.mynd.topic.rest;
 import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
-import de.thi.mynd.topic.requests.TopicRequest;
+import de.thi.mynd.topic.request.TopicRequest;
 import de.thi.mynd.topic.service.TopicService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
