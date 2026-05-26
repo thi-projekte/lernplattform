@@ -7,6 +7,7 @@ import de.thi.mynd.progressTracking.service.StreakService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
@@ -71,7 +72,7 @@ public final class StreakResource {
     @APIResponse(responseCode = "200", description = "Preferences updated successfully")
     @APIResponse(responseCode = "400", description = "Invalid request body")
     @APIResponse(responseCode = "401", description = "User is not authenticated")
-    public Response updateStreakPreferences(@Valid StreakPreferenceRequest request) {
+    public Response updateStreakPreferences(@Valid @NotNull StreakPreferenceRequest request) {
         streakService.updateStreakPreferencesForCurrentUser(request);
         return Response.ok().build();
     }
