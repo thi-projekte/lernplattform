@@ -140,9 +140,7 @@ const AdminCategoriesPage = () => {
       notifications.show({
         color: 'green',
         title: t('common.success'),
-        message: editingId
-          ? t('categoryAdmin.updateSuccess')
-          : t('categoryAdmin.createSuccess'),
+        message: editingId ? t('categoryAdmin.updateSuccess') : t('categoryAdmin.createSuccess'),
       });
       close();
     };
@@ -212,10 +210,7 @@ const AdminCategoriesPage = () => {
       >
         <form onSubmit={form.onSubmit(handleSubmit)}>
           <Stack gap="sm">
-            <TextInput
-              label={t('categoryAdmin.fields.title')}
-              {...form.getInputProps('title')}
-            />
+            <TextInput label={t('categoryAdmin.fields.title')} {...form.getInputProps('title')} />
             <ColorInput
               label={t('categoryAdmin.fields.color')}
               {...form.getInputProps('color')}
