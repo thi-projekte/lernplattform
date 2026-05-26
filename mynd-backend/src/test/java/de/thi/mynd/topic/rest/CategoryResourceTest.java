@@ -163,7 +163,8 @@ public class CategoryResourceTest {
     @DisplayName("Should successfully create a valid category")
     void createCategorySuccess() {
       CategoryRequest request = new CategoryRequest();
-      // Assuming your request object has a setter for validation purposes, fill it here if needed
+      request.title = "new title";
+      request.color = "111111";
 
       Mockito.doNothing().when(categoryService).createCategory(any(CategoryRequest.class));
 
@@ -188,6 +189,8 @@ public class CategoryResourceTest {
     void updateCategorySuccess() {
       UUID categoryId = UUID.randomUUID();
       CategoryRequest request = new CategoryRequest();
+      request.title = "new title";
+      request.color = "111111";
 
       Mockito.doNothing().when(categoryService).updateCategory(eq(categoryId), any(CategoryRequest.class));
 
