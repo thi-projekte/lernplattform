@@ -32,7 +32,11 @@ const StepperProgress = ({ steps, onComplete, isLoading, lastStepLabel }: Steppe
 
   return (
     <>
-      <Stepper active={active} onStepClick={setActive} orientation={isMobile ? 'vertical' : 'horizontal'}>
+      <Stepper
+        active={active}
+        onStepClick={setActive}
+        orientation={isMobile ? 'vertical' : 'horizontal'}
+      >
         {steps.map((step, i) => (
           <Stepper.Step
             label={step.label}
