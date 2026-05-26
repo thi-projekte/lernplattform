@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.thi.mynd.common.entity.BaseEntityWithId;
 import de.thi.mynd.common.entity.LtreeType;
 import jakarta.persistence.*;
-import org.hibernate.annotations.Type;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "category")
