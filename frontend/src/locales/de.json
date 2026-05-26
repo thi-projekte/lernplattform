@@ -6,7 +6,23 @@
     "becomeBuilder": "Zum Builder werden",
     "editTopic": "Thema bearbeiten",
     "account": "Mein Profil",
-    "invitations": "Einladungen"
+    "invitations": "Einladungen",
+    "streaks": "Meine Streaks"
+  },
+  "streak": {
+    "title": "Meine Streaks",
+    "subtitle": "Verfolge deine Lernkontinuität über die Zeit.",
+    "currentStreak": "Aktueller Streak",
+    "noActiveStreak": "Noch kein aktiver Streak. Fang an zu lernen!",
+    "satisfied": "Im Plan",
+    "notSatisfied": "Noch nicht erfüllt",
+    "history": "Streak-Verlauf",
+    "present": "heute",
+    "type": {
+      "DAILY": "Tage",
+      "WEEKLY": "Wochen",
+      "MONTHLY": "Monate"
+    }
   },
   "journey": {
     "title": "Deine Journey Map",

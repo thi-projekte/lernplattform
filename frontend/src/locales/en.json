@@ -6,7 +6,23 @@
     "createTopic": "Create topic",
     "editTopic": "Edit topic",
     "account": "My profile",
-    "invitations": "Invitations"
+    "invitations": "Invitations",
+    "streaks": "My Streaks"
+  },
+  "streak": {
+    "title": "My Streaks",
+    "subtitle": "Track your learning consistency over time.",
+    "currentStreak": "Current streak",
+    "noActiveStreak": "No active streak yet. Start learning to build one!",
+    "satisfied": "On track",
+    "notSatisfied": "Not satisfied yet",
+    "history": "Streak history",
+    "present": "today",
+    "type": {
+      "DAILY": "days",
+      "WEEKLY": "weeks",
+      "MONTHLY": "months"
+    }
   },
   "journey": {
     "title": "Your journey map",

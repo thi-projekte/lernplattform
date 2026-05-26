@@ -7,12 +7,16 @@ import {
   Group,
   Image,
   NavLink,
+  Text,
+  ThemeIcon,
+  Tooltip,
   UnstyledButton,
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconChevronLeft, IconUser } from '@tabler/icons-react';
+import { IconChevronLeft, IconFlame, IconUser } from '@tabler/icons-react';
 import { useQueryProfilePicture } from '../api/profile-picture.ts';
+import { useFetchStreaks } from '../api/streak.ts';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import ColorSchemeToggle from './color-scheme-toggle.tsx';
@@ -23,6 +27,35 @@ import { useLocation, useMatches, useNavigate } from 'react-router';
 import { isGranted } from '../auth.ts';
 import AccessDenied from './access-denied.tsx';
 import { useUserService } from '../provider/user-provider.tsx';
+
+const StreakBadge = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { data: streaks } = useFetchStreaks();
+  const activeStreak = streaks?.find((s) => s.isActive);
+
+  if (!activeStreak) return null;
+
+  const days = Math.max(
+    1,
+    Math.round((new Date().getTime() - new Date(activeStreak.startedAt).getTime()) / 86400000)
+  );
+
+  return (
+    <Tooltip label={t('streak.currentStreak')} withArrow>
+      <UnstyledButton onClick={() => navigate('/streaks')}>
+        <Group gap={4} align="center">
+          <ThemeIcon size="sm" radius="xl" color="orange" variant="light">
+            <IconFlame size={12} />
+          </ThemeIcon>
+          <Text size="sm" fw={600} c="orange">
+            {days}
+          </Text>
+        </Group>
+      </UnstyledButton>
+    </Tooltip>
+  );
+};
 
 interface LayoutProps {
   children: ReactNode;
@@ -135,6 +168,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             </UnstyledButton>
           </Group>
           <Group px="md" gap="xs">
+            <StreakBadge />
             <ColorSchemeToggle />
             <LanguagePicker />
           </Group>
