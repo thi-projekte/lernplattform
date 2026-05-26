@@ -7,10 +7,10 @@ import jakarta.persistence.*;
 @Table(name = "streak_preference")
 public class StreakPreference extends BaseEntityWithCreatorIdPk {
 
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    public StreakType type;
+  @Column(nullable = false)
+  @Enumerated(EnumType.STRING)
+  public StreakType type;
 
-    @Column(nullable = false)
-    public boolean isPublic;
+  @Column(nullable = false)
+  public boolean isPublic;
 }

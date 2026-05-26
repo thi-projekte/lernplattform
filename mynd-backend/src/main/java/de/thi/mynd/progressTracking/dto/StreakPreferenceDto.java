@@ -6,7 +6,7 @@ import lombok.Builder;
 @Builder
 public final class StreakPreferenceDto {
 
-    public String creatorId;
-    public StreakType type;
-    public boolean isPublic;
+  public String creatorId;
+  public StreakType type;
+  public boolean isPublic;
 }

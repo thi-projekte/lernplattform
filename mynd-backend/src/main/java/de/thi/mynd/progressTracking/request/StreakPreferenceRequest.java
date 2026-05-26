@@ -5,8 +5,6 @@ import jakarta.validation.constraints.NotNull;
 
 public final class StreakPreferenceRequest {
 
-    @NotNull
-    public StreakType type;
-    @NotNull
-    public Boolean isPublic;
+  @NotNull public StreakType type;
+  @NotNull public Boolean isPublic;
 }

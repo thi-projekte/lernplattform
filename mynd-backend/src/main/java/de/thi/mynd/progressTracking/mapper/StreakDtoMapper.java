@@ -10,30 +10,29 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public final class StreakDtoMapper extends AbstractMappingProcessor<Streak, StreakDto> {
 
-    @Inject
-    StreakService streakService;
+  @Inject StreakService streakService;
 
-    @Override
-    public StreakDto mapAndEnrich(Streak entity) {
-        return StreakDto.builder()
-                .id(entity.id)
-                .creatorId(entity.creatorId)
-                .startedAt(entity.startedAt)
-                .endedAt(entity.endedAt)
-                .type(entity.type)
-                .lastContinuedAt(entity.lastContinuedAt)
-                .isActive(streakService.isStreakActive(entity))
-                .isSatisfied(streakService.isStreakSatisfied(entity))
-                .build();
-    }
+  @Override
+  public StreakDto mapAndEnrich(Streak entity) {
+    return StreakDto.builder()
+        .id(entity.id)
+        .creatorId(entity.creatorId)
+        .startedAt(entity.startedAt)
+        .endedAt(entity.endedAt)
+        .type(entity.type)
+        .lastContinuedAt(entity.lastContinuedAt)
+        .isActive(streakService.isStreakActive(entity))
+        .isSatisfied(streakService.isStreakSatisfied(entity))
+        .build();
+  }
 
-    @Override
-    public Class<Streak> getEntityType() {
-        return Streak.class;
-    }
+  @Override
+  public Class<Streak> getEntityType() {
+    return Streak.class;
+  }
 
-    @Override
-    public Class<StreakDto> getDtoType() {
-        return StreakDto.class;
-    }
+  @Override
+  public Class<StreakDto> getDtoType() {
+    return StreakDto.class;
+  }
 }
