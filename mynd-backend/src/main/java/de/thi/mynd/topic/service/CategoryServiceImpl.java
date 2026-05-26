@@ -68,6 +68,7 @@ public final class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
+  @Transactional
   public void updateCategory(UUID categoryId, CategoryRequest request) {
     Category category = categoryRepository.findByIdOptional(categoryId)
             .orElseThrow(() -> new CategoryNotFoundException("Category not found: " + categoryId));
