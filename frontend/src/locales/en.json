@@ -248,10 +248,12 @@
       "noInvitationsLeft": "You have no invitations left.",
       "historyTitle": "Sent invitations",
       "noHistory": "No invitations sent yet.",
-      "statusSent": "Sent",
+      "acceptedTrue": "Accepeted",
+      "acceptedFalse": "Pending",
       "columns": {
         "date": "Date",
-        "status": "Status"
+        "sentTo": "Sent to",
+        "accepted": "Accepted?"
       }
     },
     "accept": {

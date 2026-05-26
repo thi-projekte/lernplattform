@@ -15,7 +15,7 @@ import {
 } from '@mantine/core';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { IconAlertCircle, IconCheck, IconMail, IconSend } from '@tabler/icons-react';
+import { IconAlertCircle, IconCheck, IconClock, IconMail, IconSend } from '@tabler/icons-react';
 import { Layout } from '../../components/layout.tsx';
 import {
   useQueryInvitationStatus,
@@ -137,7 +137,8 @@ const ManageInvitationsPage = () => {
               <Table.Thead>
                 <Table.Tr>
                   <Table.Th>{t('invitation.manage.columns.date')}</Table.Th>
-                  <Table.Th>{t('invitation.manage.columns.status')}</Table.Th>
+                  <Table.Th>{t('invitation.manage.columns.sentTo')}</Table.Th>
+                  <Table.Th>{t('invitation.manage.columns.accepted')}</Table.Th>
                 </Table.Tr>
               </Table.Thead>
               <Table.Tbody>
@@ -147,13 +148,18 @@ const ManageInvitationsPage = () => {
                       <Text size="sm">{new Date(inv.createdAt).toLocaleDateString()}</Text>
                     </Table.Td>
                     <Table.Td>
+                      <Text size="sm">{inv.mailSentTo}</Text>
+                    </Table.Td>
+                    <Table.Td>
                       <Badge
                         size="sm"
-                        color="green"
+                        color={inv.accepted ? 'green' : 'gray'}
                         variant="light"
-                        leftSection={<IconCheck size={12} />}
+                        leftSection={
+                          inv.accepted ? <IconCheck size={12} /> : <IconClock size={12} />
+                        }
                       >
-                        {t('invitation.manage.statusSent')}
+                        {t(`invitation.manage.${inv.accepted ? 'acceptedTrue' : 'acceptedFalse'}`)}
                       </Badge>
                     </Table.Td>
                   </Table.Tr>

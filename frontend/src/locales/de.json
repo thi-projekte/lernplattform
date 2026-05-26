@@ -249,10 +249,12 @@
       "noInvitationsLeft": "Du hast keine Einladungen mehr übrig.",
       "historyTitle": "Gesendete Einladungen",
       "noHistory": "Noch keine Einladungen gesendet.",
-      "statusSent": "Gesendet",
+      "acceptedTrue": "Akzeptiert",
+      "acceptedFalse": "Ausstehend",
       "columns": {
         "date": "Datum",
-        "status": "Status"
+        "sentTo": "Gesendet at",
+        "accepted": "Akzeptiert?"
       }
     },
     "accept": {

@@ -13,6 +13,8 @@ public final class InvitationDtoMapper extends AbstractMappingProcessor<Invitati
         .id(entity.id)
         .createdAt(entity.createdAt)
         .creatorId(entity.creatorId)
+        .mailSentTo(entity.mailSentTo)
+        .accepted(entity.acceptedBy != null)
         .build();
   }
 
