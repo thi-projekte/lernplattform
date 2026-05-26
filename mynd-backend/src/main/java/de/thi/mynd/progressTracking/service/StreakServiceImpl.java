@@ -4,14 +4,19 @@ import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.progressTracking.dto.StreakDto;
 import de.thi.mynd.progressTracking.dto.StreakPreferenceDto;
 import de.thi.mynd.progressTracking.entity.Streak;
+import de.thi.mynd.progressTracking.entity.StreakContinuation;
+import de.thi.mynd.progressTracking.entity.StreakType;
 import de.thi.mynd.progressTracking.repository.StreakRepository;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.List;
 
 @ApplicationScoped
@@ -31,12 +36,53 @@ public final class StreakServiceImpl implements StreakService {
         String creatorId = identity.getPrincipal().getName();
         List<Streak> latestStreaks = streakRepository.findNotEndedByCreatorId(creatorId);
 
+        endStreaksIfNotActiveAnymore(latestStreaks);
+
         return mappingRegistry.mapList(latestStreaks, StreakDto.class);
     }
 
     @Override
+    @Transactional
     public void continueOrStartStreaksForCurrentUser() {
+        String creatorId = identity.getPrincipal().getName();
+        List<Streak> latestStreaks = streakRepository.findNotEndedByCreatorId(creatorId);
+        List<StreakType> typesToCreate = new ArrayList<>(List.of(StreakType.DAILY, StreakType.WEEKLY, StreakType.MONTHLY));
 
+        StreakContinuation newContinuation = new StreakContinuation();
+        newContinuation.creatorId = creatorId;
+        for (Streak streak : latestStreaks) {
+            if (isStreakActive(streak)) {
+                streak.lastContinuedAt = LocalDateTime.now();
+                streak.continuations.add(newContinuation);
+                streakRepository.persist(streak);
+                typesToCreate.remove(streak.type);
+            }
+        }
+
+        for (StreakType type : typesToCreate) {
+            Streak newStreak = new Streak();
+            newStreak.type = type;
+            newStreak.creatorId = creatorId;
+            newStreak.startedAt = LocalDateTime.now();
+            newStreak.lastContinuedAt = LocalDateTime.now();
+            newStreak.continuations.add(newContinuation);
+
+            streakRepository.persist(newStreak);
+        }
+
+        streakRepository.flush();
+    }
+
+    @Override
+    @Transactional
+    public void endStreaksIfNotActiveAnymore(List<Streak> streaks) {
+        for (Streak streak : streaks) {
+            if (!isStreakActive(streak)) {
+                streak.endedAt = streak.lastContinuedAt;
+                streakRepository.persist(streak);
+            }
+        }
+        streakRepository.flush();
     }
 
     @Override

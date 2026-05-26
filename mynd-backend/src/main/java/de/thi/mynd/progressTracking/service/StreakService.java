@@ -12,6 +12,8 @@ public interface StreakService {
 
     void continueOrStartStreaksForCurrentUser();
 
+    void endStreaksIfNotActiveAnymore(List<Streak> streaks);
+
     StreakPreferenceDto getOrCreateStreakPreferenceForCurrentUser();
 
     void updateStreakPreferencesForCurrentUser();
@@ -19,4 +21,5 @@ public interface StreakService {
     boolean isStreakActive(Streak streak);
 
     boolean isStreakSatisfied(Streak streak);
+
 }
