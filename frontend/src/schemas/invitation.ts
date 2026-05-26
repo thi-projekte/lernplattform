@@ -4,6 +4,8 @@ export const InvitationDtoSchema = z.object({
   id: z.string().uuid(),
   creatorId: z.string(),
   createdAt: z.string(),
+  mailSentTo: z.string(),
+  accepted: z.boolean(),
 });
 
 export type InvitationDto = z.infer<typeof InvitationDtoSchema>;
