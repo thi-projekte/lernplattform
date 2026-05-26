@@ -3,6 +3,7 @@ package de.thi.mynd.progressTracking.service;
 import de.thi.mynd.progressTracking.dto.StreakDto;
 import de.thi.mynd.progressTracking.dto.StreakPreferenceDto;
 import de.thi.mynd.progressTracking.entity.Streak;
+import de.thi.mynd.progressTracking.request.StreakPreferenceRequest;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ public interface StreakService {
 
     StreakPreferenceDto getOrCreateStreakPreferenceForCurrentUser();
 
-    void updateStreakPreferencesForCurrentUser();
+    void updateStreakPreferencesForCurrentUser(StreakPreferenceRequest request);
 
     boolean isStreakActive(Streak streak);
 

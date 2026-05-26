@@ -10,6 +10,7 @@ import de.thi.mynd.progressTracking.entity.StreakPreference;
 import de.thi.mynd.progressTracking.entity.StreakType;
 import de.thi.mynd.progressTracking.repository.StreakPreferenceRepository;
 import de.thi.mynd.progressTracking.repository.StreakRepository;
+import de.thi.mynd.progressTracking.request.StreakPreferenceRequest;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -102,8 +103,17 @@ public final class StreakServiceImpl implements StreakService {
     }
 
     @Override
-    public void updateStreakPreferencesForCurrentUser() {
+    @Transactional
+    public void updateStreakPreferencesForCurrentUser(StreakPreferenceRequest request) {
+        CreatorIdKey id = new CreatorIdKey();
+        id.creatorId = identity.getPrincipal().getName();
+        StreakPreference preference = streakPreferenceRepository.findByIdOptional(id)
+                .orElseGet(this::createStreakPreferenceForCurrentUser);
 
+        preference.type = request.type;
+        preference.isPublic = request.isPublic;
+
+        streakPreferenceRepository.persistAndFlush(preference);
     }
 
     @Override
