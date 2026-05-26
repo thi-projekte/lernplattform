@@ -1,11 +1,14 @@
 package de.thi.mynd.progressTracking.service;
 
+import de.thi.mynd.common.entity.CreatorIdKey;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.progressTracking.dto.StreakDto;
 import de.thi.mynd.progressTracking.dto.StreakPreferenceDto;
 import de.thi.mynd.progressTracking.entity.Streak;
 import de.thi.mynd.progressTracking.entity.StreakContinuation;
+import de.thi.mynd.progressTracking.entity.StreakPreference;
 import de.thi.mynd.progressTracking.entity.StreakType;
+import de.thi.mynd.progressTracking.repository.StreakPreferenceRepository;
 import de.thi.mynd.progressTracking.repository.StreakRepository;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -27,6 +30,9 @@ public final class StreakServiceImpl implements StreakService {
 
     @Inject
     StreakRepository streakRepository;
+
+    @Inject
+    StreakPreferenceRepository streakPreferenceRepository;
 
     @Inject
     MappingRegistry mappingRegistry;
@@ -87,7 +93,12 @@ public final class StreakServiceImpl implements StreakService {
 
     @Override
     public StreakPreferenceDto getOrCreateStreakPreferenceForCurrentUser() {
-        return null;
+        CreatorIdKey id = new CreatorIdKey();
+        id.creatorId = identity.getPrincipal().getName();
+        StreakPreference preference = streakPreferenceRepository.findByIdOptional(id)
+                .orElseGet(this::createStreakPreferenceForCurrentUser);
+
+        return mappingRegistry.map(preference, StreakPreferenceDto.class);
     }
 
     @Override
@@ -148,5 +159,16 @@ public final class StreakServiceImpl implements StreakService {
             }
             default -> throw new IllegalArgumentException("Unknown streak type: " + streak.type);
         }
+    }
+
+    @Transactional
+    private StreakPreference createStreakPreferenceForCurrentUser() {
+        StreakPreference preference = new StreakPreference();
+        preference.creatorId = identity.getPrincipal().getName();
+        preference.isPublic = false;
+        preference.type = StreakType.DAILY;
+        streakPreferenceRepository.persistAndFlush(preference);
+
+        return preference;
     }
 }
