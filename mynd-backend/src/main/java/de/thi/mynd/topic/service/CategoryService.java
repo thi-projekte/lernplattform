@@ -14,9 +14,9 @@ public interface CategoryService {
 
   List<Category> findByAssociatedEntities(List<AssociatedEntityRequest> entities);
 
-  // List<CategoryTreeDto> getFullTree();
+  List<CategoryTreeDto> getFullTree();
 
-  // void createCategory(CategoryRequest request);
+  void createCategory(CategoryRequest request);
 
-  // void updateCategory(UUID categoryId, CategoryRequest request);
+  void updateCategory(UUID categoryId, CategoryRequest request);
 }
