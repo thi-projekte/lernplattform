@@ -2,6 +2,7 @@ package de.thi.mynd.topic.rest;
 
 import static io.restassured.RestAssured.given;
 
+import de.thi.mynd.topic.dto.CategoryDto;
 import de.thi.mynd.topic.entity.Category;
 import de.thi.mynd.topic.repository.CategoryRepository;
 import io.quarkus.test.InjectMock;
@@ -34,7 +35,7 @@ public class CategoryResourceTest {
 
     Mockito.when(categoryRepository.findAllWithLimit(5)).thenReturn(expected);
 
-    List<Category> actual =
+    List<CategoryDto> actual =
         given()
             .when()
             .get("/categories/search")
@@ -44,7 +45,7 @@ public class CategoryResourceTest {
             .extract()
             .body()
             .jsonPath()
-            .getList(".", Category.class);
+            .getList(".", CategoryDto.class);
 
     Assertions.assertEquals(demo.title, actual.get(0).title);
   }
@@ -59,7 +60,7 @@ public class CategoryResourceTest {
 
     Mockito.when(categoryRepository.findByTitleWithLimit("techn", 5)).thenReturn(expected);
 
-    List<Category> actual =
+    List<CategoryDto> actual =
         given()
             .when()
             .get("/categories/search?query=techn")
@@ -69,7 +70,7 @@ public class CategoryResourceTest {
             .extract()
             .body()
             .jsonPath()
-            .getList(".", Category.class);
+            .getList(".", CategoryDto.class);
 
     Assertions.assertEquals(demo.title, actual.get(0).title);
   }
@@ -84,7 +85,7 @@ public class CategoryResourceTest {
 
     Mockito.when(categoryRepository.findByTitleWithLimit("TecHn", 5)).thenReturn(expected);
 
-    List<Category> actual =
+    List<CategoryDto> actual =
         given()
             .when()
             .get("/categories/search?query=TecHn")
@@ -94,7 +95,7 @@ public class CategoryResourceTest {
             .extract()
             .body()
             .jsonPath()
-            .getList(".", Category.class);
+            .getList(".", CategoryDto.class);
 
     Assertions.assertEquals(demo.title, actual.get(0).title);
   }
@@ -104,7 +105,7 @@ public class CategoryResourceTest {
   public void testSearch_whenQueryProvided_thenFilterNotForColor() {
 
     Mockito.when(categoryRepository.findAllWithLimit(5)).thenReturn(Collections.emptyList());
-    List<Category> actual =
+    List<CategoryDto> actual =
         given()
             .when()
             .get("/categories/search?query=00CEC8")
@@ -114,7 +115,7 @@ public class CategoryResourceTest {
             .extract()
             .body()
             .jsonPath()
-            .getList(".", Category.class);
+            .getList(".", CategoryDto.class);
 
     Assertions.assertSame(0, actual.size());
   }

@@ -4,6 +4,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
+import de.thi.mynd.topic.dto.CategoryDto;
 import de.thi.mynd.topic.entity.Category;
 import de.thi.mynd.topic.repository.CategoryRepository;
 import io.quarkus.test.InjectMock;
@@ -29,7 +30,7 @@ class CategoryServiceImplTest {
     when(categoryRepository.findAllWithLimit(5)).thenReturn(List.of(cat));
 
     // Act
-    List<Category> results = categoryService.searchMax5(null);
+    List<CategoryDto> results = categoryService.searchMax5(null);
 
     // Assert
     Assertions.assertEquals(1, results.size());
@@ -70,7 +71,7 @@ class CategoryServiceImplTest {
         .thenReturn(List.of(new Category(), new Category()));
 
     // Act
-    List<Category> results = categoryService.findByAssociatedEntities(requests);
+    List<CategoryDto> results = categoryService.findByAssociatedEntities(requests);
 
     // Assert
     Assertions.assertEquals(2, results.size());
