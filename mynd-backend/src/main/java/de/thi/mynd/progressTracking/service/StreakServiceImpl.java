@@ -93,6 +93,7 @@ public final class StreakServiceImpl implements StreakService {
     }
 
     @Override
+    @Transactional
     public StreakPreferenceDto getOrCreateStreakPreferenceForCurrentUser() {
         CreatorIdKey id = new CreatorIdKey();
         id.creatorId = identity.getPrincipal().getName();
@@ -171,7 +172,7 @@ public final class StreakServiceImpl implements StreakService {
         }
     }
 
-    @Transactional
+
     private StreakPreference createStreakPreferenceForCurrentUser() {
         StreakPreference preference = new StreakPreference();
         preference.creatorId = identity.getPrincipal().getName();
