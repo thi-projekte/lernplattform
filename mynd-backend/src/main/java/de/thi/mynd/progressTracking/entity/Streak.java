@@ -4,6 +4,7 @@ import de.thi.mynd.common.entity.BaseEntityWithId;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,5 +29,5 @@ public class Streak extends BaseEntityWithId {
             name = "join_streak_streak_continuation",
             joinColumns = @JoinColumn(name = "streak_id"),
             inverseJoinColumns = @JoinColumn(name = "streak_continuation_id"))
-    public List<StreakContinuation> continuations;
+    public List<StreakContinuation> continuations = new ArrayList<>();
 }
