@@ -1,6 +1,6 @@
 package de.thi.mynd.topic.rest;
 
-import de.thi.mynd.topic.entity.Category;
+import de.thi.mynd.topic.dto.CategoryDto;
 import de.thi.mynd.topic.service.CategoryService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -34,7 +34,7 @@ public final class CategoryResource {
       description = "The search string that is used to find specific categories",
       required = true,
       example = "Tech")
-  public List<Category> searchCategories(@RestQuery String query) {
+  public List<CategoryDto> searchCategories(@RestQuery String query) {
 
     return categoryService.searchMax5(query);
   }
