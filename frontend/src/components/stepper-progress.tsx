@@ -18,7 +18,13 @@ interface StepperProgressProps {
   lastStepLabel?: string;
 }
 
-const StepperProgress = ({ steps, onComplete, onBack, isLoading, lastStepLabel }: StepperProgressProps) => {
+const StepperProgress = ({
+  steps,
+  onComplete,
+  onBack,
+  isLoading,
+  lastStepLabel,
+}: StepperProgressProps) => {
   const [active, setActive] = useState(0);
   const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -50,7 +56,12 @@ const StepperProgress = ({ steps, onComplete, onBack, isLoading, lastStepLabel }
         ))}
       </Stepper>
       <Group justify="space-between" mt="xl">
-        <Button variant="default" onClick={active === 0 ? onBack : prevStep} disabled={active === 0 ? !onBack : false} loading={isLoading && active === 0}>
+        <Button
+          variant="default"
+          onClick={active === 0 ? onBack : prevStep}
+          disabled={active === 0 ? !onBack : false}
+          loading={isLoading && active === 0}
+        >
           {t('common.back')}
         </Button>
         <Button
