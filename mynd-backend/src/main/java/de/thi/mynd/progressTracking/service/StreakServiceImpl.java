@@ -160,8 +160,7 @@ public final class StreakServiceImpl implements StreakService {
             }
             case WEEKLY -> {
                 LocalDate startOfThisWeek = today.with(DayOfWeek.MONDAY);
-                LocalDate startOfLastWeek = startOfThisWeek.minusWeeks(1);
-                return !lastActivity.isBefore(startOfLastWeek);
+                return !lastActivity.isBefore(startOfThisWeek);
             }
             case MONTHLY -> {
                 YearMonth thisMonth = YearMonth.from(today);
