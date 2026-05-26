@@ -13,7 +13,6 @@ import de.thi.mynd.topic.request.CategoryRequest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-
 import java.util.*;
 
 @ApplicationScoped
@@ -48,7 +47,8 @@ public final class CategoryServiceImpl implements CategoryService {
   @Transactional
   public void createCategory(CategoryRequest request) {
     if (categoryRepository.existsByTitle(request.title)) {
-      throw new CategoryAlreadyExistsException("Category with title '" + request.title + "' already exists");
+      throw new CategoryAlreadyExistsException(
+          "Category with title '" + request.title + "' already exists");
     }
 
     Category category = new Category();
@@ -60,8 +60,13 @@ public final class CategoryServiceImpl implements CategoryService {
     if (request.parentId == null) {
       category.path = category.id.toString().replace("-", "");
     } else {
-      Category parent = categoryRepository.findByIdOptional(request.parentId)
-              .orElseThrow(() -> new CategoryNotFoundException("Parent category not found: " + request.parentId));
+      Category parent =
+          categoryRepository
+              .findByIdOptional(request.parentId)
+              .orElseThrow(
+                  () ->
+                      new CategoryNotFoundException(
+                          "Parent category not found: " + request.parentId));
       category.path = parent.path + "." + category.id.toString().replace("-", "");
     }
     categoryRepository.persistAndFlush(category);
@@ -70,11 +75,14 @@ public final class CategoryServiceImpl implements CategoryService {
   @Override
   @Transactional
   public void updateCategory(UUID categoryId, CategoryRequest request) {
-    Category category = categoryRepository.findByIdOptional(categoryId)
+    Category category =
+        categoryRepository
+            .findByIdOptional(categoryId)
             .orElseThrow(() -> new CategoryNotFoundException("Category not found: " + categoryId));
 
     if (!category.title.equals(request.title) && categoryRepository.existsByTitle(request.title)) {
-      throw new CategoryAlreadyExistsException("Category with title '" + request.title + "' already exists");
+      throw new CategoryAlreadyExistsException(
+          "Category with title '" + request.title + "' already exists");
     }
 
     category.title = request.title;
@@ -83,8 +91,13 @@ public final class CategoryServiceImpl implements CategoryService {
     if (request.parentId == null) {
       category.path = category.id.toString().replace("-", "");
     } else {
-      Category parent = categoryRepository.findByIdOptional(request.parentId)
-              .orElseThrow(() -> new CategoryNotFoundException("Parent category not found: " + request.parentId));
+      Category parent =
+          categoryRepository
+              .findByIdOptional(request.parentId)
+              .orElseThrow(
+                  () ->
+                      new CategoryNotFoundException(
+                          "Parent category not found: " + request.parentId));
 
       if (parent.path.startsWith(category.path)) {
         throw new CategoryMoveException("Cannot move a category into one of its own descendants");

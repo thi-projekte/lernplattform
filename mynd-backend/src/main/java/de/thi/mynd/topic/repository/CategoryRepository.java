@@ -5,15 +5,13 @@ import de.thi.mynd.topic.entity.Category;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
-
 import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
 public final class CategoryRepository extends MyndBaseRepository<Category> {
 
-  @Inject
-  EntityManager em;
+  @Inject EntityManager em;
 
   public Optional<Category> findByTitleOptional(String title) {
     return find("title = ?1", title).singleResultOptional();
@@ -32,14 +30,15 @@ public final class CategoryRepository extends MyndBaseRepository<Category> {
   }
 
   public void updateDescendantPaths(String oldPath, String newPath) {
-    em.createNativeQuery("""
+    em.createNativeQuery(
+            """
             UPDATE category
             SET path = CAST(:newPath AS ltree) || subpath(path, nlevel(CAST(:oldPath AS ltree)))
             WHERE path <@ CAST(:oldPath AS ltree)
             AND path != CAST(:oldPath AS ltree)
             """)
-            .setParameter("oldPath", oldPath)
-            .setParameter("newPath", newPath)
-            .executeUpdate();
+        .setParameter("oldPath", oldPath)
+        .setParameter("newPath", newPath)
+        .executeUpdate();
   }
 }
