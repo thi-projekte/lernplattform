@@ -227,6 +227,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
               color="gray"
               size="xs"
               fullWidth
+              className="hide-node-btn"
               onClick={(event) => {
                 event.stopPropagation();
                 data.onHide?.();
