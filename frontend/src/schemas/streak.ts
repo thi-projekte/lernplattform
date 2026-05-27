@@ -10,6 +10,7 @@ export const StreakDtoSchema = z.object({
   endedAt: z.string().nullable(),
   type: StreakTypeSchema,
   lastContinuedAt: z.string().nullable(),
+  streakCount: z.number(),
   isActive: z.boolean(),
   isSatisfied: z.boolean(),
 });
