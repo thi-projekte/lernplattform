@@ -244,6 +244,7 @@ const AdminCategoriesPage = () => {
               label={t('categoryAdmin.fields.color')}
               {...form.getInputProps('color')}
               format="hex"
+              withEyeDropper={false}
             />
             {!editingId && (
               <Select
