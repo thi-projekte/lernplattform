@@ -16,7 +16,7 @@ import {
 import { useDisclosure } from '@mantine/hooks';
 import { IconChevronLeft, IconFlame, IconUser } from '@tabler/icons-react';
 import { useQueryProfilePicture } from '../api/profile-picture.ts';
-import { useFetchStreaks } from '../api/streak.ts';
+import { useFetchStreakPreferences, useFetchStreaks } from '../api/streak.ts';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import ColorSchemeToggle from './color-scheme-toggle.tsx';
@@ -32,14 +32,13 @@ const StreakBadge = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: streaks } = useFetchStreaks();
-  const activeStreak = streaks?.find((s) => s.isActive);
+  const { data: preferences } = useFetchStreakPreferences();
 
-  if (!activeStreak) return null;
-
-  const days = Math.max(
-    1,
-    Math.round((new Date().getTime() - new Date(activeStreak.startedAt).getTime()) / 86400000)
+  const preferredStreak = streaks?.find(
+    (s) => s.isActive && s.type === (preferences?.type ?? 'DAILY')
   );
+
+  if (!preferredStreak) return null;
 
   return (
     <Tooltip label={t('streak.currentStreak')} withArrow>
@@ -49,7 +48,7 @@ const StreakBadge = () => {
             <IconFlame size={16} />
           </ThemeIcon>
           <Text size="md" fw={700} c="orange">
-            {days}
+            {preferredStreak.streakCount}
           </Text>
         </Group>
       </UnstyledButton>
