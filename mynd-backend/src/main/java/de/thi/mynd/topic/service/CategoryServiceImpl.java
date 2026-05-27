@@ -117,9 +117,9 @@ public final class CategoryServiceImpl implements CategoryService {
   @Override
   public void deleteCategory(UUID categoryId) {
     Category category =
-            categoryRepository
-                    .findByIdOptional(categoryId)
-                    .orElseThrow(() -> new CategoryNotFoundException("Category not found: " + categoryId));
+        categoryRepository
+            .findByIdOptional(categoryId)
+            .orElseThrow(() -> new CategoryNotFoundException("Category not found: " + categoryId));
 
     category.topics.clear();
     categoryRepository.delete(category);

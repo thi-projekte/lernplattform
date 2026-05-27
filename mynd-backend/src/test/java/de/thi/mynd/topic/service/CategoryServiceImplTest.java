@@ -430,4 +430,17 @@ class CategoryServiceImplTest {
 
     verify(categoryRepository, never()).updateDescendantPaths(any(), any());
   }
+
+  @Test
+  void deleteCategory_ShouldThrowException_WhenCategoryDoesNotExist() {
+    // Arrange
+    UUID nonExistentId = UUID.randomUUID();
+
+    // Act & Assert
+    CategoryNotFoundException exception =
+        assertThrows(
+            CategoryNotFoundException.class, () -> categoryService.deleteCategory(nonExistentId));
+
+    assertTrue(exception.getMessage().contains("Category not found"));
+  }
 }
