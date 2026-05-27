@@ -21,6 +21,7 @@ public final class StreakDtoMapper extends AbstractMappingProcessor<Streak, Stre
         .endedAt(entity.endedAt)
         .type(entity.type)
         .lastContinuedAt(entity.lastContinuedAt)
+        .streakCount(entity.streakCount)
         .isActive(streakService.isStreakActive(entity))
         .isSatisfied(streakService.isStreakSatisfied(entity))
         .build();
