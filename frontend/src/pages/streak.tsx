@@ -6,7 +6,6 @@ import { useFetchStreaks } from '../api/streak.ts';
 import LayoutLoader from '../components/layout-loader.tsx';
 import type { StreakType } from '../schemas/streak.ts';
 
-
 const StreakPage = () => {
   const { t } = useTranslation();
   const { data: streaks, isLoading } = useFetchStreaks();
