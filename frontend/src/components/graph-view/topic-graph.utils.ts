@@ -224,7 +224,7 @@ export const buildTopicAssociationsGraph = (
       target: nodeId,
       sourceHandle: 'bottom',
       targetHandle: 'top',
-      style: { stroke: '#adb5bd', strokeWidth: 0.8 },
+      style: { stroke: '#adb5bd', strokeWidth: 1.2 },
     });
   });
 
@@ -436,7 +436,7 @@ export const buildPersonalTopicsGraph = (topics: GraphTopicDto[], currentUsernam
         type: 'straight',
         style: {
           stroke: '#7a90a8',
-          strokeWidth: 0.7,
+          strokeWidth: 1.2,
         },
       });
     });
