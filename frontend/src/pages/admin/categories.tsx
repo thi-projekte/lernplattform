@@ -95,13 +95,25 @@ const CategoryRow = ({ node, depth, onEdit, onDelete }: CategoryRowProps) => {
           <ActionIcon variant="subtle" color="gray" size="sm" onClick={() => onEdit(node)}>
             <IconEdit size={14} />
           </ActionIcon>
-          <ActionIcon variant="subtle" color="gray" size="sm" className="delete-hover-red" onClick={() => onDelete(node.id)}>
+          <ActionIcon
+            variant="subtle"
+            color="gray"
+            size="sm"
+            className="delete-hover-red"
+            onClick={() => onDelete(node.id)}
+          >
             <IconTrash size={14} />
           </ActionIcon>
         </Group>
       </Group>
       {node.children.map((child) => (
-        <CategoryRow key={child.id} node={child} depth={depth + 1} onEdit={onEdit} onDelete={onDelete} />
+        <CategoryRow
+          key={child.id}
+          node={child}
+          depth={depth + 1}
+          onEdit={onEdit}
+          onDelete={onDelete}
+        />
       ))}
     </>
   );
@@ -225,7 +237,13 @@ const AdminCategoriesPage = () => {
               </Text>
             </Group>
             {tree.map((node) => (
-              <CategoryRow key={node.id} node={node} depth={0} onEdit={openEdit} onDelete={handleDelete} />
+              <CategoryRow
+                key={node.id}
+                node={node}
+                depth={0}
+                onEdit={openEdit}
+                onDelete={handleDelete}
+              />
             ))}
           </Paper>
         )}
