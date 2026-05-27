@@ -115,6 +115,7 @@ public final class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
+  @Transactional
   public void deleteCategory(UUID categoryId) {
     Category category =
         categoryRepository
