@@ -223,6 +223,8 @@
     "createSuccess": "Kategorie erfolgreich erstellt",
     "updateSuccess": "Kategorie erfolgreich aktualisiert",
     "saveError": "Kategorie konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "deleteSuccess": "Kategorie erfolgreich gelöscht",
+    "deleteError": "Kategorie konnte nicht gelöscht werden. Bitte versuche es erneut.",
     "fields": {
       "title": "Titel",
       "color": "Farbe",

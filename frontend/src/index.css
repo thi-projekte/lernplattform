@@ -17,6 +17,11 @@
   --panel-right-bg: #ffffff;
 }
 
+.delete-hover-red:hover {
+  --ai-hover: var(--mantine-color-red-light) !important;
+  --ai-hover-color: var(--mantine-color-red-light-color) !important;
+}
+
 [data-mantine-color-scheme='dark'] .react-flow__node {
   --mantine-color-text: #1c1d21;
   color: #1c1d21;

@@ -223,6 +223,8 @@
     "createSuccess": "Category created successfully",
     "updateSuccess": "Category updated successfully",
     "saveError": "Failed to save category. Please try again.",
+    "deleteSuccess": "Category deleted successfully",
+    "deleteError": "Failed to delete category. Please try again.",
     "fields": {
       "title": "Title",
       "color": "Color",

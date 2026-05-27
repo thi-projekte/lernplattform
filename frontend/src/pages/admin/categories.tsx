@@ -17,11 +17,12 @@ import {
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import { IconEdit, IconPlus, IconTree } from '@tabler/icons-react';
+import { IconEdit, IconPlus, IconTrash, IconTree } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   useCreateCategoryMutation,
+  useDeleteCategoryMutation,
   useQueryCategoryTree,
   useUpdateCategoryMutation,
 } from '../../api/category.ts';
@@ -40,6 +41,8 @@ interface FlatCategory {
   depth: number;
 }
 
+const toHex = (color: string) => (color.startsWith('#') ? color : `#${color}`);
+
 const flattenTree = (nodes: CategoryTreeDto[], depth = 0): FlatCategory[] => {
   return nodes.flatMap((node) => [
     { id: node.id, title: node.title, depth },
@@ -51,9 +54,10 @@ interface CategoryRowProps {
   node: CategoryTreeDto;
   depth: number;
   onEdit: (node: CategoryTreeDto) => void;
+  onDelete: (id: string) => void;
 }
 
-const CategoryRow = ({ node, depth, onEdit }: CategoryRowProps) => {
+const CategoryRow = ({ node, depth, onEdit, onDelete }: CategoryRowProps) => {
   return (
     <>
       <Group
@@ -73,7 +77,7 @@ const CategoryRow = ({ node, depth, onEdit }: CategoryRowProps) => {
                 width: 14,
                 height: 14,
                 borderRadius: 3,
-                background: node.color,
+                background: toHex(node.color),
                 flexShrink: 0,
               }}
             />
@@ -82,17 +86,22 @@ const CategoryRow = ({ node, depth, onEdit }: CategoryRowProps) => {
             {node.title}
           </Text>
           {node.color && (
-            <Badge size="xs" variant="outline" color="gray">
+            <Badge size="xs" color={toHex(node.color)}>
               {node.color}
             </Badge>
           )}
         </Group>
-        <ActionIcon variant="subtle" color="gray" size="sm" onClick={() => onEdit(node)}>
-          <IconEdit size={14} />
-        </ActionIcon>
+        <Group gap={4} wrap="nowrap">
+          <ActionIcon variant="subtle" color="gray" size="sm" onClick={() => onEdit(node)}>
+            <IconEdit size={14} />
+          </ActionIcon>
+          <ActionIcon variant="subtle" color="gray" size="sm" className="delete-hover-red" onClick={() => onDelete(node.id)}>
+            <IconTrash size={14} />
+          </ActionIcon>
+        </Group>
       </Group>
       {node.children.map((child) => (
-        <CategoryRow key={child.id} node={child} depth={depth + 1} onEdit={onEdit} />
+        <CategoryRow key={child.id} node={child} depth={depth + 1} onEdit={onEdit} onDelete={onDelete} />
       ))}
     </>
   );
@@ -106,6 +115,7 @@ const AdminCategoriesPage = () => {
   const { data: tree, isLoading } = useQueryCategoryTree();
   const { mutate: create, isPending: isCreating } = useCreateCategoryMutation();
   const { mutate: update, isPending: isUpdating } = useUpdateCategoryMutation();
+  const { mutate: deleteCategory } = useDeleteCategoryMutation();
 
   const flat = tree ? flattenTree(tree) : [];
 
@@ -121,6 +131,25 @@ const AdminCategoriesPage = () => {
     setEditingId(null);
     form.setValues({ title: '', color: '#6366f1', parentId: null });
     open();
+  };
+
+  const handleDelete = (id: string) => {
+    deleteCategory(id, {
+      onSuccess: () => {
+        notifications.show({
+          color: 'green',
+          title: t('common.success'),
+          message: t('categoryAdmin.deleteSuccess'),
+        });
+      },
+      onError: () => {
+        notifications.show({
+          color: 'red',
+          title: t('common.serverError'),
+          message: t('categoryAdmin.deleteError'),
+        });
+      },
+    });
   };
 
   const openEdit = (node: CategoryTreeDto) => {
@@ -196,7 +225,7 @@ const AdminCategoriesPage = () => {
               </Text>
             </Group>
             {tree.map((node) => (
-              <CategoryRow key={node.id} node={node} depth={0} onEdit={openEdit} />
+              <CategoryRow key={node.id} node={node} depth={0} onEdit={openEdit} onDelete={handleDelete} />
             ))}
           </Paper>
         )}

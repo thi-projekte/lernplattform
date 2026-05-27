@@ -36,3 +36,14 @@ export const useUpdateCategoryMutation = () => {
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ['categoryTree'] }),
   });
 };
+
+export const useDeleteCategoryMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) =>
+      apiClient.delete(`/categories/${id}`, {
+        validateStatus: (status) => status <= 204,
+      }),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['categoryTree'] }),
+  });
+};
