@@ -114,8 +114,8 @@ public final class CategoryServiceImpl implements CategoryService {
     categoryRepository.flush();
   }
 
-  @Override
   @Transactional
+  @Override
   public void deleteCategory(UUID categoryId) {
     Category category =
         categoryRepository
