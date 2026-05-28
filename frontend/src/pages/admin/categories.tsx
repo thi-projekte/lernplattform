@@ -64,7 +64,14 @@ interface CategoryRowProps {
   onDelete: (id: string) => void;
 }
 
-const CategoryRow = ({ node, depth, parentId, parentTitle, onEdit, onDelete }: CategoryRowProps) => {
+const CategoryRow = ({
+  node,
+  depth,
+  parentId,
+  parentTitle,
+  onEdit,
+  onDelete,
+}: CategoryRowProps) => {
   return (
     <>
       <Group
@@ -106,7 +113,12 @@ const CategoryRow = ({ node, depth, parentId, parentTitle, onEdit, onDelete }: C
           )}
         </Group>
         <Group gap={4} wrap="nowrap">
-          <ActionIcon variant="subtle" color="gray" size="sm" onClick={() => onEdit(node, parentId)}>
+          <ActionIcon
+            variant="subtle"
+            color="gray"
+            size="sm"
+            onClick={() => onEdit(node, parentId)}
+          >
             <IconEdit size={14} />
           </ActionIcon>
           <ActionIcon
