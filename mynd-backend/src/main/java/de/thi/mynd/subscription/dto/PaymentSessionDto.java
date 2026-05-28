@@ -5,5 +5,5 @@ import lombok.Builder;
 @Builder
 public final class PaymentSessionDto {
 
-    public String url;
+  public String url;
 }

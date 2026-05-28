@@ -5,9 +5,9 @@ import de.thi.mynd.subscription.entity.SubscriptionStatus;
 
 public interface SubscriptionService {
 
-    boolean canUserUpgradeTo(SubscriptionStatus subscriptionStatus);
+  boolean canUserUpgradeTo(SubscriptionStatus subscriptionStatus);
 
-    Subscription getSubscriptionForCurrentUser();
+  Subscription getSubscriptionForCurrentUser();
 
-    Subscription createDefaultSubscriptionForCurrentUser();
+  Subscription createDefaultSubscriptionForCurrentUser();
 }

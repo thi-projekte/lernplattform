@@ -14,32 +14,32 @@ import jakarta.inject.Inject;
 @ApplicationScoped
 public final class PaymentServiceImpl implements PaymentService {
 
-    @Inject SubscriptionService subscriptionService;
+  @Inject SubscriptionService subscriptionService;
 
-    @Inject StripeService stripeService;
+  @Inject StripeService stripeService;
 
-    @Inject
-    SecurityIdentity identity;
+  @Inject SecurityIdentity identity;
 
-    @Inject
-    MappingRegistry mappingRegistry;
+  @Inject MappingRegistry mappingRegistry;
 
-    @Override
-    public PaymentSessionDto getCheckoutSessionForSubscription(SubscriptionStatus subscriptionStatus) {
-        String creatorId = identity.getPrincipal().getName();
+  @Override
+  public PaymentSessionDto getCheckoutSessionForSubscription(
+      SubscriptionStatus subscriptionStatus) {
+    String creatorId = identity.getPrincipal().getName();
 
-        if (!subscriptionService.canUserUpgradeTo(subscriptionStatus)) {
-            throw new CannotUpgradeSubscriptionException("You cannot upgrade your subscription to that status");
-        }
-
-        Subscription subscription = subscriptionService.getSubscriptionForCurrentUser();
-        if (subscription.subscriptionStatus != SubscriptionStatus.FREE) {
-            stripeService.cancelSubscriptionImmediately(subscription.stripeSubscriptionId);
-        }
-
-        Price price = stripeService.obtainPriceForSubscriptionStatus(subscriptionStatus);
-        Session session = stripeService.createCheckoutSessionForSubscriptionPrice(price, creatorId);
-
-        return mappingRegistry.map(session, PaymentSessionDto.class);
+    if (!subscriptionService.canUserUpgradeTo(subscriptionStatus)) {
+      throw new CannotUpgradeSubscriptionException(
+          "You cannot upgrade your subscription to that status");
     }
+
+    Subscription subscription = subscriptionService.getSubscriptionForCurrentUser();
+    if (subscription.subscriptionStatus != SubscriptionStatus.FREE) {
+      stripeService.cancelSubscriptionImmediately(subscription.stripeSubscriptionId);
+    }
+
+    Price price = stripeService.obtainPriceForSubscriptionStatus(subscriptionStatus);
+    Session session = stripeService.createCheckoutSessionForSubscriptionPrice(price, creatorId);
+
+    return mappingRegistry.map(session, PaymentSessionDto.class);
+  }
 }

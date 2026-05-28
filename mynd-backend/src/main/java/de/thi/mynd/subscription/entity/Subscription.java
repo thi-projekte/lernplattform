@@ -7,13 +7,11 @@ import jakarta.persistence.*;
 @Table(name = "subscription")
 public class Subscription extends BaseEntityWithCreatorIdPk {
 
-    @Column
-    public String stripeCustomerId;
+  @Column public String stripeCustomerId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    public SubscriptionStatus subscriptionStatus;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  public SubscriptionStatus subscriptionStatus;
 
-    @Column
-    public String stripeSubscriptionId;
+  @Column public String stripeSubscriptionId;
 }

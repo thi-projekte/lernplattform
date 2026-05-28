@@ -13,42 +13,44 @@ import jakarta.transaction.Transactional;
 @ApplicationScoped
 public final class SubscriptionServiceImpl implements SubscriptionService {
 
-    @Inject
-    SecurityIdentity identity;
+  @Inject SecurityIdentity identity;
 
-    @Inject
-    SubscriptionRepository subscriptionRepository;
+  @Inject SubscriptionRepository subscriptionRepository;
 
-    @Override
-    public boolean canUserUpgradeTo(SubscriptionStatus subscriptionStatus) {
-        Subscription subscription = getSubscriptionForCurrentUser();
-        if (subscription.subscriptionStatus == SubscriptionStatus.FREE && subscriptionStatus != SubscriptionStatus.FREE) {
-            return true;
-        }
-
-        return subscription.subscriptionStatus == SubscriptionStatus.PLUS && subscriptionStatus == SubscriptionStatus.PRO;
+  @Override
+  public boolean canUserUpgradeTo(SubscriptionStatus subscriptionStatus) {
+    Subscription subscription = getSubscriptionForCurrentUser();
+    if (subscription.subscriptionStatus == SubscriptionStatus.FREE
+        && subscriptionStatus != SubscriptionStatus.FREE) {
+      return true;
     }
 
-    @Override
-    public Subscription getSubscriptionForCurrentUser() {
-        CreatorIdKey id = new CreatorIdKey();
-        id.creatorId = identity.getPrincipal().getName();
+    return subscription.subscriptionStatus == SubscriptionStatus.PLUS
+        && subscriptionStatus == SubscriptionStatus.PRO;
+  }
 
-        return subscriptionRepository.findByIdOptional(id).orElseGet(this::createDefaultSubscriptionForCurrentUser);
-    }
+  @Override
+  public Subscription getSubscriptionForCurrentUser() {
+    CreatorIdKey id = new CreatorIdKey();
+    id.creatorId = identity.getPrincipal().getName();
 
-    @Override
-    @Transactional
-    public Subscription createDefaultSubscriptionForCurrentUser() {
-        CreatorIdKey id = new CreatorIdKey();
-        id.creatorId = identity.getPrincipal().getName();
-        Subscription subscription = new Subscription();
-        subscription.id = id;
-        subscription.subscriptionStatus = SubscriptionStatus.FREE;
+    return subscriptionRepository
+        .findByIdOptional(id)
+        .orElseGet(this::createDefaultSubscriptionForCurrentUser);
+  }
 
-        subscriptionRepository.persistAndFlush(subscription);
+  @Override
+  @Transactional
+  public Subscription createDefaultSubscriptionForCurrentUser() {
+    CreatorIdKey id = new CreatorIdKey();
+    id.creatorId = identity.getPrincipal().getName();
+    Subscription subscription = new Subscription();
+    subscription.id = id;
+    subscription.subscriptionStatus = SubscriptionStatus.FREE;
 
-        Log.infof("Successfully created default subscription for user %s", id.creatorId);
-        return subscription;
-    }
+    subscriptionRepository.persistAndFlush(subscription);
+
+    Log.infof("Successfully created default subscription for user %s", id.creatorId);
+    return subscription;
+  }
 }

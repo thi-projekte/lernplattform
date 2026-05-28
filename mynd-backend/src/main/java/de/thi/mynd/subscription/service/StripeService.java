@@ -7,12 +7,12 @@ import io.quarkus.cache.CacheResult;
 
 public interface StripeService {
 
-    @CacheResult(cacheName = "stripe-prices")
-    Price obtainPriceForSubscriptionStatus(SubscriptionStatus subscriptionStatus);
+  @CacheResult(cacheName = "stripe-prices")
+  Price obtainPriceForSubscriptionStatus(SubscriptionStatus subscriptionStatus);
 
-    Session createCheckoutSessionForSubscriptionPrice(Price price, String userId);
+  Session createCheckoutSessionForSubscriptionPrice(Price price, String userId);
 
-    void cancelSubscriptionImmediately(String subscriptionId);
+  void cancelSubscriptionImmediately(String subscriptionId);
 
-    void cancelSubscriptionAtPeriodEnd(String subscriptionId);
+  void cancelSubscriptionAtPeriodEnd(String subscriptionId);
 }

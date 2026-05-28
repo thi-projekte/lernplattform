@@ -6,5 +6,5 @@ import de.thi.mynd.subscription.entity.Subscription;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public final class SubscriptionRepository extends MyndBaseCustomIdRepository<Subscription, CreatorIdKey> {
-}
+public final class SubscriptionRepository
+    extends MyndBaseCustomIdRepository<Subscription, CreatorIdKey> {}

@@ -1,6 +1,5 @@
 package de.thi.mynd.subscription.rest;
 
-import com.stripe.model.checkout.Session;
 import de.thi.mynd.subscription.dto.PaymentSessionDto;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.service.PaymentService;
@@ -9,12 +8,9 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.FormParam;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
-
-import java.util.Map;
 
 @Path("/payments")
 @RolesAllowed("authorizedUser")
@@ -22,16 +18,15 @@ import java.util.Map;
 @SecurityRequirement(name = "keycloak")
 public final class PaymentResource {
 
-    @Inject
-    PaymentService paymentService;
+  @Inject PaymentService paymentService;
 
-    @POST
-    @Path("/create-checkout-session")
-    @Operation(
-            summary = "Creates a new checkout session",
-            description =
-                    "Creates a new checkout session for one of our subscriptions.")
-    public PaymentSessionDto createCheckoutSessionForSubscription(@FormParam("subscriptionStatus") SubscriptionStatus subscriptionStatus) {
-        return paymentService.getCheckoutSessionForSubscription(subscriptionStatus);
-    }
+  @POST
+  @Path("/create-checkout-session")
+  @Operation(
+      summary = "Creates a new checkout session",
+      description = "Creates a new checkout session for one of our subscriptions.")
+  public PaymentSessionDto createCheckoutSessionForSubscription(
+      @FormParam("subscriptionStatus") SubscriptionStatus subscriptionStatus) {
+    return paymentService.getCheckoutSessionForSubscription(subscriptionStatus);
+  }
 }
