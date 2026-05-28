@@ -1,0 +1,38 @@
+package de.thi.mynd.subscription.service;
+
+import com.stripe.model.Price;
+import com.stripe.model.checkout.Session;
+import de.thi.mynd.subscription.entity.Subscription;
+import de.thi.mynd.subscription.entity.SubscriptionStatus;
+import de.thi.mynd.subscription.exception.CannotUpgradeSubscriptionException;
+import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
+
+@ApplicationScoped
+public final class PaymentServiceImpl implements PaymentService {
+
+    @Inject SubscriptionService subscriptionService;
+
+    @Inject StripeService stripeService;
+
+    @Inject
+    SecurityIdentity identity;
+
+    @Override
+    public Session getCheckoutSessionForSubscription(SubscriptionStatus subscriptionStatus) {
+        String creatorId = identity.getPrincipal().getName();
+
+        if (!subscriptionService.canUserUpgradeTo(subscriptionStatus)) {
+            throw new CannotUpgradeSubscriptionException("You cannot upgrade your subscription to that status");
+        }
+
+        Subscription subscription = subscriptionService.getSubscriptionForCurrentUser();
+        if (subscription.subscriptionStatus != SubscriptionStatus.FREE) {
+            stripeService.cancelSubscriptionImmediately(subscription.stripeSubscriptionId);
+        }
+
+        Price price = stripeService.obtainPriceForSubscriptionStatus(subscriptionStatus);
+        return stripeService.createCheckoutSessionForSubscriptionPrice(price, creatorId);
+    }
+}
