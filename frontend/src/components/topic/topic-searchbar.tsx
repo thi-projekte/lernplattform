@@ -50,6 +50,9 @@ const TopicSearchbar = ({ onAdd, existingIds = [], onSuggestionsChange }: TopicS
       data={autocompleteData}
       rightSection={isLoading || isFetching ? <Loader size="xs" /> : null}
       rightSectionPointerEvents="all"
+      maxDropdownHeight={160}
+      limit={4}
+      comboboxProps={{ withinPortal: true, zIndex: 9999 }}
     />
   );
 };
