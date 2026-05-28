@@ -2,6 +2,8 @@ package de.thi.mynd.subscription.service;
 
 import com.stripe.model.Price;
 import com.stripe.model.checkout.Session;
+import de.thi.mynd.common.processor.MappingRegistry;
+import de.thi.mynd.subscription.dto.PaymentSessionDto;
 import de.thi.mynd.subscription.entity.Subscription;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.exception.CannotUpgradeSubscriptionException;
@@ -19,8 +21,11 @@ public final class PaymentServiceImpl implements PaymentService {
     @Inject
     SecurityIdentity identity;
 
+    @Inject
+    MappingRegistry mappingRegistry;
+
     @Override
-    public Session getCheckoutSessionForSubscription(SubscriptionStatus subscriptionStatus) {
+    public PaymentSessionDto getCheckoutSessionForSubscription(SubscriptionStatus subscriptionStatus) {
         String creatorId = identity.getPrincipal().getName();
 
         if (!subscriptionService.canUserUpgradeTo(subscriptionStatus)) {
@@ -33,6 +38,8 @@ public final class PaymentServiceImpl implements PaymentService {
         }
 
         Price price = stripeService.obtainPriceForSubscriptionStatus(subscriptionStatus);
-        return stripeService.createCheckoutSessionForSubscriptionPrice(price, creatorId);
+        Session session = stripeService.createCheckoutSessionForSubscriptionPrice(price, creatorId);
+
+        return mappingRegistry.map(session, PaymentSessionDto.class);
     }
 }
