@@ -39,25 +39,32 @@ interface FlatCategory {
   id: string;
   title: string;
   depth: number;
+  parentId: string | null;
 }
 
 const toHex = (color: string) => (color.startsWith('#') ? color : `#${color}`);
 
-const flattenTree = (nodes: CategoryTreeDto[], depth = 0): FlatCategory[] => {
+const flattenTree = (
+  nodes: CategoryTreeDto[],
+  depth = 0,
+  parentId: string | null = null
+): FlatCategory[] => {
   return nodes.flatMap((node) => [
-    { id: node.id, title: node.title, depth },
-    ...flattenTree(node.children, depth + 1),
+    { id: node.id, title: node.title, depth, parentId },
+    ...flattenTree(node.children, depth + 1, node.id),
   ]);
 };
 
 interface CategoryRowProps {
   node: CategoryTreeDto;
   depth: number;
-  onEdit: (node: CategoryTreeDto) => void;
+  parentId: string | null;
+  parentTitle?: string;
+  onEdit: (node: CategoryTreeDto, parentId: string | null) => void;
   onDelete: (id: string) => void;
 }
 
-const CategoryRow = ({ node, depth, onEdit, onDelete }: CategoryRowProps) => {
+const CategoryRow = ({ node, depth, parentId, parentTitle, onEdit, onDelete }: CategoryRowProps) => {
   return (
     <>
       <Group
@@ -70,7 +77,7 @@ const CategoryRow = ({ node, depth, onEdit, onDelete }: CategoryRowProps) => {
         justify="space-between"
         wrap="nowrap"
       >
-        <Group gap="sm" wrap="nowrap">
+        <Group gap="sm" wrap="nowrap" style={{ minWidth: 0 }}>
           {node.color && (
             <Box
               style={{
@@ -82,9 +89,16 @@ const CategoryRow = ({ node, depth, onEdit, onDelete }: CategoryRowProps) => {
               }}
             />
           )}
-          <Text size="sm" fw={depth === 0 ? 600 : 400}>
-            {node.title}
-          </Text>
+          <Stack gap={0} style={{ minWidth: 0 }}>
+            <Text size="sm" fw={depth === 0 ? 600 : 400}>
+              {node.title}
+            </Text>
+            {parentTitle && (
+              <Text size="xs" c="dimmed">
+                {parentTitle}
+              </Text>
+            )}
+          </Stack>
           {node.color && (
             <Badge size="xs" color={toHex(node.color)}>
               {node.color}
@@ -92,7 +106,7 @@ const CategoryRow = ({ node, depth, onEdit, onDelete }: CategoryRowProps) => {
           )}
         </Group>
         <Group gap={4} wrap="nowrap">
-          <ActionIcon variant="subtle" color="gray" size="sm" onClick={() => onEdit(node)}>
+          <ActionIcon variant="subtle" color="gray" size="sm" onClick={() => onEdit(node, parentId)}>
             <IconEdit size={14} />
           </ActionIcon>
           <ActionIcon
@@ -111,6 +125,8 @@ const CategoryRow = ({ node, depth, onEdit, onDelete }: CategoryRowProps) => {
           key={child.id}
           node={child}
           depth={depth + 1}
+          parentId={node.id}
+          parentTitle={node.title}
           onEdit={onEdit}
           onDelete={onDelete}
         />
@@ -164,9 +180,9 @@ const AdminCategoriesPage = () => {
     });
   };
 
-  const openEdit = (node: CategoryTreeDto) => {
+  const openEdit = (node: CategoryTreeDto, parentId: string | null) => {
     setEditingId(node.id);
-    form.setValues({ title: node.title, color: node.color ?? '#6366f1', parentId: null });
+    form.setValues({ title: node.title, color: node.color ?? '#6366f1', parentId });
     open();
   };
 
@@ -205,7 +221,7 @@ const AdminCategoriesPage = () => {
     .filter((c) => c.id !== editingId)
     .map((c) => ({
       value: c.id,
-      label: ' '.repeat(c.depth * 2) + c.title,
+      label: ' '.repeat(c.depth * 2) + c.title,
     }));
 
   return (
@@ -241,6 +257,7 @@ const AdminCategoriesPage = () => {
                 key={node.id}
                 node={node}
                 depth={0}
+                parentId={null}
                 onEdit={openEdit}
                 onDelete={handleDelete}
               />
@@ -264,16 +281,14 @@ const AdminCategoriesPage = () => {
               format="hex"
               withEyeDropper={false}
             />
-            {!editingId && (
-              <Select
-                label={t('categoryAdmin.fields.parentCategory')}
-                placeholder={t('categoryAdmin.fields.parentPlaceholder')}
-                data={parentOptions}
-                clearable
-                searchable
-                {...form.getInputProps('parentId')}
-              />
-            )}
+            <Select
+              label={t('categoryAdmin.fields.parentCategory')}
+              placeholder={t('categoryAdmin.fields.parentPlaceholder')}
+              data={parentOptions}
+              clearable
+              searchable
+              {...form.getInputProps('parentId')}
+            />
             <Group justify="flex-end" mt="xs">
               <Button variant="default" onClick={close}>
                 {t('common.cancel')}
