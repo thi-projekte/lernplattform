@@ -2,7 +2,11 @@ import { Badge, Group, Paper, Select, Stack, Text, ThemeIcon, Title } from '@man
 import { IconFlame } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { Layout } from '../components/layout.tsx';
-import { useFetchStreakPreferences, useFetchStreaks, useUpdateStreakPreferences } from '../api/streak.ts';
+import {
+  useFetchStreakPreferences,
+  useFetchStreaks,
+  useUpdateStreakPreferences,
+} from '../api/streak.ts';
 import LayoutLoader from '../components/layout-loader.tsx';
 import type { StreakType } from '../schemas/streak.ts';
 
