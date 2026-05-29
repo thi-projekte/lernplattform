@@ -33,12 +33,21 @@ public final class PaymentServiceImpl implements PaymentService {
     }
 
     Subscription subscription = subscriptionService.getSubscriptionForCurrentUser();
+
+    if (subscription.stripeCustomerId == null) {
+      subscription =
+          subscriptionService.updateCustomerId(
+              subscription, stripeService.createCustomer(creatorId).getId());
+    }
+
     if (subscription.subscriptionStatus != SubscriptionStatus.FREE) {
       stripeService.cancelSubscriptionImmediately(subscription.stripeSubscriptionId);
     }
 
     Price price = stripeService.obtainPriceForSubscriptionStatus(subscriptionStatus);
-    Session session = stripeService.createCheckoutSessionForSubscriptionPrice(price, creatorId);
+    Session session =
+        stripeService.createCheckoutSessionForSubscriptionPrice(
+            price, subscription.stripeCustomerId);
 
     return mappingRegistry.map(session, PaymentSessionDto.class);
   }

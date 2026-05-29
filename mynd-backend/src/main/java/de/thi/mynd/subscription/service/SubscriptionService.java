@@ -10,4 +10,6 @@ public interface SubscriptionService {
   Subscription getSubscriptionForCurrentUser();
 
   Subscription createDefaultSubscriptionForCurrentUser();
+
+  Subscription updateCustomerId(Subscription subscription, String customerId);
 }

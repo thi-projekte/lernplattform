@@ -53,4 +53,14 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     Log.infof("Successfully created default subscription for user %s", id.creatorId);
     return subscription;
   }
+
+  @Transactional
+  @Override
+  public Subscription updateCustomerId(Subscription subscription, String customerId) {
+    Subscription merged = subscriptionRepository.getEntityManager().merge(subscription);
+    merged.stripeCustomerId = customerId;
+    subscriptionRepository.persistAndFlush(merged);
+
+    return merged;
+  }
 }

@@ -14,8 +14,8 @@ import {
 import { IconCheck, IconCrown, IconRocket, IconStar } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { Layout } from '../components/layout.tsx';
-
-const CHECKOUT_URL = `${import.meta.env.VITE_MYND_BACKEND_URI}/payments/create-checkout-session`;
+import { useCreateCheckoutSessionForSubscription } from '../api/payment.ts';
+import { type SubscriptionStatus, SubscriptionStatusSchema } from '../schemas/payment.ts';
 
 interface PlanCardProps {
   title: string;
@@ -30,6 +30,7 @@ interface PlanCardProps {
   isCurrentPlan?: boolean;
   accentColor: string;
   icon: React.ReactNode;
+  onSubscribe?: () => void;
 }
 
 const PlanCard = ({
@@ -45,6 +46,7 @@ const PlanCard = ({
   isCurrentPlan,
   accentColor,
   icon,
+  onSubscribe
 }: PlanCardProps) => (
   <Paper
     p={28}
@@ -132,11 +134,8 @@ const PlanCard = ({
       </List>
 
       {subscriptionStatus ? (
-        <form method="POST" action={CHECKOUT_URL} style={{ marginTop: 'auto' }}>
           <Button
-            type="submit"
-            name="subscriptionStatus"
-            value={subscriptionStatus}
+            onClick={onSubscribe}
             fullWidth
             radius="md"
             size="sm"
@@ -149,7 +148,6 @@ const PlanCard = ({
           >
             {buttonLabel}
           </Button>
-        </form>
       ) : (
         <Button
           fullWidth
@@ -168,6 +166,15 @@ const PlanCard = ({
 
 const SubscriptionPage = () => {
   const { t } = useTranslation();
+
+  const {mutateAsync} = useCreateCheckoutSessionForSubscription();
+
+  const buySubscription = async (status: SubscriptionStatus) => {
+    const dto = await mutateAsync(status);
+    window.location.replace(dto.data.url);
+  }
+
+
 
   return (
     <Layout>
@@ -216,6 +223,7 @@ const SubscriptionPage = () => {
                 subscriptionStatus="PLUS"
                 accentColor="#339af0"
                 icon={<IconRocket size={18} />}
+                onSubscribe={() => buySubscription(SubscriptionStatusSchema.enum.PLUS)}
               />
 
               <PlanCard
@@ -236,6 +244,7 @@ const SubscriptionPage = () => {
                 subscriptionStatus="PRO"
                 accentColor="#f59f00"
                 icon={<IconCrown size={18} />}
+                onSubscribe={() => buySubscription(SubscriptionStatusSchema.enum.PRO)}
               />
             </Group>
           </Stack>
