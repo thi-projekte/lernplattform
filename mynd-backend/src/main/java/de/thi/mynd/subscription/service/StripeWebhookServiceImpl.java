@@ -12,9 +12,8 @@ import de.thi.mynd.subscription.exception.ProductNotFoundException;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import java.util.Optional;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 public final class StripeWebhookServiceImpl implements StripeWebhookService {
@@ -44,7 +43,8 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
 
     if (objectOptional.get() instanceof Subscription subscription) {
       if (subscription.getCancelAtPeriodEnd()) {
-        Log.infof("Marked subscription %s for cancellation at the end of period", subscription.getId());
+        Log.infof(
+            "Marked subscription %s for cancellation at the end of period", subscription.getId());
         return;
       }
 

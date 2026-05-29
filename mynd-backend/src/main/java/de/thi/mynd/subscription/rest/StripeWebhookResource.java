@@ -10,12 +10,11 @@ import jakarta.ws.rs.core.Response;
 @Path("/stripe-webhook")
 public final class StripeWebhookResource {
 
-    @Inject
-    StripeWebhookService webhookService;
+  @Inject StripeWebhookService webhookService;
 
-    @POST
-    public Response handleWebhook(String payload, @HeaderParam("Stripe-Signature") String sigHeader) {
-        webhookService.processWebhook(payload, sigHeader);
-        return Response.ok().build();
-    }
+  @POST
+  public Response handleWebhook(String payload, @HeaderParam("Stripe-Signature") String sigHeader) {
+    webhookService.processWebhook(payload, sigHeader);
+    return Response.ok().build();
+  }
 }

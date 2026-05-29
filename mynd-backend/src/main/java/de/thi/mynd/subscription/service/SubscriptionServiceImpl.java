@@ -14,7 +14,6 @@ import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-
 import java.util.Optional;
 
 @ApplicationScoped
@@ -83,7 +82,8 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
   @Override
   @Transactional
   public void setSubscriptionStatus(String stripeSubscriptionId, SubscriptionStatus status) {
-    Optional<Subscription> subscriptionOptional = subscriptionRepository.findByStripeSubscriptionId(stripeSubscriptionId);
+    Optional<Subscription> subscriptionOptional =
+        subscriptionRepository.findByStripeSubscriptionId(stripeSubscriptionId);
     if (subscriptionOptional.isEmpty()) {
       throw new SubscriptionNotFoundException("This subscription does not exist");
     }
