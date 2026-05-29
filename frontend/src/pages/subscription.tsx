@@ -14,8 +14,8 @@ import {
 import { IconCheck, IconCrown, IconRocket, IconStar } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { Layout } from '../components/layout.tsx';
-import { useCreateCheckoutSession } from '../api/payment.ts';
-import { notifications } from '@mantine/notifications';
+
+const CHECKOUT_URL = `${import.meta.env.VITE_MYND_BACKEND_URI}/payments/create-checkout-session`;
 
 interface PlanCardProps {
   title: string;
@@ -26,8 +26,7 @@ interface PlanCardProps {
   badge?: string;
   badgeColor?: string;
   buttonLabel: string;
-  onSubscribe?: () => void;
-  isLoading?: boolean;
+  subscriptionStatus?: 'PLUS' | 'PRO';
   isCurrentPlan?: boolean;
   accentColor: string;
   icon: React.ReactNode;
@@ -42,8 +41,7 @@ const PlanCard = ({
   badge,
   badgeColor,
   buttonLabel,
-  onSubscribe,
-  isLoading,
+  subscriptionStatus,
   isCurrentPlan,
   accentColor,
   icon,
@@ -91,7 +89,7 @@ const PlanCard = ({
         >
           <span style={{ color: accentColor, display: 'flex', alignItems: 'center' }}>{icon}</span>
         </ThemeIcon>
-        <Text fw={800} size="lg" style={{ color: 'var(--mantine-color-text)' }}>
+        <Text fw={800} size="lg">
           {title}
         </Text>
       </Group>
@@ -133,23 +131,25 @@ const PlanCard = ({
         ))}
       </List>
 
-      {onSubscribe ? (
-        <Button
-          fullWidth
-          radius="md"
-          size="sm"
-          loading={isLoading}
-          onClick={onSubscribe}
-          style={{
-            background: accentColor,
-            color: '#fff',
-            fontWeight: 700,
-            boxShadow: `0 4px 14px color-mix(in srgb, ${accentColor} 38%, transparent)`,
-            marginTop: 'auto',
-          }}
-        >
-          {buttonLabel}
-        </Button>
+      {subscriptionStatus ? (
+        <form method="POST" action={CHECKOUT_URL} style={{ marginTop: 'auto' }}>
+          <Button
+            type="submit"
+            name="subscriptionStatus"
+            value={subscriptionStatus}
+            fullWidth
+            radius="md"
+            size="sm"
+            style={{
+              background: accentColor,
+              color: '#fff',
+              fontWeight: 700,
+              boxShadow: `0 4px 14px color-mix(in srgb, ${accentColor} 38%, transparent)`,
+            }}
+          >
+            {buttonLabel}
+          </Button>
+        </form>
       ) : (
         <Button
           fullWidth
@@ -168,15 +168,6 @@ const PlanCard = ({
 
 const SubscriptionPage = () => {
   const { t } = useTranslation();
-  const { mutate: subscribe, isPending, variables } = useCreateCheckoutSession();
-
-  const handleSubscribe = (plan: 'PLUS' | 'PRO') => {
-    subscribe(plan, {
-      onError: () => {
-        notifications.show({ color: 'red', message: t('common.serverError') });
-      },
-    });
-  };
 
   return (
     <Layout>
@@ -222,8 +213,7 @@ const SubscriptionPage = () => {
                 badge={t('subscription.popular')}
                 badgeColor="#339af0"
                 buttonLabel={t('subscription.plus.button')}
-                onSubscribe={() => handleSubscribe('PLUS')}
-                isLoading={isPending && variables === 'PLUS'}
+                subscriptionStatus="PLUS"
                 accentColor="#339af0"
                 icon={<IconRocket size={18} />}
               />
@@ -243,8 +233,7 @@ const SubscriptionPage = () => {
                 badge={t('subscription.bestValue')}
                 badgeColor="#f59f00"
                 buttonLabel={t('subscription.pro.button')}
-                onSubscribe={() => handleSubscribe('PRO')}
-                isLoading={isPending && variables === 'PRO'}
+                subscriptionStatus="PRO"
                 accentColor="#f59f00"
                 icon={<IconCrown size={18} />}
               />
