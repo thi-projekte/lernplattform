@@ -6,7 +6,8 @@
     "createTopic": "Create topic",
     "editTopic": "Edit topic",
     "account": "My profile",
-    "invitations": "Invitations"
+    "invitations": "Invitations",
+    "subscription": "Subscription"
   },
   "journey": {
     "title": "Your journey map",

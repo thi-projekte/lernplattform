@@ -2,7 +2,13 @@ import { type BaseRouteObject, createBrowserRouter } from 'react-router';
 import Homepage from './pages/home.tsx';
 import BuilderModeListPage from './pages/builder-mode/list.tsx';
 import type { ComponentType } from 'react';
-import { IconHammer, IconHome, IconMail, type IconProps } from '@tabler/icons-react';
+import {
+  IconHammer,
+  IconHome,
+  IconMail,
+  type IconProps,
+  IconReportMoney,
+} from '@tabler/icons-react';
 import CreateTopicPage from './pages/builder-mode/create.tsx';
 import EditTopicPage from './pages/builder-mode/edit.tsx';
 import TopicDetailsPage from './pages/topic/details.tsx';
@@ -81,6 +87,8 @@ export const routes: TypedMyndRoute[] = [
     path: '/subscription',
     Component: SubscriptionPage,
     translation: 'subscription',
+    isSidebar: true,
+    icon: IconReportMoney
   },
 ];
 
