@@ -22,6 +22,8 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
   String endpointSecret;
 
   @Inject SubscriptionService subscriptionService;
+    @Inject
+    StripeService stripeService;
 
   @Override
   public void processWebhook(String payload, String sigHeader) {
@@ -48,10 +50,13 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
         return;
       }
 
-      Product product = getProductFromSubscription(subscription);
+      String productId = getProductIdFromSubscription(subscription);
+      Product product = stripeService.getFullProductById(productId);
       String tier = product.getMetadata().get("tier");
       SubscriptionStatus status = SubscriptionStatus.valueOf(tier);
       subscriptionService.setSubscriptionStatus(subscription.getId(), status);
+
+      Log.infof("Updated subscription info locally coming from webhook");
     }
   }
 
@@ -61,16 +66,17 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
 
     if (objectOptional.get() instanceof Subscription subscription) {
       subscriptionService.setSubscriptionStatus(subscription.getId(), SubscriptionStatus.FREE);
+      Log.infof("Updated subscription info locally coming from webhook");
     }
   }
 
-  private Product getProductFromSubscription(Subscription subscription) {
+  private String getProductIdFromSubscription(Subscription subscription) {
     var items = subscription.getItems().getData();
     if (items.isEmpty()) {
       throw new ProductNotFoundException("No product listed for this subscription");
     }
 
-    return items.get(0).getPrice().getProductObject();
+    return items.get(0).getPrice().getProduct();
   }
 
   private Event verifySignatureAndExtractEvent(String payload, String sigHeader) {

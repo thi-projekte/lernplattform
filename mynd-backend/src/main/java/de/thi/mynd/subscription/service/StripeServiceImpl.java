@@ -4,9 +4,7 @@ import com.stripe.StripeClient;
 import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
-import com.stripe.param.CustomerCreateParams;
-import com.stripe.param.CustomerSearchParams;
-import com.stripe.param.ProductSearchParams;
+import com.stripe.param.*;
 import com.stripe.param.checkout.SessionCreateParams;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.exception.HandledStripeException;
@@ -30,6 +28,16 @@ public final class StripeServiceImpl implements StripeService {
   }
 
   @Override
+  public Product getFullProductById(String id) {
+    try {
+      return stripeClient.v1().products().retrieve(id);
+    } catch (StripeException e) {
+      throw new HandledStripeException("Could not retrieve product: " + e.getMessage());
+    }
+  }
+
+
+  @Override
   public Session createCheckoutSessionForSubscriptionPrice(Price price, String userId) {
     SessionCreateParams.Builder paramsBuilder =
         SessionCreateParams.builder()
@@ -45,7 +53,7 @@ public final class StripeServiceImpl implements StripeService {
     paramsBuilder.setCustomer(userId);
 
     try {
-      return stripeClient.checkout().sessions().create(paramsBuilder.build());
+      return stripeClient.v1().checkout().sessions().create(paramsBuilder.build());
     } catch (StripeException e) {
       throw new HandledStripeException(e.getMessage());
     }
@@ -60,7 +68,7 @@ public final class StripeServiceImpl implements StripeService {
             .build();
 
     try {
-      return stripeClient.billingPortal().sessions().create(params);
+      return stripeClient.v1().billingPortal().sessions().create(params);
     } catch (StripeException e) {
       throw new HandledStripeException(e.getMessage());
     }
@@ -72,7 +80,7 @@ public final class StripeServiceImpl implements StripeService {
     CustomerSearchParams searchParams = CustomerSearchParams.builder().setQuery(query).build();
 
     try {
-      StripeSearchResult<Customer> result = stripeClient.customers().search(searchParams);
+      StripeSearchResult<Customer> result = stripeClient.v1().customers().search(searchParams);
 
       if (!result.getData().isEmpty()) {
         return result.getData().getFirst();
@@ -80,7 +88,7 @@ public final class StripeServiceImpl implements StripeService {
 
       CustomerCreateParams createParams = CustomerCreateParams.builder().setName(username).build();
 
-      return stripeClient.customers().create(createParams);
+      return stripeClient.v1().customers().create(createParams);
 
     } catch (StripeException e) {
       throw new HandledStripeException(e.getMessage());
@@ -95,7 +103,7 @@ public final class StripeServiceImpl implements StripeService {
         ProductSearchParams.builder().setQuery(query).addExpand("data.default_price").build();
 
     try {
-      StripeSearchResult<Product> result = stripeClient.products().search(params);
+      StripeSearchResult<Product> result = stripeClient.v1().products().search(params);
       if (result.getData().isEmpty()) {
         throw new ProductNotFoundException("The product does not exist");
       }
