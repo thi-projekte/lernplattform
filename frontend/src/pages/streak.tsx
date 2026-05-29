@@ -1,16 +1,18 @@
-import { Badge, Group, Paper, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import { Badge, Group, Paper, Select, Stack, Text, ThemeIcon, Title } from '@mantine/core';
 import { IconFlame } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { Layout } from '../components/layout.tsx';
-import { useFetchStreaks } from '../api/streak.ts';
+import { useFetchStreakPreferences, useFetchStreaks, useUpdateStreakPreferences } from '../api/streak.ts';
 import LayoutLoader from '../components/layout-loader.tsx';
 import type { StreakType } from '../schemas/streak.ts';
 
 const StreakPage = () => {
   const { t } = useTranslation();
   const { data: streaks, isLoading } = useFetchStreaks();
+  const { data: preferences, isLoading: isLoadingPrefs } = useFetchStreakPreferences();
+  const { mutate: updatePreference, isPending: isUpdating } = useUpdateStreakPreferences();
 
-  if (isLoading) return <LayoutLoader />;
+  if (isLoading || isLoadingPrefs) return <LayoutLoader />;
 
   const activeStreak = streaks?.find((s) => s.isActive);
   const history = streaks?.filter((s) => !s.isActive) ?? [];
@@ -18,10 +20,24 @@ const StreakPage = () => {
   return (
     <Layout>
       <Stack gap="lg">
-        <Stack gap={4}>
-          <Title order={1}>{t('streak.title')}</Title>
-          <Text c="dimmed">{t('streak.subtitle')}</Text>
-        </Stack>
+        <Group justify="space-between" align="flex-end">
+          <Stack gap={4}>
+            <Title order={1}>{t('streak.title')}</Title>
+            <Text c="dimmed">{t('streak.subtitle')}</Text>
+          </Stack>
+          <Select
+            label={t('streak.preference')}
+            value={preferences?.type ?? 'DAILY'}
+            disabled={isUpdating}
+            onChange={(val) => val && updatePreference(val as StreakType)}
+            w={160}
+            data={[
+              { value: 'DAILY', label: t('streak.typeLabel.DAILY') },
+              { value: 'WEEKLY', label: t('streak.typeLabel.WEEKLY') },
+              { value: 'MONTHLY', label: t('streak.typeLabel.MONTHLY') },
+            ]}
+          />
+        </Group>
 
         {activeStreak && (
           <Paper withBorder radius="lg" p="lg">

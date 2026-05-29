@@ -22,6 +22,13 @@
       "DAILY": "Tage",
       "WEEKLY": "Wochen",
       "MONTHLY": "Monate"
+    },
+    "preference": "Streak-Typ",
+    "preferenceDescription": "Wähle, welcher Streak-Typ im Header angezeigt wird.",
+    "typeLabel": {
+      "DAILY": "Täglich",
+      "WEEKLY": "Wöchentlich",
+      "MONTHLY": "Monatlich"
     }
   },
   "journey": {
