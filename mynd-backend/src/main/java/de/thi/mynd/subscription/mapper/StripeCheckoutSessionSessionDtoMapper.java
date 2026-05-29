@@ -6,7 +6,7 @@ import de.thi.mynd.subscription.dto.StripeSessionDto;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public final class StripeSessionDtoMapper
+public final class StripeCheckoutSessionSessionDtoMapper
     extends AbstractMappingProcessor<Session, StripeSessionDto> {
   @Override
   public StripeSessionDto mapAndEnrich(Session entity) {

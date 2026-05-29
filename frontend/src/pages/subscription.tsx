@@ -14,7 +14,7 @@ import {
 import { IconCheck, IconCrown, IconRocket, IconStar } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { Layout } from '../components/layout.tsx';
-import { useCreateCheckoutSessionForSubscription } from '../api/payment.ts';
+import { useCreateBillingPortalSession, useCreateInitialCheckoutSessionForSubscription } from '../api/subscription.ts';
 import { type SubscriptionStatus, SubscriptionStatusSchema } from '../schemas/payment.ts';
 
 interface PlanCardProps {
@@ -167,12 +167,18 @@ const PlanCard = ({
 const SubscriptionPage = () => {
   const { t } = useTranslation();
 
-  const {mutateAsync} = useCreateCheckoutSessionForSubscription();
+  const {mutateAsync: subscribe} = useCreateInitialCheckoutSessionForSubscription();
+  const {mutateAsync: createBillingPortalSession} = useCreateBillingPortalSession();
 
   const buySubscription = async (status: SubscriptionStatus) => {
-    const dto = await mutateAsync(status);
+    const dto = await subscribe(status);
     window.location.replace(dto.data.url);
   }
+
+  const openBillingPortal = async () => {
+    const dto = await createBillingPortalSession();
+    window.location.replace(dto.data.url);
+  };
 
 
 
@@ -189,6 +195,9 @@ const SubscriptionPage = () => {
                 {t('subscription.subtitle')}
               </Text>
             </Stack>
+            <Button onClick={openBillingPortal}>
+              BILLING PORTAL HIER LABEL
+            </Button>
 
             <Group align="stretch" gap="lg" style={{ flexWrap: 'wrap' }}>
               <PlanCard

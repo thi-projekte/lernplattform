@@ -22,7 +22,7 @@ public final class PaymentResource {
   @Inject PaymentService paymentService;
 
   @POST
-  @Path("/subscripe")
+  @Path("/subscribe")
   @Operation(
       summary = "Creates a new checkout session",
       description = "Creates a new checkout session for one of our subscriptions.")

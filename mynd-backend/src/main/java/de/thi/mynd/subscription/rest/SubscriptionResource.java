@@ -30,6 +30,7 @@ public final class SubscriptionResource {
     }
 
     @POST
+    @Path("/billing-portal-session")
     @Operation(
             summary = "Creates a new billing portal session for the current user",
             description = "NOTE: The user needs to have a valid subscription or past subscriptions in order to access the billing portal")

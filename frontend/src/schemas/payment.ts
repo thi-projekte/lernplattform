@@ -4,8 +4,8 @@ export const SubscriptionStatusSchema = z.enum(["FREE", "PLUS", "PRO"]);
 
 export type SubscriptionStatus = z.infer<typeof SubscriptionStatusSchema>;
 
-export const PaymentSessionDtoSchema = z.object({
+export const StripeSessionDtoSchema = z.object({
   url: z.string()
 });
 
-export type PaymentSessionDto = z.infer<typeof PaymentSessionDtoSchema>;
+export type StripeSessionDto = z.infer<typeof StripeSessionDtoSchema>;
