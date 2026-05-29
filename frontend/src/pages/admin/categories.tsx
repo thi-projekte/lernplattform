@@ -17,7 +17,14 @@ import {
 import { useForm } from '@mantine/form';
 import { useDisclosure } from '@mantine/hooks';
 import { notifications } from '@mantine/notifications';
-import { IconChevronDown, IconChevronRight, IconEdit, IconPlus, IconTrash, IconTree } from '@tabler/icons-react';
+import {
+  IconChevronDown,
+  IconChevronRight,
+  IconEdit,
+  IconPlus,
+  IconTrash,
+  IconTree,
+} from '@tabler/icons-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
@@ -47,7 +54,7 @@ const toHex = (color: string) => (color.startsWith('#') ? color : `#${color}`);
 const flattenTree = (
   nodes: CategoryTreeDto[],
   depth = 0,
-  parentId: string | null = null,
+  parentId: string | null = null
 ): FlatCategory[] =>
   nodes.flatMap((node) => [
     { id: node.id, title: node.title, depth, parentId },
@@ -106,7 +113,16 @@ interface CategoryRowProps {
   onDelete: (id: string) => void;
 }
 
-const CategoryRow = ({ node, isLast, lineage, parentId, expanded, onToggle, onEdit, onDelete }: CategoryRowProps) => {
+const CategoryRow = ({
+  node,
+  isLast,
+  lineage,
+  parentId,
+  expanded,
+  onToggle,
+  onEdit,
+  onDelete,
+}: CategoryRowProps) => {
   const hasChildren = node.children.length > 0;
   const isExpanded = expanded.has(node.id);
 
@@ -158,27 +174,39 @@ const CategoryRow = ({ node, isLast, lineage, parentId, expanded, onToggle, onEd
           )}
         </Group>
         <Group gap={4} wrap="nowrap">
-          <ActionIcon variant="subtle" color="gray" size="sm" onClick={() => onEdit(node, parentId)}>
+          <ActionIcon
+            variant="subtle"
+            color="gray"
+            size="sm"
+            onClick={() => onEdit(node, parentId)}
+          >
             <IconEdit size={14} />
           </ActionIcon>
-          <ActionIcon variant="subtle" color="gray" size="sm" className="delete-hover-red" onClick={() => onDelete(node.id)}>
+          <ActionIcon
+            variant="subtle"
+            color="gray"
+            size="sm"
+            className="delete-hover-red"
+            onClick={() => onDelete(node.id)}
+          >
             <IconTrash size={14} />
           </ActionIcon>
         </Group>
       </Group>
-      {isExpanded && node.children.map((child, i) => (
-        <CategoryRow
-          key={child.id}
-          node={child}
-          isLast={i === node.children.length - 1}
-          lineage={[...lineage, isLast]}
-          parentId={node.id}
-          expanded={expanded}
-          onToggle={onToggle}
-          onEdit={onEdit}
-          onDelete={onDelete}
-        />
-      ))}
+      {isExpanded &&
+        node.children.map((child, i) => (
+          <CategoryRow
+            key={child.id}
+            node={child}
+            isLast={i === node.children.length - 1}
+            lineage={[...lineage, isLast]}
+            parentId={node.id}
+            expanded={expanded}
+            onToggle={onToggle}
+            onEdit={onEdit}
+            onDelete={onDelete}
+          />
+        ))}
     </>
   );
 };
