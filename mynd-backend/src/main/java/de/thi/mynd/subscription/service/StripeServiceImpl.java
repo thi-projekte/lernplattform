@@ -104,10 +104,10 @@ public final class StripeServiceImpl implements StripeService {
   }
 
   private String getSuccessUrl() {
-    return String.format("%s/subscription?session_id={CHECKOUT_SESSION_ID}", frontendUri);
+    return String.format("%s/subscription?success=true", frontendUri);
   }
 
   private String getCancelUrl() {
-    return String.format("%s/subscription?cancel=true", frontendUri);
+    return String.format("%s/subscription?success=false", frontendUri);
   }
 }

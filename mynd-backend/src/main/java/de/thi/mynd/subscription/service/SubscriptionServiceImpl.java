@@ -1,6 +1,8 @@
 package de.thi.mynd.subscription.service;
 
 import de.thi.mynd.common.entity.CreatorIdKey;
+import de.thi.mynd.common.processor.MappingRegistry;
+import de.thi.mynd.subscription.dto.SubscriptionDto;
 import de.thi.mynd.subscription.entity.Subscription;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.repository.SubscriptionRepository;
@@ -16,6 +18,9 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
   @Inject SecurityIdentity identity;
 
   @Inject SubscriptionRepository subscriptionRepository;
+
+    @Inject
+    MappingRegistry mappingRegistry;
 
   @Override
   public boolean canUserUpgradeTo(SubscriptionStatus subscriptionStatus) {
@@ -37,6 +42,11 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     return subscriptionRepository
         .findByIdOptional(id)
         .orElseGet(this::createDefaultSubscriptionForCurrentUser);
+  }
+
+  @Override
+  public SubscriptionDto getSubscriptionForCurrentUserAsDto() {
+    return mappingRegistry.map(getSubscriptionForCurrentUser(), SubscriptionDto.class);
   }
 
   @Override
