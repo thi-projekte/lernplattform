@@ -28,8 +28,6 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
   public void processWebhook(String payload, String sigHeader) {
     Event event = verifySignatureAndExtractEvent(payload, sigHeader);
 
-      Log.infof(event.getType());
-
     switch (event.getType()) {
       case "customer.subscription.updated":
         handleSubscriptionUpdated(event);
