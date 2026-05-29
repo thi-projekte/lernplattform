@@ -180,8 +180,10 @@ public final class StreakServiceImpl implements StreakService {
   }
 
   private StreakPreference createStreakPreferenceForCurrentUser() {
+    CreatorIdKey id = new CreatorIdKey();
+    id.creatorId = identity.getPrincipal().getName();
     StreakPreference preference = new StreakPreference();
-    preference.creatorId = identity.getPrincipal().getName();
+    preference.id = id;
     preference.isPublic = false;
     preference.type = StreakType.DAILY;
     streakPreferenceRepository.persistAndFlush(preference);
