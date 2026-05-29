@@ -7,7 +7,6 @@ import de.thi.mynd.subscription.dto.SubscriptionDto;
 import de.thi.mynd.subscription.entity.Subscription;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.exception.CannotUpgradeSubscriptionException;
-import de.thi.mynd.subscription.exception.HandledStripeException;
 import de.thi.mynd.subscription.repository.SubscriptionRepository;
 import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -22,11 +21,8 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
 
   @Inject SubscriptionRepository subscriptionRepository;
 
-    @Inject
-    MappingRegistry mappingRegistry;
-    @Inject
-    StripeService stripeService;
-
+  @Inject MappingRegistry mappingRegistry;
+  @Inject StripeService stripeService;
 
   @Override
   public Subscription getSubscriptionForCurrentUser() {
@@ -72,12 +68,12 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
   public StripeSessionDto createBillingPortalSession() {
     Subscription subscription = getSubscriptionForCurrentUser();
     if (subscription.stripeCustomerId == null) {
-      throw new CannotUpgradeSubscriptionException("There is no customer registered for this subscription");
+      throw new CannotUpgradeSubscriptionException(
+          "There is no customer registered for this subscription");
     }
 
     return mappingRegistry.map(
-            stripeService.createBillingPortalSession(subscription.stripeCustomerId),
-            StripeSessionDto.class
-    );
+        stripeService.createBillingPortalSession(subscription.stripeCustomerId),
+        StripeSessionDto.class);
   }
 }

@@ -4,5 +4,5 @@ import de.thi.mynd.subscription.entity.SubscriptionStatus;
 
 public final class SubscribeRequest {
 
-    public SubscriptionStatus subscriptionStatus;
+  public SubscriptionStatus subscriptionStatus;
 }

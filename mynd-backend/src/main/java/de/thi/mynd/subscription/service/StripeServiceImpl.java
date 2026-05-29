@@ -53,7 +53,8 @@ public final class StripeServiceImpl implements StripeService {
 
   @Override
   public com.stripe.model.billingportal.Session createBillingPortalSession(String customerId) {
-    com.stripe.param.billingportal.SessionCreateParams params = com.stripe.param.billingportal.SessionCreateParams.builder()
+    com.stripe.param.billingportal.SessionCreateParams params =
+        com.stripe.param.billingportal.SessionCreateParams.builder()
             .setCustomer(customerId)
             .setReturnUrl(frontendUri + "/subscription")
             .build();
@@ -68,9 +69,7 @@ public final class StripeServiceImpl implements StripeService {
   @Override
   public Customer getOrCreateCustomer(String username) {
     String query = String.format("name:'%s'", username);
-    CustomerSearchParams searchParams = CustomerSearchParams.builder()
-            .setQuery(query)
-            .build();
+    CustomerSearchParams searchParams = CustomerSearchParams.builder().setQuery(query).build();
 
     try {
       StripeSearchResult<Customer> result = stripeClient.customers().search(searchParams);
@@ -79,9 +78,7 @@ public final class StripeServiceImpl implements StripeService {
         return result.getData().getFirst();
       }
 
-      CustomerCreateParams createParams = CustomerCreateParams.builder()
-              .setName(username)
-              .build();
+      CustomerCreateParams createParams = CustomerCreateParams.builder().setName(username).build();
 
       return stripeClient.customers().create(createParams);
 

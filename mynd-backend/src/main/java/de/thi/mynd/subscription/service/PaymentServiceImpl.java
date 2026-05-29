@@ -23,8 +23,7 @@ public final class PaymentServiceImpl implements PaymentService {
   @Inject MappingRegistry mappingRegistry;
 
   @Override
-  public StripeSessionDto createInitialSubscriptionSession(
-      SubscriptionStatus subscriptionStatus) {
+  public StripeSessionDto createInitialSubscriptionSession(SubscriptionStatus subscriptionStatus) {
     String creatorId = identity.getPrincipal().getName();
 
     Subscription subscription = subscriptionService.getSubscriptionForCurrentUser();
@@ -35,9 +34,7 @@ public final class PaymentServiceImpl implements PaymentService {
 
     if (subscription.stripeCustomerId == null) {
       String customerId = stripeService.getOrCreateCustomer(creatorId).getId();
-      subscription =
-              subscriptionService.updateCustomerId(
-                      subscription, customerId);
+      subscription = subscriptionService.updateCustomerId(subscription, customerId);
     }
 
     Price price = stripeService.obtainPriceForSubscriptionStatus(subscriptionStatus);

@@ -5,7 +5,7 @@ import lombok.Builder;
 
 @Builder
 public final class SubscriptionDto {
-    public String creatorId;
-    public SubscriptionStatus subscriptionStatus;
-    public boolean canAccessBillingPortal;
+  public String creatorId;
+  public SubscriptionStatus subscriptionStatus;
+  public boolean canAccessBillingPortal;
 }

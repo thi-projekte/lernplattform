@@ -10,30 +10,28 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 @ApplicationScoped
 public final class StripeWebhookServiceImpl implements StripeWebhookService {
 
-    @ConfigProperty(name = "stripe.webhook.secret")
-    String endpointSecret;
+  @ConfigProperty(name = "stripe.webhook.secret")
+  String endpointSecret;
 
-    @Override
-    public void processWebhook(String payload, String sigHeader) {
-        Event event = verifySignatureAndExtractEvent(payload, sigHeader);
+  @Override
+  public void processWebhook(String payload, String sigHeader) {
+    Event event = verifySignatureAndExtractEvent(payload, sigHeader);
 
-        switch (event.getType()) {
-            case "checkout.session.completed":
-                break;
-            case "customer.subscription.deleted":
-                break;
-        }
+    switch (event.getType()) {
+      case "checkout.session.completed":
+        break;
+      case "customer.subscription.deleted":
+        break;
     }
+  }
 
-    private void checkoutSessionCompleted(Event event) {
+  private void checkoutSessionCompleted(Event event) {}
 
+  private Event verifySignatureAndExtractEvent(String payload, String sigHeader) {
+    try {
+      return Webhook.constructEvent(payload, sigHeader, endpointSecret);
+    } catch (SignatureVerificationException e) {
+      throw new InvalidStripeSignatureException(e.getMessage());
     }
-
-    private Event verifySignatureAndExtractEvent(String payload, String sigHeader) {
-        try {
-            return Webhook.constructEvent(payload, sigHeader, endpointSecret);
-        } catch (SignatureVerificationException e) {
-            throw new InvalidStripeSignatureException(e.getMessage());
-        }
-    }
+  }
 }

@@ -18,23 +18,23 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 @SecurityRequirement(name = "keycloak")
 public final class SubscriptionResource {
 
-    @Inject
-    SubscriptionService subscriptionService;
+  @Inject SubscriptionService subscriptionService;
 
-    @GET
-    @Operation(
-            summary = "Gets the subscription status for the current user",
-            description = "Gets the subscription status for the current user")
-    public SubscriptionDto getSubscription() {
-        return subscriptionService.getSubscriptionForCurrentUserAsDto();
-    }
+  @GET
+  @Operation(
+      summary = "Gets the subscription status for the current user",
+      description = "Gets the subscription status for the current user")
+  public SubscriptionDto getSubscription() {
+    return subscriptionService.getSubscriptionForCurrentUserAsDto();
+  }
 
-    @POST
-    @Path("/billing-portal-session")
-    @Operation(
-            summary = "Creates a new billing portal session for the current user",
-            description = "NOTE: The user needs to have a valid subscription or past subscriptions in order to access the billing portal")
-    public StripeSessionDto createBillingPortalSession() {
-        return subscriptionService.createBillingPortalSession();
-    }
+  @POST
+  @Path("/billing-portal-session")
+  @Operation(
+      summary = "Creates a new billing portal session for the current user",
+      description =
+          "NOTE: The user needs to have a valid subscription or past subscriptions in order to access the billing portal")
+  public StripeSessionDto createBillingPortalSession() {
+    return subscriptionService.createBillingPortalSession();
+  }
 }
