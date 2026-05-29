@@ -2,9 +2,12 @@ package de.thi.mynd.subscription.service;
 
 import de.thi.mynd.common.entity.CreatorIdKey;
 import de.thi.mynd.common.processor.MappingRegistry;
+import de.thi.mynd.subscription.dto.StripeSessionDto;
 import de.thi.mynd.subscription.dto.SubscriptionDto;
 import de.thi.mynd.subscription.entity.Subscription;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
+import de.thi.mynd.subscription.exception.CannotUpgradeSubscriptionException;
+import de.thi.mynd.subscription.exception.HandledStripeException;
 import de.thi.mynd.subscription.repository.SubscriptionRepository;
 import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -21,18 +24,9 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
 
     @Inject
     MappingRegistry mappingRegistry;
+    @Inject
+    StripeService stripeService;
 
-  @Override
-  public boolean canUserUpgradeTo(SubscriptionStatus subscriptionStatus) {
-    Subscription subscription = getSubscriptionForCurrentUser();
-    if (subscription.subscriptionStatus == SubscriptionStatus.FREE
-        && subscriptionStatus != SubscriptionStatus.FREE) {
-      return true;
-    }
-
-    return subscription.subscriptionStatus == SubscriptionStatus.PLUS
-        && subscriptionStatus == SubscriptionStatus.PRO;
-  }
 
   @Override
   public Subscription getSubscriptionForCurrentUser() {
@@ -72,5 +66,18 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     subscriptionRepository.persistAndFlush(merged);
 
     return merged;
+  }
+
+  @Override
+  public StripeSessionDto createBillingPortalSession() {
+    Subscription subscription = getSubscriptionForCurrentUser();
+    if (subscription.stripeCustomerId == null) {
+      throw new CannotUpgradeSubscriptionException("There is no customer registered for this subscription");
+    }
+
+    return mappingRegistry.map(
+            stripeService.createBillingPortalSession(subscription.stripeCustomerId),
+            StripeSessionDto.class
+    );
   }
 }

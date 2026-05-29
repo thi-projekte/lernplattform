@@ -7,4 +7,5 @@ import lombok.Builder;
 public final class SubscriptionDto {
     public String creatorId;
     public SubscriptionStatus subscriptionStatus;
+    public boolean canAccessBillingPortal;
 }

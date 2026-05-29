@@ -1,6 +1,6 @@
 package de.thi.mynd.subscription.rest;
 
-import de.thi.mynd.subscription.dto.PaymentSessionDto;
+import de.thi.mynd.subscription.dto.StripeSessionDto;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.service.PaymentService;
 import jakarta.annotation.security.RolesAllowed;
@@ -21,12 +21,12 @@ public final class PaymentResource {
   @Inject PaymentService paymentService;
 
   @POST
-  @Path("/create-checkout-session")
+  @Path("/subscripe")
   @Operation(
       summary = "Creates a new checkout session",
       description = "Creates a new checkout session for one of our subscriptions.")
-  public PaymentSessionDto createCheckoutSessionForSubscription(
+  public StripeSessionDto createSubscriptionSession(
       @FormParam("subscriptionStatus") SubscriptionStatus subscriptionStatus) {
-    return paymentService.getCheckoutSessionForSubscription(subscriptionStatus);
+    return paymentService.createInitialSubscriptionSession(subscriptionStatus);
   }
 }

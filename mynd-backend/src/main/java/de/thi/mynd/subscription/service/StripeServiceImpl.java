@@ -6,7 +6,6 @@ import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.ProductSearchParams;
-import com.stripe.param.SubscriptionUpdateParams;
 import com.stripe.param.checkout.SessionCreateParams;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.exception.HandledStripeException;
@@ -52,22 +51,14 @@ public final class StripeServiceImpl implements StripeService {
   }
 
   @Override
-  public void cancelSubscriptionImmediately(String subscriptionId) {
-    try {
-      stripeClient.subscriptions().cancel(subscriptionId);
-    } catch (StripeException e) {
-      throw new HandledStripeException(e.getMessage());
-    }
-  }
+  public com.stripe.model.billingportal.Session createBillingPortalSession(String customerId) {
+    com.stripe.param.billingportal.SessionCreateParams params = com.stripe.param.billingportal.SessionCreateParams.builder()
+            .setCustomer(customerId)
+            .setReturnUrl(frontendUri + "/subscription")
+            .build();
 
-  @Override
-  public void cancelSubscriptionAtPeriodEnd(String subscriptionId) {
     try {
-      Subscription subscription = stripeClient.subscriptions().retrieve(subscriptionId);
-      SubscriptionUpdateParams params =
-          SubscriptionUpdateParams.builder().setCancelAtPeriodEnd(true).build();
-
-      stripeClient.subscriptions().update(subscriptionId, params);
+      return stripeClient.billingPortal().sessions().create(params);
     } catch (StripeException e) {
       throw new HandledStripeException(e.getMessage());
     }

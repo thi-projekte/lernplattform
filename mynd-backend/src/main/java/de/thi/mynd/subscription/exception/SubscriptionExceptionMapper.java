@@ -24,4 +24,9 @@ public final class SubscriptionExceptionMapper {
   public Response mapInvalidStripeSignatureException(InvalidStripeSignatureException e) {
     return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
   }
+
+  @ServerExceptionMapper
+  public Response mapStripeCustomerAlreadyExists(StripeCustomerAlreadyExists e) {
+    return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+  }
 }

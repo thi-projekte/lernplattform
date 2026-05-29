@@ -12,6 +12,7 @@ public final class SubscriptionDtoMapper extends AbstractMappingProcessor<Subscr
         return SubscriptionDto.builder()
                 .creatorId(entity.creatorId)
                 .subscriptionStatus(entity.subscriptionStatus)
+                .canAccessBillingPortal(entity.stripeCustomerId != null)
                 .build();
     }
 

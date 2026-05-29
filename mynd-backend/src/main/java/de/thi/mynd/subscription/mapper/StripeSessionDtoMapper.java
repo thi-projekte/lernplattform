@@ -1,0 +1,25 @@
+package de.thi.mynd.subscription.mapper;
+
+import com.stripe.model.checkout.Session;
+import de.thi.mynd.common.processor.AbstractMappingProcessor;
+import de.thi.mynd.subscription.dto.StripeSessionDto;
+import jakarta.enterprise.context.ApplicationScoped;
+
+@ApplicationScoped
+public final class StripeSessionDtoMapper
+    extends AbstractMappingProcessor<Session, StripeSessionDto> {
+  @Override
+  public StripeSessionDto mapAndEnrich(Session entity) {
+    return StripeSessionDto.builder().url(entity.getUrl()).build();
+  }
+
+  @Override
+  public Class<Session> getEntityType() {
+    return Session.class;
+  }
+
+  @Override
+  public Class<StripeSessionDto> getDtoType() {
+    return StripeSessionDto.class;
+  }
+}
