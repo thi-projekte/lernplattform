@@ -4,6 +4,7 @@ import com.stripe.exception.SignatureVerificationException;
 import com.stripe.model.Event;
 import com.stripe.net.Webhook;
 import de.thi.mynd.subscription.exception.InvalidStripeSignatureException;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -16,6 +17,8 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
   @Override
   public void processWebhook(String payload, String sigHeader) {
     Event event = verifySignatureAndExtractEvent(payload, sigHeader);
+
+      Log.infof(event.getType());
 
     switch (event.getType()) {
       case "checkout.session.completed":
