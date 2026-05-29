@@ -10,6 +10,7 @@ import AccountPage from './pages/account.tsx';
 import ManageInvitationsPage from './pages/invitations/manage.tsx';
 import AcceptInviteRoute from './pages/invitations/accept-route.tsx';
 import OnboardingPage from './pages/onboarding/onboarding.tsx';
+import SubscriptionPage from './pages/subscription.tsx';
 import { Role } from './auth.ts';
 
 export interface TypedMyndRoute extends BaseRouteObject {
@@ -75,6 +76,11 @@ export const routes: TypedMyndRoute[] = [
   {
     path: '/acceptInvite',
     Component: AcceptInviteRoute,
+  },
+  {
+    path: '/subscription',
+    Component: SubscriptionPage,
+    translation: 'subscription',
   },
 ];
 
