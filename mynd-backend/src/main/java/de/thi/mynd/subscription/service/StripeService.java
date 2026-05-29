@@ -14,5 +14,5 @@ public interface StripeService {
 
   com.stripe.model.billingportal.Session createBillingPortalSession(String customerId);
 
-  Customer createCustomer(String username);
+  Customer getOrCreateCustomer(String username);
 }

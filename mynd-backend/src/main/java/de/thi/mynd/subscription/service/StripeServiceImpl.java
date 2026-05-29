@@ -5,6 +5,7 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.CustomerCreateParams;
+import com.stripe.param.CustomerSearchParams;
 import com.stripe.param.ProductSearchParams;
 import com.stripe.param.checkout.SessionCreateParams;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
@@ -65,11 +66,25 @@ public final class StripeServiceImpl implements StripeService {
   }
 
   @Override
-  public Customer createCustomer(String username) {
-    CustomerCreateParams params = CustomerCreateParams.builder().setName(username).build();
+  public Customer getOrCreateCustomer(String username) {
+    String query = String.format("name:'%s'", username);
+    CustomerSearchParams searchParams = CustomerSearchParams.builder()
+            .setQuery(query)
+            .build();
 
     try {
-      return stripeClient.customers().create(params);
+      StripeSearchResult<Customer> result = stripeClient.customers().search(searchParams);
+
+      if (!result.getData().isEmpty()) {
+        return result.getData().getFirst();
+      }
+
+      CustomerCreateParams createParams = CustomerCreateParams.builder()
+              .setName(username)
+              .build();
+
+      return stripeClient.customers().create(createParams);
+
     } catch (StripeException e) {
       throw new HandledStripeException(e.getMessage());
     }

@@ -7,7 +7,6 @@ import de.thi.mynd.subscription.dto.StripeSessionDto;
 import de.thi.mynd.subscription.entity.Subscription;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.exception.CannotUpgradeSubscriptionException;
-import de.thi.mynd.subscription.exception.StripeCustomerAlreadyExists;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -35,7 +34,7 @@ public final class PaymentServiceImpl implements PaymentService {
     }
 
     if (subscription.stripeCustomerId == null) {
-      String customerId = stripeService.createCustomer(creatorId).getId();
+      String customerId = stripeService.getOrCreateCustomer(creatorId).getId();
       subscription =
               subscriptionService.updateCustomerId(
                       subscription, customerId);
