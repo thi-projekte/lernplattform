@@ -36,7 +36,6 @@ public final class StripeServiceImpl implements StripeService {
     }
   }
 
-
   @Override
   public Session createCheckoutSessionForSubscriptionPrice(Price price, String userId) {
     SessionCreateParams.Builder paramsBuilder =

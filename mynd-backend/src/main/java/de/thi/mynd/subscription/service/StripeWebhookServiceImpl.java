@@ -22,8 +22,7 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
   String endpointSecret;
 
   @Inject SubscriptionService subscriptionService;
-    @Inject
-    StripeService stripeService;
+  @Inject StripeService stripeService;
 
   @Override
   public void processWebhook(String payload, String sigHeader) {
