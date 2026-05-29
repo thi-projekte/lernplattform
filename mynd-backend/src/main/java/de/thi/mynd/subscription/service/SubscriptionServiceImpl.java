@@ -7,12 +7,15 @@ import de.thi.mynd.subscription.dto.SubscriptionDto;
 import de.thi.mynd.subscription.entity.Subscription;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.exception.CannotUpgradeSubscriptionException;
+import de.thi.mynd.subscription.exception.SubscriptionNotFoundException;
 import de.thi.mynd.subscription.repository.SubscriptionRepository;
 import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+
+import java.util.Optional;
 
 @ApplicationScoped
 public final class SubscriptionServiceImpl implements SubscriptionService {
@@ -75,5 +78,19 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     return mappingRegistry.map(
         stripeService.createBillingPortalSession(subscription.stripeCustomerId),
         StripeSessionDto.class);
+  }
+
+  @Override
+  @Transactional
+  public void setSubscriptionStatus(String stripeSubscriptionId, SubscriptionStatus status) {
+    Optional<Subscription> subscriptionOptional = subscriptionRepository.findByStripeSubscriptionId(stripeSubscriptionId);
+    if (subscriptionOptional.isEmpty()) {
+      throw new SubscriptionNotFoundException("This subscription does not exist");
+    }
+
+    Subscription subscription = subscriptionOptional.get();
+    subscription.subscriptionStatus = status;
+
+    subscriptionRepository.persistAndFlush(subscription);
   }
 }

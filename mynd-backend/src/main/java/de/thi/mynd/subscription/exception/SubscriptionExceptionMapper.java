@@ -29,4 +29,9 @@ public final class SubscriptionExceptionMapper {
   public Response mapStripeCustomerAlreadyExists(StripeCustomerAlreadyExists e) {
     return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
   }
+
+  @ServerExceptionMapper
+  public Response mapSubscriptionNotFoundException(SubscriptionNotFoundException e) {
+    return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+  }
 }
