@@ -40,10 +40,6 @@ public final class PaymentServiceImpl implements PaymentService {
               subscription, stripeService.createCustomer(creatorId).getId());
     }
 
-    if (subscription.subscriptionStatus != SubscriptionStatus.FREE) {
-      stripeService.cancelSubscriptionImmediately(subscription.stripeSubscriptionId);
-    }
-
     Price price = stripeService.obtainPriceForSubscriptionStatus(subscriptionStatus);
     Session session =
         stripeService.createCheckoutSessionForSubscriptionPrice(

@@ -19,4 +19,9 @@ public final class SubscriptionExceptionMapper {
   public Response mapHandledStripeException(HandledStripeException e) {
     return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(e.getMessage()).build();
   }
+
+  @ServerExceptionMapper
+  public Response mapInvalidStripeSignatureException(InvalidStripeSignatureException e) {
+    return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+  }
 }
