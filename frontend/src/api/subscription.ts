@@ -34,7 +34,7 @@ export const useCreateInitialCheckoutSessionForSubscription = () => {
 const createBillingPortalSession = async (): Promise<AxiosResponse<StripeSessionDto>> => {
   return await apiClient.post(
     `/subscriptions/billing-portal-session`,
-    { },
+    {},
     {
       validateStatus: (status) => status <= 204,
     }

@@ -88,7 +88,7 @@ export const routes: TypedMyndRoute[] = [
     Component: SubscriptionPage,
     translation: 'subscription',
     isSidebar: true,
-    icon: IconReportMoney
+    icon: IconReportMoney,
   },
 ];
 

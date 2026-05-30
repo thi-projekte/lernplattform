@@ -236,8 +236,11 @@ const SubscriptionPage = () => {
   const { t } = useTranslation();
   const { subscriptionStatus, canAccessBillingPortal } = useSubscription();
 
-  const { mutate: subscribe, isPending: isSubscribing, variables: subscribingPlan } =
-    useCreateInitialCheckoutSessionForSubscription();
+  const {
+    mutate: subscribe,
+    isPending: isSubscribing,
+    variables: subscribingPlan,
+  } = useCreateInitialCheckoutSessionForSubscription();
   const { mutate: openBillingPortal, isPending: isBillingPortalLoading } =
     useCreateBillingPortalSession();
 
