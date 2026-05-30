@@ -108,7 +108,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              paddingLeft: 83,
+              paddingLeft: 100,
               overflow: 'visible',
               transition: 'width 150ms ease',
             }}
