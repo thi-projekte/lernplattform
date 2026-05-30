@@ -242,6 +242,10 @@
     "perMonth": "/ Monat",
     "popular": "Beliebt",
     "bestValue": "Bestes Preis-Leistungs-Verhältnis",
+    "currentPlan": "Aktueller Plan",
+    "managePlan": "Abo verwalten",
+    "switchPlan": "Plan wechseln",
+    "billingPortal": "Abrechnungsportal",
     "free": {
       "title": "Free",
       "price": "€0",

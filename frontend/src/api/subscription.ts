@@ -1,7 +1,16 @@
 import { apiClient } from './common.ts';
-import { useMutation } from '@tanstack/react-query';
-import type { StripeSessionDto, SubscriptionStatus } from '../schemas/payment.ts';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import type { StripeSessionDto, SubscriptionDto, SubscriptionStatus } from '../schemas/payment.ts';
 import type { AxiosResponse } from 'axios';
+
+export const useFetchSubscription = () =>
+  useQuery({
+    queryKey: ['subscription'],
+    queryFn: async (): Promise<SubscriptionDto> => {
+      const res = await apiClient.get<SubscriptionDto>('/subscriptions');
+      return res.data;
+    },
+  });
 
 const createCheckoutSessionForSubscription = async (
   subscriptionStatus: SubscriptionStatus

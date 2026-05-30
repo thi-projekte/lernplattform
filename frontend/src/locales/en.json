@@ -241,6 +241,10 @@
     "perMonth": "/ month",
     "popular": "Popular",
     "bestValue": "Best value",
+    "currentPlan": "Current plan",
+    "managePlan": "Manage subscription",
+    "switchPlan": "Switch plan",
+    "billingPortal": "Billing portal",
     "free": {
       "title": "Free",
       "price": "€0",
