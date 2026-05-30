@@ -52,7 +52,8 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
       Product product = stripeService.getFullProductById(productId);
       String tier = product.getMetadata().get("tier");
       SubscriptionStatus status = SubscriptionStatus.valueOf(tier);
-      subscriptionService.setSubscriptionIdAndStatusForCustomerId(subscription.getCustomer(), subscription.getId(), status);
+      subscriptionService.setSubscriptionIdAndStatusForCustomerId(
+          subscription.getCustomer(), subscription.getId(), status);
 
       Log.infof("Created subscription info locally coming from webhook");
     }
@@ -84,7 +85,8 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
     if (objectOptional.isEmpty()) return;
 
     if (objectOptional.get() instanceof Subscription subscription) {
-      subscriptionService.setSubscriptionStatusForSubscriptionId(subscription.getId(), SubscriptionStatus.FREE);
+      subscriptionService.setSubscriptionStatusForSubscriptionId(
+          subscription.getId(), SubscriptionStatus.FREE);
       Log.infof("Updated subscription info locally coming from webhook");
     }
   }

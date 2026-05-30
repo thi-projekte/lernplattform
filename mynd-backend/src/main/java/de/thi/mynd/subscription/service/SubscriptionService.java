@@ -17,7 +17,9 @@ public interface SubscriptionService {
 
   StripeSessionDto createBillingPortalSession();
 
-  void setSubscriptionStatusForSubscriptionId(String stripeSubscriptionId, SubscriptionStatus status);
+  void setSubscriptionStatusForSubscriptionId(
+      String stripeSubscriptionId, SubscriptionStatus status);
 
-  void setSubscriptionIdAndStatusForCustomerId(String customerId, String subscriptionId, SubscriptionStatus subscriptionStatus);
+  void setSubscriptionIdAndStatusForCustomerId(
+      String customerId, String subscriptionId, SubscriptionStatus subscriptionStatus);
 }
