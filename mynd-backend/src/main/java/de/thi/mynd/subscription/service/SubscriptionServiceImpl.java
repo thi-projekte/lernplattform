@@ -81,7 +81,7 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
 
   @Override
   @Transactional
-  public void setSubscriptionStatus(String stripeSubscriptionId, SubscriptionStatus status) {
+  public void setSubscriptionStatusForSubscriptionId(String stripeSubscriptionId, SubscriptionStatus status) {
     Optional<Subscription> subscriptionOptional =
         subscriptionRepository.findByStripeSubscriptionId(stripeSubscriptionId);
     if (subscriptionOptional.isEmpty()) {
@@ -89,6 +89,22 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     Subscription subscription = subscriptionOptional.get();
+    subscription.subscriptionStatus = status;
+
+    subscriptionRepository.persistAndFlush(subscription);
+  }
+
+  @Override
+  @Transactional
+  public void setSubscriptionIdAndStatusForCustomerId(String customerId, String subscriptionId, SubscriptionStatus status) {
+    Optional<Subscription> subscriptionOptional =
+            subscriptionRepository.findByStripeCustomerId(customerId);
+    if (subscriptionOptional.isEmpty()) {
+      throw new SubscriptionNotFoundException("This subscription does not exist");
+    }
+
+    Subscription subscription = subscriptionOptional.get();
+    subscription.stripeSubscriptionId = subscriptionId;
     subscription.subscriptionStatus = status;
 
     subscriptionRepository.persistAndFlush(subscription);

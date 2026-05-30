@@ -13,4 +13,8 @@ public final class SubscriptionRepository
   public Optional<Subscription> findByStripeSubscriptionId(String subscriptionId) {
     return find("stripeSubscriptionId = ?1", subscriptionId).firstResultOptional();
   }
+
+  public Optional<Subscription> findByStripeCustomerId(String customerId) {
+    return find("stripeCustomerId = ?1", customerId).firstResultOptional();
+  }
 }

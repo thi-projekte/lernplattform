@@ -167,25 +167,14 @@ const PlanCard = ({
           ))}
         </List>
 
-        {plan === 'FREE' ? (
-          <Button
-            fullWidth
-            radius="md"
-            size="sm"
-            variant="outline"
-            disabled
-            style={{ marginTop: 'auto', borderColor: accentColor, color: accentColor }}
-          >
-            {t('subscription.free.button')}
-          </Button>
-        ) : isCurrent ? (
+        {plan === 'FREE' ? null : isCurrent ? (
           <Button
             fullWidth
             radius="md"
             size="sm"
             leftSection={<IconExternalLink size={14} />}
-            loading={isBillingPortalLoading}
-            onClick={onBillingPortal}
+            loading={isBillingPortalLoading || isSubscribing}
+            onClick={currentPlan === 'FREE' ? () => onSubscribe(plan) : onBillingPortal}
             style={{
               marginTop: 'auto',
               background: accentColor,
@@ -203,8 +192,8 @@ const PlanCard = ({
             size="sm"
             variant="outline"
             leftSection={<IconExternalLink size={14} />}
-            loading={isBillingPortalLoading}
-            onClick={onBillingPortal}
+            loading={isBillingPortalLoading || isSubscribing}
+            onClick={currentPlan === 'FREE' ? () => onSubscribe(plan) : onBillingPortal}
             style={{ marginTop: 'auto', borderColor: accentColor, color: accentColor }}
           >
             {t('subscription.switchPlan')}

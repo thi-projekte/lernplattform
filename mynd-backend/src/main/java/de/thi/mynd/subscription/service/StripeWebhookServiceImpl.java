@@ -28,13 +28,33 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
   public void processWebhook(String payload, String sigHeader) {
     Event event = verifySignatureAndExtractEvent(payload, sigHeader);
 
+    Log.infof("Received webhook for %s", event.getType());
+
     switch (event.getType()) {
+      case "customer.subscription.created":
+        handleSubscriptionCreated(event);
+        break;
       case "customer.subscription.updated":
         handleSubscriptionUpdated(event);
         break;
       case "customer.subscription.deleted":
         handleSubscriptionDeleted(event);
         break;
+    }
+  }
+
+  private void handleSubscriptionCreated(Event event) {
+    Optional<StripeObject> objectOptional = event.getDataObjectDeserializer().getObject();
+    if (objectOptional.isEmpty()) return;
+
+    if (objectOptional.get() instanceof Subscription subscription) {
+      String productId = getProductIdFromSubscription(subscription);
+      Product product = stripeService.getFullProductById(productId);
+      String tier = product.getMetadata().get("tier");
+      SubscriptionStatus status = SubscriptionStatus.valueOf(tier);
+      subscriptionService.setSubscriptionIdAndStatusForCustomerId(subscription.getCustomer(), subscription.getId(), status);
+
+      Log.infof("Created subscription info locally coming from webhook");
     }
   }
 
@@ -53,7 +73,7 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
       Product product = stripeService.getFullProductById(productId);
       String tier = product.getMetadata().get("tier");
       SubscriptionStatus status = SubscriptionStatus.valueOf(tier);
-      subscriptionService.setSubscriptionStatus(subscription.getId(), status);
+      subscriptionService.setSubscriptionStatusForSubscriptionId(subscription.getId(), status);
 
       Log.infof("Updated subscription info locally coming from webhook");
     }
@@ -64,7 +84,7 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
     if (objectOptional.isEmpty()) return;
 
     if (objectOptional.get() instanceof Subscription subscription) {
-      subscriptionService.setSubscriptionStatus(subscription.getId(), SubscriptionStatus.FREE);
+      subscriptionService.setSubscriptionStatusForSubscriptionId(subscription.getId(), SubscriptionStatus.FREE);
       Log.infof("Updated subscription info locally coming from webhook");
     }
   }
@@ -82,6 +102,7 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
     try {
       return Webhook.constructEvent(payload, sigHeader, endpointSecret);
     } catch (SignatureVerificationException e) {
+      Log.error("Invalid stripe signature");
       throw new InvalidStripeSignatureException(e.getMessage());
     }
   }
