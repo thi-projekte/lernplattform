@@ -18,8 +18,9 @@ const StreakPage = () => {
 
   if (isLoading || isLoadingPrefs) return <LayoutLoader />;
 
-  const activeStreak = streaks?.find((s) => s.isActive);
-  const history = streaks?.filter((s) => !s.isActive) ?? [];
+  const currentType = preferences?.type ?? 'DAILY';
+  const activeStreak = streaks?.find((s) => s.isActive && s.type === currentType);
+  const history = streaks?.filter((s) => !s.isActive && s.type === currentType) ?? [];
 
   return (
     <Layout>
