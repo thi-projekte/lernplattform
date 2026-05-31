@@ -121,7 +121,7 @@ class StripeServiceImplTest {
 
     String query = captor.getValue().toMap().get("query").toString();
     assertTrue(query.contains("PRO"));
-    assertTrue(query.contains("active:'true'"));
+    assertTrue(query.contains("active:\"true\""));
   }
 
   // --- getFullProductById ---
