@@ -36,6 +36,7 @@ jobs:
           chmod +x mvnw
           ./mvnw package -Dnative -DskipTests
       - name: Verify Stripe Reflection Matrix in GraalVM Config
+        working-directory: mynd-backend
         run: |
           CONFIG_FILE="target/quarkus-app/quarkus/reflect-config.json"
           
