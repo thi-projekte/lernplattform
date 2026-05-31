@@ -3141,5 +3141,26 @@
     "allDeclaredFields": true,
     "allPublicFields": true,
     "name": "com.stripe.param.terminal.ReaderUpdateParams"
+  },
+  {
+    "name": "com.stripe.param.CustomerSearchParams",
+    "allDeclaredFields": true,
+    "allPublicMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "com.stripe.param.ProductSearchParams",
+    "allDeclaredFields": true,
+    "allPublicMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
+  },
+  {
+    "name": "com.stripe.model.StripeSearchResult",
+    "allDeclaredFields": true,
+    "allPublicMethods": true,
+    "allDeclaredConstructors": true,
+    "allPublicConstructors": true
   }
 ]
