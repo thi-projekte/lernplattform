@@ -8,6 +8,7 @@ import static org.mockito.ArgumentMatchers.eq;
 
 import de.thi.mynd.topic.dto.CategoryDto;
 import de.thi.mynd.topic.dto.CategoryTreeDto;
+import de.thi.mynd.topic.exception.CategoryNotFoundException;
 import de.thi.mynd.topic.request.CategoryRequest;
 import de.thi.mynd.topic.service.CategoryServiceImpl;
 import io.quarkus.test.InjectMock;
@@ -189,5 +190,74 @@ public class CategoryResourceTest {
       Mockito.verify(categoryService, Mockito.times(1))
           .updateCategory(eq(categoryId), any(CategoryRequest.class));
     }
+  }
+
+  @Test
+  @TestSecurity(
+      user = "adminUser",
+      roles = {"admin"})
+  void deleteCategory_AsAdmin_ShouldReturn200() {
+    UUID categoryId = UUID.randomUUID();
+
+    // Mocking the service to do nothing (successful deletion)
+    Mockito.doNothing().when(categoryService).deleteCategory(categoryId);
+
+    given()
+        .pathParam("categoryId", categoryId)
+        .when()
+        .delete("/categories/{categoryId}") // Adjust path if you have a class-level @Path
+        .then()
+        .statusCode(200);
+
+    Mockito.verify(categoryService, Mockito.times(1)).deleteCategory(categoryId);
+  }
+
+  @Test
+  @TestSecurity(
+      user = "adminUser",
+      roles = {"admin"})
+  void deleteCategory_WhenNotFound_ShouldReturn404() {
+    UUID categoryId = UUID.randomUUID();
+
+    // Mocking the service to throw your custom exception
+    Mockito.doThrow(new CategoryNotFoundException("Category not found: " + categoryId))
+        .when(categoryService)
+        .deleteCategory(categoryId);
+
+    given()
+        .pathParam("categoryId", categoryId)
+        .when()
+        .delete("/categories/{categoryId}")
+        .then()
+        // Note: Assumes you have an ExceptionMapper that maps CategoryNotFoundException to 404.
+        // If not, Quarkus defaults to 500 for unmapped custom exceptions.
+        .statusCode(404);
+  }
+
+  @Test
+  @TestSecurity(
+      user = "regularUser",
+      roles = {"user"})
+  void deleteCategory_AsRegularUser_ShouldReturn403Forbidden() {
+    UUID categoryId = UUID.randomUUID();
+
+    given()
+        .pathParam("categoryId", categoryId)
+        .when()
+        .delete("/categories/{categoryId}")
+        .then()
+        .statusCode(403); // Authenticated, but wrong role
+  }
+
+  @Test
+  void deleteCategory_Anonymous_ShouldReturn401Unauthorized() {
+    UUID categoryId = UUID.randomUUID();
+
+    given()
+        .pathParam("categoryId", categoryId)
+        .when()
+        .delete("/categories/{categoryId}")
+        .then()
+        .statusCode(401); // No credentials provided
   }
 }

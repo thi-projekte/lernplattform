@@ -119,6 +119,19 @@ public final class CategoryServiceImpl implements CategoryService {
     Log.infof("Successfully updated category with id %s", category.id);
   }
 
+  @Transactional
+  @Override
+  public void deleteCategory(UUID categoryId) {
+    Category category =
+        categoryRepository
+            .findByIdOptional(categoryId)
+            .orElseThrow(() -> new CategoryNotFoundException("Category not found: " + categoryId));
+
+    category.topics.clear();
+    categoryRepository.delete(category);
+    categoryRepository.flush();
+  }
+
   private List<CategoryTreeDto> mapToTree(List<Category> flat) {
     Map<String, CategoryTreeDto> byPath = new LinkedHashMap<>();
     for (Category category : flat) {

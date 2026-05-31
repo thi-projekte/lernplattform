@@ -19,4 +19,6 @@ public interface CategoryService {
   void createCategory(CategoryRequest request);
 
   void updateCategory(UUID categoryId, CategoryRequest request);
+
+  void deleteCategory(UUID categoryId);
 }
