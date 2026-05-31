@@ -96,7 +96,7 @@ public final class StripeServiceImpl implements StripeService {
 
   private Product getProductByTierMetadataField(SubscriptionStatus subscriptionStatus) {
     String query =
-        String.format("metadata['tier']:'%s' AND active:'true'", subscriptionStatus.toString());
+        String.format("metadata[\"tier\"]:\"%s\" AND active:\"true\"", subscriptionStatus.toString());
 
     ProductSearchParams params =
         ProductSearchParams.builder().setQuery(query).addExpand("data.default_price").build();
