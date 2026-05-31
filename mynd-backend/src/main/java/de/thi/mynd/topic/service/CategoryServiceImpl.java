@@ -10,6 +10,7 @@ import de.thi.mynd.topic.exception.CategoryMoveException;
 import de.thi.mynd.topic.exception.CategoryNotFoundException;
 import de.thi.mynd.topic.repository.CategoryRepository;
 import de.thi.mynd.topic.request.CategoryRequest;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -70,6 +71,8 @@ public final class CategoryServiceImpl implements CategoryService {
       category.path = parent.path + "." + category.id.toString().replace("-", "");
     }
     categoryRepository.persistAndFlush(category);
+
+    Log.infof("Successfully created new category with id %s", category.id);
   }
 
   @Override
@@ -112,6 +115,8 @@ public final class CategoryServiceImpl implements CategoryService {
     }
 
     categoryRepository.flush();
+
+    Log.infof("Successfully updated category with id %s", category.id);
   }
 
   @Transactional

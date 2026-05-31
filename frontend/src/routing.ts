@@ -7,7 +7,7 @@ import {
   IconHammer,
   IconHome,
   IconMail,
-  IconTree,
+ IconReportMoney, IconTree,
   type IconProps,
 } from '@tabler/icons-react';
 import CreateTopicPage from './pages/builder-mode/create.tsx';
@@ -17,6 +17,7 @@ import AccountPage from './pages/account.tsx';
 import ManageInvitationsPage from './pages/invitations/manage.tsx';
 import AcceptInviteRoute from './pages/invitations/accept-route.tsx';
 import OnboardingPage from './pages/onboarding/onboarding.tsx';
+import SubscriptionPage from './pages/subscription.tsx';
 import StreakPage from './pages/streak.tsx';
 import AdminCategoriesPage from './pages/admin/categories.tsx';
 import { Role } from './auth.ts';
@@ -91,6 +92,13 @@ export const routes: TypedMyndRoute[] = [
   {
     path: '/acceptInvite',
     Component: AcceptInviteRoute,
+  },
+  {
+    path: '/subscription',
+    Component: SubscriptionPage,
+    translation: 'subscription',
+    isSidebar: true,
+    icon: IconReportMoney,
   },
   {
     path: '/admin/categories',
