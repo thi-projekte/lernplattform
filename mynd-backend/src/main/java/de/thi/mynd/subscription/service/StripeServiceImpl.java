@@ -75,7 +75,7 @@ public final class StripeServiceImpl implements StripeService {
 
   @Override
   public Customer getOrCreateCustomer(String username) {
-    String query = String.format("name:'%s'", username);
+    String query = String.format("name:\"%s\"", username);
     CustomerSearchParams searchParams = CustomerSearchParams.builder().setQuery(query).build();
 
     try {
