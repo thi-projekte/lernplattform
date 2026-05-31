@@ -13,6 +13,7 @@ public final class StreakDto {
   public LocalDateTime endedAt;
   public StreakType type;
   public LocalDateTime lastContinuedAt;
+  public long streakCount;
   public boolean isActive;
   public boolean isSatisfied;
 }

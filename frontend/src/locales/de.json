@@ -8,7 +8,30 @@
     "account": "Mein Profil",
     "invitations": "Einladungen",
     "subscription": "Abonnement",
+    "streaks": "Meine Streaks",
     "adminCategories": "Kategorien"
+  },
+  "streak": {
+    "title": "Meine Streaks",
+    "subtitle": "Verfolge deine Lernkontinuität über die Zeit.",
+    "currentStreak": "Aktueller Streak",
+    "noActiveStreak": "Noch kein aktiver Streak. Fang an zu lernen!",
+    "satisfied": "Im Plan",
+    "notSatisfied": "Noch nicht erfüllt",
+    "history": "Streak-Verlauf",
+    "present": "heute",
+    "type": {
+      "DAILY": "Tage",
+      "WEEKLY": "Wochen",
+      "MONTHLY": "Monate"
+    },
+    "preference": "Streak-Typ",
+    "preferenceDescription": "Wähle, welcher Streak-Typ im Header angezeigt wird.",
+    "typeLabel": {
+      "DAILY": "Täglich",
+      "WEEKLY": "Wöchentlich",
+      "MONTHLY": "Monatlich"
+    }
   },
   "journey": {
     "title": "Deine Journey Map",

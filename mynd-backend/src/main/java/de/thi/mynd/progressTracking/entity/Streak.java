@@ -23,6 +23,9 @@ public class Streak extends BaseEntityWithId {
   @Column(nullable = false)
   public LocalDateTime lastContinuedAt;
 
+  @Column(nullable = false)
+  public long streakCount = 0;
+
   @ManyToMany(cascade = CascadeType.PERSIST)
   @JoinTable(
       name = "join_streak_streak_continuation",

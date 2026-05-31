@@ -31,6 +31,7 @@ const invalidateProgressQueries = (queryClient: ReturnType<typeof useQueryClient
   queryClient.invalidateQueries({ queryKey: ['personalTopics'] });
   queryClient.invalidateQueries({ queryKey: ['mostPopularTopics'] });
   queryClient.invalidateQueries({ queryKey: ['directNeighborTopics'] });
+  queryClient.invalidateQueries({ queryKey: ['streaks'] });
 };
 
 export const useStartTopicMutation = () => {

@@ -3,6 +3,7 @@ import Homepage from './pages/home.tsx';
 import BuilderModeListPage from './pages/builder-mode/list.tsx';
 import type { ComponentType } from 'react';
 import {
+  IconFlame,
   IconHammer,
   IconHome,
   IconMail,
@@ -18,6 +19,7 @@ import ManageInvitationsPage from './pages/invitations/manage.tsx';
 import AcceptInviteRoute from './pages/invitations/accept-route.tsx';
 import OnboardingPage from './pages/onboarding/onboarding.tsx';
 import SubscriptionPage from './pages/subscription.tsx';
+import StreakPage from './pages/streak.tsx';
 import AdminCategoriesPage from './pages/admin/categories.tsx';
 import { Role } from './auth.ts';
 
@@ -72,6 +74,13 @@ export const routes: TypedMyndRoute[] = [
     path: '/account',
     Component: AccountPage,
     translation: 'account',
+  },
+  {
+    path: '/streaks',
+    Component: StreakPage,
+    isSidebar: true,
+    icon: IconFlame,
+    translation: 'streaks',
   },
   {
     path: '/invitations',

@@ -61,6 +61,7 @@ public final class StreakServiceImpl implements StreakService {
       if (isStreakActive(streak) && !isStreakSatisfied(streak)) {
         streak.lastContinuedAt = LocalDateTime.now();
         streak.continuations.add(newContinuation);
+        streak.streakCount += 1;
         streakRepository.persist(streak);
         Log.infof("Continued streak %s for user %s", streak.id, streak.creatorId);
       }
@@ -72,6 +73,7 @@ public final class StreakServiceImpl implements StreakService {
       newStreak.creatorId = creatorId;
       newStreak.startedAt = LocalDateTime.now();
       newStreak.lastContinuedAt = LocalDateTime.now();
+      newStreak.streakCount = 1;
       newStreak.continuations.add(newContinuation);
 
       streakRepository.persist(newStreak);
@@ -178,8 +180,10 @@ public final class StreakServiceImpl implements StreakService {
   }
 
   private StreakPreference createStreakPreferenceForCurrentUser() {
+    CreatorIdKey id = new CreatorIdKey();
+    id.creatorId = identity.getPrincipal().getName();
     StreakPreference preference = new StreakPreference();
-    preference.creatorId = identity.getPrincipal().getName();
+    preference.id = id;
     preference.isPublic = false;
     preference.type = StreakType.DAILY;
     streakPreferenceRepository.persistAndFlush(preference);
