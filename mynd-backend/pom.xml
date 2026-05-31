@@ -109,6 +109,10 @@
             <version>32.1.0</version>
         </dependency>
         <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-arc-deployment</artifactId>
+        </dependency>
+        <dependency>
             <groupId>io.quarkiverse.amazonservices</groupId>
             <artifactId>quarkus-amazon-s3</artifactId>
         </dependency>
