@@ -72,6 +72,11 @@ public final class ImportServiceImpl implements ImportService {
 
       categoryRepository.persist(category);
 
+      if (category.id != null) {
+        category.path = category.id.toString();
+        categoryRepository.persist(category);
+      }
+
       mapping.put(model.getIdentifier(), category);
       count++;
     }

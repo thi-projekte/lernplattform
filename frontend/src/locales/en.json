@@ -7,7 +7,8 @@
     "editTopic": "Edit topic",
     "account": "My profile",
     "invitations": "Invitations",
-    "streaks": "My Streaks"
+    "streaks": "My Streaks",
+    "adminCategories": "Categories"
   },
   "streak": {
     "title": "My Streaks",
@@ -233,6 +234,25 @@
       "ownedTopic": "Own topic",
       "foreignTopic": "Foreign topic",
       "removeOwnTopic": "Remove from graph"
+    }
+  },
+  "categoryAdmin": {
+    "title": "Category management",
+    "treeTitle": "Category tree",
+    "createCategory": "Create category",
+    "createTitle": "Create category",
+    "editTitle": "Edit category",
+    "empty": "No categories found.",
+    "createSuccess": "Category created successfully",
+    "updateSuccess": "Category updated successfully",
+    "saveError": "Failed to save category. Please try again.",
+    "deleteSuccess": "Category deleted successfully",
+    "deleteError": "Failed to delete category. Please try again.",
+    "fields": {
+      "title": "Title",
+      "color": "Color",
+      "parentCategory": "Parent category",
+      "parentPlaceholder": "None (root category)"
     }
   },
   "auth": {

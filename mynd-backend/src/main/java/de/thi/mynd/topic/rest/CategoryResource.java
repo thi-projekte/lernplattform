@@ -70,4 +70,13 @@ public final class CategoryResource {
     categoryService.updateCategory(categoryId, request);
     return Response.ok().build();
   }
+
+  @DELETE
+  @Path("/{categoryId}")
+  @RolesAllowed("admin")
+  @Operation(summary = "Deletes an existing category", description = "Deletes an category")
+  public Response deleteCategory(UUID categoryId) {
+    categoryService.deleteCategory(categoryId);
+    return Response.ok().build();
+  }
 }

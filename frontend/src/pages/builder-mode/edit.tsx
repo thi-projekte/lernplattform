@@ -71,7 +71,7 @@ const EditTopicPage = () => {
       <Title mb={32}>{t('routes.editTopic')}</Title>
       <Container fluid px="md">
         <Tabs defaultValue="coreData">
-          <Tabs.List mb={16}>
+          <Tabs.List mb={16} grow>
             <Tabs.Tab value="coreData">{t('topic.steps.coreDataTitle')}</Tabs.Tab>
             <Tabs.Tab value="associatedTopics">{t('topic.steps.associatedTopicsTitle')}</Tabs.Tab>
             <Tabs.Tab value="contentElements">{t('topic.steps.contentElementsTitle')}</Tabs.Tab>

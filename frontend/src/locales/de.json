@@ -7,7 +7,8 @@
     "editTopic": "Thema bearbeiten",
     "account": "Mein Profil",
     "invitations": "Einladungen",
-    "streaks": "Meine Streaks"
+    "streaks": "Meine Streaks",
+    "adminCategories": "Kategorien"
   },
   "streak": {
     "title": "Meine Streaks",
@@ -233,6 +234,25 @@
       "ownedTopic": "Eigenes Thema",
       "foreignTopic": "Fremdes Thema",
       "removeOwnTopic": "Aus Graph entfernen"
+    }
+  },
+  "categoryAdmin": {
+    "title": "Kategorieverwaltung",
+    "treeTitle": "Kategoriebaum",
+    "createCategory": "Kategorie erstellen",
+    "createTitle": "Kategorie erstellen",
+    "editTitle": "Kategorie bearbeiten",
+    "empty": "Keine Kategorien gefunden.",
+    "createSuccess": "Kategorie erfolgreich erstellt",
+    "updateSuccess": "Kategorie erfolgreich aktualisiert",
+    "saveError": "Kategorie konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "deleteSuccess": "Kategorie erfolgreich gelöscht",
+    "deleteError": "Kategorie konnte nicht gelöscht werden. Bitte versuche es erneut.",
+    "fields": {
+      "title": "Titel",
+      "color": "Farbe",
+      "parentCategory": "Übergeordnete Kategorie",
+      "parentPlaceholder": "Keine (Hauptkategorie)"
     }
   },
   "auth": {

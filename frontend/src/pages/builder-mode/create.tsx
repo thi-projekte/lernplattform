@@ -54,6 +54,7 @@ const CreateTopicPage = () => {
         <StepperProgress
           steps={steps}
           onComplete={onComplete}
+          onBack={() => navigate('/builder-mode')}
           isLoading={isPending}
           lastStepLabel={t('topic.actions.create')}
         />
