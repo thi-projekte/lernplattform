@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  Avatar,
   Collapse,
   Divider,
   Group,
@@ -15,6 +16,7 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
+import { useQueryProfilePicture } from '../../../api/profile-picture.ts';
 import type { Topic } from '../../../schemas/topic';
 import { useTranslation } from 'react-i18next';
 import {
@@ -50,6 +52,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
     !!currentUsername &&
     selectedElement.creatorId.toLowerCase() === currentUsername;
 
+  const { data: creatorPicture } = useQueryProfilePicture(selectedElement.creatorId);
   const [mynaOpen, { toggle: toggleMyna }] = useDisclosure(false);
 
   const { mutate: startTopic, isPending: isStarting } = useStartTopicMutation();
@@ -81,7 +84,13 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
         <Title order={3} mb={6}>
           {selectedElement.title}
         </Title>
-        <Group gap={6} c="dimmed">
+        <Group gap={6} c="dimmed" align="center">
+          <Avatar
+            src={creatorPicture?.url ?? null}
+            size={20}
+            radius="xl"
+            name={selectedElement.creatorFullName}
+          />
           <Text size="xs">{selectedElement.creatorFullName}</Text>
           {selectedElement.estimatedLearningDuration && (
             <>
