@@ -5,8 +5,8 @@
   --layout-border: rgba(176, 210, 232, 0.5);
   --graph-bg: #c7d5e33b;
   --graph-dots: #d1d5db;
-  --node-own-bg: #ffffb865;
-  --node-own-selected-bg: #f1f1adf0;
+  --node-own-bg: linear-gradient(135deg, #f3f8fc 0%, #fbf0d8 100%);
+  --node-own-selected-bg: linear-gradient(135deg, #eaf2f8 0%, #f6e5be 100%);
   --node-foreign-bg: linear-gradient(135deg, #f4f9fe 0%, #e8f1f9 100%);
   --node-foreign-selected-bg: linear-gradient(135deg, #e6f0fa 0%, #d4e4f3 100%);
   --node-journey-bg: linear-gradient(135deg, #e7f2ff 0%, #fff9e6 100%);
@@ -17,9 +17,18 @@
   --panel-right-bg: #ffffff;
 }
 
+.delete-hover-red:hover {
+  --ai-hover: var(--mantine-color-red-light) !important;
+  --ai-hover-color: var(--mantine-color-red-light-color) !important;
+}
+
 [data-mantine-color-scheme='dark'] .react-flow__node {
   --mantine-color-text: #1c1d21;
   color: #1c1d21;
+}
+
+[data-mantine-color-scheme='dark'] .react-flow__node .hide-node-btn {
+  --button-color: #1c1d21 !important;
 }
 
 :root[data-mantine-color-scheme='dark'] {
@@ -34,8 +43,8 @@
   --mantine-color-dark-6: #2e3a4c;
   --mantine-color-dark-5: #374656;
   --mantine-color-dark-4: #415464;
-  --node-own-bg: #ffffb865;
-  --node-own-selected-bg: #f1f1adf0;
+  --node-own-bg: linear-gradient(135deg, #f3f8fc 0%, #fbf0d8 100%);
+  --node-own-selected-bg: linear-gradient(135deg, #eaf2f8 0%, #f6e5be 100%);
   --node-foreign-bg: linear-gradient(135deg, #f4f9fe 0%, #e8f1f9 100%);
   --node-foreign-selected-bg: linear-gradient(135deg, #e6f0fa 0%, #d4e4f3 100%);
   --node-journey-bg: linear-gradient(135deg, #e7f2ff 0%, #fff9e6 100%);

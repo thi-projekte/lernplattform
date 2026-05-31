@@ -6,7 +6,32 @@
     "becomeBuilder": "Zum Builder werden",
     "editTopic": "Thema bearbeiten",
     "account": "Mein Profil",
-    "invitations": "Einladungen"
+    "invitations": "Einladungen",
+    "subscription": "Abonnement",
+    "streaks": "Meine Streaks",
+    "adminCategories": "Kategorien"
+  },
+  "streak": {
+    "title": "Meine Streaks",
+    "subtitle": "Verfolge deine Lernkontinuität über die Zeit.",
+    "currentStreak": "Aktueller Streak",
+    "noActiveStreak": "Noch kein aktiver Streak. Fang an zu lernen!",
+    "satisfied": "Im Plan",
+    "notSatisfied": "Noch nicht erfüllt",
+    "history": "Streak-Verlauf",
+    "present": "heute",
+    "type": {
+      "DAILY": "Tage",
+      "WEEKLY": "Wochen",
+      "MONTHLY": "Monate"
+    },
+    "preference": "Streak-Typ",
+    "preferenceDescription": "Wähle, welcher Streak-Typ im Header angezeigt wird.",
+    "typeLabel": {
+      "DAILY": "Täglich",
+      "WEEKLY": "Wöchentlich",
+      "MONTHLY": "Monatlich"
+    }
   },
   "journey": {
     "title": "Deine Journey Map",
@@ -212,6 +237,25 @@
       "removeOwnTopic": "Aus Graph entfernen"
     }
   },
+  "categoryAdmin": {
+    "title": "Kategorieverwaltung",
+    "treeTitle": "Kategoriebaum",
+    "createCategory": "Kategorie erstellen",
+    "createTitle": "Kategorie erstellen",
+    "editTitle": "Kategorie bearbeiten",
+    "empty": "Keine Kategorien gefunden.",
+    "createSuccess": "Kategorie erfolgreich erstellt",
+    "updateSuccess": "Kategorie erfolgreich aktualisiert",
+    "saveError": "Kategorie konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "deleteSuccess": "Kategorie erfolgreich gelöscht",
+    "deleteError": "Kategorie konnte nicht gelöscht werden. Bitte versuche es erneut.",
+    "fields": {
+      "title": "Titel",
+      "color": "Farbe",
+      "parentCategory": "Übergeordnete Kategorie",
+      "parentPlaceholder": "Keine (Hauptkategorie)"
+    }
+  },
   "auth": {
     "accessDenied": "Zugriff verweigert",
     "noAccessPageText": "Anscheinend verfügen Sie nicht über die erforderlichen Berechtigungen, um diese Seite anzuzeigen. Wenn Sie glauben, dass es sich um einen Fehler handelt, wenden Sie sich bitte an Ihren Administrator.",
@@ -235,6 +279,47 @@
     "submit": "Bestätigen",
     "upgradeToBuilderText": "Klicke auf den Button unten, um dein Konto auf Builder hochzustufen und eigene Lerninhalte zu erstellen."
   },
+  "subscription": {
+    "title": "Wähle deinen Plan",
+    "subtitle": "Schalte mehr Funktionen frei und bringe dein Lernen auf das nächste Level.",
+    "perMonth": "/ Monat",
+    "popular": "Beliebt",
+    "bestValue": "Bestes Preis-Leistungs-Verhältnis",
+    "currentPlan": "Aktueller Plan",
+    "managePlan": "Abo verwalten",
+    "switchPlan": "Plan wechseln",
+    "billingPortal": "Abrechnungsportal",
+    "free": {
+      "title": "Free",
+      "price": "€0",
+      "description": "Kostenlos starten.",
+      "feature1": "Zugriff auf öffentliche Themen",
+      "feature2": "Einfacher Skill Tree",
+      "feature3": "Community-Support",
+      "button": "Aktueller Plan"
+    },
+    "plus": {
+      "title": "Plus",
+      "price": "€9",
+      "description": "Für engagierte Lernende.",
+      "feature1": "Alles aus Free",
+      "feature2": "Unbegrenzte Themen",
+      "feature3": "Myna KI-Assistent",
+      "feature4": "Prioritäts-Support",
+      "button": "Plus abonnieren"
+    },
+    "pro": {
+      "title": "Pro",
+      "price": "€19",
+      "description": "Maximale Lernpower.",
+      "feature1": "Alles aus Plus",
+      "feature2": "Erweiterte Analysen",
+      "feature3": "Eigene Kategorien",
+      "feature4": "Team-Zusammenarbeit",
+      "feature5": "Früher Zugang zu neuen Funktionen",
+      "button": "Pro abonnieren"
+    }
+  },
   "invitation": {
     "manage": {
       "title": "Einladungen",
@@ -249,10 +334,12 @@
       "noInvitationsLeft": "Du hast keine Einladungen mehr übrig.",
       "historyTitle": "Gesendete Einladungen",
       "noHistory": "Noch keine Einladungen gesendet.",
-      "statusSent": "Gesendet",
+      "acceptedTrue": "Akzeptiert",
+      "acceptedFalse": "Ausstehend",
       "columns": {
         "date": "Datum",
-        "status": "Status"
+        "sentTo": "Gesendet at",
+        "accepted": "Akzeptiert?"
       }
     },
     "accept": {

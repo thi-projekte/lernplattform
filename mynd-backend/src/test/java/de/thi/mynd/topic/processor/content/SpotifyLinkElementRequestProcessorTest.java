@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 import de.thi.mynd.topic.entity.ContentType;
 import de.thi.mynd.topic.entity.SpotifyLinkElement;
 import de.thi.mynd.topic.repository.ContentElementRepository;
-import de.thi.mynd.topic.requests.content.SpotifyLinkElementRequest;
+import de.thi.mynd.topic.request.content.SpotifyLinkElementRequest;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -52,6 +52,6 @@ class SpotifyLinkElementRequestProcessorTest {
 
     // Verify it returns false for a different request type
     assertFalse(
-        processor.supports(mock(de.thi.mynd.topic.requests.content.ImageElementRequest.class)));
+        processor.supports(mock(de.thi.mynd.topic.request.content.ImageElementRequest.class)));
   }
 }

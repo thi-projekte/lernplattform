@@ -7,6 +7,7 @@ import { formatDate } from '../utils/date.ts';
 import { IconEye, IconPencil, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import CategoryBadge from '../components/category-badge.tsx';
+import CreatorCell from './creator-cell.tsx';
 
 interface TopicColumnProps {
   editAction?: boolean;
@@ -50,12 +51,7 @@ export const useTopicColumns = ({
     }),
     columnHelper.accessor('creatorFullName', {
       cell: (info) => (
-        <CategoryBadge
-          title={info.getValue()}
-          color="#4c6ef5"
-          size="sm"
-          style={{ textTransform: 'uppercase' }}
-        />
+        <CreatorCell creatorId={info.row.original.creatorId} creatorFullName={info.getValue()} />
       ),
       header: t('common.creatorFullName'),
     }),

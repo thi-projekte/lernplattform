@@ -48,7 +48,8 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
   const updateNodeInternals = useUpdateNodeInternals();
 
   const categories = data.categories ?? data.payload?.categories ?? [];
-  const singleCategoryColor = categories.length === 1 ? `#${categories[0].color}` : undefined;
+  const singleCategoryColor =
+    categories.length === 1 && categories[0].color ? `#${categories[0].color}` : undefined;
   const accentColor = singleCategoryColor ?? '#00aaff';
   const categoryLabels = categories.slice(0, 3);
   const topicId = data.payload?.id;
@@ -226,6 +227,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
               color="gray"
               size="xs"
               fullWidth
+              className="hide-node-btn"
               onClick={(event) => {
                 event.stopPropagation();
                 data.onHide?.();

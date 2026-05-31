@@ -6,7 +6,32 @@
     "createTopic": "Create topic",
     "editTopic": "Edit topic",
     "account": "My profile",
-    "invitations": "Invitations"
+    "invitations": "Invitations",
+    "subscription": "Subscription",
+    "streaks": "My Streaks",
+    "adminCategories": "Categories"
+  },
+  "streak": {
+    "title": "My Streaks",
+    "subtitle": "Track your learning consistency over time.",
+    "currentStreak": "Current streak",
+    "noActiveStreak": "No active streak yet. Start learning to build one!",
+    "satisfied": "On track",
+    "notSatisfied": "Not satisfied yet",
+    "history": "Streak history",
+    "present": "today",
+    "type": {
+      "DAILY": "days",
+      "WEEKLY": "weeks",
+      "MONTHLY": "months"
+    },
+    "preference": "Streak type",
+    "preferenceDescription": "Choose which streak type to display in the header.",
+    "typeLabel": {
+      "DAILY": "Daily",
+      "WEEKLY": "Weekly",
+      "MONTHLY": "Monthly"
+    }
   },
   "journey": {
     "title": "Your journey map",
@@ -212,6 +237,25 @@
       "removeOwnTopic": "Remove from graph"
     }
   },
+  "categoryAdmin": {
+    "title": "Category management",
+    "treeTitle": "Category tree",
+    "createCategory": "Create category",
+    "createTitle": "Create category",
+    "editTitle": "Edit category",
+    "empty": "No categories found.",
+    "createSuccess": "Category created successfully",
+    "updateSuccess": "Category updated successfully",
+    "saveError": "Failed to save category. Please try again.",
+    "deleteSuccess": "Category deleted successfully",
+    "deleteError": "Failed to delete category. Please try again.",
+    "fields": {
+      "title": "Title",
+      "color": "Color",
+      "parentCategory": "Parent category",
+      "parentPlaceholder": "None (root category)"
+    }
+  },
   "auth": {
     "accessDenied": "Access Denied",
     "noAccessPageText": "It looks like you don't have the necessary permissions to view this page. If you think this is a mistake, please contact your administrator.",
@@ -234,6 +278,47 @@
     "role_selection_placeholder": "Select your role",
     "submit": "Submit"
   },
+  "subscription": {
+    "title": "Choose your plan",
+    "subtitle": "Unlock more features and take your learning to the next level.",
+    "perMonth": "/ month",
+    "popular": "Popular",
+    "bestValue": "Best value",
+    "currentPlan": "Current plan",
+    "managePlan": "Manage subscription",
+    "switchPlan": "Switch plan",
+    "billingPortal": "Billing portal",
+    "free": {
+      "title": "Free",
+      "price": "€0",
+      "description": "Get started at no cost.",
+      "feature1": "Access to public topics",
+      "feature2": "Basic skill tree",
+      "feature3": "Community support",
+      "button": "Current plan"
+    },
+    "plus": {
+      "title": "Plus",
+      "price": "€9",
+      "description": "For dedicated learners.",
+      "feature1": "Everything in Free",
+      "feature2": "Unlimited topics",
+      "feature3": "Myna AI assistant",
+      "feature4": "Priority support",
+      "button": "Subscribe to Plus"
+    },
+    "pro": {
+      "title": "Pro",
+      "price": "€19",
+      "description": "Maximum learning power.",
+      "feature1": "Everything in Plus",
+      "feature2": "Advanced analytics",
+      "feature3": "Custom categories",
+      "feature4": "Team collaboration",
+      "feature5": "Early access to new features",
+      "button": "Subscribe to Pro"
+    }
+  },
   "invitation": {
     "manage": {
       "title": "Invitations",
@@ -248,10 +333,12 @@
       "noInvitationsLeft": "You have no invitations left.",
       "historyTitle": "Sent invitations",
       "noHistory": "No invitations sent yet.",
-      "statusSent": "Sent",
+      "acceptedTrue": "Accepeted",
+      "acceptedFalse": "Pending",
       "columns": {
         "date": "Date",
-        "status": "Status"
+        "sentTo": "Sent to",
+        "accepted": "Accepted?"
       }
     },
     "accept": {

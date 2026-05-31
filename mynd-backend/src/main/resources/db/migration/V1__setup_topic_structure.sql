@@ -119,12 +119,12 @@ alter table if exists image_element
 alter table if exists join_topic_category
    add constraint FKlxi950g0wb9x3jqqg0tj1g6dq
    foreign key (category_id)
-   references category;
+   references category on delete cascade;
 
 alter table if exists join_topic_category
    add constraint FKk8mvrj1ocn3jqinxyabi8gu9d
    foreign key (topic_id)
-   references topic;
+   references topic on delete cascade;
 
 alter table if exists pdf_element
    add constraint FK62539yhj2ylbmwxqx6o9x05sq

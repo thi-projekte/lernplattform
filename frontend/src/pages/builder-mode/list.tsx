@@ -11,6 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import EntityTable from '../../components/entity-table.tsx';
 import {
   ActionIcon,
+  Box,
   Button,
   Flex,
   Group,
@@ -22,7 +23,7 @@ import {
   Tooltip,
   useMantineTheme,
 } from '@mantine/core';
-import { useDisclosure } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import ImportTopicsModal from '../../components/topic/import-topics-modal.tsx';
 import { useTranslation } from 'react-i18next';
 import type { OnConnect } from '@xyflow/react';
@@ -42,6 +43,7 @@ import CategoryBadge from '../../components/category-badge.tsx';
 
 const BuilderModeListPage = () => {
   const theme = useMantineTheme();
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const [pagination, setPagination] = useState<PaginationState>({ pageSize: 20, pageIndex: 0 });
   const [viewMode, setViewMode] = useState<'list' | 'graph'>('list');
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
@@ -260,11 +262,20 @@ const BuilderModeListPage = () => {
   return (
     <Layout>
       <Title>{t('topic.headings.personalTopics')}</Title>
-      <Flex justify="flex-end" w="100%" mt={12} gap="sm">
-        <Button variant="default" leftSection={<IconFileImport size={16} />} onClick={openImport}>
+      <Flex justify="flex-end" w="100%" mt={12} gap="sm" wrap="wrap">
+        <Button
+          variant="default"
+          leftSection={<IconFileImport size={16} />}
+          onClick={openImport}
+          fullWidth={isMobile}
+        >
           {t('topic.actions.importJson')}
         </Button>
-        <Button variant="filled" onClick={() => navigate('/builder-mode/topics/create')}>
+        <Button
+          variant="filled"
+          onClick={() => navigate('/builder-mode/topics/create')}
+          fullWidth={isMobile}
+        >
           <IconPlusFilled />
           &nbsp;{t('topic.actions.create')}
         </Button>
@@ -287,25 +298,27 @@ const BuilderModeListPage = () => {
 
         {viewMode === 'list' ? (
           data && (
-            <EntityTable
-              data={data.results}
-              columns={columns}
-              pageCount={data.totalPages}
-              pagination={pagination}
-              isFetching={isLoading}
-              setPagination={setPagination}
-            />
+            <Box style={{ overflowX: 'auto' }}>
+              <EntityTable
+                data={data.results}
+                columns={columns}
+                pageCount={data.totalPages}
+                pagination={pagination}
+                isFetching={isLoading}
+                setPagination={setPagination}
+              />
+            </Box>
           )
         ) : (
           <div
             style={{
               display: 'grid',
               gap: '1rem',
-              gridTemplateColumns: '240px minmax(0, 1fr)',
+              gridTemplateColumns: isMobile ? '1fr' : '240px minmax(0, 1fr)',
               alignItems: 'start',
             }}
           >
-            <Paper withBorder radius="md" p="sm" h={760}>
+            <Paper withBorder radius="md" p="sm" h={isMobile ? 400 : 760}>
               <Stack gap="md" h="100%" style={{ minHeight: 0 }}>
                 <div>
                   <Title order={4}>{t('topic.graph.graphModeRailTitle')}</Title>
@@ -452,7 +465,7 @@ const BuilderModeListPage = () => {
               withBorder
               radius="md"
               p="md"
-              h={760}
+              h={isMobile ? 400 : 760}
               style={{ background: theme.other.graphBg }}
             >
               <PersonalTopicsGraph

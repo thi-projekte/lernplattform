@@ -6,7 +6,7 @@ import java.util.UUID;
 import lombok.Builder;
 
 @Builder
-public class TopicLearnProgressDto {
+public final class TopicLearnProgressDto {
 
   public UUID topicId;
   public LearnProgressStatus status;

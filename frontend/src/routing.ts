@@ -2,7 +2,15 @@ import { type BaseRouteObject, createBrowserRouter } from 'react-router';
 import Homepage from './pages/home.tsx';
 import BuilderModeListPage from './pages/builder-mode/list.tsx';
 import type { ComponentType } from 'react';
-import { IconHammer, IconHome, IconMail, type IconProps } from '@tabler/icons-react';
+import {
+  IconFlame,
+  IconHammer,
+  IconHome,
+  IconMail,
+  IconReportMoney,
+  IconTree,
+  type IconProps,
+} from '@tabler/icons-react';
 import CreateTopicPage from './pages/builder-mode/create.tsx';
 import EditTopicPage from './pages/builder-mode/edit.tsx';
 import TopicDetailsPage from './pages/topic/details.tsx';
@@ -10,6 +18,9 @@ import AccountPage from './pages/account.tsx';
 import ManageInvitationsPage from './pages/invitations/manage.tsx';
 import AcceptInviteRoute from './pages/invitations/accept-route.tsx';
 import OnboardingPage from './pages/onboarding/onboarding.tsx';
+import SubscriptionPage from './pages/subscription.tsx';
+import StreakPage from './pages/streak.tsx';
+import AdminCategoriesPage from './pages/admin/categories.tsx';
 import { Role } from './auth.ts';
 
 export interface TypedMyndRoute extends BaseRouteObject {
@@ -65,6 +76,13 @@ export const routes: TypedMyndRoute[] = [
     translation: 'account',
   },
   {
+    path: '/streaks',
+    Component: StreakPage,
+    isSidebar: true,
+    icon: IconFlame,
+    translation: 'streaks',
+  },
+  {
     path: '/invitations',
     Component: ManageInvitationsPage,
     isSidebar: true,
@@ -75,6 +93,21 @@ export const routes: TypedMyndRoute[] = [
   {
     path: '/acceptInvite',
     Component: AcceptInviteRoute,
+  },
+  {
+    path: '/subscription',
+    Component: SubscriptionPage,
+    translation: 'subscription',
+    isSidebar: true,
+    icon: IconReportMoney,
+  },
+  {
+    path: '/admin/categories',
+    Component: AdminCategoriesPage,
+    isSidebar: true,
+    icon: IconTree,
+    translation: 'adminCategories',
+    roles: [Role.Admin],
   },
 ];
 

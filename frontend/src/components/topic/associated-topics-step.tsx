@@ -12,6 +12,7 @@ import {
   Tooltip,
   useMantineTheme,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconEyeOff, IconLink, IconTrash } from '@tabler/icons-react';
@@ -36,6 +37,7 @@ interface AssociatedTopicsStepProps {
 const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) => {
   const { t } = useTranslation();
   const theme = useMantineTheme();
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const userService = useUserService();
   const [editorMode, setEditorMode] = useState<'list' | 'graph'>('graph');
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
@@ -245,12 +247,12 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
           style={{
             display: 'grid',
             gap: '1rem',
-            gridTemplateColumns: '260px minmax(0, 1fr)',
+            gridTemplateColumns: isMobile ? '1fr' : '260px minmax(0, 1fr)',
             alignItems: 'start',
           }}
         >
           <div>
-            <Paper withBorder radius="md" p="sm" h={760}>
+            <Paper withBorder radius="md" p="sm" h={isMobile ? 400 : 760}>
               <Stack gap="md" h="100%">
                 <div>
                   <Group justify="space-between" align="center" wrap="nowrap">
@@ -393,7 +395,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
             </Paper>
           </div>
           <div>
-            <Paper withBorder radius="md" p="md" h={760}>
+            <Paper withBorder radius="md" p="md" h={isMobile ? 400 : 760}>
               <Stack gap="md" h="100%">
                 <Group justify="space-between" align="flex-start" wrap="nowrap">
                   <div style={{ minWidth: 0 }}>

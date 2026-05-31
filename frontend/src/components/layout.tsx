@@ -7,12 +7,16 @@ import {
   Group,
   Image,
   NavLink,
+  Text,
+  ThemeIcon,
+  Tooltip,
   UnstyledButton,
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconChevronLeft, IconUser } from '@tabler/icons-react';
+import { IconChevronLeft, IconFlame, IconUser } from '@tabler/icons-react';
 import { useQueryProfilePicture } from '../api/profile-picture.ts';
+import { useFetchStreakPreferences, useFetchStreaks } from '../api/streak.ts';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import ColorSchemeToggle from './color-scheme-toggle.tsx';
@@ -23,6 +27,34 @@ import { useLocation, useMatches, useNavigate } from 'react-router';
 import { isGranted } from '../auth.ts';
 import AccessDenied from './access-denied.tsx';
 import { useUserService } from '../provider/user-provider.tsx';
+
+const StreakBadge = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { data: streaks } = useFetchStreaks();
+  const { data: preferences } = useFetchStreakPreferences();
+
+  const preferredStreak = streaks?.find(
+    (s) => s.isActive && s.type === (preferences?.type ?? 'DAILY')
+  );
+
+  if (!preferredStreak) return null;
+
+  return (
+    <Tooltip label={t('streak.currentStreak')} withArrow>
+      <UnstyledButton onClick={() => navigate('/streaks')}>
+        <Group gap={6} align="center">
+          <ThemeIcon size="md" radius="xl" color="orange" variant="light">
+            <IconFlame size={16} />
+          </ThemeIcon>
+          <Text size="md" fw={700} c="orange">
+            {preferredStreak.streakCount}
+          </Text>
+        </Group>
+      </UnstyledButton>
+    </Tooltip>
+  );
+};
 
 interface LayoutProps {
   children: ReactNode;
@@ -108,7 +140,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              paddingLeft: 83,
+              paddingLeft: 100,
               overflow: 'visible',
               transition: 'width 150ms ease',
             }}
@@ -135,6 +167,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             </UnstyledButton>
           </Group>
           <Group px="md" gap="xs">
+            <StreakBadge />
             <ColorSchemeToggle />
             <LanguagePicker />
           </Group>

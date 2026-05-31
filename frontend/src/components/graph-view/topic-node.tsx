@@ -1,6 +1,7 @@
 import { Handle, Position, type Node, type NodeProps } from '@xyflow/react';
-import { Text } from '@mantine/core';
+import { Text, Group, Avatar } from '@mantine/core';
 import type { GraphTopicNodeData } from './topic-graph.types';
+import { useQueryProfilePicture } from '../../api/profile-picture.ts';
 
 type TopicNodeProps = NodeProps<Node<GraphTopicNodeData>>;
 
@@ -15,6 +16,9 @@ const TopicNode = ({ data, selected }: TopicNodeProps) => {
     : data.isIsolated || data.isOwned === false
       ? 'rgba(34, 139, 230, 0.10)'
       : 'rgba(240, 140, 0, 0.10)';
+
+  const creatorId = data.creatorId || (data.payload as { creatorId?: string })?.creatorId;
+  const { data: profilePicture } = useQueryProfilePicture(creatorId);
 
   return (
     <div
@@ -91,15 +95,22 @@ const TopicNode = ({ data, selected }: TopicNodeProps) => {
       </div>
 
       {data.creatorFullName && (
-        <Text
-          size="xs"
-          c="dimmed"
-          ta="center"
-          mt={8}
-          style={{ lineHeight: 1.2, maxWidth: 180, textWrap: 'balance' }}
-        >
-          {data.creatorFullName}
-        </Text>
+        <Group gap={6} mt={8} align="center" justify="center" wrap="nowrap">
+          <Avatar
+            src={profilePicture?.url}
+            size={16}
+            radius="xl"
+            name={data.creatorFullName}
+            color="initials"
+          />
+          <Text
+            size="xs"
+            c="dimmed"
+            style={{ lineHeight: 1.2, maxWidth: 160, textWrap: 'balance' }}
+          >
+            {data.creatorFullName}
+          </Text>
+        </Group>
       )}
     </div>
   );
