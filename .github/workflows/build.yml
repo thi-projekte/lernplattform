@@ -34,28 +34,7 @@ jobs:
         working-directory: mynd-backend
         run: |
           chmod +x mvnw
-          ./mvnw package -Dnative -DskipTests
-      - name: Verify Stripe Reflection Matrix in GraalVM Config
-        run: |
-          CONFIG_FILE="target/quarkus-app/quarkus/reflect-config.json"
-          
-          # Check if the configuration file exists
-          if [ ! -f "$CONFIG_FILE" ]; then
-            echo "ERROR: reflect-config.json not found!"
-            exit 1
-          fi
-          
-          # Use jq to verify that com.stripe.model.Account exists and has the correct flags
-          # This ensures your exact block structure is present
-          VERIFY_ACCOUNT=$(jq '.[] | select(.name=="com.stripe.model.Account")' $CONFIG_FILE)
-          
-          if echo "$VERIFY_ACCOUNT" | grep -q '"allDeclaredFields": true' && echo "$VERIFY_ACCOUNT" | grep -q '"allDeclaredConstructors": true'; then
-            echo "SUCCESS: Stripe models perfectly registered for reflection!"
-          else
-            echo "CRITICAL ERROR: Stripe Account model configuration is missing or incorrect!"
-            echo "Found block: $VERIFY_ACCOUNT"
-            exit 1
-          fi
+          ./mvnw package -DskipTests
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
