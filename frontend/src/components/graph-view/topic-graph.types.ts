@@ -16,6 +16,7 @@ export interface GraphTopicNodeData extends Record<string, unknown> {
   kind: 'topic';
   graphNodeId?: string;
   title: string;
+  creatorId?: string;
   creatorFullName?: string;
   isRoot?: boolean;
   isIsolated?: boolean;
