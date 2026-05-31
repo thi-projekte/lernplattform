@@ -2,7 +2,14 @@ import { type BaseRouteObject, createBrowserRouter } from 'react-router';
 import Homepage from './pages/home.tsx';
 import BuilderModeListPage from './pages/builder-mode/list.tsx';
 import type { ComponentType } from 'react';
-import { IconFlame, IconHammer, IconHome, IconMail, IconTree, type IconProps } from '@tabler/icons-react';
+import {
+  IconFlame,
+  IconHammer,
+  IconHome,
+  IconMail,
+  IconTree,
+  type IconProps,
+} from '@tabler/icons-react';
 import CreateTopicPage from './pages/builder-mode/create.tsx';
 import EditTopicPage from './pages/builder-mode/edit.tsx';
 import TopicDetailsPage from './pages/topic/details.tsx';
