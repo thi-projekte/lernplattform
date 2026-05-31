@@ -32,7 +32,7 @@ jobs:
         working-directory: mynd-backend
         run: |
           chmod +x mvnw
-          ./mvnw package -DskipTests
+          ./mvnw package -Dnative -DskipTests
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
