@@ -7,7 +7,8 @@ import {
   IconHammer,
   IconHome,
   IconMail,
- IconReportMoney, IconTree,
+  IconReportMoney,
+  IconTree,
   type IconProps,
 } from '@tabler/icons-react';
 import CreateTopicPage from './pages/builder-mode/create.tsx';
