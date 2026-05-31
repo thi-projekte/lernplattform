@@ -16,6 +16,7 @@ import '@mantine/notifications/styles.css';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import RegistrationProvider from './provider/registration-provider.tsx';
+import { SubscriptionProvider } from './provider/subscription-provider.tsx';
 import type { KeycloakResourceAccess } from 'keycloak-js';
 import keycloak from './keycloak.ts';
 import { track } from '@plausible-analytics/tracker';
@@ -38,7 +39,9 @@ function App() {
           <UserProvider>
             <Notifications />
             <RegistrationProvider>
-              <RouterProvider router={router} />
+              <SubscriptionProvider>
+                <RouterProvider router={router} />
+              </SubscriptionProvider>
             </RegistrationProvider>
           </UserProvider>
         </QueryClientProvider>

@@ -120,6 +120,8 @@ services:
       MAILER_USERNAME: ${MAILER_USERNAME}
       MAILER_FROM: ${MAILER_FROM}
       MAILER_PASSWORD: ${MAILER_PASSWORD}
+      STRIPE_API_KEY: ${STRIPE_API_KEY}
+      STRIPE_WEBHOOK_SECRET: ${STRIPE_WEBHOOK_SECRET}
 
   mynd-frontend:
     container_name: mynd-lernplattform-frontend
