@@ -209,7 +209,9 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
             leftSection={<IconRefresh size={14} />}
             loading={isResetting}
             onClick={() => topicId && resetTopic(topicId)}
-            styles={{ root: { '--button-hover': 'light-dark(rgba(0,0,0,0.04), rgba(255,255,255,0.06))' } }}
+            styles={{
+              root: { '--button-hover': 'light-dark(rgba(0,0,0,0.04), rgba(255,255,255,0.06))' },
+            }}
           >
             {t('topic.actions.resetProgress')}
           </Button>
