@@ -262,7 +262,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                 <div>
                   <Group justify="space-between" align="center" wrap="nowrap">
                     <Title order={4}>{t('topic.graph.graphModeRailTitle')}</Title>
-                    <Badge variant="light" color={(topic.relatedTopics ?? []).length >= 3 ? 'red' : 'gray'}>
+                    <Badge
+                      variant="light"
+                      color={(topic.relatedTopics ?? []).length >= 3 ? 'red' : 'gray'}
+                    >
                       {(topic.relatedTopics ?? []).length} / 3
                     </Badge>
                   </Group>
