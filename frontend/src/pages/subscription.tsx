@@ -293,7 +293,11 @@ const SubscriptionPage = () => {
               </Group>
             )}
 
-            <Group align="stretch" gap="lg" style={{ flexWrap: 'wrap', flexDirection: isMobile ? 'column' : 'row' }}>
+            <Group
+              align="stretch"
+              gap="lg"
+              style={{ flexWrap: 'wrap', flexDirection: isMobile ? 'column' : 'row' }}
+            >
               <PlanCard
                 plan="FREE"
                 title={t('subscription.free.title')}
