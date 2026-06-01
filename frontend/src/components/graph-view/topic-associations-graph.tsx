@@ -4,6 +4,7 @@ import type {
   EdgeMouseHandler,
   Node,
   NodeMouseHandler,
+  OnNodeDrag,
   NodeTypes,
   OnConnect,
   OnMoveEnd,
@@ -106,7 +107,7 @@ const TopicAssociationsGraph = ({
     }
   };
 
-  const handleNodeDragStop: NodeMouseHandler = (_event, node) => {
+  const handleNodeDragStop: OnNodeDrag = (_event, node) => {
     onNodePositionChange?.(node.id, node.position);
   };
 
