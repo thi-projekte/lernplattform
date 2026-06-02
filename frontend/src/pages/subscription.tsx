@@ -353,9 +353,7 @@ const SubscriptionPage = () => {
                 plan="PRO"
                 title={t('subscription.pro.title')}
                 price={isMonthly ? t('subscription.pro.price') : t('subscription.pro.priceYearly')}
-                priceSuffix={
-                  isMonthly ? t('subscription.perMonth') : t('subscription.perMonth')
-                }
+                priceSuffix={isMonthly ? t('subscription.perMonth') : t('subscription.perMonth')}
                 priceSub={isMonthly ? undefined : t('subscription.billedYearly')}
                 description={t('subscription.pro.description')}
                 features={[
