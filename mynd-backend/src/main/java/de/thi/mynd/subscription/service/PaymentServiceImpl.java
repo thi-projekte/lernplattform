@@ -1,5 +1,6 @@
 package de.thi.mynd.subscription.service;
 
+import com.stripe.model.Product;
 import com.stripe.model.checkout.Session;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.subscription.dto.ProductDto;
@@ -47,6 +48,9 @@ public final class PaymentServiceImpl implements PaymentService {
 
   @Override
   public List<ProductDto> getAllProducts() {
-    return List.of();
+    Subscription subscription = subscriptionService.getSubscriptionForCurrentUser();
+    List<Product> products = stripeService.getAllProductsWithPricesAndMetaData();
+
+    return mappingRegistry.mapList(products, ProductDto.class, subscription.usedTrial);
   }
 }

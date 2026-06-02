@@ -3,8 +3,10 @@ package de.thi.mynd.subscription.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+import com.stripe.model.Product;
 import com.stripe.model.checkout.Session;
 import de.thi.mynd.common.processor.MappingRegistry;
+import de.thi.mynd.subscription.dto.ProductDto;
 import de.thi.mynd.subscription.dto.StripeSessionDto;
 import de.thi.mynd.subscription.entity.Subscription;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
@@ -14,6 +16,8 @@ import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.security.Principal;
+import java.util.List;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -138,6 +142,58 @@ class PaymentServiceImplTest {
 
     verify(identity).getPrincipal();
     verify(stripeService).getOrCreateCustomer(CREATOR_ID);
+  }
+
+  @Test
+  void testGetAllProducts_Success() {
+    // 1. Arrange Subscription
+    Subscription mockSubscription = new Subscription();
+    mockSubscription.usedTrial = true; // Setting the flag to true
+    when(subscriptionService.getSubscriptionForCurrentUser()).thenReturn(mockSubscription);
+
+    // 2. Arrange Stripe Products
+    Product mockProduct = new Product();
+    mockProduct.setId("prod_123");
+    List<Product> mockProductList = List.of(mockProduct);
+    when(stripeService.getAllProductsWithPricesAndMetaData()).thenReturn(mockProductList);
+
+    // 3. Arrange Mapping Registry
+    ProductDto mockDto = ProductDto.builder().build();
+    List<ProductDto> expectedDtoList = List.of(mockDto);
+
+    // Match the exact parameters your method passes down
+    when(mappingRegistry.mapList(mockProductList, ProductDto.class, true))
+            .thenReturn(expectedDtoList);
+
+    // Act
+    List<ProductDto> result = paymentService.getAllProducts();
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(1, result.size());
+
+    // Verify the interactions happened exactly as expected
+    verify(subscriptionService, times(1)).getSubscriptionForCurrentUser();
+    verify(stripeService, times(1)).getAllProductsWithPricesAndMetaData();
+    verify(mappingRegistry, times(1)).mapList(mockProductList, ProductDto.class, true);
+  }
+
+  @Test
+  void testGetAllProducts_PropagatesExceptionWhenSubscriptionFails() {
+    // Arrange
+    when(subscriptionService.getSubscriptionForCurrentUser())
+            .thenThrow(new RuntimeException("User not authenticated"));
+
+    // Act & Assert
+    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
+      paymentService.getAllProducts();
+    });
+
+    assertEquals("User not authenticated", exception.getMessage());
+
+    // Verify downstream services were never called because it failed early
+    verifyNoInteractions(stripeService);
+    verifyNoInteractions(mappingRegistry);
   }
 
   // --- Helpers ---
