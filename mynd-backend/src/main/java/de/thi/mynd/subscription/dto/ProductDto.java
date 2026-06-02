@@ -8,5 +8,6 @@ import lombok.Builder;
 public final class ProductDto {
   public String title;
   public SubscriptionStatus subscriptionStatus;
-  public List<PossiblePricesDto> prices;
+  public boolean canHaveTrial;
+  public List<PriceDto> prices;
 }
