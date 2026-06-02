@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.stripe.StripeClient;
+import com.stripe.exception.ApiConnectionException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
@@ -35,6 +36,7 @@ class StripeServiceImplTest {
   private CheckoutService checkoutService;
   private SessionService checkoutSessionService;
   private BillingPortalService billingPortalService;
+  private PriceService priceService;
   private com.stripe.service.billingportal.SessionService billingPortalSessionService;
 
   private static final String FRONTEND_URI = "https://app.mynd.de";
@@ -51,12 +53,14 @@ class StripeServiceImplTest {
     checkoutService = mock(CheckoutService.class);
     checkoutSessionService = mock(SessionService.class);
     billingPortalService = mock(BillingPortalService.class);
+    priceService = mock(PriceService.class);
     billingPortalSessionService = mock(com.stripe.service.billingportal.SessionService.class);
 
     when(stripeClient.v1()).thenReturn(v1Services);
     when(v1Services.products()).thenReturn(productService);
     when(v1Services.customers()).thenReturn(customerService);
     when(v1Services.checkout()).thenReturn(checkoutService);
+    when(v1Services.prices()).thenReturn(priceService);
     when(checkoutService.sessions()).thenReturn(checkoutSessionService);
     when(v1Services.billingPortal()).thenReturn(billingPortalService);
     when(billingPortalService.sessions()).thenReturn(billingPortalSessionService);
@@ -257,6 +261,88 @@ class StripeServiceImplTest {
         .thenThrow(mock(StripeException.class));
 
     assertThrows(HandledStripeException.class, () -> stripeService.getOrCreateCustomer(USERNAME));
+  }
+
+  // ==========================================
+  // Tests for getAllPricesForProduct
+  // ==========================================
+
+  @Test
+  void testGetAllPricesForProduct_Success() throws StripeException {
+    // Arrange
+    String productId = "prod_123";
+    Price mockPrice = new Price();
+    mockPrice.setId("price_ABC");
+
+    // Stripe uses specific Collection classes that extend StripeCollection
+    PriceCollection mockCollection = new PriceCollection();
+    mockCollection.setData(List.of(mockPrice));
+
+    when(priceService.list(any(com.stripe.param.PriceListParams.class))).thenReturn(mockCollection);
+
+    // Act
+    List<Price> result = stripeService.getAllPricesForProduct(productId);
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertEquals("price_ABC", result.get(0).getId());
+  }
+
+  @Test
+  void testGetAllPricesForProduct_ThrowsHandledException() throws StripeException {
+    // Arrange
+    String productId = "prod_123";
+    // Creating a real StripeException subclass to simulate failure
+    StripeException stripeException = new ApiConnectionException("Connection failed", null);
+
+    when(priceService.list(any(com.stripe.param.PriceListParams.class))).thenThrow(stripeException);
+
+    // Act & Assert
+    HandledStripeException exception = assertThrows(HandledStripeException.class, () -> {
+      stripeService.getAllPricesForProduct(productId);
+    });
+
+    assertEquals("Cannot fetch prices for product", exception.getMessage());
+  }
+
+  // ==========================================
+  // Tests for getAllProductsWithPricesAndMetaData
+  // ==========================================
+
+  @Test
+  void testGetAllProductsWithPricesAndMetaData_Success() throws StripeException {
+    // Arrange
+    Product mockProduct = new Product();
+    mockProduct.setId("prod_XYZ");
+
+    ProductCollection mockCollection = new ProductCollection();
+    mockCollection.setData(List.of(mockProduct));
+
+    when(productService.list(any(com.stripe.param.ProductListParams.class))).thenReturn(mockCollection);
+
+    // Act
+    List<Product> result = stripeService.getAllProductsWithPricesAndMetaData();
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertEquals("prod_XYZ", result.get(0).getId());
+  }
+
+  @Test
+  void testGetAllProductsWithPricesAndMetaData_ThrowsHandledException() throws StripeException {
+    // Arrange
+    StripeException stripeException = new ApiConnectionException("API error", null);
+
+    when(productService.list(any(com.stripe.param.ProductListParams.class))).thenThrow(stripeException);
+
+    // Act & Assert
+    HandledStripeException exception = assertThrows(HandledStripeException.class, () -> {
+      stripeService.getAllProductsWithPricesAndMetaData();
+    });
+
+    assertEquals("Cannot fetch all products", exception.getMessage());
   }
 
   // --- Helpers ---

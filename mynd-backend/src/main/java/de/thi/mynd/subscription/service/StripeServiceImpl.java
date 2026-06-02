@@ -6,12 +6,10 @@ import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.CustomerSearchParams;
+import com.stripe.param.PriceListParams;
 import com.stripe.param.ProductListParams;
-import com.stripe.param.ProductSearchParams;
 import com.stripe.param.checkout.SessionCreateParams;
-import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.exception.HandledStripeException;
-import de.thi.mynd.subscription.exception.ProductNotFoundException;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -29,8 +27,7 @@ public final class StripeServiceImpl implements StripeService {
   @Override
   public List<Product> getAllProductsWithPricesAndMetaData() {
 
-    ProductListParams params =
-        ProductListParams.builder().addExpand("data.prices").addExpand("data.metadata").build();
+    ProductListParams params = ProductListParams.builder().setActive(true).build();
 
     try {
       return stripeClient.v1().products().list(params).getData();
@@ -47,6 +44,20 @@ public final class StripeServiceImpl implements StripeService {
     } catch (StripeException e) {
       Log.error(e.getMessage());
       throw new HandledStripeException("Could not retrieve product");
+    }
+  }
+
+  @Override
+  public List<Price> getAllPricesForProduct(String productId) {
+    PriceListParams params =
+        PriceListParams.builder().setProduct(productId).setActive(true).build();
+
+    try {
+      StripeCollection<Price> prices = stripeClient.v1().prices().list(params);
+      return prices.getData();
+    } catch (StripeException e) {
+      Log.error(e.getMessage());
+      throw new HandledStripeException("Cannot fetch prices for product");
     }
   }
 
@@ -105,27 +116,6 @@ public final class StripeServiceImpl implements StripeService {
     } catch (StripeException e) {
       Log.error(e.getMessage());
       throw new HandledStripeException("Cannot get or create the customer");
-    }
-  }
-
-  private Product getProductByTierMetadataField(SubscriptionStatus subscriptionStatus) {
-    String query =
-        String.format(
-            "metadata[\"tier\"]:\"%s\" AND active:\"true\"", subscriptionStatus.toString());
-
-    ProductSearchParams params =
-        ProductSearchParams.builder().setQuery(query).addExpand("data.default_price").build();
-
-    try {
-      StripeSearchResult<Product> result = stripeClient.v1().products().search(params);
-      if (result.getData().isEmpty()) {
-        throw new ProductNotFoundException("The product does not exist");
-      }
-      return result.getData().getFirst();
-
-    } catch (StripeException e) {
-      Log.error(e.getMessage());
-      throw new ProductNotFoundException("Cannot fetch product by metadata");
     }
   }
 

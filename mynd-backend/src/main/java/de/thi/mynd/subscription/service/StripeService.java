@@ -1,16 +1,21 @@
 package de.thi.mynd.subscription.service;
 
 import com.stripe.model.Customer;
+import com.stripe.model.Price;
 import com.stripe.model.Product;
 import io.quarkus.cache.CacheResult;
 import java.util.List;
 
 public interface StripeService {
 
+  @CacheResult(cacheName = "products")
   List<Product> getAllProductsWithPricesAndMetaData();
 
   @CacheResult(cacheName = "stripe-product-by-price")
   Product getFullProductById(String productId);
+
+  @CacheResult(cacheName = "prices")
+  List<Price> getAllPricesForProduct(String productId);
 
   com.stripe.model.checkout.Session createCheckoutSessionForSubscriptionPrice(
       String priceId, String customerId);
