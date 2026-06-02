@@ -35,7 +35,7 @@ public final class StripeServiceImpl implements StripeService {
     try {
       return stripeClient.v1().products().retrieve(id);
     } catch (StripeException e) {
-      Log.error(e.getStripeError().getMessage());
+      Log.error(e.getMessage());
       throw new HandledStripeException("Could not retrieve product");
     }
   }
@@ -58,7 +58,7 @@ public final class StripeServiceImpl implements StripeService {
     try {
       return stripeClient.v1().checkout().sessions().create(paramsBuilder.build());
     } catch (StripeException e) {
-      Log.error(e.getStripeError().getMessage());
+      Log.error(e.getMessage());
       throw new HandledStripeException("Cannot create checkout session");
     }
   }
@@ -74,7 +74,7 @@ public final class StripeServiceImpl implements StripeService {
     try {
       return stripeClient.v1().billingPortal().sessions().create(params);
     } catch (StripeException e) {
-      Log.error(e.getStripeError().getMessage());
+      Log.error(e.getMessage());
       throw new HandledStripeException("Cannot create billing portal session");
     }
   }
@@ -96,7 +96,7 @@ public final class StripeServiceImpl implements StripeService {
       return stripeClient.v1().customers().create(createParams);
 
     } catch (StripeException e) {
-      Log.error(e.getStripeError().getMessage());
+      Log.error(e.getMessage());
       throw new HandledStripeException("Cannot get or create the customer");
     }
   }
@@ -117,7 +117,7 @@ public final class StripeServiceImpl implements StripeService {
       return result.getData().getFirst();
 
     } catch (StripeException e) {
-      Log.error(e.getStripeError().getMessage());
+      Log.error(e.getMessage());
       throw new ProductNotFoundException("Cannot fetch product by metadata");
     }
   }
