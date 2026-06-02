@@ -13,5 +13,8 @@ public class Subscription extends BaseEntityWithCreatorIdPk {
   @Column(nullable = false)
   public SubscriptionStatus subscriptionStatus;
 
+  @Column(nullable = false)
+  public boolean usedTrial;
+
   @Column public String stripeSubscriptionId;
 }
