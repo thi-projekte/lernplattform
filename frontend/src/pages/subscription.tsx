@@ -7,12 +7,14 @@ import {
   Group,
   List,
   Paper,
+  SegmentedControl,
   Stack,
   Text,
   ThemeIcon,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconCheck, IconCrown, IconExternalLink, IconRocket, IconStar } from '@tabler/icons-react';
+import { IconCheck, IconCrown, IconExternalLink, IconStar } from '@tabler/icons-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Layout } from '../components/layout.tsx';
 import {
@@ -23,24 +25,28 @@ import { useSubscription } from '../provider/subscription-provider.tsx';
 import { notifications } from '@mantine/notifications';
 import type { SubscriptionStatus } from '../schemas/payment.ts';
 
+type BillingInterval = 'monthly' | 'yearly';
+
 interface PlanCardProps {
   plan: SubscriptionStatus;
   title: string;
   price: string;
   priceSuffix?: string;
+  priceSub?: string;
   description: string;
   features: string[];
   badge?: string;
   badgeColor?: string;
+  trialBadge?: string;
   accentColor: string;
   icon: React.ReactNode;
   currentPlan: SubscriptionStatus;
   canAccessBillingPortal: boolean;
-  onSubscribe: (plan: 'PLUS' | 'PRO') => void;
+  onSubscribe: (plan: 'PRO', interval: BillingInterval) => void;
   onBillingPortal: () => void;
   isSubscribing: boolean;
-  isSubscribingPlan?: 'PLUS' | 'PRO';
   isBillingPortalLoading: boolean;
+  billingInterval?: BillingInterval;
 }
 
 const PlanCard = ({
@@ -48,10 +54,12 @@ const PlanCard = ({
   title,
   price,
   priceSuffix,
+  priceSub,
   description,
   features,
   badge,
   badgeColor,
+  trialBadge,
   accentColor,
   icon,
   currentPlan,
@@ -59,8 +67,8 @@ const PlanCard = ({
   onSubscribe,
   onBillingPortal,
   isSubscribing,
-  isSubscribingPlan,
   isBillingPortalLoading,
+  billingInterval,
 }: PlanCardProps) => {
   const { t } = useTranslation();
   const isCurrent = currentPlan === plan;
@@ -85,21 +93,6 @@ const PlanCard = ({
         position: 'relative',
       }}
     >
-      {badge && !isCurrent && (
-        <Badge
-          size="sm"
-          style={{
-            position: 'absolute',
-            top: 16,
-            right: 16,
-            background: badgeColor,
-            color: '#fff',
-            fontWeight: 700,
-          }}
-        >
-          {badge}
-        </Badge>
-      )}
       {isCurrent && (
         <Badge
           size="sm"
@@ -113,6 +106,21 @@ const PlanCard = ({
           }}
         >
           {t('subscription.currentPlan')}
+        </Badge>
+      )}
+      {!isCurrent && badge && (
+        <Badge
+          size="sm"
+          style={{
+            position: 'absolute',
+            top: 16,
+            right: 16,
+            background: badgeColor,
+            color: '#fff',
+            fontWeight: 700,
+          }}
+        >
+          {badge}
         </Badge>
       )}
 
@@ -143,6 +151,11 @@ const PlanCard = ({
               </Text>
             )}
           </Group>
+          {priceSub && (
+            <Text size="xs" c="dimmed" mt={2}>
+              {priceSub}
+            </Text>
+          )}
           <Text size="sm" c="dimmed" mt={4}>
             {description}
           </Text>
@@ -176,7 +189,7 @@ const PlanCard = ({
             size="sm"
             leftSection={<IconExternalLink size={14} />}
             loading={isBillingPortalLoading || isSubscribing}
-            onClick={currentPlan === 'FREE' ? () => onSubscribe(plan) : onBillingPortal}
+            onClick={onBillingPortal}
             style={{
               marginTop: 'auto',
               background: accentColor,
@@ -195,28 +208,34 @@ const PlanCard = ({
             variant="outline"
             leftSection={<IconExternalLink size={14} />}
             loading={isBillingPortalLoading || isSubscribing}
-            onClick={currentPlan === 'FREE' ? () => onSubscribe(plan) : onBillingPortal}
+            onClick={onBillingPortal}
             style={{ marginTop: 'auto', borderColor: accentColor, color: accentColor }}
           >
             {t('subscription.switchPlan')}
           </Button>
         ) : (
-          <Button
-            fullWidth
-            radius="md"
-            size="sm"
-            loading={isSubscribing && isSubscribingPlan === plan}
-            onClick={() => onSubscribe(plan as 'PLUS' | 'PRO')}
-            style={{
-              marginTop: 'auto',
-              background: accentColor,
-              color: '#fff',
-              fontWeight: 700,
-              boxShadow: `0 4px 14px color-mix(in srgb, ${accentColor} 38%, transparent)`,
-            }}
-          >
-            {plan === 'PLUS' ? t('subscription.plus.button') : t('subscription.pro.button')}
-          </Button>
+          <Stack gap="xs" mt="auto">
+            {trialBadge && (
+              <Text size="xs" ta="center" c="dimmed">
+                {trialBadge}
+              </Text>
+            )}
+            <Button
+              fullWidth
+              radius="md"
+              size="sm"
+              loading={isSubscribing}
+              onClick={() => onSubscribe('PRO', billingInterval ?? 'monthly')}
+              style={{
+                background: accentColor,
+                color: '#fff',
+                fontWeight: 700,
+                boxShadow: `0 4px 14px color-mix(in srgb, ${accentColor} 38%, transparent)`,
+              }}
+            >
+              {t('subscription.pro.button')}
+            </Button>
+          </Stack>
         )}
       </Stack>
     </Paper>
@@ -226,17 +245,22 @@ const PlanCard = ({
 const SubscriptionPage = () => {
   const { t } = useTranslation();
   const { subscriptionStatus, canAccessBillingPortal } = useSubscription();
+  const [billingInterval, setBillingInterval] = useState<BillingInterval>('monthly');
 
-  const {
-    mutate: subscribe,
-    isPending: isSubscribing,
-    variables: subscribingPlan,
-  } = useCreateInitialCheckoutSessionForSubscription();
+  const { mutate: subscribe, isPending: isSubscribing } =
+    useCreateInitialCheckoutSessionForSubscription();
   const { mutate: openBillingPortal, isPending: isBillingPortalLoading } =
     useCreateBillingPortalSession();
 
-  const handleSubscribe = (plan: 'PLUS' | 'PRO') => {
-    subscribe(plan, {
+  const handleSubscribe = (_plan: 'PRO', interval: BillingInterval) => {
+    if (interval === 'yearly') {
+      notifications.show({
+        color: 'blue',
+        message: t('subscription.yearlyComingSoon'),
+      });
+      return;
+    }
+    subscribe('PRO', {
       onSuccess: (res) => {
         window.location.href = res.data.url;
       },
@@ -255,20 +279,22 @@ const SubscriptionPage = () => {
 
   const isMobile = useMediaQuery('(max-width: 768px)');
 
+  const isMonthly = billingInterval === 'monthly';
+
   const cardProps = {
     currentPlan: subscriptionStatus,
     canAccessBillingPortal,
     onSubscribe: handleSubscribe,
     onBillingPortal: handleBillingPortal,
     isSubscribing,
-    isSubscribingPlan: subscribingPlan as 'PLUS' | 'PRO' | undefined,
     isBillingPortalLoading,
+    billingInterval,
   };
 
   return (
     <Layout>
       <Box py="xl" px="md">
-        <Container size="lg">
+        <Container size="md">
           <Stack gap="xl">
             <Stack gap="xs" align="center">
               <Text fw={800} ta="center" style={{ fontSize: 28 }}>
@@ -278,6 +304,17 @@ const SubscriptionPage = () => {
                 {t('subscription.subtitle')}
               </Text>
             </Stack>
+
+            <Group justify="center">
+              <SegmentedControl
+                value={billingInterval}
+                onChange={(v) => setBillingInterval(v as BillingInterval)}
+                data={[
+                  { label: t('subscription.monthly'), value: 'monthly' },
+                  { label: t('subscription.yearly'), value: 'yearly' },
+                ]}
+              />
+            </Group>
 
             {canAccessBillingPortal && subscriptionStatus === 'FREE' && (
               <Group justify="center">
@@ -313,28 +350,13 @@ const SubscriptionPage = () => {
                 {...cardProps}
               />
               <PlanCard
-                plan="PLUS"
-                title={t('subscription.plus.title')}
-                price={t('subscription.plus.price')}
-                priceSuffix={t('subscription.perMonth')}
-                description={t('subscription.plus.description')}
-                features={[
-                  t('subscription.plus.feature1'),
-                  t('subscription.plus.feature2'),
-                  t('subscription.plus.feature3'),
-                  t('subscription.plus.feature4'),
-                ]}
-                badge={t('subscription.popular')}
-                badgeColor="#339af0"
-                accentColor="#339af0"
-                icon={<IconRocket size={18} />}
-                {...cardProps}
-              />
-              <PlanCard
                 plan="PRO"
                 title={t('subscription.pro.title')}
-                price={t('subscription.pro.price')}
-                priceSuffix={t('subscription.perMonth')}
+                price={isMonthly ? t('subscription.pro.price') : t('subscription.pro.priceYearly')}
+                priceSuffix={
+                  isMonthly ? t('subscription.perMonth') : t('subscription.perMonth')
+                }
+                priceSub={isMonthly ? undefined : t('subscription.billedYearly')}
                 description={t('subscription.pro.description')}
                 features={[
                   t('subscription.pro.feature1'),
@@ -343,10 +365,11 @@ const SubscriptionPage = () => {
                   t('subscription.pro.feature4'),
                   t('subscription.pro.feature5'),
                 ]}
-                badge={t('subscription.bestValue')}
-                badgeColor="#f59f00"
+                badge={billingInterval === 'yearly' ? t('subscription.yearlyDiscount') : undefined}
+                badgeColor="#22c55e"
                 accentColor="#f59f00"
                 icon={<IconCrown size={18} />}
+                trialBadge={t('subscription.trialBadge')}
                 {...cardProps}
               />
             </Group>

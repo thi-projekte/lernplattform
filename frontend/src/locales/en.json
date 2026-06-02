@@ -316,8 +316,15 @@
       "feature3": "Custom categories",
       "feature4": "Team collaboration",
       "feature5": "Early access to new features",
-      "button": "Subscribe to Pro"
-    }
+      "button": "Start 7-day free trial",
+      "priceYearly": "€15"
+    },
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "yearlyDiscount": "Save 21%",
+    "billedYearly": "billed annually (€180 / year)",
+    "trialBadge": "✦ 7-day free trial included",
+    "yearlyComingSoon": "Yearly plan coming soon!"
   },
   "invitation": {
     "manage": {

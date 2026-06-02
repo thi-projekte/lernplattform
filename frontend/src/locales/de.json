@@ -317,8 +317,15 @@
       "feature3": "Eigene Kategorien",
       "feature4": "Team-Zusammenarbeit",
       "feature5": "Früher Zugang zu neuen Funktionen",
-      "button": "Pro abonnieren"
-    }
+      "button": "7 Tage kostenlos testen",
+      "priceYearly": "€15"
+    },
+    "monthly": "Monatlich",
+    "yearly": "Jährlich",
+    "yearlyDiscount": "Spare 21%",
+    "billedYearly": "jährlich abgerechnet (€180 / Jahr)",
+    "trialBadge": "✦ 7 Tage kostenlos testen",
+    "yearlyComingSoon": "Jahresabo kommt bald!"
   },
   "invitation": {
     "manage": {
