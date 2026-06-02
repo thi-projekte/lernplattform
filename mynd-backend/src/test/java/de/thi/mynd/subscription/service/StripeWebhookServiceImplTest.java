@@ -34,7 +34,7 @@ class StripeWebhookServiceImplTest {
   private static final String CUSTOMER_ID = "cus_abc123";
   private static final String SUBSCRIPTION_ID = "sub_xyz";
   private static final String PRODUCT_ID = "prod_123";
-  private static final String TIER = "PRO";
+  private static final String TIER = "PREMIUM";
 
   private MockedStatic<Webhook> webhookMock;
 
