@@ -180,7 +180,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
       </Group>
 
       {learnProgress && (
-        <Paper withBorder radius="md" p="sm" bg="gray.0">
+        <Paper withBorder radius="md" p="sm">
           <Group justify="space-between" mb={6}>
             <Text size="xs" c="dimmed" fw={500}>
               {t('topic.progress.label')}
@@ -209,6 +209,9 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
             leftSection={<IconRefresh size={14} />}
             loading={isResetting}
             onClick={() => topicId && resetTopic(topicId)}
+            styles={{
+              root: { '--button-hover': 'light-dark(rgba(0,0,0,0.04), rgba(255,255,255,0.06))' },
+            }}
           >
             {t('topic.actions.resetProgress')}
           </Button>
@@ -244,8 +247,8 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
         <Stack gap="xs">
           <Box
             style={(theme) => ({
-              background: theme.colors.gray[0],
-              border: `1px solid ${theme.colors.gray[2]}`,
+              background: 'var(--card-bg)',
+              border: '1px solid var(--card-border)',
               borderRadius: theme.radius.md,
               minHeight: 110,
               display: 'flex',
