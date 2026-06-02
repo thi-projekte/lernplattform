@@ -42,7 +42,12 @@ public final class StripeServiceImpl implements StripeService {
 
   @Override
   public Product getFullProductById(String productId) {
-    return null;
+    try {
+      return stripeClient.v1().products().retrieve(productId);
+    } catch (StripeException e) {
+      Log.error(e.getMessage());
+      throw new HandledStripeException("Could not retrieve product");
+    }
   }
 
   @Override

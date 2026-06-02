@@ -3,7 +3,6 @@ package de.thi.mynd.subscription.service;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-import com.stripe.model.Price;
 import com.stripe.model.checkout.Session;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.subscription.dto.StripeSessionDto;
@@ -47,27 +46,23 @@ class PaymentServiceImplTest {
   void
       createInitialSubscriptionSession_withFreeSubscriptionAndExistingCustomer_returnsSessionDto() {
     Subscription subscription = freeSubscriptionWithCustomer();
-    Price price = mock(Price.class);
+    String priceId = "price_123";
     Session session = mock(Session.class);
     StripeSessionDto expectedDto = StripeSessionDto.builder().build();
 
     when(subscriptionService.getSubscriptionForCurrentUser()).thenReturn(subscription);
-    when(stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PREMIUM))
-        .thenReturn(price);
-    when(stripeService.createCheckoutSessionForSubscriptionPrice(price, STRIPE_CUSTOMER_ID))
+    when(stripeService.createCheckoutSessionForSubscriptionPrice(priceId, STRIPE_CUSTOMER_ID))
         .thenReturn(session);
     when(mappingRegistry.map(session, StripeSessionDto.class)).thenReturn(expectedDto);
 
-    StripeSessionDto result =
-        paymentService.createInitialSubscriptionSession(SubscriptionStatus.PREMIUM);
+    StripeSessionDto result = paymentService.createInitialSubscriptionSession(priceId);
 
     assertNotNull(result);
     assertSame(expectedDto, result);
 
     verify(stripeService, never()).getOrCreateCustomer(any());
     verify(subscriptionService, never()).updateCustomerId(any(), any());
-    verify(stripeService).obtainPriceForSubscriptionStatus(SubscriptionStatus.PREMIUM);
-    verify(stripeService).createCheckoutSessionForSubscriptionPrice(price, STRIPE_CUSTOMER_ID);
+    verify(stripeService).createCheckoutSessionForSubscriptionPrice(priceId, STRIPE_CUSTOMER_ID);
     verify(mappingRegistry).map(session, StripeSessionDto.class);
   }
 
@@ -76,7 +71,7 @@ class PaymentServiceImplTest {
       createInitialSubscriptionSession_withFreeSubscriptionAndNoCustomer_createsCustomerThenReturnsSessionDto() {
     Subscription subscriptionWithoutCustomer = freeSubscriptionWithoutCustomer();
     Subscription subscriptionWithCustomer = freeSubscriptionWithCustomer();
-    Price price = mock(Price.class);
+    String priceId = "price_123";
     Session session = mock(Session.class);
     StripeSessionDto expectedDto = StripeSessionDto.builder().build();
 
@@ -88,14 +83,11 @@ class PaymentServiceImplTest {
     when(stripeService.getOrCreateCustomer(CREATOR_ID)).thenReturn(stripeCustomer);
     when(subscriptionService.updateCustomerId(subscriptionWithoutCustomer, STRIPE_CUSTOMER_ID))
         .thenReturn(subscriptionWithCustomer);
-    when(stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PREMIUM))
-        .thenReturn(price);
-    when(stripeService.createCheckoutSessionForSubscriptionPrice(price, STRIPE_CUSTOMER_ID))
+    when(stripeService.createCheckoutSessionForSubscriptionPrice(priceId, STRIPE_CUSTOMER_ID))
         .thenReturn(session);
     when(mappingRegistry.map(session, StripeSessionDto.class)).thenReturn(expectedDto);
 
-    StripeSessionDto result =
-        paymentService.createInitialSubscriptionSession(SubscriptionStatus.PREMIUM);
+    StripeSessionDto result = paymentService.createInitialSubscriptionSession(priceId);
 
     assertNotNull(result);
     assertSame(expectedDto, result);
@@ -108,18 +100,18 @@ class PaymentServiceImplTest {
   void
       createInitialSubscriptionSession_withNonFreeSubscription_throwsCannotUpgradeSubscriptionException() {
     Subscription subscription = subscriptionWithStatus(SubscriptionStatus.PREMIUM);
+    String priceId = "price_123";
 
     when(subscriptionService.getSubscriptionForCurrentUser()).thenReturn(subscription);
 
     CannotUpgradeSubscriptionException ex =
         assertThrows(
             CannotUpgradeSubscriptionException.class,
-            () -> paymentService.createInitialSubscriptionSession(SubscriptionStatus.PREMIUM));
+            () -> paymentService.createInitialSubscriptionSession(priceId));
 
     assertEquals("You already have a subscription", ex.getMessage());
 
     verify(stripeService, never()).getOrCreateCustomer(any());
-    verify(stripeService, never()).obtainPriceForSubscriptionStatus(any());
     verify(stripeService, never()).createCheckoutSessionForSubscriptionPrice(any(), any());
     verify(mappingRegistry, never()).map(any(), any());
   }
@@ -137,13 +129,12 @@ class PaymentServiceImplTest {
     when(stripeService.getOrCreateCustomer(CREATOR_ID)).thenReturn(stripeCustomer);
     when(subscriptionService.updateCustomerId(subscriptionWithoutCustomer, STRIPE_CUSTOMER_ID))
         .thenReturn(subscriptionWithCustomer);
-    when(stripeService.obtainPriceForSubscriptionStatus(any())).thenReturn(mock(Price.class));
     when(stripeService.createCheckoutSessionForSubscriptionPrice(any(), any()))
         .thenReturn(mock(Session.class));
     when(mappingRegistry.map(any(), eq(StripeSessionDto.class)))
         .thenReturn(StripeSessionDto.builder().build());
 
-    paymentService.createInitialSubscriptionSession(SubscriptionStatus.PREMIUM);
+    paymentService.createInitialSubscriptionSession("price_123");
 
     verify(identity).getPrincipal();
     verify(stripeService).getOrCreateCustomer(CREATOR_ID);
