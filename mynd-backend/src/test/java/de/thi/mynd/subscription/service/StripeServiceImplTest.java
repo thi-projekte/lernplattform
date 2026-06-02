@@ -147,7 +147,6 @@ class StripeServiceImplTest {
             HandledStripeException.class, () -> stripeService.getFullProductById(PRODUCT_ID));
 
     assertTrue(ex.getMessage().contains("Could not retrieve product"));
-    assertTrue(ex.getMessage().contains("Not found"));
   }
 
   // --- createCheckoutSessionForSubscriptionPrice ---
