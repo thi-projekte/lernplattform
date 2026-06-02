@@ -86,7 +86,11 @@ class AuthServiceImplTest {
     // Setup: User ist noch KEIN Builder
     UserRepresentation user = new UserRepresentation();
     user.setClientRoles(Map.of(CLIENT_UUID, List.of("viewer")));
+    UserProfile up = new UserProfile();
+    up.invitationsLeft = 0;
+    up.creatorId = USERNAME;
     when(identityService.getUser(USERNAME)).thenReturn(user);
+    when(userProfileService.getPersonalUserProfile()).thenReturn(Optional.of(up));
 
     authService.makeUserALearner(USERNAME);
 
