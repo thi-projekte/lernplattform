@@ -87,7 +87,7 @@ class StripeWebhookServiceImplTest {
 
     verify(subscriptionService)
         .setSubscriptionIdAndStatusForCustomerId(
-            CUSTOMER_ID, SUBSCRIPTION_ID, SubscriptionStatus.PRO);
+            CUSTOMER_ID, SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM);
     verify(subscriptionService, never()).setSubscriptionStatusForSubscriptionId(any(), any());
   }
 
@@ -128,7 +128,7 @@ class StripeWebhookServiceImplTest {
     stripeWebhookService.processWebhook(PAYLOAD, SIG_HEADER);
 
     verify(subscriptionService)
-        .setSubscriptionStatusForSubscriptionId(SUBSCRIPTION_ID, SubscriptionStatus.PRO);
+        .setSubscriptionStatusForSubscriptionId(SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM);
     verify(subscriptionService, never())
         .setSubscriptionIdAndStatusForCustomerId(any(), any(), any());
   }

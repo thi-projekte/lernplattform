@@ -50,7 +50,7 @@ class SubscriptionServiceImplTest {
 
   @Test
   void getSubscriptionForCurrentUser_whenSubscriptionExists_returnsIt() {
-    Subscription existing = subscriptionWithStatus(SubscriptionStatus.PRO);
+    Subscription existing = subscriptionWithStatus(SubscriptionStatus.PREMIUM);
     when(subscriptionRepository.findByIdOptional(
             argThat(key -> CREATOR_ID.equals(((CreatorIdKey) key).creatorId))))
         .thenReturn(Optional.of(existing));
@@ -179,7 +179,7 @@ class SubscriptionServiceImplTest {
 
   @Test
   void setSubscriptionStatusForSubscriptionId_withValidId_updatesStatus() {
-    Subscription subscription = subscriptionWithStatus(SubscriptionStatus.PRO);
+    Subscription subscription = subscriptionWithStatus(SubscriptionStatus.PREMIUM);
     when(subscriptionRepository.findByStripeSubscriptionId(STRIPE_SUBSCRIPTION_ID))
         .thenReturn(Optional.of(subscription));
 
@@ -215,10 +215,10 @@ class SubscriptionServiceImplTest {
         .thenReturn(Optional.of(subscription));
 
     subscriptionService.setSubscriptionIdAndStatusForCustomerId(
-        CUSTOMER_ID, STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.PRO);
+        CUSTOMER_ID, STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM);
 
     assertEquals(STRIPE_SUBSCRIPTION_ID, subscription.stripeSubscriptionId);
-    assertEquals(SubscriptionStatus.PRO, subscription.subscriptionStatus);
+    assertEquals(SubscriptionStatus.PREMIUM, subscription.subscriptionStatus);
     verify(subscriptionRepository).persistAndFlush(subscription);
   }
 
@@ -232,7 +232,7 @@ class SubscriptionServiceImplTest {
             SubscriptionNotFoundException.class,
             () ->
                 subscriptionService.setSubscriptionIdAndStatusForCustomerId(
-                    CUSTOMER_ID, STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.PRO));
+                    CUSTOMER_ID, STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM));
 
     assertEquals("This subscription does not exist", ex.getMessage());
     verify(subscriptionRepository, never()).persistAndFlush(any());
@@ -250,7 +250,7 @@ class SubscriptionServiceImplTest {
   }
 
   private Subscription subscriptionWithCustomer() {
-    Subscription s = subscriptionWithStatus(SubscriptionStatus.PRO);
+    Subscription s = subscriptionWithStatus(SubscriptionStatus.PREMIUM);
     s.stripeCustomerId = SubscriptionServiceImplTest.CUSTOMER_ID;
     return s;
   }

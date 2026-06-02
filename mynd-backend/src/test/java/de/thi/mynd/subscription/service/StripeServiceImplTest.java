@@ -76,7 +76,7 @@ class StripeServiceImplTest {
     StripeSearchResult<Product> searchResult = mockSearchResult(List.of(product));
     when(productService.search(any(ProductSearchParams.class))).thenReturn(searchResult);
 
-    Price result = stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PRO);
+    Price result = stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PREMIUM);
 
     assertNotNull(result);
     assertSame(price, result);
@@ -91,7 +91,7 @@ class StripeServiceImplTest {
     ProductNotFoundException ex =
         assertThrows(
             ProductNotFoundException.class,
-            () -> stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PRO));
+            () -> stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PREMIUM));
 
     assertEquals("The product does not exist", ex.getMessage());
   }
@@ -104,7 +104,7 @@ class StripeServiceImplTest {
 
     assertThrows(
         ProductNotFoundException.class,
-        () -> stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PRO));
+        () -> stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PREMIUM));
   }
 
   @Test
@@ -117,7 +117,7 @@ class StripeServiceImplTest {
     ArgumentCaptor<ProductSearchParams> captor = ArgumentCaptor.forClass(ProductSearchParams.class);
     when(productService.search(captor.capture())).thenReturn(searchResult);
 
-    stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PRO);
+    stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PREMIUM);
 
     String query = captor.getValue().toMap().get("query").toString();
     assertTrue(query.contains("PRO"));
