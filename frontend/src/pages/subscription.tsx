@@ -30,8 +30,7 @@ type Interval = 'month' | 'year';
 const FREE_COLOR = '#74c0fc';
 const PAID_COLOR = '#f59f00';
 
-const getPlanColor = (status: SubscriptionStatus) =>
-  status === 'FREE' ? FREE_COLOR : PAID_COLOR;
+const getPlanColor = (status: SubscriptionStatus) => (status === 'FREE' ? FREE_COLOR : PAID_COLOR);
 
 const getPlanIcon = (status: SubscriptionStatus) =>
   status === 'FREE' ? <IconStar size={18} /> : <IconCrown size={18} />;
