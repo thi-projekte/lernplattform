@@ -12,3 +12,18 @@ export const SubscriptionDtoSchema = z.object({
   canAccessBillingPortal: z.boolean(),
 });
 export type SubscriptionDto = z.infer<typeof SubscriptionDtoSchema>;
+
+export const PriceDtoSchema = z.object({
+  id: z.string(),
+  interval: z.enum(['month', 'year']),
+  amount: z.number(),
+});
+export type PriceDto = z.infer<typeof PriceDtoSchema>;
+
+export const ProductDtoSchema = z.object({
+  title: z.string(),
+  subscriptionStatus: SubscriptionStatusSchema,
+  canHaveTrial: z.boolean(),
+  prices: z.array(PriceDtoSchema),
+});
+export type ProductDto = z.infer<typeof ProductDtoSchema>;

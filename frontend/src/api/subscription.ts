@@ -1,6 +1,6 @@
 import { apiClient } from './common.ts';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import type { StripeSessionDto, SubscriptionDto, SubscriptionStatus } from '../schemas/payment.ts';
+import type { ProductDto, StripeSessionDto, SubscriptionDto } from '../schemas/payment.ts';
 import type { AxiosResponse } from 'axios';
 
 export const useFetchSubscription = () =>
@@ -12,12 +12,21 @@ export const useFetchSubscription = () =>
     },
   });
 
+export const useFetchProducts = () =>
+  useQuery({
+    queryKey: ['products'],
+    queryFn: async (): Promise<ProductDto[]> => {
+      const res = await apiClient.get<ProductDto[]>('/payments/products');
+      return res.data;
+    },
+  });
+
 const createCheckoutSessionForSubscription = async (
-  subscriptionStatus: SubscriptionStatus
+  priceId: string
 ): Promise<AxiosResponse<StripeSessionDto>> => {
   return await apiClient.post(
     `/payments/subscribe`,
-    { subscriptionStatus },
+    { priceId },
     {
       validateStatus: (status) => status <= 204,
     }
