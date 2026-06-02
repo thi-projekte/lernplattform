@@ -299,9 +299,12 @@ class StripeServiceImplTest {
     when(priceService.list(any(com.stripe.param.PriceListParams.class))).thenThrow(stripeException);
 
     // Act & Assert
-    HandledStripeException exception = assertThrows(HandledStripeException.class, () -> {
-      stripeService.getAllPricesForProduct(productId);
-    });
+    HandledStripeException exception =
+        assertThrows(
+            HandledStripeException.class,
+            () -> {
+              stripeService.getAllPricesForProduct(productId);
+            });
 
     assertEquals("Cannot fetch prices for product", exception.getMessage());
   }
@@ -319,7 +322,8 @@ class StripeServiceImplTest {
     ProductCollection mockCollection = new ProductCollection();
     mockCollection.setData(List.of(mockProduct));
 
-    when(productService.list(any(com.stripe.param.ProductListParams.class))).thenReturn(mockCollection);
+    when(productService.list(any(com.stripe.param.ProductListParams.class)))
+        .thenReturn(mockCollection);
 
     // Act
     List<Product> result = stripeService.getAllProductsWithPricesAndMetaData();
@@ -335,12 +339,16 @@ class StripeServiceImplTest {
     // Arrange
     StripeException stripeException = new ApiConnectionException("API error", null);
 
-    when(productService.list(any(com.stripe.param.ProductListParams.class))).thenThrow(stripeException);
+    when(productService.list(any(com.stripe.param.ProductListParams.class)))
+        .thenThrow(stripeException);
 
     // Act & Assert
-    HandledStripeException exception = assertThrows(HandledStripeException.class, () -> {
-      stripeService.getAllProductsWithPricesAndMetaData();
-    });
+    HandledStripeException exception =
+        assertThrows(
+            HandledStripeException.class,
+            () -> {
+              stripeService.getAllProductsWithPricesAndMetaData();
+            });
 
     assertEquals("Cannot fetch all products", exception.getMessage());
   }

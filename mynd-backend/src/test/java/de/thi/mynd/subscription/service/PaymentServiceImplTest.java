@@ -17,7 +17,6 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import java.security.Principal;
 import java.util.List;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -163,7 +162,7 @@ class PaymentServiceImplTest {
 
     // Match the exact parameters your method passes down
     when(mappingRegistry.mapList(mockProductList, ProductDto.class, true))
-            .thenReturn(expectedDtoList);
+        .thenReturn(expectedDtoList);
 
     // Act
     List<ProductDto> result = paymentService.getAllProducts();
@@ -182,12 +181,15 @@ class PaymentServiceImplTest {
   void testGetAllProducts_PropagatesExceptionWhenSubscriptionFails() {
     // Arrange
     when(subscriptionService.getSubscriptionForCurrentUser())
-            .thenThrow(new RuntimeException("User not authenticated"));
+        .thenThrow(new RuntimeException("User not authenticated"));
 
     // Act & Assert
-    RuntimeException exception = assertThrows(RuntimeException.class, () -> {
-      paymentService.getAllProducts();
-    });
+    RuntimeException exception =
+        assertThrows(
+            RuntimeException.class,
+            () -> {
+              paymentService.getAllProducts();
+            });
 
     assertEquals("User not authenticated", exception.getMessage());
 
