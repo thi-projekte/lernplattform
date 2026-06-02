@@ -25,6 +25,6 @@ public final class PaymentResource {
       summary = "Creates a new checkout session",
       description = "Creates a new checkout session for one of our subscriptions.")
   public StripeSessionDto createSubscriptionSession(SubscribeRequest request) {
-    return paymentService.createInitialSubscriptionSession(request.subscriptionStatus);
+    return paymentService.createInitialSubscriptionSession(request.priceId);
   }
 }

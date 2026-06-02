@@ -6,6 +6,7 @@ import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.CustomerSearchParams;
+import com.stripe.param.ProductListParams;
 import com.stripe.param.ProductSearchParams;
 import com.stripe.param.checkout.SessionCreateParams;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
@@ -16,6 +17,8 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
+import java.util.List;
+
 @ApplicationScoped
 public final class StripeServiceImpl implements StripeService {
 
@@ -24,24 +27,30 @@ public final class StripeServiceImpl implements StripeService {
 
   @Inject StripeClient stripeClient;
 
-  @Override
-  public Price obtainPriceForSubscriptionStatus(SubscriptionStatus subscriptionStatus) {
-    Product product = getProductByTierMetadataField(subscriptionStatus);
-    return product.getDefaultPriceObject();
-  }
 
   @Override
-  public Product getFullProductById(String id) {
+  public List<Product> getAllProductsWithPricesAndMetaData() {
+
+    ProductListParams params = ProductListParams.builder()
+                    .addExpand("data.prices")
+                            .addExpand("data.metadata")
+                                    .build();
+
     try {
-      return stripeClient.v1().products().retrieve(id);
+      return stripeClient.v1().products().list(params).getData();
     } catch (StripeException e) {
       Log.error(e.getMessage());
-      throw new HandledStripeException("Could not retrieve product");
+      throw new HandledStripeException("Cannot fetch all products");
     }
   }
 
   @Override
-  public Session createCheckoutSessionForSubscriptionPrice(Price price, String userId) {
+  public Product getFullProductById(String productId) {
+    return null;
+  }
+
+  @Override
+  public Session createCheckoutSessionForSubscriptionPrice(String priceId, String userId) {
     SessionCreateParams.Builder paramsBuilder =
         SessionCreateParams.builder()
             .setSuccessUrl(getSuccessUrl())
@@ -49,7 +58,7 @@ public final class StripeServiceImpl implements StripeService {
             .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
             .addLineItem(
                 SessionCreateParams.LineItem.builder()
-                    .setPrice(price.getId())
+                    .setPrice(priceId)
                     .setQuantity(1L)
                     .build());
 

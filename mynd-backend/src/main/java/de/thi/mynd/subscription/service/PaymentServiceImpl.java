@@ -3,6 +3,7 @@ package de.thi.mynd.subscription.service;
 import com.stripe.model.Price;
 import com.stripe.model.checkout.Session;
 import de.thi.mynd.common.processor.MappingRegistry;
+import de.thi.mynd.subscription.dto.ProductDto;
 import de.thi.mynd.subscription.dto.StripeSessionDto;
 import de.thi.mynd.subscription.entity.Subscription;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
@@ -10,6 +11,8 @@ import de.thi.mynd.subscription.exception.CannotUpgradeSubscriptionException;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
+import java.util.List;
 
 @ApplicationScoped
 public final class PaymentServiceImpl implements PaymentService {
@@ -23,7 +26,7 @@ public final class PaymentServiceImpl implements PaymentService {
   @Inject MappingRegistry mappingRegistry;
 
   @Override
-  public StripeSessionDto createInitialSubscriptionSession(SubscriptionStatus subscriptionStatus) {
+  public StripeSessionDto createInitialSubscriptionSession(String priceId) {
     String creatorId = identity.getPrincipal().getName();
 
     Subscription subscription = subscriptionService.getSubscriptionForCurrentUser();
@@ -37,11 +40,15 @@ public final class PaymentServiceImpl implements PaymentService {
       subscription = subscriptionService.updateCustomerId(subscription, customerId);
     }
 
-    Price price = stripeService.obtainPriceForSubscriptionStatus(subscriptionStatus);
     Session session =
         stripeService.createCheckoutSessionForSubscriptionPrice(
-            price, subscription.stripeCustomerId);
+            priceId, subscription.stripeCustomerId);
 
     return mappingRegistry.map(session, StripeSessionDto.class);
+  }
+
+  @Override
+  public List<ProductDto> getAllProducts() {
+    return List.of();
   }
 }
