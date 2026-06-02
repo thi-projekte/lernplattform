@@ -88,7 +88,6 @@ export const routes: TypedMyndRoute[] = [
     isSidebar: true,
     icon: IconMail,
     translation: 'invitations',
-    roles: [Role.Builder],
   },
   {
     path: '/acceptInvite',
