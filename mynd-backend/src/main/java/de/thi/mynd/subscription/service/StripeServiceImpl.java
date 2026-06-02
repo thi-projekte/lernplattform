@@ -11,6 +11,7 @@ import com.stripe.param.checkout.SessionCreateParams;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.exception.HandledStripeException;
 import de.thi.mynd.subscription.exception.ProductNotFoundException;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -34,7 +35,8 @@ public final class StripeServiceImpl implements StripeService {
     try {
       return stripeClient.v1().products().retrieve(id);
     } catch (StripeException e) {
-      throw new HandledStripeException("Could not retrieve product: " + e.getMessage());
+      Log.error(e.getStripeError().getMessage());
+      throw new HandledStripeException("Could not retrieve product");
     }
   }
 
@@ -56,7 +58,8 @@ public final class StripeServiceImpl implements StripeService {
     try {
       return stripeClient.v1().checkout().sessions().create(paramsBuilder.build());
     } catch (StripeException e) {
-      throw new HandledStripeException(e.getMessage());
+      Log.error(e.getStripeError().getMessage());
+      throw new HandledStripeException("Cannot create checkout session");
     }
   }
 
@@ -71,7 +74,8 @@ public final class StripeServiceImpl implements StripeService {
     try {
       return stripeClient.v1().billingPortal().sessions().create(params);
     } catch (StripeException e) {
-      throw new HandledStripeException(e.getMessage());
+      Log.error(e.getStripeError().getMessage());
+      throw new HandledStripeException("Cannot create billing portal session");
     }
   }
 
@@ -92,7 +96,8 @@ public final class StripeServiceImpl implements StripeService {
       return stripeClient.v1().customers().create(createParams);
 
     } catch (StripeException e) {
-      throw new HandledStripeException(e.getMessage());
+      Log.error(e.getStripeError().getMessage());
+      throw new HandledStripeException("Cannot get or create the customer");
     }
   }
 
@@ -112,7 +117,8 @@ public final class StripeServiceImpl implements StripeService {
       return result.getData().getFirst();
 
     } catch (StripeException e) {
-      throw new ProductNotFoundException(e.getMessage());
+      Log.error(e.getStripeError().getMessage());
+      throw new ProductNotFoundException("Cannot fetch product by metadata");
     }
   }
 
