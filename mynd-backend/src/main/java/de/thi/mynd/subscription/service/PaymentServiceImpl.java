@@ -1,6 +1,5 @@
 package de.thi.mynd.subscription.service;
 
-import com.stripe.model.Price;
 import com.stripe.model.checkout.Session;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.subscription.dto.ProductDto;
@@ -11,7 +10,6 @@ import de.thi.mynd.subscription.exception.CannotUpgradeSubscriptionException;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.List;
 
 @ApplicationScoped

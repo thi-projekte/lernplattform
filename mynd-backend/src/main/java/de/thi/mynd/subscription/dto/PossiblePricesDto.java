@@ -1,12 +1,11 @@
 package de.thi.mynd.subscription.dto;
 
 import com.stripe.model.Price;
-import lombok.Builder;
-
 import java.util.List;
+import lombok.Builder;
 
 @Builder
 public final class PossiblePricesDto {
-    public boolean canHaveTrial;
-    public List<Price> prices;
+  public boolean canHaveTrial;
+  public List<Price> prices;
 }

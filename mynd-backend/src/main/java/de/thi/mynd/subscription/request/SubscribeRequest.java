@@ -4,6 +4,5 @@ import jakarta.validation.constraints.NotBlank;
 
 public final class SubscribeRequest {
 
-  @NotBlank
-  public String priceId;
+  @NotBlank public String priceId;
 }

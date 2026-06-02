@@ -15,9 +15,8 @@ import de.thi.mynd.subscription.exception.ProductNotFoundException;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import java.util.List;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 @ApplicationScoped
 public final class StripeServiceImpl implements StripeService {
@@ -27,14 +26,11 @@ public final class StripeServiceImpl implements StripeService {
 
   @Inject StripeClient stripeClient;
 
-
   @Override
   public List<Product> getAllProductsWithPricesAndMetaData() {
 
-    ProductListParams params = ProductListParams.builder()
-                    .addExpand("data.prices")
-                            .addExpand("data.metadata")
-                                    .build();
+    ProductListParams params =
+        ProductListParams.builder().addExpand("data.prices").addExpand("data.metadata").build();
 
     try {
       return stripeClient.v1().products().list(params).getData();
@@ -57,10 +53,7 @@ public final class StripeServiceImpl implements StripeService {
             .setCancelUrl(getCancelUrl())
             .setMode(SessionCreateParams.Mode.SUBSCRIPTION)
             .addLineItem(
-                SessionCreateParams.LineItem.builder()
-                    .setPrice(priceId)
-                    .setQuantity(1L)
-                    .build());
+                SessionCreateParams.LineItem.builder().setPrice(priceId).setQuantity(1L).build());
 
     paramsBuilder.setCustomer(userId);
 

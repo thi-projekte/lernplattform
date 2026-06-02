@@ -1,11 +1,8 @@
 package de.thi.mynd.subscription.service;
 
 import com.stripe.model.Customer;
-import com.stripe.model.Price;
 import com.stripe.model.Product;
-import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import io.quarkus.cache.CacheResult;
-
 import java.util.List;
 
 public interface StripeService {

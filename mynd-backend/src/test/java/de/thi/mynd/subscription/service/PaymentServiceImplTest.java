@@ -52,7 +52,8 @@ class PaymentServiceImplTest {
     StripeSessionDto expectedDto = StripeSessionDto.builder().build();
 
     when(subscriptionService.getSubscriptionForCurrentUser()).thenReturn(subscription);
-    when(stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PREMIUM)).thenReturn(price);
+    when(stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PREMIUM))
+        .thenReturn(price);
     when(stripeService.createCheckoutSessionForSubscriptionPrice(price, STRIPE_CUSTOMER_ID))
         .thenReturn(session);
     when(mappingRegistry.map(session, StripeSessionDto.class)).thenReturn(expectedDto);
@@ -87,7 +88,8 @@ class PaymentServiceImplTest {
     when(stripeService.getOrCreateCustomer(CREATOR_ID)).thenReturn(stripeCustomer);
     when(subscriptionService.updateCustomerId(subscriptionWithoutCustomer, STRIPE_CUSTOMER_ID))
         .thenReturn(subscriptionWithCustomer);
-    when(stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PREMIUM)).thenReturn(price);
+    when(stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PREMIUM))
+        .thenReturn(price);
     when(stripeService.createCheckoutSessionForSubscriptionPrice(price, STRIPE_CUSTOMER_ID))
         .thenReturn(session);
     when(mappingRegistry.map(session, StripeSessionDto.class)).thenReturn(expectedDto);
