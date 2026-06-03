@@ -3,6 +3,7 @@ package de.thi.mynd.subscription.service;
 import com.stripe.model.Customer;
 import com.stripe.model.Price;
 import com.stripe.model.Product;
+import com.stripe.model.Subscription;
 import io.quarkus.cache.CacheResult;
 import java.util.List;
 
@@ -23,4 +24,6 @@ public interface StripeService {
   com.stripe.model.billingportal.Session createBillingPortalSession(String customerId);
 
   Customer getOrCreateCustomer(String username);
+
+  Subscription createTrialForPriceId(String priceId, String customerId);
 }

@@ -4,10 +4,7 @@ import com.stripe.StripeClient;
 import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
-import com.stripe.param.CustomerCreateParams;
-import com.stripe.param.CustomerSearchParams;
-import com.stripe.param.PriceListParams;
-import com.stripe.param.ProductListParams;
+import com.stripe.param.*;
 import com.stripe.param.checkout.SessionCreateParams;
 import de.thi.mynd.subscription.exception.HandledStripeException;
 import io.quarkus.logging.Log;
@@ -21,6 +18,9 @@ public final class StripeServiceImpl implements StripeService {
 
   @ConfigProperty(name = "mynd.frontendUri")
   String frontendUri;
+
+  @ConfigProperty(name = "mynd.trialDays")
+  long trialDays;
 
   @Inject StripeClient stripeClient;
 
@@ -116,6 +116,27 @@ public final class StripeServiceImpl implements StripeService {
     } catch (StripeException e) {
       Log.error(e.getMessage());
       throw new HandledStripeException("Cannot get or create the customer");
+    }
+  }
+
+  @Override
+  public Subscription createTrialForPriceId(String priceId, String customerId) {
+    SubscriptionCreateParams params = SubscriptionCreateParams.builder()
+            .setCustomer(customerId)
+            .addItem(
+                    SubscriptionCreateParams.Item.builder()
+                            .setPrice(priceId)
+                            .build()
+            )
+            .setTrialPeriodDays(trialDays)
+            .setCancelAtPeriodEnd(true)
+            .build();
+
+    try {
+      return stripeClient.v1().subscriptions().create(params);
+    } catch (StripeException e) {
+      Log.error(e.getMessage());
+      throw new HandledStripeException("Cannot create trial");
     }
   }
 
