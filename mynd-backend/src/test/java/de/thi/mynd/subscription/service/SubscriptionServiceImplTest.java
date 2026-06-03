@@ -238,6 +238,52 @@ class SubscriptionServiceImplTest {
     verify(subscriptionRepository, never()).persistAndFlush(any());
   }
 
+  @Test
+  void testSetTrialUsed_Success() {
+    // Arrange
+    CreatorIdKey id = new CreatorIdKey();
+    id.creatorId = "creator";
+
+    // Setup a mock entity entity where usedTrial is initially false
+    Subscription mockSubscription = new Subscription();
+    mockSubscription.id = id;
+    mockSubscription.usedTrial = false;
+
+    when(subscriptionRepository.findByIdOptional(id))
+            .thenReturn(Optional.of(mockSubscription));
+
+    // Act
+    subscriptionService.setTrialUsed(id);
+
+    // Assert
+    assertTrue(mockSubscription.usedTrial, "The usedTrial flag should be set to true");
+
+    // Verify that the repository actually persisted and flushed the updated entity
+    verify(subscriptionRepository, times(1)).persistAndFlush(mockSubscription);
+  }
+
+  @Test
+  void testSetTrialUsed_SubscriptionNotFound_ThrowsException() {
+    // Arrange
+    CreatorIdKey id = new CreatorIdKey();
+    id.creatorId = "creator";
+
+    // Simulate repository returning an empty Optional
+    when(subscriptionRepository.findByIdOptional(id))
+            .thenReturn(Optional.empty());
+
+    // Act & Assert
+    SubscriptionNotFoundException exception = assertThrows(
+            SubscriptionNotFoundException.class,
+            () -> subscriptionService.setTrialUsed(id)
+    );
+
+    assertEquals("This subscription does not exist", exception.getMessage());
+
+    // Verify that persistAndFlush was never called because the method should fail early
+    verify(subscriptionRepository, never()).persistAndFlush(any(Subscription.class));
+  }
+
   // --- Helpers ---
 
   private Subscription subscriptionWithStatus(SubscriptionStatus status) {
