@@ -26,18 +26,8 @@ public final class PaymentServiceImpl implements PaymentService {
 
   @Override
   public StripeSessionDto createInitialSubscriptionSession(String priceId) {
-    String creatorId = identity.getPrincipal().getName();
 
-    Subscription subscription = subscriptionService.getSubscriptionForCurrentUser();
-
-    if (subscription.subscriptionStatus != SubscriptionStatus.FREE) {
-      throw new CannotUpgradeSubscriptionException("You already have a subscription");
-    }
-
-    if (subscription.stripeCustomerId == null) {
-      String customerId = stripeService.getOrCreateCustomer(creatorId).getId();
-      subscription = subscriptionService.updateCustomerId(subscription, customerId);
-    }
+    Subscription subscription = obtainSubscription();
 
     Session session =
         stripeService.createCheckoutSessionForSubscriptionPrice(
@@ -52,5 +42,34 @@ public final class PaymentServiceImpl implements PaymentService {
     List<Product> products = stripeService.getAllProductsWithPricesAndMetaData();
 
     return mappingRegistry.mapList(products, ProductDto.class, subscription.usedTrial);
+  }
+
+  @Override
+  public void createTrial(String priceId) {
+    Subscription subscription = obtainSubscription();
+
+    if (subscription.usedTrial) {
+      throw new CannotUpgradeSubscriptionException("You already used your free trial");
+    }
+    subscription.usedTrial = true;
+    subscriptionService.setTrialUsed(subscription.id);
+
+    stripeService.createTrialForPriceId(priceId, subscription.stripeCustomerId);
+  }
+
+  private Subscription obtainSubscription() {
+    String creatorId = identity.getPrincipal().getName();
+
+    Subscription subscription = subscriptionService.getSubscriptionForCurrentUser();
+
+    if (subscription.subscriptionStatus != SubscriptionStatus.FREE) {
+      throw new CannotUpgradeSubscriptionException("You already have a subscription");
+    }
+
+    if (subscription.stripeCustomerId == null) {
+      String customerId = stripeService.getOrCreateCustomer(creatorId).getId();
+      subscription = subscriptionService.updateCustomerId(subscription, customerId);
+    }
+    return subscription;
   }
 }

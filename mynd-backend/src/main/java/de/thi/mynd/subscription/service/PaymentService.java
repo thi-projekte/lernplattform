@@ -9,4 +9,6 @@ public interface PaymentService {
   StripeSessionDto createInitialSubscriptionSession(String priceId);
 
   List<ProductDto> getAllProducts();
+
+  void createTrial(String priceId);
 }
