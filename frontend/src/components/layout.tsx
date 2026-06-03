@@ -27,6 +27,7 @@ import { useLocation, useMatches, useNavigate } from 'react-router';
 import { isGranted } from '../auth.ts';
 import AccessDenied from './access-denied.tsx';
 import { useUserService } from '../provider/user-provider.tsx';
+import { Footer } from './footer.tsx';
 
 const StreakBadge = () => {
   const { t } = useTranslation();
@@ -273,31 +274,36 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
       <AppShell.Main>
         <Box
-          px="md"
-          py="md"
           style={{
             minHeight: 'calc(100vh - 104px)',
             background: theme.other.layoutMainBg,
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
-          {pathname !== '/' && (
-            <Button
-              variant="subtle"
-              color="gray"
-              leftSection={<IconChevronLeft size={16} stroke={2} />}
-              onClick={() => navigate(-1)}
-              mb="md"
-              px="xs"
-              size="sm"
-              styles={{
-                root: { color: 'var(--mantine-color-dimmed)' },
-                label: { fontWeight: 400 },
-              }}
-            >
-              {t('common.back')}
-            </Button>
-          )}
-          {isCurrentRouteGranted ? children : <AccessDenied />}
+          <Box px="md" py="md" style={{ flex: 1 }}>
+            {pathname !== '/' && (
+              <Button
+                variant="subtle"
+                color="gray"
+                leftSection={<IconChevronLeft size={16} stroke={2} />}
+                onClick={() => navigate(-1)}
+                mb="md"
+                px="xs"
+                size="sm"
+                styles={{
+                  root: { color: 'var(--mantine-color-dimmed)' },
+                  label: { fontWeight: 400 },
+                }}
+              >
+                {t('common.back')}
+              </Button>
+            )}
+
+            {isCurrentRouteGranted ? children : <AccessDenied />}
+          </Box>
+
+          <Footer />
         </Box>
       </AppShell.Main>
     </AppShell>
