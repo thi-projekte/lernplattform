@@ -5,6 +5,7 @@ import static org.mockito.Mockito.*;
 
 import com.stripe.model.Product;
 import com.stripe.model.checkout.Session;
+import de.thi.mynd.common.entity.CreatorIdKey;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.subscription.dto.ProductDto;
 import de.thi.mynd.subscription.dto.StripeSessionDto;
@@ -196,6 +197,118 @@ class PaymentServiceImplTest {
     // Verify downstream services were never called because it failed early
     verifyNoInteractions(stripeService);
     verifyNoInteractions(mappingRegistry);
+  }
+
+  @Test
+  void testCreateTrial_Success_WithExistingStripeCustomer() {
+    // Arrange
+    String priceId = "price_premium";
+
+    CreatorIdKey id = new CreatorIdKey();
+    id.creatorId = CREATOR_ID;
+
+    Subscription mockSubscription = new Subscription();
+    mockSubscription.id = id;
+    mockSubscription.usedTrial = false;
+    mockSubscription.subscriptionStatus = SubscriptionStatus.FREE;
+    mockSubscription.stripeCustomerId = "cus_already_exists";
+
+    when(subscriptionService.getSubscriptionForCurrentUser()).thenReturn(mockSubscription);
+
+    // Act
+    paymentService.createTrial(priceId);
+
+    // Assert
+    assertTrue(mockSubscription.usedTrial);
+    verify(subscriptionService, times(1)).setTrialUsed(id);
+    verify(stripeService, times(1)).createTrialForPriceId(priceId, "cus_already_exists");
+
+    // Ensure we never tried to create a new Stripe customer
+    verify(stripeService, never()).getOrCreateCustomer(anyString());
+  }
+
+  @Test
+  void testCreateTrial_Success_CreatesStripeCustomerIfMissing() {
+    // Arrange
+    String priceId = "price_premium";
+
+    CreatorIdKey id = new CreatorIdKey();
+    id.creatorId = CREATOR_ID;
+
+    Subscription initialSubscription = new Subscription();
+    initialSubscription.id = id;
+    initialSubscription.usedTrial = false;
+    initialSubscription.subscriptionStatus = SubscriptionStatus.FREE;
+    initialSubscription.stripeCustomerId = null; // No stripe customer yet
+
+    Subscription updatedSubscription = new Subscription();
+    updatedSubscription.id = id;
+    updatedSubscription.usedTrial = false;
+    updatedSubscription.subscriptionStatus = SubscriptionStatus.FREE;
+    updatedSubscription.stripeCustomerId = "cus_newly_created";
+
+    com.stripe.model.Customer mockCustomer = mock(com.stripe.model.Customer.class);
+    when(mockCustomer.getId()).thenReturn("cus_newly_created");
+
+    when(subscriptionService.getSubscriptionForCurrentUser()).thenReturn(initialSubscription);
+    when(stripeService.getOrCreateCustomer("user-123")).thenReturn(mockCustomer);
+    when(subscriptionService.updateCustomerId(initialSubscription, "cus_newly_created")).thenReturn(updatedSubscription);
+
+    // Act
+    paymentService.createTrial(priceId);
+
+    // Assert
+    assertTrue(updatedSubscription.usedTrial);
+    verify(subscriptionService, times(1)).setTrialUsed(id);
+    verify(stripeService, times(1)).createTrialForPriceId(priceId, "cus_newly_created");
+  }
+
+  @Test
+  void testCreateTrial_ThrowsException_IfTrialAlreadyUsed() {
+    // Arrange
+    String priceId = "price_premium";
+
+    Subscription mockSubscription = new Subscription();
+    mockSubscription.usedTrial = true; // Trial already used!
+    mockSubscription.subscriptionStatus = SubscriptionStatus.FREE;
+    mockSubscription.stripeCustomerId = "123";
+
+    when(subscriptionService.getSubscriptionForCurrentUser()).thenReturn(mockSubscription);
+
+    // Act & Assert
+    CannotUpgradeSubscriptionException exception = assertThrows(
+            CannotUpgradeSubscriptionException.class,
+            () -> paymentService.createTrial(priceId)
+    );
+
+    assertEquals("You already used your free trial", exception.getMessage());
+
+    // Verify downstream executions were blocked
+    verify(subscriptionService, never()).setTrialUsed(any(CreatorIdKey.class));
+    verify(stripeService, never()).createTrialForPriceId(anyString(), anyString());
+  }
+
+  @Test
+  void testCreateTrial_ThrowsException_IfAlreadySubscribed() {
+    // Arrange
+    String priceId = "price_premium";
+
+    Subscription mockSubscription = new Subscription();
+    mockSubscription.usedTrial = false;
+    mockSubscription.subscriptionStatus = SubscriptionStatus.PREMIUM; // Not FREE!
+
+    when(subscriptionService.getSubscriptionForCurrentUser()).thenReturn(mockSubscription);
+
+    // Act & Assert
+    CannotUpgradeSubscriptionException exception = assertThrows(
+            CannotUpgradeSubscriptionException.class,
+            () -> paymentService.createTrial(priceId)
+    );
+
+    assertEquals("You already have a subscription", exception.getMessage());
+
+    // Verify downstream executions were blocked
+    verify(stripeService, never()).createTrialForPriceId(anyString(), anyString());
   }
 
   // --- Helpers ---
