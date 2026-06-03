@@ -2,7 +2,6 @@ package de.thi.mynd.subscription.rest;
 
 import de.thi.mynd.subscription.dto.ProductDto;
 import de.thi.mynd.subscription.dto.StripeSessionDto;
-import de.thi.mynd.subscription.entity.Subscription;
 import de.thi.mynd.subscription.request.SubscribeRequest;
 import de.thi.mynd.subscription.service.PaymentService;
 import jakarta.annotation.security.RolesAllowed;
@@ -10,9 +9,8 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
-import java.util.List;
-
 import jakarta.ws.rs.core.Response;
+import java.util.List;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -37,8 +35,8 @@ public final class PaymentResource {
   @GET
   @Path("/products")
   @Operation(
-          summary = "Fetches all products from stripe",
-          description = "Fetches all products from stripe")
+      summary = "Fetches all products from stripe",
+      description = "Fetches all products from stripe")
   public List<ProductDto> getProducts() {
     return paymentService.getAllProducts();
   }
@@ -46,8 +44,8 @@ public final class PaymentResource {
   @POST
   @Path("/trial")
   @Operation(
-          summary = "Creates a new trial",
-          description = "Creates a new trial for the subscription linked to the current price")
+      summary = "Creates a new trial",
+      description = "Creates a new trial for the subscription linked to the current price")
   public Response createTrial(SubscribeRequest request) {
     paymentService.createTrial(request.priceId);
     return Response.ok().build();

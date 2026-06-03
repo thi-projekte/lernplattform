@@ -249,8 +249,7 @@ class SubscriptionServiceImplTest {
     mockSubscription.id = id;
     mockSubscription.usedTrial = false;
 
-    when(subscriptionRepository.findByIdOptional(id))
-            .thenReturn(Optional.of(mockSubscription));
+    when(subscriptionRepository.findByIdOptional(id)).thenReturn(Optional.of(mockSubscription));
 
     // Act
     subscriptionService.setTrialUsed(id);
@@ -269,14 +268,12 @@ class SubscriptionServiceImplTest {
     id.creatorId = "creator";
 
     // Simulate repository returning an empty Optional
-    when(subscriptionRepository.findByIdOptional(id))
-            .thenReturn(Optional.empty());
+    when(subscriptionRepository.findByIdOptional(id)).thenReturn(Optional.empty());
 
     // Act & Assert
-    SubscriptionNotFoundException exception = assertThrows(
-            SubscriptionNotFoundException.class,
-            () -> subscriptionService.setTrialUsed(id)
-    );
+    SubscriptionNotFoundException exception =
+        assertThrows(
+            SubscriptionNotFoundException.class, () -> subscriptionService.setTrialUsed(id));
 
     assertEquals("This subscription does not exist", exception.getMessage());
 

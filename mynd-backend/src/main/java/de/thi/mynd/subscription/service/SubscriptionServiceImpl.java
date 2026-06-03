@@ -115,8 +115,7 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
   @Override
   @Transactional
   public void setTrialUsed(CreatorIdKey id) {
-    Optional<Subscription> subscriptionOptional =
-            subscriptionRepository.findByIdOptional(id);
+    Optional<Subscription> subscriptionOptional = subscriptionRepository.findByIdOptional(id);
     if (subscriptionOptional.isEmpty()) {
       throw new SubscriptionNotFoundException("This subscription does not exist");
     }

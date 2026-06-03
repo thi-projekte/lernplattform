@@ -121,13 +121,10 @@ public final class StripeServiceImpl implements StripeService {
 
   @Override
   public Subscription createTrialForPriceId(String priceId, String customerId) {
-    SubscriptionCreateParams params = SubscriptionCreateParams.builder()
+    SubscriptionCreateParams params =
+        SubscriptionCreateParams.builder()
             .setCustomer(customerId)
-            .addItem(
-                    SubscriptionCreateParams.Item.builder()
-                            .setPrice(priceId)
-                            .build()
-            )
+            .addItem(SubscriptionCreateParams.Item.builder().setPrice(priceId).build())
             .setTrialPeriodDays(trialDays)
             .setCancelAtPeriodEnd(true)
             .build();

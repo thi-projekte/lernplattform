@@ -365,7 +365,7 @@ class StripeServiceImplTest {
     Subscription mockSubscription = mock(Subscription.class);
 
     when(subscriptionService.create(any(SubscriptionCreateParams.class)))
-            .thenReturn(mockSubscription);
+        .thenReturn(mockSubscription);
 
     // Act
     Subscription result = stripeService.createTrialForPriceId(priceId, customerId);
@@ -376,7 +376,7 @@ class StripeServiceImplTest {
 
     // Verify the parameters passed to Stripe match your method logic
     ArgumentCaptor<SubscriptionCreateParams> argumentCaptor =
-            ArgumentCaptor.forClass(SubscriptionCreateParams.class);
+        ArgumentCaptor.forClass(SubscriptionCreateParams.class);
 
     verify(subscriptionService, times(1)).create(argumentCaptor.capture());
 
@@ -389,7 +389,8 @@ class StripeServiceImplTest {
   }
 
   @Test
-  void testCreateTrialForPriceId_StripeException_ThrowsHandledStripeException() throws StripeException {
+  void testCreateTrialForPriceId_StripeException_ThrowsHandledStripeException()
+      throws StripeException {
     // Arrange
     String priceId = "price_123";
     String customerId = "cus_abc";
@@ -398,12 +399,15 @@ class StripeServiceImplTest {
     StripeException stripeException = new ApiConnectionException("Connection failed", null);
 
     when(subscriptionService.create(any(SubscriptionCreateParams.class)))
-            .thenThrow(stripeException);
+        .thenThrow(stripeException);
 
     // Act & Assert
-    HandledStripeException exception = assertThrows(HandledStripeException.class, () -> {
-      stripeService.createTrialForPriceId(priceId, customerId);
-    });
+    HandledStripeException exception =
+        assertThrows(
+            HandledStripeException.class,
+            () -> {
+              stripeService.createTrialForPriceId(priceId, customerId);
+            });
 
     assertEquals("Cannot create trial", exception.getMessage());
   }

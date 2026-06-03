@@ -252,7 +252,8 @@ class PaymentServiceImplTest {
 
     when(subscriptionService.getSubscriptionForCurrentUser()).thenReturn(initialSubscription);
     when(stripeService.getOrCreateCustomer("user-123")).thenReturn(mockCustomer);
-    when(subscriptionService.updateCustomerId(initialSubscription, "cus_newly_created")).thenReturn(updatedSubscription);
+    when(subscriptionService.updateCustomerId(initialSubscription, "cus_newly_created"))
+        .thenReturn(updatedSubscription);
 
     // Act
     paymentService.createTrial(priceId);
@@ -276,10 +277,9 @@ class PaymentServiceImplTest {
     when(subscriptionService.getSubscriptionForCurrentUser()).thenReturn(mockSubscription);
 
     // Act & Assert
-    CannotUpgradeSubscriptionException exception = assertThrows(
-            CannotUpgradeSubscriptionException.class,
-            () -> paymentService.createTrial(priceId)
-    );
+    CannotUpgradeSubscriptionException exception =
+        assertThrows(
+            CannotUpgradeSubscriptionException.class, () -> paymentService.createTrial(priceId));
 
     assertEquals("You already used your free trial", exception.getMessage());
 
@@ -300,10 +300,9 @@ class PaymentServiceImplTest {
     when(subscriptionService.getSubscriptionForCurrentUser()).thenReturn(mockSubscription);
 
     // Act & Assert
-    CannotUpgradeSubscriptionException exception = assertThrows(
-            CannotUpgradeSubscriptionException.class,
-            () -> paymentService.createTrial(priceId)
-    );
+    CannotUpgradeSubscriptionException exception =
+        assertThrows(
+            CannotUpgradeSubscriptionException.class, () -> paymentService.createTrial(priceId));
 
     assertEquals("You already have a subscription", exception.getMessage());
 
