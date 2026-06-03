@@ -1,5 +1,6 @@
 package de.thi.mynd.subscription.service;
 
+import de.thi.mynd.common.entity.CreatorIdKey;
 import de.thi.mynd.subscription.dto.StripeSessionDto;
 import de.thi.mynd.subscription.dto.SubscriptionDto;
 import de.thi.mynd.subscription.entity.Subscription;
@@ -22,4 +23,6 @@ public interface SubscriptionService {
 
   void setSubscriptionIdAndStatusForCustomerId(
       String customerId, String subscriptionId, SubscriptionStatus subscriptionStatus);
+
+  void setTrialUsed(CreatorIdKey id);
 }

@@ -111,4 +111,19 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
 
     subscriptionRepository.persistAndFlush(subscription);
   }
+
+  @Override
+  @Transactional
+  public void setTrialUsed(CreatorIdKey id) {
+    Optional<Subscription> subscriptionOptional =
+            subscriptionRepository.findByIdOptional(id);
+    if (subscriptionOptional.isEmpty()) {
+      throw new SubscriptionNotFoundException("This subscription does not exist");
+    }
+
+    Subscription subscription = subscriptionOptional.get();
+    subscription.usedTrial = true;
+
+    subscriptionRepository.persistAndFlush(subscription);
+  }
 }
