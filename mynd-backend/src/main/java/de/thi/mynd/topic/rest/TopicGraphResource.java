@@ -32,15 +32,11 @@ public final class TopicGraphResource {
       description =
           "Returns the most popular topics in the graph along with their direct neighbors. "
               + "Without filters returns the top 10 globally, or top 100 when personalized for the current user.")
-  @Parameter(
-      name = "builderMode",
-      description =
-          "If true, results are for the current builder")
+  @Parameter(name = "builderMode", description = "If true, results are for the current builder")
   @APIResponse(
       responseCode = "200",
       description = "List of popular topics with their direct neighbors")
-  public List<GraphTopicDto> getMostPopular(
-      @RestQuery @DefaultValue("false") boolean builderMode) {
+  public List<GraphTopicDto> getMostPopular(@RestQuery @DefaultValue("false") boolean builderMode) {
     return builderMode
         ? topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
             100, securityIdentity.getPrincipal().getName())

@@ -18,22 +18,20 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
 
   @Inject TopicGraphRepository topicGraphRepository;
 
-  @Inject
-  LearnProgressService learnProgressService;
+  @Inject LearnProgressService learnProgressService;
 
   @Inject TopicRepository topicRepository;
 
   @Inject MappingRegistry mappingRegistry;
 
-  @Inject
-  SecurityIdentity identity;
-
+  @Inject SecurityIdentity identity;
 
   @Override
   public List<GraphTopicDto> getLearnGraph() {
     String creatorId = identity.getPrincipal().getName();
 
-    List<UUID> lastLearnedTopicIds = learnProgressService.getLastNUncompletedTopicsForUser(10, creatorId);
+    List<UUID> lastLearnedTopicIds =
+        learnProgressService.getLastNUncompletedTopicsForUser(10, creatorId);
     if (lastLearnedTopicIds.isEmpty()) {
       List<Topic> topics = topicGraphRepository.findNMostPopular(10);
 
@@ -42,8 +40,11 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
     List<Topic> initialTopics = topicRepository.findByIdsTypeSafe(lastLearnedTopicIds);
     Set<GraphTopicDto> dtos = new HashSet<>(getGraphTopicDtosWithNeighbors(initialTopics));
 
-    List<Topic> topicGraph = topicGraphRepository.findForAssociatedTopicsNotStartedAllCompleted(lastLearnedTopicIds, creatorId);
-    List<GraphTopicDto> additionalDtos =  mappingRegistry.mapListWithAdditionalData(topicGraph, GraphTopicDto.class);
+    List<Topic> topicGraph =
+        topicGraphRepository.findForAssociatedTopicsNotStartedAllCompleted(
+            lastLearnedTopicIds, creatorId);
+    List<GraphTopicDto> additionalDtos =
+        mappingRegistry.mapListWithAdditionalData(topicGraph, GraphTopicDto.class);
 
     dtos.addAll(additionalDtos);
     return dtos.stream().toList();

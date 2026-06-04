@@ -34,10 +34,16 @@ public final class LearnProgressTopicRepository
 
   public List<UUID> getLastNUncompletedTopicIdsForUser(int n, String creatorId) {
     return getSession()
-            .createQuery("SELECT t.id.topicId FROM LearnProgressTopic t WHERE t.creatorId = :creatorId AND status IN :allowedStates ORDER BY updatedAt LIMIT :limit", UUID.class)
-            .setParameter("creatorId", creatorId)
-            .setParameter("allowedStates", List.of(LearnProgressStatus.COMPLETED_MANUALLY, LearnProgressStatus.ALL_CONTENT_ELEMENTS_COMPLETED))
-            .setParameter("limit", n)
-            .getResultList();
+        .createQuery(
+            "SELECT t.id.topicId FROM LearnProgressTopic t WHERE t.creatorId = :creatorId AND status IN :allowedStates ORDER BY updatedAt LIMIT :limit",
+            UUID.class)
+        .setParameter("creatorId", creatorId)
+        .setParameter(
+            "allowedStates",
+            List.of(
+                LearnProgressStatus.COMPLETED_MANUALLY,
+                LearnProgressStatus.ALL_CONTENT_ELEMENTS_COMPLETED))
+        .setParameter("limit", n)
+        .getResultList();
   }
 }

@@ -51,14 +51,17 @@ public final class TopicGraphRepository extends MyndBaseRepository<Topic> {
         .getResultList();
   }
 
-  public List<Topic> findForAssociatedTopicsNotStartedAllCompleted(List<UUID> seedIds, String creatorId) {
+  public List<Topic> findForAssociatedTopicsNotStartedAllCompleted(
+      List<UUID> seedIds, String creatorId) {
 
     String[] allowedStatus = {
-            LearnProgressStatus.COMPLETED_MANUALLY.name(),
-            LearnProgressStatus.ALL_CONTENT_ELEMENTS_COMPLETED.name()
+      LearnProgressStatus.COMPLETED_MANUALLY.name(),
+      LearnProgressStatus.ALL_CONTENT_ELEMENTS_COMPLETED.name()
     };
 
-    return getEntityManager().createNativeQuery("""
+    return getEntityManager()
+        .createNativeQuery(
+            """
                 WITH RECURSIVE topic_tree AS (
                     SELECT
                         ta.foreign_topic_id AS topic_id,
@@ -86,10 +89,11 @@ public final class TopicGraphRepository extends MyndBaseRepository<Topic> {
                     ON lpt.topicId = t.id
                     AND lpt.creatorId = :creatorId
                 WHERE lpt.status = ANY(CAST(:allowedStatus AS varchar[]))
-                """, Topic.class)
-            .setParameter("seedIds", seedIds.toArray(UUID[]::new))
-            .setParameter("creatorId", creatorId)
-            .setParameter("allowedStatus", allowedStatus)
-            .getResultList();
+                """,
+            Topic.class)
+        .setParameter("seedIds", seedIds.toArray(UUID[]::new))
+        .setParameter("creatorId", creatorId)
+        .setParameter("allowedStatus", allowedStatus)
+        .getResultList();
   }
 }

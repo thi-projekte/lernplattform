@@ -15,7 +15,6 @@ import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-
 import java.security.Principal;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,11 +32,9 @@ class TopicGraphServiceImplTest {
 
   @InjectMock MappingRegistry mappingRegistry;
 
-  @InjectMock
-  LearnProgressService learnProgressService;
+  @InjectMock LearnProgressService learnProgressService;
 
-  @InjectMock
-  SecurityIdentity identity;
+  @InjectMock SecurityIdentity identity;
 
   private Topic testTopic;
   private GraphTopicDto testDto;
@@ -150,7 +147,7 @@ class TopicGraphServiceImplTest {
   void testGetLearnGraph_NoProgress_FetchesNeighbors() {
     // Arrange
     when(learnProgressService.getLastNUncompletedTopicsForUser(10, creatorId))
-            .thenReturn(Collections.emptyList());
+        .thenReturn(Collections.emptyList());
 
     // 1. Setup Mock Topics & Relationships
     UUID popularTopicId = UUID.randomUUID();
@@ -175,10 +172,10 @@ class TopicGraphServiceImplTest {
 
     // Mapping for the primary popular topics list
     when(mappingRegistry.mapListWithAdditionalData(popularTopics, GraphTopicDto.class))
-            .thenReturn(List.of(popularDto));
+        .thenReturn(List.of(popularDto));
     // Mapping for the neighbors list
     when(mappingRegistry.mapListWithAdditionalData(List.of(neighborTopic), GraphTopicDto.class))
-            .thenReturn(List.of(neighborDto));
+        .thenReturn(List.of(neighborDto));
 
     // Act
     List<GraphTopicDto> result = topicGraphService.getLearnGraph();
@@ -191,11 +188,12 @@ class TopicGraphServiceImplTest {
   }
 
   @Test
-  @DisplayName("Should throw exception or bubble up if a topic's neighbor lookup finds a missing topic ID")
+  @DisplayName(
+      "Should throw exception or bubble up if a topic's neighbor lookup finds a missing topic ID")
   void testGetLearnGraph_NeighborTopicNotFound_ThrowsException() {
     // Arrange
     when(learnProgressService.getLastNUncompletedTopicsForUser(10, creatorId))
-            .thenReturn(Collections.emptyList());
+        .thenReturn(Collections.emptyList());
 
     UUID missingTopicId = UUID.randomUUID();
     Topic targetTopic = mock(Topic.class);
@@ -207,8 +205,10 @@ class TopicGraphServiceImplTest {
     when(topicRepository.findByIdOptional(missingTopicId)).thenReturn(Optional.empty());
 
     // Act & Assert
-    assertThrows(EntityInstanceNotFoundException.class, () -> {
-      topicGraphService.getLearnGraph();
-    });
+    assertThrows(
+        EntityInstanceNotFoundException.class,
+        () -> {
+          topicGraphService.getLearnGraph();
+        });
   }
 }
