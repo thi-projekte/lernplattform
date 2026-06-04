@@ -20,4 +20,6 @@ public interface LearnProgressService {
   void resetTopicLearningProgress(UUID topicId);
 
   void resetContentElementLearningProgress(UUID contentElementId);
+
+  List<UUID> getLastNUncompletedTopicsForUser(int n, String creatorId);
 }
