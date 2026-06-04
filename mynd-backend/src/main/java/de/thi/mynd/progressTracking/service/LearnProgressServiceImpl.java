@@ -20,6 +20,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import de.thi.mynd.progressTracking.service.ChallengeService;
 
 @ApplicationScoped
 public final class LearnProgressServiceImpl implements LearnProgressService {
@@ -35,6 +36,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
   @Inject ContentElementService contentElementService;
 
   @Inject StreakService streakService;
+
+  @Inject ChallengeService challengeService;
 
   @Override
   public Map<UUID, TopicLearnProgressDto> getLearnProgressMappingForTopics(List<UUID> topicIds) {
@@ -157,6 +160,7 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     learnProgressTopicRepository.persistAndFlush(progressTopic);
 
     streakService.continueOrStartStreaksForCurrentUser();
+    challengeService.trackContentElementCompletion();
     Log.infof(
         "User %s successfully completed learning content element %s", creatorId, contentElementId);
   }
