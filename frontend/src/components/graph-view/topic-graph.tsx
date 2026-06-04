@@ -8,6 +8,7 @@ import {
   type EdgeMouseHandler,
   type Node,
   type NodeMouseHandler,
+  type OnNodeDrag,
   type OnConnect,
   type OnMoveEnd,
   type NodeTypes,
@@ -23,7 +24,7 @@ interface TopicGraphViewProps {
   nodeTypes: NodeTypes;
   edgeTypes?: EdgeTypes;
   onNodeClick?: NodeMouseHandler;
-  onNodeDragStop?: NodeMouseHandler;
+  onNodeDragStop?: OnNodeDrag<Node>;
   onEdgeClick?: EdgeMouseHandler;
   onMoveEnd?: OnMoveEnd;
   onConnect?: OnConnect;
