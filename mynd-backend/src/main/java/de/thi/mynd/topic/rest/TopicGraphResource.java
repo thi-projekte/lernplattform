@@ -26,7 +26,6 @@ public final class TopicGraphResource {
   @Inject TopicGraphService topicGraphService;
   @Inject SecurityIdentity securityIdentity;
 
-  @Path("/most-popular")
   @GET
   @Operation(
       summary = "Get most popular topics",
@@ -34,28 +33,18 @@ public final class TopicGraphResource {
           "Returns the most popular topics in the graph along with their direct neighbors. "
               + "Without filters returns the top 10 globally, or top 100 when personalized for the current user.")
   @Parameter(
-      name = "categories",
+      name = "builderMode",
       description =
-          "Optional list of category IDs to filter topics by. If empty, all categories are considered.")
-  @Parameter(
-      name = "personal",
-      description =
-          "If true, results are personalized for the current user and the limit is increased to 100.")
+          "If true, results are for the current builder")
   @APIResponse(
       responseCode = "200",
       description = "List of popular topics with their direct neighbors")
   public List<GraphTopicDto> getMostPopular(
-      @RestQuery List<UUID> categories, @RestQuery @DefaultValue("false") boolean personal) {
-    if (categories.isEmpty()) {
-      return personal
-          ? topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
-              100, securityIdentity.getPrincipal().getName())
-          : topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10);
-    }
-    return personal
+      @RestQuery @DefaultValue("false") boolean builderMode) {
+    return builderMode
         ? topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
-            100, categories, securityIdentity.getPrincipal().getName())
-        : topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10, categories);
+            100, securityIdentity.getPrincipal().getName())
+        : topicGraphService.getLearnGraph();
   }
 
   @Path("/{topicId}/neighbors")
@@ -81,6 +70,7 @@ public final class TopicGraphResource {
   }
 
   @GET
+  @Path("/search")
   @Operation(
       summary = "Search topics",
       description = "Searches for topics in the graph by name. Returns up to 5 matching results.")

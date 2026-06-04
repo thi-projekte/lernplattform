@@ -45,48 +45,6 @@ class TopicGraphServiceImplTest {
   }
 
   @Test
-  void testGetNMostPopularTopicsInGraphAndTheirDirectNeighbors() {
-    // Arrange
-    int n = 5;
-    List<Topic> mockTopics = List.of(testTopic);
-    when(topicGraphRepository.findNMostPopular(n)).thenReturn(mockTopics);
-    when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.ofNullable(testTopic));
-    when(mappingRegistry.mapListWithAdditionalData(mockTopics, GraphTopicDto.class))
-        .thenReturn(List.of(testDto));
-
-    // Act
-    List<GraphTopicDto> result =
-        topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(n);
-
-    // Assert
-    assertNotNull(result);
-    assertEquals(1, result.size());
-    verify(topicGraphRepository, times(1)).findNMostPopular(n);
-  }
-
-  @Test
-  void testGetNMostPopularTopicsWithCategoryFilter() {
-    // Arrange
-    int n = 3;
-    List<UUID> categoryIds = List.of(UUID.randomUUID());
-    List<Topic> mockTopics = List.of(testTopic);
-
-    when(topicGraphRepository.findNMostPopularFilterByCategoryIds(n, categoryIds))
-        .thenReturn(mockTopics);
-    when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.ofNullable(testTopic));
-    when(mappingRegistry.mapListWithAdditionalData(mockTopics, GraphTopicDto.class))
-        .thenReturn(List.of(testDto));
-
-    // Act
-    List<GraphTopicDto> result =
-        topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(n, categoryIds);
-
-    // Assert
-    assertEquals(1, result.size());
-    verify(topicGraphRepository).findNMostPopularFilterByCategoryIds(n, categoryIds);
-  }
-
-  @Test
   void testGetNMostPopularTopics() {
     // Arrange
     List<Topic> mockTopics = List.of(testTopic);

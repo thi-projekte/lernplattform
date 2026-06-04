@@ -24,48 +24,6 @@ public class TopicGraphResourceTest {
   @TestSecurity(
       user = "alice",
       roles = {"builder", "authorizedUser"})
-  public void testGetMostPopularNoCategories() {
-    UUID topicId = UUID.randomUUID();
-    GraphTopicDto dto = GraphTopicDto.builder().id(topicId).build();
-
-    when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10))
-        .thenReturn(List.of(dto));
-
-    given()
-        .when()
-        .get("/topics/graph/most-popular")
-        .then()
-        .statusCode(200)
-        .contentType(ContentType.JSON)
-        .body("size()", is(1))
-        .body("[0].id", is(topicId.toString()));
-  }
-
-  @Test
-  @TestSecurity(
-      user = "alice",
-      roles = {"builder", "authorizedUser"})
-  public void testGetMostPopularWithCategories() {
-    UUID categoryId = UUID.randomUUID();
-    List<UUID> categories = List.of(categoryId);
-
-    when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
-            eq(10), eq(categories)))
-        .thenReturn(List.of(GraphTopicDto.builder().build()));
-
-    given()
-        .queryParam("categories", categoryId.toString())
-        .when()
-        .get("/topics/graph/most-popular")
-        .then()
-        .statusCode(200)
-        .body("size()", is(1));
-  }
-
-  @Test
-  @TestSecurity(
-      user = "alice",
-      roles = {"builder", "authorizedUser"})
   public void testGetNeighbors() {
     UUID topicId = UUID.randomUUID();
 
