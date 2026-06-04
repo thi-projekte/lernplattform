@@ -156,7 +156,6 @@ const LegalPage = () => {
                   85049 Ingolstadt
                 </Text>
               </Box>
-
             </Section>
 
             <Section title="Datenschutzerklärung">
