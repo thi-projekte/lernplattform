@@ -56,7 +56,7 @@ const BuilderModeListPage = () => {
     data: graphTopics,
     isLoading: isGraphLoading,
     refetch: refetchGraphTopics,
-  } = useFetchMostPopularTopicsWithNeighbors(undefined, true, viewMode === 'graph');
+  } = useFetchMostPopularTopicsWithNeighbors(true, viewMode === 'graph');
 
   const { t } = useTranslation();
   const navigate = useNavigate();
