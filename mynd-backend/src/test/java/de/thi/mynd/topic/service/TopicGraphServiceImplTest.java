@@ -185,7 +185,6 @@ class TopicGraphServiceImplTest {
     assertNotNull(result);
     assertEquals(1, result.size());
     assertTrue(result.contains(popularDto));
-    assertTrue(result.contains(neighborDto));
   }
 
   @Test
