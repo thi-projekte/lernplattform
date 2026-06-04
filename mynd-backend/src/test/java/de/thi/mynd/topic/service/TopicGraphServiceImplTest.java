@@ -168,8 +168,8 @@ class TopicGraphServiceImplTest {
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(popularTopic));
 
     // 2. Mock the mapping registry calls
-    GraphTopicDto popularDto = GraphTopicDto.builder().build();
-    GraphTopicDto neighborDto = GraphTopicDto.builder().build();
+    GraphTopicDto popularDto = GraphTopicDto.builder().id(UUID.randomUUID()).build();
+    GraphTopicDto neighborDto = GraphTopicDto.builder().id(UUID.randomUUID()).build();
 
     // Mapping for the primary popular topics list
     when(mappingRegistry.mapListWithAdditionalData(popularTopics, GraphTopicDto.class))
