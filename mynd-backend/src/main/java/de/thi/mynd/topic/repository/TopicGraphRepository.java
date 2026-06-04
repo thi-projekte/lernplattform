@@ -1,6 +1,7 @@
 package de.thi.mynd.topic.repository;
 
 import de.thi.mynd.common.repository.MyndBaseRepository;
+import de.thi.mynd.progressTracking.entity.LearnProgressStatus;
 import de.thi.mynd.topic.entity.Topic;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.util.List;
@@ -48,5 +49,47 @@ public final class TopicGraphRepository extends MyndBaseRepository<Topic> {
         .setParameter("creator", creatorId)
         .setMaxResults(n)
         .getResultList();
+  }
+
+  public List<Topic> findForAssociatedTopicsNotStartedAllCompleted(List<UUID> seedIds, String creatorId) {
+
+    String[] allowedStatus = {
+            LearnProgressStatus.COMPLETED_MANUALLY.name(),
+            LearnProgressStatus.ALL_CONTENT_ELEMENTS_COMPLETED.name()
+    };
+
+    return getEntityManager().createNativeQuery("""
+                WITH RECURSIVE topic_tree AS (
+                    SELECT
+                        ta.foreign_topic_id AS topic_id,
+                        ARRAY[ta.owning_topic_id] AS visited,
+                        1 AS depth
+                    FROM topic_association ta
+                    WHERE ta.owning_topic_id = ANY(:seedIds)
+
+                    UNION
+
+                    SELECT
+                        ta.foreign_topic_id,
+                        tt.visited || ta.owning_topic_id,
+                        tt.depth + 1
+                    FROM topic_association ta
+                    INNER JOIN topic_tree tt
+                        ON ta.owning_topic_id = tt.topic_id
+                       AND ta.foreign_topic_id != ALL(tt.visited)
+                )
+                SELECT DISTINCT t.*
+                FROM topic_tree tt
+                INNER JOIN topic t
+                    ON t.id = tt.topic_id
+                LEFT JOIN learn_progress_topic lpt
+                    ON lpt.topicId = t.id
+                    AND lpt.creatorId = :creatorId
+                WHERE lpt.status = ANY(CAST(:allowedStatus AS varchar[]))
+                """, Topic.class)
+            .setParameter("seedIds", seedIds.toArray(UUID[]::new))
+            .setParameter("creatorId", creatorId)
+            .setParameter("allowedStatus", allowedStatus)
+            .getResultList();
   }
 }
