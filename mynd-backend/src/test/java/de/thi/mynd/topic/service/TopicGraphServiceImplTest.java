@@ -156,6 +156,7 @@ class TopicGraphServiceImplTest {
 
     // Set up associations for the neighbor lookup
     Topic neighborTopic = mock(Topic.class);
+    neighborTopic.id = UUID.randomUUID();
 
     when(popularTopic.ownedAssociations).thenReturn(Collections.emptyList());
     when(popularTopic.foreignAssociations).thenReturn(Collections.emptyList());

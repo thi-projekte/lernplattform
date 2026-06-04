@@ -54,13 +54,13 @@ public final class TopicGraphResource {
       name = "topicId",
       description = "The unique ID of the topic whose neighbors should be retrieved.")
   @Parameter(
-      name = "personal",
+      name = "builderMode",
       description = "If true, only neighbors owned by the current user are returned.")
   @APIResponse(responseCode = "200", description = "List of neighboring topics")
   @APIResponse(responseCode = "404", description = "Topic not found")
   public List<GraphTopicDto> getNeighbors(
-      UUID topicId, @RestQuery @DefaultValue("false") boolean personal) {
-    return personal
+      UUID topicId, @RestQuery @DefaultValue("false") boolean builderMode) {
+    return builderMode
         ? topicGraphService.getOwnedNeighborsOfTopic(topicId)
         : topicGraphService.getNeighborsOfTopic(topicId);
   }
