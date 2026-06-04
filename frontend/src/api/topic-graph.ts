@@ -3,9 +3,7 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { type GraphTopicDto, GraphTopicDtoSchema } from '../schemas/topic-graph.ts';
 import { z } from 'zod';
 
-const fetchMostPopularWithNeighbors = async (
-  builderMode?: boolean
-): Promise<GraphTopicDto[]> => {
+const fetchMostPopularWithNeighbors = async (builderMode?: boolean): Promise<GraphTopicDto[]> => {
   const search = new URLSearchParams();
   if (builderMode) {
     search.set('builderMode', 'true');
@@ -20,10 +18,7 @@ const fetchMostPopularWithNeighbors = async (
   return safeValidateApiResponseContent(z.array(GraphTopicDtoSchema), result.data);
 };
 
-export const useFetchMostPopularTopicsWithNeighbors = (
-  builderMode?: boolean,
-  enabled = true
-) => {
+export const useFetchMostPopularTopicsWithNeighbors = (builderMode?: boolean, enabled = true) => {
   return useQuery({
     queryKey: ['mostPopularTopics', builderMode],
     queryFn: () => fetchMostPopularWithNeighbors(builderMode),
