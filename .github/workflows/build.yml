@@ -42,7 +42,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./mynd-backend
-          file: mynd-backend/src/main/docker/Dockerfile.native-micro
+          file: mynd-backend/src/main/docker/Dockerfile
           push: false
           load: true
           tags: local-test-image:latest
