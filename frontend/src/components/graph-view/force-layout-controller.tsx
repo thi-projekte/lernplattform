@@ -24,9 +24,11 @@ const ForceLayoutController = ({
   // seeds, but does NOT recreate every time the parent re-renders new array
   // references (e.g. on selection changes).
   const baseNodesRef = useRef(baseNodes);
-  baseNodesRef.current = baseNodes;
   const edgesRef = useRef(edges);
-  edgesRef.current = edges;
+  useEffect(() => {
+    baseNodesRef.current = baseNodes;
+    edgesRef.current = edges;
+  }, [baseNodes, edges]);
 
   // Topology key: only changes when the set of nodes or edges actually
   // changes. Selection / expansion state alone won't trigger sim recreation.
