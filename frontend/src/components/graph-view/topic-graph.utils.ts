@@ -110,7 +110,8 @@ export const applyForceLayout = (
   nodes: ForceLayoutNode[],
   edges: Edge[],
   onTick: (positions: Map<string, { x: number; y: number }>) => void,
-  initialAlpha: number = 1
+  initialAlpha: number = 1,
+  warmupTicks: number = 0
 ): ForceLayoutHandle => {
   // Seed simulation in CENTER coordinates (React Flow stores top-left).
   const simNodes: ForceSimNode[] = nodes.map((node) => ({
@@ -162,7 +163,7 @@ export const applyForceLayout = (
     .velocityDecay(0.25)
     .alpha(initialAlpha);
 
-  simulation.on('tick', () => {
+  const emitPositions = () => {
     const positions = new Map<string, { x: number; y: number }>();
     simNodes.forEach((node) => {
       if (typeof node.x === 'number' && typeof node.y === 'number') {
@@ -173,7 +174,21 @@ export const applyForceLayout = (
       }
     });
     onTick(positions);
-  });
+  };
+
+  // Pre-tick the simulation synchronously so nodes arrive on screen at their
+  // resolved positions immediately, without the user having to wait for the
+  // live tick loop to settle them.
+  if (warmupTicks > 0) {
+    simulation.stop();
+    for (let i = 0; i < warmupTicks; i += 1) {
+      simulation.tick();
+    }
+    emitPositions();
+    simulation.alpha(initialAlpha).restart();
+  }
+
+  simulation.on('tick', emitPositions);
 
   const findNode = (id: string) => simNodes.find((n) => n.id === id);
 

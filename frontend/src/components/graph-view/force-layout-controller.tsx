@@ -11,11 +11,15 @@ interface ForceLayoutControllerProps {
 const ForceLayoutController = ({ baseNodes, edges, onHandleReady }: ForceLayoutControllerProps) => {
   const { setNodes, getNodes, fitView } = useReactFlow();
   const handleRef = useRef<ForceLayoutHandle | null>(null);
-  // First sim creation seeds from dagre — needs full alpha to spread out, and
-  // a fitView so the user sees the freshly arranged graph. Subsequent
-  // recreations (topology change, e.g. expanding a node) use a softer alpha
-  // and do NOT touch the camera so the user's current focus is preserved.
+  // First sim creation seeds from dagre — needs full alpha to spread out.
+  // Subsequent recreations (topology change, e.g. expanding a node) use a
+  // softer alpha so existing nodes don't get yanked around.
   const hasInitializedRef = useRef(false);
+  // The initial fitView must run once after the graph settles. If the
+  // simulation is recreated mid-settle (e.g. cached neighbours load right
+  // after the page mounts), the previous timeout gets cancelled — so we keep
+  // re-scheduling fitView until it has actually fired once.
+  const hasFitOnceRef = useRef(false);
 
   // Keep the latest baseNodes/edges in refs so the simulation reads up-to-date
   // seeds, but does NOT recreate every time the parent re-renders new array
@@ -50,6 +54,11 @@ const ForceLayoutController = ({ baseNodes, edges, onHandleReady }: ForceLayoutC
 
     const isFirstSim = !hasInitializedRef.current;
     const initialAlpha = isFirstSim ? 1 : 0.3;
+    // Warm up the simulation synchronously on the first creation so nodes
+    // appear at their settled positions immediately, without the user having
+    // to wait for the live tick loop. Later recreations skip the warmup so
+    // existing nodes don't visibly jump.
+    const warmupTicks = isFirstSim ? 200 : 0;
     hasInitializedRef.current = true;
 
     // Seed from the live React Flow store so existing nodes start at their
@@ -75,27 +84,30 @@ const ForceLayoutController = ({ baseNodes, edges, onHandleReady }: ForceLayoutC
           })
         );
       },
-      initialAlpha
+      initialAlpha,
+      warmupTicks
     );
     handleRef.current = handle;
     onHandleReady?.(handle);
 
-    // Only fitView on the very first simulation so the user sees the freshly
-    // arranged graph; later recreations keep the user's current camera.
-    let settleTimeout: number | undefined;
-    if (isFirstSim) {
-      settleTimeout = window.setTimeout(() => {
-        fitView({ padding: 0.2, maxZoom: 1.2, duration: 600 });
-      }, 1400);
-    }
-
     return () => {
-      if (settleTimeout !== undefined) window.clearTimeout(settleTimeout);
       handle.stop();
       handleRef.current = null;
       onHandleReady?.(null);
     };
-  }, [topologyKey, setNodes, getNodes, fitView, onHandleReady]);
+  }, [topologyKey, setNodes, getNodes, onHandleReady]);
+
+  // Initial camera fit — runs once per mount, independent of sim recreations
+  // so it survives cached-neighbour reloads that would otherwise cancel a
+  // timeout tied to the sim useEffect.
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      if (hasFitOnceRef.current) return;
+      hasFitOnceRef.current = true;
+      fitView({ padding: 0.2, maxZoom: 1.2, duration: 400 });
+    }, 400);
+    return () => window.clearTimeout(timeout);
+  }, [fitView]);
 
   return null;
 };
