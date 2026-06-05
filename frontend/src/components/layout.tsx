@@ -14,9 +14,10 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconChevronLeft, IconFlame, IconUser } from '@tabler/icons-react';
+import { IconChevronLeft, IconFlame, IconTrophy, IconUser } from '@tabler/icons-react';
 import { useQueryProfilePicture } from '../api/profile-picture.ts';
 import { useFetchStreakPreferences, useFetchStreaks } from '../api/streak.ts';
+import { useFetchCurrentChallenge } from '../api/challenge.ts';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import ColorSchemeToggle from './color-scheme-toggle.tsx';
@@ -51,6 +52,26 @@ const StreakBadge = () => {
           <Text size="md" fw={700} c="orange">
             {preferredStreak.streakCount}
           </Text>
+        </Group>
+      </UnstyledButton>
+    </Tooltip>
+  );
+};
+
+const ChallengeBadge = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { data: challenge } = useFetchCurrentChallenge();
+
+  if (!challenge?.completed || challenge.rewardClaimed) return null;
+
+  return (
+    <Tooltip label={t('challenge.claimButton')} withArrow>
+      <UnstyledButton onClick={() => navigate('/challenges')}>
+        <Group gap={6} align="center">
+          <ThemeIcon size="md" radius="xl" color="yellow" variant="light">
+            <IconTrophy size={16} />
+          </ThemeIcon>
         </Group>
       </UnstyledButton>
     </Tooltip>
@@ -170,6 +191,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           </Group>
           <Group px="md" gap="xs">
             <StreakBadge />
+            <ChallengeBadge />
             <ColorSchemeToggle />
             <LanguagePicker />
           </Group>

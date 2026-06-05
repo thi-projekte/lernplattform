@@ -9,7 +9,22 @@
     "invitations": "Invitations",
     "subscription": "Subscription",
     "streaks": "My Streaks",
-    "adminCategories": "Categories"
+    "adminCategories": "Categories",
+    "challenges": "My Challenge"
+  },
+  "challenge": {
+    "title": "Weekly Challenge",
+    "subtitle": "Complete content elements to earn rewards.",
+    "weekly": "Weekly Challenge",
+    "description": "Complete {{target}} content elements this week.",
+    "nodes": "content elements completed",
+    "reward": "Reward: +{{count}} invite credits",
+    "completed": "Completed!",
+    "claimed": "Reward claimed",
+    "claimButton": "Claim +2 Invite Credits",
+    "rewardClaimed": "Reward successfully claimed! You received 2 invite credits.",
+    "history": "Past Challenges",
+    "noHistory": "No past challenges yet."
   },
   "streak": {
     "title": "My Streaks",

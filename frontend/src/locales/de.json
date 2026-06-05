@@ -9,7 +9,22 @@
     "invitations": "Einladungen",
     "subscription": "Abonnement",
     "streaks": "Meine Streaks",
-    "adminCategories": "Kategorien"
+    "adminCategories": "Kategorien",
+    "challenges": "Meine Challenge"
+  },
+  "challenge": {
+    "title": "Wöchentliche Challenge",
+    "subtitle": "Schließe Content Elemente ab und verdiene Belohnungen.",
+    "weekly": "Wöchentliche Challenge",
+    "description": "Schließe diese Woche {{target}} Content Elemente ab.",
+    "nodes": "Content Elemente abgeschlossen",
+    "reward": "Belohnung: +{{count}} Einladungs-Credits",
+    "completed": "Abgeschlossen!",
+    "claimed": "Belohnung erhalten",
+    "claimButton": "+2 Einladungs-Credits einlösen",
+    "rewardClaimed": "Belohnung eingelöst! Du hast 2 Einladungs-Credits erhalten.",
+    "history": "Vergangene Challenges",
+    "noHistory": "Noch keine vergangenen Challenges."
   },
   "streak": {
     "title": "Meine Streaks",

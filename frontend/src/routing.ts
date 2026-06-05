@@ -21,6 +21,8 @@ import AcceptInviteRoute from './pages/invitations/accept-route.tsx';
 import OnboardingPage from './pages/onboarding/onboarding.tsx';
 import SubscriptionPage from './pages/subscription.tsx';
 import StreakPage from './pages/streak.tsx';
+import ChallengePage from './pages/challenge.tsx';
+import { IconTrophy } from '@tabler/icons-react';
 import AdminCategoriesPage from './pages/admin/categories.tsx';
 import { Role } from './auth.ts';
 
@@ -46,6 +48,13 @@ export const routes: TypedMyndRoute[] = [
     icon: IconHammer,
     translation: 'builderMode',
     roles: [Role.Builder],
+  },
+  {
+    path: '/challenges',
+    Component: ChallengePage,
+    isSidebar: true,
+    icon: IconTrophy,
+    translation: 'challenges',
   },
   {
     path: '/become-builder',
