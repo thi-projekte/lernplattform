@@ -18,6 +18,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -184,7 +185,7 @@ class SubscriptionServiceImplTest {
         .thenReturn(Optional.of(subscription));
 
     subscriptionService.setSubscriptionStatusForSubscriptionId(
-        STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.FREE);
+        STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.FREE, new ArrayList<>());
 
     assertEquals(SubscriptionStatus.FREE, subscription.subscriptionStatus);
     verify(subscriptionRepository).persistAndFlush(subscription);
@@ -200,7 +201,7 @@ class SubscriptionServiceImplTest {
             SubscriptionNotFoundException.class,
             () ->
                 subscriptionService.setSubscriptionStatusForSubscriptionId(
-                    STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.FREE));
+                    STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.FREE, new ArrayList<>()));
 
     assertEquals("This subscription does not exist", ex.getMessage());
     verify(subscriptionRepository, never()).persistAndFlush(any());
@@ -215,7 +216,7 @@ class SubscriptionServiceImplTest {
         .thenReturn(Optional.of(subscription));
 
     subscriptionService.setSubscriptionIdAndStatusForCustomerId(
-        CUSTOMER_ID, STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM);
+        CUSTOMER_ID, STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM, new ArrayList<>());
 
     assertEquals(STRIPE_SUBSCRIPTION_ID, subscription.stripeSubscriptionId);
     assertEquals(SubscriptionStatus.PREMIUM, subscription.subscriptionStatus);
@@ -232,7 +233,7 @@ class SubscriptionServiceImplTest {
             SubscriptionNotFoundException.class,
             () ->
                 subscriptionService.setSubscriptionIdAndStatusForCustomerId(
-                    CUSTOMER_ID, STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM));
+                    CUSTOMER_ID, STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM, new ArrayList<>()));
 
     assertEquals("This subscription does not exist", ex.getMessage());
     verify(subscriptionRepository, never()).persistAndFlush(any());

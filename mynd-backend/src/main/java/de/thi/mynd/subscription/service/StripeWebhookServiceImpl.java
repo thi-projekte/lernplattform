@@ -1,10 +1,7 @@
 package de.thi.mynd.subscription.service;
 
 import com.stripe.exception.SignatureVerificationException;
-import com.stripe.model.Event;
-import com.stripe.model.Product;
-import com.stripe.model.StripeObject;
-import com.stripe.model.Subscription;
+import com.stripe.model.*;
 import com.stripe.net.Webhook;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.exception.InvalidStripeSignatureException;
@@ -12,6 +9,9 @@ import de.thi.mynd.subscription.exception.ProductNotFoundException;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -50,10 +50,12 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
     if (objectOptional.get() instanceof Subscription subscription) {
       String productId = getProductIdFromSubscription(subscription);
       Product product = stripeService.getFullProductById(productId);
+      List<String> features = getFeaturesFromProduct(productId);
+
       String tier = product.getMetadata().get("tier");
       SubscriptionStatus status = SubscriptionStatus.valueOf(tier);
       subscriptionService.setSubscriptionIdAndStatusForCustomerId(
-          subscription.getCustomer(), subscription.getId(), status);
+          subscription.getCustomer(), subscription.getId(), status, features);
 
       Log.infof("Created subscription info locally coming from webhook");
     }
@@ -72,9 +74,11 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
 
       String productId = getProductIdFromSubscription(subscription);
       Product product = stripeService.getFullProductById(productId);
+      List<String> features = getFeaturesFromProduct(productId);
+
       String tier = product.getMetadata().get("tier");
       SubscriptionStatus status = SubscriptionStatus.valueOf(tier);
-      subscriptionService.setSubscriptionStatusForSubscriptionId(subscription.getId(), status);
+      subscriptionService.setSubscriptionStatusForSubscriptionId(subscription.getId(), status, features);
 
       Log.infof("Updated subscription info locally coming from webhook");
     }
@@ -86,7 +90,7 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
 
     if (objectOptional.get() instanceof Subscription subscription) {
       subscriptionService.setSubscriptionStatusForSubscriptionId(
-          subscription.getId(), SubscriptionStatus.FREE);
+          subscription.getId(), SubscriptionStatus.FREE, new ArrayList<>());
       Log.infof("Updated subscription info locally coming from webhook");
     }
   }
@@ -98,6 +102,16 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
     }
 
     return items.get(0).getPrice().getProduct();
+  }
+
+  private List<String> getFeaturesFromProduct(String productId) {
+    List<ProductFeature> productFeatures = stripeService.getProductFeatures(productId);
+    List<String> features = new ArrayList<>();
+    for (ProductFeature productFeature : productFeatures) {
+      features.add(productFeature.getEntitlementFeature().getLookupKey());
+    }
+
+    return features;
   }
 
   private Event verifySignatureAndExtractEvent(String payload, String sigHeader) {

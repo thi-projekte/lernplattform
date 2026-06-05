@@ -6,6 +6,8 @@ import de.thi.mynd.subscription.dto.SubscriptionDto;
 import de.thi.mynd.subscription.entity.Subscription;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 
+import java.util.List;
+
 public interface SubscriptionService {
 
   Subscription getSubscriptionForCurrentUser();
@@ -19,10 +21,10 @@ public interface SubscriptionService {
   StripeSessionDto createBillingPortalSession();
 
   void setSubscriptionStatusForSubscriptionId(
-      String stripeSubscriptionId, SubscriptionStatus status);
+          String stripeSubscriptionId, SubscriptionStatus status, List<String> features);
 
   void setSubscriptionIdAndStatusForCustomerId(
-      String customerId, String subscriptionId, SubscriptionStatus subscriptionStatus);
+      String customerId, String subscriptionId, SubscriptionStatus subscriptionStatus, List<String> features);
 
   void setTrialUsed(CreatorIdKey id);
 }

@@ -14,6 +14,8 @@ import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+
+import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -82,7 +84,7 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
   @Override
   @Transactional
   public void setSubscriptionStatusForSubscriptionId(
-      String stripeSubscriptionId, SubscriptionStatus status) {
+      String stripeSubscriptionId, SubscriptionStatus status, List<String> features) {
     Optional<Subscription> subscriptionOptional =
         subscriptionRepository.findByStripeSubscriptionId(stripeSubscriptionId);
     if (subscriptionOptional.isEmpty()) {
@@ -90,6 +92,7 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     Subscription subscription = subscriptionOptional.get();
+    subscription.features = features;
     subscription.subscriptionStatus = status;
 
     subscriptionRepository.persistAndFlush(subscription);
@@ -98,7 +101,7 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
   @Override
   @Transactional
   public void setSubscriptionIdAndStatusForCustomerId(
-      String customerId, String subscriptionId, SubscriptionStatus status) {
+      String customerId, String subscriptionId, SubscriptionStatus status, List<String> features) {
     Optional<Subscription> subscriptionOptional =
         subscriptionRepository.findByStripeCustomerId(customerId);
     if (subscriptionOptional.isEmpty()) {
@@ -106,6 +109,7 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     Subscription subscription = subscriptionOptional.get();
+    subscription.features = features;
     subscription.stripeSubscriptionId = subscriptionId;
     subscription.subscriptionStatus = status;
 
