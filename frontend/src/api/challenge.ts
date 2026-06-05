@@ -14,7 +14,7 @@ const fetchChallengeHistory = async (): Promise<ChallengeDto[]> => {
 };
 
 const claimReward = async (id: string): Promise<ChallengeDto> => {
-  const res = await apiClient.post('/challenges/claim/'+id);
+  const res = await apiClient.post('/challenges/claim/' + id);
   return ChallengeDtoSchema.parse(res.data);
 };
 
