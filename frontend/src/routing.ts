@@ -1,6 +1,7 @@
 import { type BaseRouteObject, createBrowserRouter } from 'react-router';
 import Homepage from './pages/home.tsx';
 import BuilderModeListPage from './pages/builder-mode/list.tsx';
+import LegalPage from './pages/LegalPage.tsx';
 import type { ComponentType } from 'react';
 import {
   IconFlame,
@@ -88,7 +89,6 @@ export const routes: TypedMyndRoute[] = [
     isSidebar: true,
     icon: IconMail,
     translation: 'invitations',
-    roles: [Role.Builder],
   },
   {
     path: '/acceptInvite',
@@ -100,6 +100,11 @@ export const routes: TypedMyndRoute[] = [
     translation: 'subscription',
     isSidebar: true,
     icon: IconReportMoney,
+  },
+  {
+    path: '/legal',
+    Component: LegalPage,
+    translation: 'legal',
   },
   {
     path: '/admin/categories',

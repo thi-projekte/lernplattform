@@ -355,5 +355,58 @@
       "acceptButton": "Accept my invitation",
       "contactHint": "Contact a builder to receive an invitation."
     }
+  },
+  "footer": {
+    "legal": "Legal notice & privacy policy"
+  },
+
+  "legal": {
+    "pageTitle": "Legal Notice & Privacy Policy",
+    "pageDescription": "Legal information about the MYnd platform and information on the processing of personal data.",
+    "imprint": {
+      "title": "Legal Notice",
+      "provider": "Provider",
+      "providerName": "Technische Hochschule Ingolstadt",
+      "street": "Esplanade 10",
+      "city": "85049 Ingolstadt",
+      "country": "Germany",
+      "representedBy": "Represented by",
+      "representedByName": "Florian Weisenberger",
+      "contact": "Contact",
+      "email": "Email",
+      "phone": "Phone",
+      "registerEntry": "Commercial Register Entry",
+      "registerText": "Local Court of Ingolstadt, HRB 123456",
+      "vatId": "VAT ID",
+      "contentResponsible": "Responsible for content",
+      "contentResponsibleName": "Florian Weisenberger",
+      "contentResponsibleStreet": "Musterstraße 12",
+      "contentResponsibleCity": "85049 Ingolstadt"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "MYnd processes personal data exclusively to provide the platform on the basis of Art. 6 GDPR.",
+      "collectedData": "Collected data",
+      "collectedDataItems": {
+        "nameEmail": "Name and email address",
+        "accountProfile": "User account and profile data",
+        "learningUsage": "Learning progress and platform usage data",
+        "rolesPermissions": "Role and permission data"
+      },
+      "processingPurpose": "Purpose of processing",
+      "processingPurposeItems": {
+        "platform": "Provision and administration of the learning platform",
+        "accountsRoles": "Management of user accounts and roles",
+        "learningProgress": "Storage and display of learning progress",
+        "improvement": "Improvement of learning content and platform features"
+      },
+      "disclosure": "Disclosure",
+      "disclosureText": "Data is only disclosed to technical hosting and infrastructure service providers where this is necessary for operating the platform.",
+      "storage": "Storage",
+      "storageText": "Personal data is stored only for as long as necessary for the use of the platform and to comply with legal obligations.",
+      "userRights": "User rights",
+      "userRightsText": "Users have the right to access, rectify, delete, restrict processing of, and object to the processing of their personal data.",
+      "privacyContact": "Privacy contact"
+    }
   }
 }

@@ -11,6 +11,7 @@ import {
   Text,
   ThemeIcon,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconCheck, IconCrown, IconExternalLink, IconRocket, IconStar } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { Layout } from '../components/layout.tsx';
@@ -63,10 +64,11 @@ const PlanCard = ({
 }: PlanCardProps) => {
   const { t } = useTranslation();
   const isCurrent = currentPlan === plan;
+  const isCardMobile = useMediaQuery('(max-width: 768px)');
 
   return (
     <Paper
-      p={28}
+      p={isCardMobile ? 16 : 28}
       radius="xl"
       style={{
         border: isCurrent ? `2px solid ${accentColor}` : '1.5px solid var(--card-border)',
@@ -251,6 +253,8 @@ const SubscriptionPage = () => {
     });
   };
 
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
   const cardProps = {
     currentPlan: subscriptionStatus,
     canAccessBillingPortal,
@@ -289,7 +293,11 @@ const SubscriptionPage = () => {
               </Group>
             )}
 
-            <Group align="stretch" gap="lg" style={{ flexWrap: 'wrap' }}>
+            <Group
+              align="stretch"
+              gap="lg"
+              style={{ flexWrap: 'wrap', flexDirection: isMobile ? 'column' : 'row' }}
+            >
               <PlanCard
                 plan="FREE"
                 title={t('subscription.free.title')}

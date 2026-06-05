@@ -356,5 +356,58 @@
       "acceptButton": "Einladung annehmen",
       "contactHint": "Wende dich an einen Builder, um eine Einladung zu erhalten."
     }
+  },
+  "footer": {
+    "legal": "Impressum & Datenschutz"
+  },
+
+  "legal": {
+    "pageTitle": "Impressum & Datenschutzerklärung",
+    "pageDescription": "Rechtliche Informationen zur Plattform MYnd und Hinweise zur Verarbeitung personenbezogener Daten.",
+    "imprint": {
+      "title": "Impressum",
+      "provider": "Anbieter",
+      "providerName": "Technische Hochschule Ingolstadt",
+      "street": "Esplanade 10",
+      "city": "85049 Ingolstadt",
+      "country": "Deutschland",
+      "representedBy": "Vertreten durch",
+      "representedByName": "Florian Weisenberger",
+      "contact": "Kontakt",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "registerEntry": "Registereintrag",
+      "registerText": "Amtsgericht Ingolstadt, HRB 123456",
+      "vatId": "Umsatzsteuer-ID",
+      "contentResponsible": "Verantwortlich für den Inhalt",
+      "contentResponsibleName": "Florian Weisenberger",
+      "contentResponsibleStreet": "Musterstraße 12",
+      "contentResponsibleCity": "85049 Ingolstadt"
+    },
+    "privacy": {
+      "title": "Datenschutzerklärung",
+      "intro": "MYnd verarbeitet personenbezogene Daten ausschließlich zur Bereitstellung der Plattform auf Grundlage von Art. 6 DSGVO.",
+      "collectedData": "Erhobene Daten",
+      "collectedDataItems": {
+        "nameEmail": "Name und E-Mail-Adresse",
+        "accountProfile": "Benutzerkonto- und Profildaten",
+        "learningUsage": "Lernfortschritt und Nutzungsdaten der Plattform",
+        "rolesPermissions": "Rollen- und Berechtigungsdaten"
+      },
+      "processingPurpose": "Zweck der Verarbeitung",
+      "processingPurposeItems": {
+        "platform": "Bereitstellung und Verwaltung der Lernplattform",
+        "accountsRoles": "Verwaltung von Benutzerkonten und Rollen",
+        "learningProgress": "Speicherung und Anzeige von Lernfortschritten",
+        "improvement": "Verbesserung der Lerninhalte und Plattformfunktionen"
+      },
+      "disclosure": "Weitergabe",
+      "disclosureText": "Eine Weitergabe erfolgt nur an technische Hosting- und Infrastrukturdienstleister, sofern dies für den Betrieb der Plattform notwendig ist.",
+      "storage": "Speicherung",
+      "storageText": "Personenbezogene Daten werden nur so lange gespeichert, wie dies für die Nutzung der Plattform und zur Erfüllung gesetzlicher Pflichten erforderlich ist.",
+      "userRights": "Rechte der Nutzer",
+      "userRightsText": "Nutzer haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung und Widerspruch gegen die Verarbeitung.",
+      "privacyContact": "Kontakt Datenschutz"
+    }
   }
 }
