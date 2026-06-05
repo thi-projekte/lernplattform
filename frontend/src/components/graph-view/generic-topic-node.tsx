@@ -103,6 +103,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
         }}
       >
         <div
+          className="mynd-drag-handle"
           style={{
             width: 32,
             height: 32,
@@ -144,6 +145,8 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
         radius="lg"
         shadow="xl"
         p="md"
+        onMouseDown={(event) => event.stopPropagation()}
+        onClick={(event) => event.stopPropagation()}
         style={{
           width: '100%',
           background: selectedBackground,
@@ -270,8 +273,9 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
         }}
       />
 
-      {/* Pin circle at bottom */}
+      {/* Pin circle at bottom (drag + click hitbox) */}
       <div
+        className="mynd-drag-handle"
         style={{
           width: 32,
           height: 32,
@@ -283,6 +287,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
           alignItems: 'center',
           justifyContent: 'center',
           position: 'relative',
+          cursor: 'grab',
           transition: 'box-shadow 0.25s ease, background 0.25s ease',
         }}
       >

@@ -851,6 +851,7 @@ export const buildSkillTreeGraph = (
         id: topic.id,
         type: 'skillTreeTopic',
         position,
+        dragHandle: '.mynd-drag-handle',
         data: {
           kind: 'skill-topic',
           title: topic.title,
@@ -894,6 +895,7 @@ export const buildSkillTreeGraph = (
         id: topic.id,
         type: 'skillTreeTopic',
         position,
+        dragHandle: '.mynd-drag-handle',
         data: {
           kind: 'skill-topic',
           title: topic.title,
