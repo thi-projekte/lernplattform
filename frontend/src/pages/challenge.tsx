@@ -27,8 +27,8 @@ const ChallengePage = () => {
   const { data: history } = useFetchChallengeHistory();
   const { mutate: claim, isPending } = useClaimRewardMutation();
 
-  const handleClaim = () => {
-    claim(`${challenge?.id}`, {
+  const handleClaim = (id: string) => {
+    claim(id, {
       onSuccess: () =>
         notifications.show({
           color: 'green',
@@ -91,7 +91,7 @@ const ChallengePage = () => {
                   leftSection={<IconTrophy size={16} />}
                   color="green"
                   loading={isPending}
-                  onClick={handleClaim}
+                  onClick={() => handleClaim(challenge?.id)}
                 >
                   {t('challenge.claimButton')}
                 </Button>
@@ -131,6 +131,16 @@ const ChallengePage = () => {
                 >
                   {c.completed ? <IconCheck size={12} /> : <IconX size={12} />}
                 </ThemeIcon>
+                {!c.rewardClaimed && (
+                  <Button
+                    leftSection={<IconTrophy size={16} />}
+                    color="green"
+                    loading={isPending}
+                    onClick={() => handleClaim(c.id)}
+                  >
+                    {t('challenge.claimButton')}
+                  </Button>
+                )}
               </Group>
             </Group>
           </Card>
