@@ -109,7 +109,8 @@ const NODE_HALF_HEIGHT = 60;
 export const applyForceLayout = (
   nodes: ForceLayoutNode[],
   edges: Edge[],
-  onTick: (positions: Map<string, { x: number; y: number }>) => void
+  onTick: (positions: Map<string, { x: number; y: number }>) => void,
+  initialAlpha: number = 1
 ): ForceLayoutHandle => {
   // Seed simulation in CENTER coordinates (React Flow stores top-left).
   const simNodes: ForceSimNode[] = nodes.map((node) => ({
@@ -158,7 +159,8 @@ export const applyForceLayout = (
     .force('center', forceCenter(0, 0))
     .force('collide', forceCollide(120).strength(0.6))
     .force('boundary', boundary)
-    .velocityDecay(0.25);
+    .velocityDecay(0.25)
+    .alpha(initialAlpha);
 
   simulation.on('tick', () => {
     const positions = new Map<string, { x: number; y: number }>();

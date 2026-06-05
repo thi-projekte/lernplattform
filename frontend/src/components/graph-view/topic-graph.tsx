@@ -137,8 +137,6 @@ const TopicGraphView = ({
         <ForceLayoutController
           baseNodes={nodes}
           edges={edges}
-          fitViewPadding={fitViewPadding}
-          fitViewMaxZoom={fitViewMaxZoom}
           onHandleReady={handleForceReady}
         />
       )}
