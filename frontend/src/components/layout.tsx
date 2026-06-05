@@ -113,6 +113,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   );
 
   const desktopNavbarWidth = desktopExpanded ? 280 : 76;
+  const showLabels = desktopExpanded || opened;
 
   return (
     <AppShell
@@ -181,7 +182,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         style={{
           background: theme.other.layoutNavbarBg,
           borderRight: `1px solid ${theme.other.layoutBorder}`,
-          transition: 'width 150ms ease',
+          transition: 'width 150ms ease, transform 200ms ease',
           overflowX: 'hidden',
           display: 'flex',
           flexDirection: 'column',
@@ -194,7 +195,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
             return (
               <NavLink
-                label={desktopExpanded ? routeLabel : undefined}
+                label={showLabels ? routeLabel : undefined}
                 leftSection={route.icon ? <route.icon size={32} stroke={1.5} /> : undefined}
                 active={isActive(route.path ?? '')}
                 onClick={() => navigate(route.path ?? '')}
@@ -204,14 +205,15 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                 styles={{
                   root: {
                     borderRadius: 12,
-                    paddingInline: desktopExpanded ? undefined : 0,
+                    paddingInline: showLabels ? undefined : 0,
                   },
                   body: {
-                    display: desktopExpanded ? undefined : 'none',
+                    display: showLabels ? undefined : 'none',
+                    whiteSpace: 'nowrap',
                   },
                   section: {
-                    marginInlineEnd: desktopExpanded ? undefined : 0,
-                    width: desktopExpanded ? undefined : '100%',
+                    marginInlineEnd: showLabels ? undefined : 0,
+                    width: showLabels ? undefined : '100%',
                     justifyContent: 'center',
                   },
                 }}
@@ -225,8 +227,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             active={pathname === '/account'}
             title={t('layout.openAccount')}
             aria-label={t('layout.openAccount')}
-            label={desktopExpanded ? userDisplayName : undefined}
-            description={desktopExpanded ? userRole : undefined}
+            label={showLabels ? userDisplayName : undefined}
+            description={showLabels ? userRole : undefined}
             leftSection={
               <Box
                 style={{
@@ -249,7 +251,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               root: {
                 height: 56,
                 borderRadius: 12,
-                paddingInline: desktopExpanded ? undefined : 0,
+                paddingInline: showLabels ? undefined : 0,
                 overflow: 'hidden',
                 transition: 'background-color 150ms ease, color 150ms ease',
               },
@@ -257,13 +259,14 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                 fontWeight: 700,
               },
               body: {
-                display: desktopExpanded ? undefined : 'none',
+                display: showLabels ? undefined : 'none',
                 minWidth: 0,
+                whiteSpace: 'nowrap',
               },
               section: {
-                marginInlineEnd: desktopExpanded ? undefined : 0,
-                width: desktopExpanded ? 44 : '100%',
-                minWidth: desktopExpanded ? 44 : '100%',
+                marginInlineEnd: showLabels ? undefined : 0,
+                width: showLabels ? 44 : '100%',
+                minWidth: showLabels ? 44 : '100%',
                 justifyContent: 'center',
               },
             }}
