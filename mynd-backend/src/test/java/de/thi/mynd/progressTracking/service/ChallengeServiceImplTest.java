@@ -32,243 +32,253 @@ import org.junit.jupiter.api.Test;
 @QuarkusTest
 class ChallengeServiceImplTest {
 
-    @Inject
-    ChallengeServiceImpl challengeService;
+  @Inject ChallengeServiceImpl challengeService;
 
-    @InjectMock
-    ChallengeRepository challengeRepository;
+  @InjectMock ChallengeRepository challengeRepository;
 
-    @InjectMock
-    SecurityIdentity identity;
+  @InjectMock SecurityIdentity identity;
 
-    @InjectMock
-    UserProfileService userProfileService;
+  @InjectMock UserProfileService userProfileService;
 
-    @InjectMock
-    MappingRegistry mappingRegistry;
+  @InjectMock MappingRegistry mappingRegistry;
 
-    private static final String USER_ID = "user-123";
-    private Principal mockPrincipal;
+  private static final String USER_ID = "user-123";
+  private Principal mockPrincipal;
 
-    @BeforeEach
-    void setUp() {
-        mockPrincipal = mock(Principal.class);
-        when(mockPrincipal.getName()).thenReturn(USER_ID);
-        when(identity.getPrincipal()).thenReturn(mockPrincipal);
+  @BeforeEach
+  void setUp() {
+    mockPrincipal = mock(Principal.class);
+    when(mockPrincipal.getName()).thenReturn(USER_ID);
+    when(identity.getPrincipal()).thenReturn(mockPrincipal);
 
-        // Injecting config values manually if QuarkusTest properties don't match production defaults
-        challengeService.weeklyTarget = 5;
-        challengeService.rewardInvitations = 3;
+    // Injecting config values manually if QuarkusTest properties don't match production defaults
+    challengeService.weeklyTarget = 5;
+    challengeService.rewardInvitations = 3;
+  }
+
+  @Nested
+  class GetCurrentChallengeTests {
+
+    @Test
+    void shouldReturnExistingChallenge() {
+      Challenge existingChallenge = new Challenge();
+      ChallengeDto expectedDto = ChallengeDto.builder().build();
+
+      when(challengeRepository.findCurrentForUser(
+              eq(USER_ID), eq(ChallengeType.WEEKLY), any(LocalDate.class)))
+          .thenReturn(Optional.of(existingChallenge));
+      when(mappingRegistry.map(existingChallenge, ChallengeDto.class)).thenReturn(expectedDto);
+
+      ChallengeDto result = challengeService.getCurrentChallenge();
+
+      assertNotNull(result);
+      assertEquals(expectedDto, result);
+      verify(challengeRepository, never()).persistAndFlush(any(Challenge.class));
     }
 
-    @Nested
-    class GetCurrentChallengeTests {
+    @Test
+    void shouldCreateNewChallengeIfNoneExists() {
+      ChallengeDto expectedDto = ChallengeDto.builder().build();
 
-        @Test
-        void shouldReturnExistingChallenge() {
-            Challenge existingChallenge = new Challenge();
-            ChallengeDto expectedDto = ChallengeDto.builder().build();
+      when(challengeRepository.findCurrentForUser(
+              eq(USER_ID), eq(ChallengeType.WEEKLY), any(LocalDate.class)))
+          .thenReturn(Optional.empty());
+      when(mappingRegistry.map(any(Challenge.class), eq(ChallengeDto.class)))
+          .thenReturn(expectedDto);
 
-            when(challengeRepository.findCurrentForUser(eq(USER_ID), eq(ChallengeType.WEEKLY), any(LocalDate.class)))
-                    .thenReturn(Optional.of(existingChallenge));
-            when(mappingRegistry.map(existingChallenge, ChallengeDto.class)).thenReturn(expectedDto);
+      ChallengeDto result = challengeService.getCurrentChallenge();
 
-            ChallengeDto result = challengeService.getCurrentChallenge();
+      assertNotNull(result);
+      assertEquals(expectedDto, result);
+      verify(challengeRepository)
+          .persistAndFlush(
+              argThat(
+                  challenge ->
+                      challenge.creatorId.equals(USER_ID)
+                          && challenge.type == ChallengeType.WEEKLY
+                          && challenge.targetCount == 7
+                          && challenge.startDate.equals(
+                              LocalDate.now()
+                                  .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)))));
+    }
+  }
 
-            assertNotNull(result);
-            assertEquals(expectedDto, result);
-            verify(challengeRepository, never()).persistAndFlush(any(Challenge.class));
-        }
+  @Nested
+  class TrackContentElementCompletionTests {
 
-        @Test
-        void shouldCreateNewChallengeIfNoneExists() {
-            ChallengeDto expectedDto = ChallengeDto.builder().build();
+    @Test
+    void shouldIncrementCountWhenNotCompleted() {
+      Challenge challenge = new Challenge();
+      challenge.completed = false;
+      challenge.currentCount = 2;
+      challenge.targetCount = 5;
 
-            when(challengeRepository.findCurrentForUser(eq(USER_ID), eq(ChallengeType.WEEKLY), any(LocalDate.class)))
-                    .thenReturn(Optional.empty());
-            when(mappingRegistry.map(any(Challenge.class), eq(ChallengeDto.class))).thenReturn(expectedDto);
+      when(challengeRepository.findCurrentForUser(
+              eq(USER_ID), eq(ChallengeType.WEEKLY), any(LocalDate.class)))
+          .thenReturn(Optional.of(challenge));
 
-            ChallengeDto result = challengeService.getCurrentChallenge();
+      challengeService.trackContentElementCompletion();
 
-            assertNotNull(result);
-            assertEquals(expectedDto, result);
-            verify(challengeRepository).persistAndFlush(argThat(challenge ->
-                    challenge.creatorId.equals(USER_ID) &&
-                            challenge.type == ChallengeType.WEEKLY &&
-                            challenge.targetCount == 7 &&
-                            challenge.startDate.equals(LocalDate.now().with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY)))
-            ));
-        }
+      assertEquals(3, challenge.currentCount);
+      assertFalse(challenge.completed);
+      verify(challengeRepository).persistAndFlush(challenge);
     }
 
-    @Nested
-    class TrackContentElementCompletionTests {
+    @Test
+    void shouldMarkAsCompletedWhenTargetReached() {
+      Challenge challenge = new Challenge();
+      challenge.completed = false;
+      challenge.currentCount = 4;
+      challenge.targetCount = 5;
 
-        @Test
-        void shouldIncrementCountWhenNotCompleted() {
-            Challenge challenge = new Challenge();
-            challenge.completed = false;
-            challenge.currentCount = 2;
-            challenge.targetCount = 5;
+      when(challengeRepository.findCurrentForUser(
+              eq(USER_ID), eq(ChallengeType.WEEKLY), any(LocalDate.class)))
+          .thenReturn(Optional.of(challenge));
 
-            when(challengeRepository.findCurrentForUser(eq(USER_ID), eq(ChallengeType.WEEKLY), any(LocalDate.class)))
-                    .thenReturn(Optional.of(challenge));
+      challengeService.trackContentElementCompletion();
 
-            challengeService.trackContentElementCompletion();
-
-            assertEquals(3, challenge.currentCount);
-            assertFalse(challenge.completed);
-            verify(challengeRepository).persistAndFlush(challenge);
-        }
-
-        @Test
-        void shouldMarkAsCompletedWhenTargetReached() {
-            Challenge challenge = new Challenge();
-            challenge.completed = false;
-            challenge.currentCount = 4;
-            challenge.targetCount = 5;
-
-            when(challengeRepository.findCurrentForUser(eq(USER_ID), eq(ChallengeType.WEEKLY), any(LocalDate.class)))
-                    .thenReturn(Optional.of(challenge));
-
-            challengeService.trackContentElementCompletion();
-
-            assertEquals(5, challenge.currentCount);
-            assertTrue(challenge.completed);
-            verify(challengeRepository).persistAndFlush(challenge);
-        }
-
-        @Test
-        void shouldDoNothingIfAlreadyCompleted() {
-            Challenge challenge = new Challenge();
-            challenge.completed = true;
-            challenge.currentCount = 5;
-            challenge.targetCount = 5;
-
-            when(challengeRepository.findCurrentForUser(eq(USER_ID), eq(ChallengeType.WEEKLY), any(LocalDate.class)))
-                    .thenReturn(Optional.of(challenge));
-
-            challengeService.trackContentElementCompletion();
-
-            assertEquals(5, challenge.currentCount);
-            verify(challengeRepository, never()).persistAndFlush(any(Challenge.class));
-        }
+      assertEquals(5, challenge.currentCount);
+      assertTrue(challenge.completed);
+      verify(challengeRepository).persistAndFlush(challenge);
     }
 
-    @Nested
-    class ClaimRewardTests {
+    @Test
+    void shouldDoNothingIfAlreadyCompleted() {
+      Challenge challenge = new Challenge();
+      challenge.completed = true;
+      challenge.currentCount = 5;
+      challenge.targetCount = 5;
 
-        @Test
-        void shouldClaimRewardSuccessfullyWithExistingProfile() {
-            UUID challengeId = UUID.randomUUID();
-            Challenge challenge = new Challenge();
-            challenge.creatorId = USER_ID;
-            challenge.completed = true;
-            challenge.rewardClaimed = false;
+      when(challengeRepository.findCurrentForUser(
+              eq(USER_ID), eq(ChallengeType.WEEKLY), any(LocalDate.class)))
+          .thenReturn(Optional.of(challenge));
 
-            UserProfile userProfile = new UserProfile();
-            userProfile.invitationsLeft = 2;
+      challengeService.trackContentElementCompletion();
 
-            ChallengeDto expectedDto = ChallengeDto.builder().build();
+      assertEquals(5, challenge.currentCount);
+      verify(challengeRepository, never()).persistAndFlush(any(Challenge.class));
+    }
+  }
 
-            when(challengeRepository.findByIdOptional(challengeId)).thenReturn(Optional.of(challenge));
-            when(userProfileService.getPersonalUserProfile()).thenReturn(Optional.of(userProfile));
-            when(mappingRegistry.map(challenge, ChallengeDto.class)).thenReturn(expectedDto);
+  @Nested
+  class ClaimRewardTests {
 
-            ChallengeDto result = challengeService.claimReward(challengeId);
+    @Test
+    void shouldClaimRewardSuccessfullyWithExistingProfile() {
+      UUID challengeId = UUID.randomUUID();
+      Challenge challenge = new Challenge();
+      challenge.creatorId = USER_ID;
+      challenge.completed = true;
+      challenge.rewardClaimed = false;
 
-            assertTrue(challenge.rewardClaimed);
-            assertEquals(4, userProfile.invitationsLeft); // 2 original + 3 rewardInvitations
-            verify(challengeRepository).persistAndFlush(challenge);
-            verify(userProfileService).updateUserProfile(userProfile);
-            assertEquals(expectedDto, result);
-        }
+      UserProfile userProfile = new UserProfile();
+      userProfile.invitationsLeft = 2;
 
-        @Test
-        void shouldClaimRewardSuccessfullyAndCreateProfileIfMissing() {
-            UUID challengeId = UUID.randomUUID();
-            Challenge challenge = new Challenge();
-            challenge.creatorId = USER_ID;
-            challenge.completed = true;
-            challenge.rewardClaimed = false;
+      ChallengeDto expectedDto = ChallengeDto.builder().build();
 
-            UserProfile newProfile = new UserProfile();
-            newProfile.invitationsLeft = 0;
+      when(challengeRepository.findByIdOptional(challengeId)).thenReturn(Optional.of(challenge));
+      when(userProfileService.getPersonalUserProfile()).thenReturn(Optional.of(userProfile));
+      when(mappingRegistry.map(challenge, ChallengeDto.class)).thenReturn(expectedDto);
 
-            when(challengeRepository.findByIdOptional(challengeId)).thenReturn(Optional.of(challenge));
-            when(userProfileService.getPersonalUserProfile()).thenReturn(Optional.empty());
-            when(userProfileService.createPersonalUserProfile()).thenReturn(newProfile);
+      ChallengeDto result = challengeService.claimReward(challengeId);
 
-            challengeService.claimReward(challengeId);
-
-            assertEquals(2, newProfile.invitationsLeft);
-            verify(userProfileService).createPersonalUserProfile();
-            verify(userProfileService).updateUserProfile(newProfile);
-        }
-
-        @Test
-        void shouldThrowExceptionIfChallengeNotFound() {
-            UUID challengeId = UUID.randomUUID();
-            when(challengeRepository.findByIdOptional(challengeId)).thenReturn(Optional.empty());
-
-            assertThrows(EntityNotFoundException.class, () -> challengeService.claimReward(challengeId));
-        }
-
-        @Test
-        void shouldThrowExceptionIfNotOwner() {
-            UUID challengeId = UUID.randomUUID();
-            Challenge challenge = new Challenge();
-            challenge.creatorId = "wrong-user";
-
-            when(challengeRepository.findByIdOptional(challengeId)).thenReturn(Optional.of(challenge));
-
-            BadRequestException exception = assertThrows(BadRequestException.class, () -> challengeService.claimReward(challengeId));
-            assertEquals("This is not your challenge", exception.getMessage());
-        }
-
-        @Test
-        void shouldThrowExceptionIfNotCompleted() {
-            UUID challengeId = UUID.randomUUID();
-            Challenge challenge = new Challenge();
-            challenge.creatorId = USER_ID;
-            challenge.completed = false;
-
-            when(challengeRepository.findByIdOptional(challengeId)).thenReturn(Optional.of(challenge));
-
-            BadRequestException exception = assertThrows(BadRequestException.class, () -> challengeService.claimReward(challengeId));
-            assertEquals("Challenge not completed yet", exception.getMessage());
-        }
-
-        @Test
-        void shouldThrowExceptionIfRewardAlreadyClaimed() {
-            UUID challengeId = UUID.randomUUID();
-            Challenge challenge = new Challenge();
-            challenge.creatorId = USER_ID;
-            challenge.completed = true;
-            challenge.rewardClaimed = true;
-
-            when(challengeRepository.findByIdOptional(challengeId)).thenReturn(Optional.of(challenge));
-
-            BadRequestException exception = assertThrows(BadRequestException.class, () -> challengeService.claimReward(challengeId));
-            assertEquals("Reward already claimed", exception.getMessage());
-        }
+      assertTrue(challenge.rewardClaimed);
+      assertEquals(4, userProfile.invitationsLeft); // 2 original + 3 rewardInvitations
+      verify(challengeRepository).persistAndFlush(challenge);
+      verify(userProfileService).updateUserProfile(userProfile);
+      assertEquals(expectedDto, result);
     }
 
-    @Nested
-    class GetChallengeHistoryTests {
+    @Test
+    void shouldClaimRewardSuccessfullyAndCreateProfileIfMissing() {
+      UUID challengeId = UUID.randomUUID();
+      Challenge challenge = new Challenge();
+      challenge.creatorId = USER_ID;
+      challenge.completed = true;
+      challenge.rewardClaimed = false;
 
-        @Test
-        void shouldReturnHistoryList() {
-            List<Challenge> mockChallenges = List.of(new Challenge(), new Challenge());
-            List<ChallengeDto> expectedDtos = List.of(ChallengeDto.builder().build(), ChallengeDto.builder().build());
+      UserProfile newProfile = new UserProfile();
+      newProfile.invitationsLeft = 0;
 
-            when(challengeRepository.findHistoryForUser(eq(USER_ID), any(LocalDate.class))).thenReturn(mockChallenges);
-            when(mappingRegistry.mapList(mockChallenges, ChallengeDto.class)).thenReturn(expectedDtos);
+      when(challengeRepository.findByIdOptional(challengeId)).thenReturn(Optional.of(challenge));
+      when(userProfileService.getPersonalUserProfile()).thenReturn(Optional.empty());
+      when(userProfileService.createPersonalUserProfile()).thenReturn(newProfile);
 
-            List<ChallengeDto> result = challengeService.getChallengeHistory();
+      challengeService.claimReward(challengeId);
 
-            assertEquals(2, result.size());
-            assertEquals(expectedDtos, result);
-        }
+      assertEquals(2, newProfile.invitationsLeft);
+      verify(userProfileService).createPersonalUserProfile();
+      verify(userProfileService).updateUserProfile(newProfile);
     }
+
+    @Test
+    void shouldThrowExceptionIfChallengeNotFound() {
+      UUID challengeId = UUID.randomUUID();
+      when(challengeRepository.findByIdOptional(challengeId)).thenReturn(Optional.empty());
+
+      assertThrows(EntityNotFoundException.class, () -> challengeService.claimReward(challengeId));
+    }
+
+    @Test
+    void shouldThrowExceptionIfNotOwner() {
+      UUID challengeId = UUID.randomUUID();
+      Challenge challenge = new Challenge();
+      challenge.creatorId = "wrong-user";
+
+      when(challengeRepository.findByIdOptional(challengeId)).thenReturn(Optional.of(challenge));
+
+      BadRequestException exception =
+          assertThrows(BadRequestException.class, () -> challengeService.claimReward(challengeId));
+      assertEquals("This is not your challenge", exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowExceptionIfNotCompleted() {
+      UUID challengeId = UUID.randomUUID();
+      Challenge challenge = new Challenge();
+      challenge.creatorId = USER_ID;
+      challenge.completed = false;
+
+      when(challengeRepository.findByIdOptional(challengeId)).thenReturn(Optional.of(challenge));
+
+      BadRequestException exception =
+          assertThrows(BadRequestException.class, () -> challengeService.claimReward(challengeId));
+      assertEquals("Challenge not completed yet", exception.getMessage());
+    }
+
+    @Test
+    void shouldThrowExceptionIfRewardAlreadyClaimed() {
+      UUID challengeId = UUID.randomUUID();
+      Challenge challenge = new Challenge();
+      challenge.creatorId = USER_ID;
+      challenge.completed = true;
+      challenge.rewardClaimed = true;
+
+      when(challengeRepository.findByIdOptional(challengeId)).thenReturn(Optional.of(challenge));
+
+      BadRequestException exception =
+          assertThrows(BadRequestException.class, () -> challengeService.claimReward(challengeId));
+      assertEquals("Reward already claimed", exception.getMessage());
+    }
+  }
+
+  @Nested
+  class GetChallengeHistoryTests {
+
+    @Test
+    void shouldReturnHistoryList() {
+      List<Challenge> mockChallenges = List.of(new Challenge(), new Challenge());
+      List<ChallengeDto> expectedDtos =
+          List.of(ChallengeDto.builder().build(), ChallengeDto.builder().build());
+
+      when(challengeRepository.findHistoryForUser(eq(USER_ID), any(LocalDate.class)))
+          .thenReturn(mockChallenges);
+      when(mappingRegistry.mapList(mockChallenges, ChallengeDto.class)).thenReturn(expectedDtos);
+
+      List<ChallengeDto> result = challengeService.getChallengeHistory();
+
+      assertEquals(2, result.size());
+      assertEquals(expectedDtos, result);
+    }
+  }
 }
