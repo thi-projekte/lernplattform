@@ -42,6 +42,7 @@ public final class ProductDtoMapper extends AbstractMappingProcessor<Product, Pr
         .canHaveTrial(true)
         .subscriptionStatus(status)
         .prices(priceDtos)
+        .features(stripeService.getProductFeatures(entity.getId()))
         .build();
   }
 

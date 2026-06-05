@@ -1,9 +1,7 @@
 package de.thi.mynd.subscription.service;
 
-import com.stripe.model.Customer;
-import com.stripe.model.Price;
-import com.stripe.model.Product;
-import com.stripe.model.Subscription;
+import com.stripe.model.*;
+import com.stripe.model.entitlements.ActiveEntitlement;
 import io.quarkus.cache.CacheResult;
 import java.util.List;
 
@@ -26,4 +24,7 @@ public interface StripeService {
   Customer getOrCreateCustomer(String username);
 
   Subscription createTrialForPriceId(String priceId, String customerId);
+
+  @CacheResult(cacheName = "features")
+  List<ProductFeature> getProductFeatures(String productId);
 }

@@ -4,6 +4,7 @@ import com.stripe.StripeClient;
 import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
+import com.stripe.model.entitlements.ActiveEntitlement;
 import com.stripe.param.*;
 import com.stripe.param.checkout.SessionCreateParams;
 import de.thi.mynd.subscription.exception.HandledStripeException;
@@ -27,7 +28,10 @@ public final class StripeServiceImpl implements StripeService {
   @Override
   public List<Product> getAllProductsWithPricesAndMetaData() {
 
-    ProductListParams params = ProductListParams.builder().setActive(true).build();
+    ProductListParams params = ProductListParams.builder()
+            .setActive(true)
+            .addExpand("data.marketing_features")
+            .build();
 
     try {
       return stripeClient.v1().products().list(params).getData();
@@ -134,6 +138,16 @@ public final class StripeServiceImpl implements StripeService {
     } catch (StripeException e) {
       Log.error(e.getMessage());
       throw new HandledStripeException("Cannot create trial");
+    }
+  }
+
+  @Override
+  public List<ProductFeature> getProductFeatures(String productId) {
+    try {
+      return stripeClient.v1().products().features().list(productId).getData();
+    } catch (StripeException e) {
+      Log.error(e.getMessage());
+      throw new HandledStripeException("Cannot fetch stripe product features");
     }
   }
 
