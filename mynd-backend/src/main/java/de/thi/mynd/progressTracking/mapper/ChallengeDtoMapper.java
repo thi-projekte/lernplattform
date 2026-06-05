@@ -9,7 +9,17 @@ import jakarta.enterprise.context.ApplicationScoped;
 public final class ChallengeDtoMapper extends AbstractMappingProcessor<Challenge, ChallengeDto> {
   @Override
   public ChallengeDto mapAndEnrich(Challenge entity) {
-    return null;
+    return ChallengeDto.builder()
+            .id(entity.id)
+            .type(entity.type)
+            .startDate(entity.startDate)
+            .endDate(entity.endDate)
+            .targetCount(entity.targetCount)
+            .currentCount(entity.currentCount)
+            .completed(entity.completed)
+            .rewardClaimed(entity.rewardClaimed)
+            .build();
+
   }
 
   @Override
