@@ -1,12 +1,23 @@
-import { ActionIcon, Paper, Stack, Tooltip } from '@mantine/core';
-import { IconLock, IconLockOpen2, IconMaximize, IconMinus, IconPlus } from '@tabler/icons-react';
+import { ActionIcon, Divider, Paper, Stack, Tooltip } from '@mantine/core';
+import {
+  IconBinaryTree2,
+  IconGrain,
+  IconLock,
+  IconLockOpen2,
+  IconMaximize,
+  IconMinus,
+  IconPlus,
+} from '@tabler/icons-react';
 import { Panel, useReactFlow } from '@xyflow/react';
+import type { GraphLayoutMode } from './topic-graph.tsx';
 
 interface ViewportToolbarProps {
   fitViewPadding: number;
   fitViewMaxZoom?: number;
   viewportLocked: boolean;
   onToggleViewportLock?: () => void;
+  layoutMode?: GraphLayoutMode;
+  onChangeLayoutMode?: (mode: GraphLayoutMode) => void;
 }
 
 const toolbarActionIconProps = {
@@ -25,6 +36,8 @@ const ViewportToolbar = ({
   fitViewMaxZoom,
   viewportLocked,
   onToggleViewportLock,
+  layoutMode,
+  onChangeLayoutMode,
 }: ViewportToolbarProps) => {
   const { zoomIn, zoomOut, fitView } = useReactFlow();
 
@@ -41,6 +54,52 @@ const ViewportToolbar = ({
         }}
       >
         <Stack gap={0}>
+          {onChangeLayoutMode && (
+            <>
+              <Tooltip label="Tree layout" position="right">
+                <ActionIcon
+                  {...toolbarActionIconProps}
+                  variant={layoutMode === 'tree' ? 'filled' : 'subtle'}
+                  style={{
+                    ...toolbarActionIconProps.style,
+                    ...(layoutMode === 'tree' && {
+                      ['--ai-bg' as string]: '#495057',
+                      ['--ai-hover' as string]: '#5c6370',
+                      ['--ai-color' as string]: '#ffffff',
+                      ['--ai-hover-color' as string]: '#ffffff',
+                    }),
+                  }}
+                  aria-label="Tree layout"
+                  onClick={() => onChangeLayoutMode('tree')}
+                >
+                  <IconBinaryTree2 size={18} stroke={2} />
+                </ActionIcon>
+              </Tooltip>
+
+              <Tooltip label="Force layout" position="right">
+                <ActionIcon
+                  {...toolbarActionIconProps}
+                  variant={layoutMode === 'force' ? 'filled' : 'subtle'}
+                  style={{
+                    ...toolbarActionIconProps.style,
+                    ...(layoutMode === 'force' && {
+                      ['--ai-bg' as string]: '#495057',
+                      ['--ai-hover' as string]: '#5c6370',
+                      ['--ai-color' as string]: '#ffffff',
+                      ['--ai-hover-color' as string]: '#ffffff',
+                    }),
+                  }}
+                  aria-label="Force layout"
+                  onClick={() => onChangeLayoutMode('force')}
+                >
+                  <IconGrain size={18} stroke={2} />
+                </ActionIcon>
+              </Tooltip>
+
+              <Divider />
+            </>
+          )}
+
           <Tooltip label="Zoom in" position="right">
             <ActionIcon
               {...toolbarActionIconProps}
