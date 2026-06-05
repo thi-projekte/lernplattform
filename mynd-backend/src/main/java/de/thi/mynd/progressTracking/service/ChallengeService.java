@@ -10,5 +10,6 @@ public interface ChallengeService {
 
   ChallengeDto claimReward();
 
+  // TODO: For the future maybe paginate this
   List<ChallengeDto> getChallengeHistory();
 }
