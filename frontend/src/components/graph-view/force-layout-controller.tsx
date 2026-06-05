@@ -8,11 +8,7 @@ interface ForceLayoutControllerProps {
   onHandleReady?: (handle: ForceLayoutHandle | null) => void;
 }
 
-const ForceLayoutController = ({
-  baseNodes,
-  edges,
-  onHandleReady,
-}: ForceLayoutControllerProps) => {
+const ForceLayoutController = ({ baseNodes, edges, onHandleReady }: ForceLayoutControllerProps) => {
   const { setNodes, getNodes, fitView } = useReactFlow();
   const handleRef = useRef<ForceLayoutHandle | null>(null);
   // First sim creation seeds from dagre — needs full alpha to spread out, and
