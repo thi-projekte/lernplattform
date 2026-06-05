@@ -4,7 +4,11 @@
     "title": "Was ist Künstliche Intelligenz?",
     "teaser": "Ein Einstieg in die Grundidee von KI und warum sie heute relevant ist.",
     "creatorId": "admin",
-    "categories": ["technology", "ki", "digitalTechnlogies"],
+    "categories": [
+      "technology",
+      "ki",
+      "digitalTechnlogies"
+    ],
     "duration": 20,
     "contentElements": [
       {
@@ -29,7 +33,11 @@
     "title": "KI, Machine Learning und Deep Learning",
     "teaser": "Abgrenzung der wichtigsten Begriffe im KI-Umfeld.",
     "creatorId": "admin",
-    "categories": ["technology", "ki", "digitalTechnlogies"],
+    "categories": [
+      "technology",
+      "ki",
+      "digitalTechnlogies"
+    ],
     "duration": 20,
     "contentElements": [
       {
@@ -54,7 +62,9 @@
     "title": "Supervised Learning",
     "teaser": "Wie Maschinen mit Beispieldaten und bekannten Zielwerten lernen.",
     "creatorId": "admin",
-    "categories": ["ki"],
+    "categories": [
+      "ki"
+    ],
     "duration": 80,
     "contentElements": [
       {
@@ -79,7 +89,9 @@
     "title": "Entscheidungsbäume",
     "teaser": "Ein einfach verständliches ML-Modell mit Wenn-Dann-Logik.",
     "creatorId": "admin",
-    "categories": ["ki"],
+    "categories": [
+      "ki"
+    ],
     "duration": 60,
     "contentElements": [
       {
@@ -104,7 +116,9 @@
     "title": "Neuronale Netze",
     "teaser": "Grundidee künstlicher neuronaler Netze.",
     "creatorId": "admin",
-    "categories": ["ki"],
+    "categories": [
+      "ki"
+    ],
     "duration": 60,
     "contentElements": [
       {
@@ -129,7 +143,9 @@
     "title": "Generative KI",
     "teaser": "KI-Systeme, die neue Inhalte wie Text, Bilder oder Code erzeugen.",
     "creatorId": "admin",
-    "categories": ["ki"],
+    "categories": [
+      "ki"
+    ],
     "duration": 45,
     "contentElements": [
       {
@@ -154,7 +170,9 @@
     "title": "Prompting-Grundlagen",
     "teaser": "Wie man bessere Eingaben für generative KI formuliert.",
     "creatorId": "admin",
-    "categories": ["ki"],
+    "categories": [
+      "ki"
+    ],
     "duration": 60,
     "contentElements": [
       {
@@ -179,7 +197,9 @@
     "title": "Chancen und Risiken von KI",
     "teaser": "Einordnung von Nutzen, Grenzen und Risiken künstlicher Intelligenz.",
     "creatorId": "admin",
-    "categories": ["ki"],
+    "categories": [
+      "ki"
+    ],
     "duration": 20,
     "contentElements": [
       {
@@ -813,6 +833,198 @@
         "title": "Video-Suche: Lebensbereiche planen",
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=o0zF4fw8Arw"
+      }
+    ]
+  },
+  {
+    "identifier": "healthWellbeingPlan",
+    "title": "Gesundheit und Wohlbefinden als Basis",
+    "teaser": "Warum persönliche Ziele ohne Energie, Erholung und körperliches Wohlbefinden schnell instabil werden.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Erklärung: Gesundheit als Fundament",
+        "type": "RTF",
+        "rtfText": "<p>Im Reisehandbuch wird Gesundheit nicht als Nebenthema behandelt, sondern als Grundlage für alles Weitere. Wer dauerhaft erschöpft ist, schlecht regeneriert oder Warnsignale des Körpers ignoriert, kann Ziele zwar kurzfristig durchdrücken, aber selten stabil leben. Deshalb beginnt gute Lebensplanung nicht bei Karriere, Status oder großen Träumen, sondern bei der Frage: Habe ich genug Kraft, um meinen Weg überhaupt gehen zu können?</p><p>Der wichtige Punkt ist die Balance zwischen Belastung und Regeneration. Stress ist nicht automatisch schlecht, aber permanenter Stress ohne Ausgleich macht aus Motivation irgendwann Druck. Gesundheit und Wohlbefinden bedeuten daher mehr als Sport oder Ernährung. Es geht auch um Schlaf, mentale Ruhe, soziale Unterstützung, Pausen, Konzentrationsfähigkeit und die Fähigkeit, rechtzeitig langsamer zu werden.</p><p>Für die Lernplattform ist dieser Node ein guter Anschluss an die Penthouse Theorie. Er zeigt, dass ein Lebensbereich nicht nur beschrieben, sondern als konkrete Reflexionsfläche genutzt werden kann. Der Lernende kann prüfen, welche Energiequellen bereits vorhanden sind und welche Warnsignale im Alltag vielleicht übersehen werden. In der Journey Map sollte dieser Node als erster konkreter Lebensbereich nach den sechs Aktivitätsfeldern stehen.</p>"
+      },
+      {
+        "title": "Vertiefung: Wohlbefinden und Gesundheit",
+        "type": "URI",
+        "uri": "https://www.bdp-verband.de/fileadmin/user_upload/BDP/verband/Untergliederungen/Sektionen/Gesundheits-und-Umweltpsychologie/Gesundheitspsychologie/Gesund-leben/Gesundheit-psychologisch-gesund-leben.pdf"
+      },
+      {
+        "title": "Video-Suche: Stress und Regeneration",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=6GKQrn1OcAI"
+      },
+      {
+        "title": "Reflexionsfrage",
+        "type": "RTF",
+        "rtfText": "<p>Welche drei Dinge geben dir im Alltag wirklich Energie und welche drei Dinge ziehen dir regelmäßig Energie?</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "socialEnvironmentSupport",
+    "title": "Familie, Freunde und privates Umfeld bewusst gestalten",
+    "teaser": "Wie das persönliche Umfeld Halt gibt, aber auch Energie kosten kann.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Erklärung: Das Netz und der doppelte Boden",
+        "type": "RTF",
+        "rtfText": "<p>Ein zentrales Aktivitätsfeld im Reisehandbuch ist das private Umfeld. Gemeint sind nicht nur Familie im engen Sinn, sondern alle Menschen, mit denen man freiwillig Zeit verbringt, denen man vertraut und die im Alltag Rückhalt geben. Dieses Umfeld kann ein echter doppelter Boden sein: Es stabilisiert, wenn Dinge schwierig werden, und macht gute Erlebnisse wertvoller, weil man sie teilen kann.</p><p>Gleichzeitig ist das private Umfeld kein Selbstläufer. Manche Kontakte geben Energie, andere kosten sie dauerhaft. Lebensplanung bedeutet deshalb auch, ehrlich zu prüfen, mit welchen Menschen man mehr Zeit verbringen möchte und wo klare Grenzen nötig sind. Das ist nicht kalt, sondern notwendig. Wer jedes private Verhältnis aus Pflichtgefühl gleich behandelt, verliert schnell Zeit für die Menschen, die wirklich wichtig sind.</p><p>Als Demo-Node ist dieses Thema stark, weil es die Plattform menschlicher macht. Der Lernpfad bleibt nicht abstrakt bei Zielen und Methoden, sondern fragt konkret nach Beziehungen, Unterstützung und Alltag. In der Journey Map kann der Node mit Gesundheit verbunden werden, weil ein stabiles Umfeld auch Wohlbefinden beeinflusst. Außerdem passt er zur Reflexion über Werte und Bauchentscheidungen.</p>"
+      },
+      {
+        "title": "Externe Ressource: Soziale Beziehungen und Gesundheit",
+        "type": "URI",
+        "uri": "https://www.gesundheit.gv.at/leben/lebenswelt/soziale-netzwerke/gesundheit-soziale-beziehungen.html"
+      },
+      {
+        "title": "Video-Suche: Soziale Beziehungen und Wohlbefinden",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=EBC_8xAjLbc"
+      },
+      {
+        "title": "Mini-Übung",
+        "type": "RTF",
+        "rtfText": "<p>Notiere drei Personen, die dir Energie geben, und eine konkrete Handlung, wie du den Kontakt zu ihnen bewusster pflegen kannst.</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "educationGrowthPath",
+    "title": "Bildung und Weiterbildung als Werkzeugkasten",
+    "teaser": "Warum Lernen dann sinnvoll ist, wenn es zum eigenen Weg und zu echten Zielen passt.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning"
+    ],
+    "duration": 35,
+    "contentElements": [
+      {
+        "title": "Erklärung: Lernen mit Richtung",
+        "type": "RTF",
+        "rtfText": "<p>Das Reisehandbuch beschreibt Bildung und Weiterbildung als Handwerkszeug für den eigenen Weg. Wissen ist nicht automatisch wertvoll, nur weil es gesammelt wird. Wertvoll wird es, wenn es dabei hilft, ein persönliches Ziel zu erreichen, neue Möglichkeiten zu öffnen oder eine Fähigkeit aufzubauen, die wirklich gebraucht wird.</p><p>Genau deshalb sollte Weiterbildung bewusst ausgewählt werden. Ein Kurs, ein Studium oder ein Zertifikat kann sinnvoll sein, wenn es zum Plan passt. Es kann aber auch bloßer Aktionismus sein, wenn man nur lernt, weil andere es erwarten oder weil man sich dadurch kurzfristig produktiv fühlt. Gute Lebensplanung fragt daher: Welches Wissen brauche ich wirklich? Welche Fähigkeit bringt mich weiter? Welche Weiterbildung passt zu meinen Stärken, Werten und Zielen?</p><p>In der Klickdemo zeigt dieser Node, wie sich persönliche Entwicklung und klassische Lernplattform-Logik verbinden lassen. Das Thema passt perfekt zur Plattform selbst: Ein Lernpfad soll nicht beliebige Inhalte sammeln, sondern Orientierung geben. Dieser Node kann deshalb als Meta-Beispiel dienen: Die Plattform zeigt an ihrem eigenen Inhalt, warum strukturierte Lernpfade sinnvoller sind als lose Links.</p>"
+      },
+      {
+        "title": "Externe Ressource: Weiterbildung planen",
+        "type": "URI",
+        "uri": "https://erwachsenenbildung.at/bildungsinfo/orientierung/bildungsberatung.php"
+      },
+      {
+        "title": "Video-Suche: Lebenslanges Lernen",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=ZzlUmZt1Wag"
+      },
+      {
+        "title": "Reflexionsfrage",
+        "type": "RTF",
+        "rtfText": "<p>Welche Fähigkeit würde dir in den nächsten zwölf Monaten am meisten helfen und warum genau diese?</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "vocationActivityMeaning",
+    "title": "Beruf, Tätigkeit und Berufung hinterfragen",
+    "teaser": "Wie Arbeit mehr sein kann als Einkommen und warum Sinn, Stärken und Alltag zusammenpassen müssen.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning"
+    ],
+    "duration": 35,
+    "contentElements": [
+      {
+        "title": "Erklärung: Arbeit mit Sinn prüfen",
+        "type": "RTF",
+        "rtfText": "<p>Der Bereich Beruf und Tätigkeit nimmt im Leben vieler Menschen enorm viel Raum ein. Deshalb reicht es nicht, Arbeit nur als Einkommensquelle zu betrachten. Natürlich muss ein Job Geld bringen und realistisch in das Leben passen. Aber wenn Arbeit dauerhaft gegen die eigenen Werte, Stärken oder Interessen läuft, wird sie schnell zu einer Energiequelle in die falsche Richtung.</p><p>Das Reisehandbuch stellt hier keine naive Forderung nach dem perfekten Traumjob auf. Es geht eher darum, ehrlich zu prüfen, was die eigene Arbeit im Alltag auslöst. Gibt sie Sinn? Nutzt sie eigene Stärken? Passt sie zum gewünschten Leben? Oder wird Freizeit gegen Geld getauscht, ohne dass klar ist, wofür? Wichtig ist auch: Veränderung muss nicht radikal sein. Man kann testen, schnuppern, Nebenprojekte starten, Gespräche führen und kleine Schritte gehen, bevor man große Entscheidungen trifft.</p><p>Für die Demo eignet sich dieser Node, weil er sehr nah an den Personas Student, Angestellte und Unternehmer liegt. Fast jeder Nutzer kann sich dazu positionieren. In der Journey Map kann der Node nach Bildung folgen, weil Weiterbildung häufig ein Werkzeug ist, um berufliche Möglichkeiten zu verändern oder zu erweitern.</p>"
+      },
+      {
+        "title": "Externe Ressource: Berufliche Orientierung",
+        "type": "URI",
+        "uri": "https://www.arbeitsagentur.de/bildung/berufsinformationszentrum-biz"
+      },
+      {
+        "title": "Video-Suche: Berufung finden",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=qF7CkNprhJA"
+      },
+      {
+        "title": "Mini-Übung",
+        "type": "RTF",
+        "rtfText": "<p>Bewerte deinen aktuellen Beruf oder dein Studium in drei Punkten: Energie, Sinn und Entwicklung. Wo ist der stärkste Bereich, wo der schwächste?</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "personalBalanceRecharge",
+    "title": "Persönlicher Ausgleich: Akkus bewusst aufladen",
+    "teaser": "Warum Erholung geplant werden muss, bevor Überlastung den Plan übernimmt.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Erklärung: Ausgleich ist kein Luxus",
+        "type": "RTF",
+        "rtfText": "<p>Persönlicher Ausgleich meint die Dinge, die man für sich selbst tut, damit die eigenen Akkus wieder voll werden. Das kann Sport sein, Musik, Lesen, Spaziergänge, Kreativität, Zeit allein oder Zeit mit bestimmten Menschen. Entscheidend ist nicht, ob die Aktivität beeindruckend klingt, sondern ob sie wirklich regeneriert.</p><p>Viele Menschen behandeln Ausgleich wie eine Belohnung, die erst erlaubt ist, wenn alles andere erledigt wurde. Das Problem: Alles andere ist selten erledigt. Dann wird Erholung ständig verschoben, bis der Körper oder die Psyche den Stopp selbst erzwingt. Das Reisehandbuch denkt Ausgleich deshalb als festen Lebensbereich. Wer langfristig motiviert und leistungsfähig bleiben will, muss Pausen, Freude und persönliche Energiequellen ernst nehmen.</p><p>In der Lernplattform ist dieser Node ein guter Praxis- und Reflexionsknoten. Er kann mit Gesundheit, Beruf und Träumen verbunden werden, weil Ausgleich überall hineinwirkt. Für die Klickdemo ist außerdem gut sichtbar: Ein Node kann nicht nur Wissen vermitteln, sondern eine konkrete Selbstbeobachtung auslösen.</p>"
+      },
+      {
+        "title": "Externe Ressource: Erholung im Alltag",
+        "type": "URI",
+        "uri": "https://www.tk.de/techniker/gesundheit-foerdern/stress-entspannung/aktiv-entspannen/entspannung-im-alltag-2006846"
+      },
+      {
+        "title": "Audio-Suche: Entspannung und Balance",
+        "type": "SPOTIFY_LINK",
+        "uri": "https://open.spotify.com/episode/6ehOs0kopAdjTqUFoPK0Fx?si=c13bedd4993e4bb4"
+      },
+      {
+        "title": "Reflexionsfrage",
+        "type": "RTF",
+        "rtfText": "<p>Welche Aktivität lädt dich zuverlässig auf, obwohl du sie im Alltag oft zu spät einplanst?</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "dreamsRealizationSteps",
+    "title": "Träume und Realisierung in konkrete Schritte übersetzen",
+    "teaser": "Wie aus großen Wünschen kleine machbare Etappen werden.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning"
+    ],
+    "duration": 40,
+    "contentElements": [
+      {
+        "title": "Erklärung: Vom Wunsch zur Etappe",
+        "type": "RTF",
+        "rtfText": "<p>Träume sind im Reisehandbuch nicht nur schöne Gedanken, sondern Orientierungspunkte. Sie zeigen, was einen reizt, begeistert oder innerlich nicht loslässt. Das Problem entsteht erst, wenn Träume nur als vage Bilder existieren. Dann bleiben sie weit weg und werden im Alltag von dringenden Aufgaben verdrängt.</p><p>Realisierung bedeutet, einen großen Wunsch in kleinere, machbare Etappen zu übersetzen. Aus „Ich will mehr erleben“ wird zum Beispiel: ein konkretes Ziel auswählen, Zeitfenster suchen, Kosten einschätzen, erste Handlung festlegen und einen Termin setzen. Dadurch wird der Traum nicht garantiert erreicht, aber er wird bearbeitbar. Genau wie ein Navigationssystem nicht teleportiert, sondern die nächste Abzweigung zeigt, braucht Lebensplanung kleine Schritte statt nur große Sehnsucht.</p><p>Dieser Node eignet sich als Abschluss der Erweiterung. Er verbindet Gesundheit, Umfeld, Bildung, Beruf und Ausgleich mit der Frage, was daraus entstehen soll. In der Journey Map kann er als Zielknoten nach den konkreten Lebensbereichen stehen. Für die Demo ist das stark, weil der Lernpfad nicht einfach endet, sondern zu einer Handlung auffordert.</p>"
+      },
+      {
+        "title": "Externe Ressource: Ziele setzen",
+        "type": "URI",
+        "uri": "https://karrierebibel.de/smart-methode/"
+      },
+      {
+        "title": "Video-Suche: Ziele in Schritte planen",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=yN00Zfupcn8"
+      },
+      {
+        "title": "Mini-Übung",
+        "type": "RTF",
+        "rtfText": "<p>Wähle einen Wunsch aus und formuliere daraus den nächsten kleinsten Schritt, den du innerhalb von sieben Tagen erledigen kannst.</p>"
       }
     ]
   }
