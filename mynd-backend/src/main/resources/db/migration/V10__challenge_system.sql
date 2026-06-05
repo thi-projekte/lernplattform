@@ -2,6 +2,8 @@ CREATE TABLE challenge
 (
     id            UUID PRIMARY KEY,
     creatorId     VARCHAR(255) NOT NULL,
+    createdAt TIMESTAMP(6) NOT NULL,
+    updatedAt TIMESTAMP(6) NOT NULL,
     type          VARCHAR(50)  NOT NULL,
     startDate     DATE         NOT NULL,
     endDate       DATE         NOT NULL,
