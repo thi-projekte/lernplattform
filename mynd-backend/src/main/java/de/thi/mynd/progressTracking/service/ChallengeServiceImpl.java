@@ -59,18 +59,17 @@ public final class ChallengeServiceImpl implements ChallengeService {
   public void trackContentElementCompletion() {
     String creatorId = identity.getPrincipal().getName();
     LocalDate today = LocalDate.now();
-    challengeRepository
+    Challenge challenge = challengeRepository
         .findCurrentForUser(creatorId, ChallengeType.WEEKLY, today)
-        .ifPresent(
-            challenge -> {
-              if (!challenge.completed) {
-                challenge.currentCount++;
-                if (challenge.currentCount >= challenge.targetCount) {
-                  challenge.completed = true;
-                }
-                challengeRepository.persistAndFlush(challenge);
-              }
-            });
+            .orElseGet(() -> createWeeklyChallenge(creatorId, today));
+
+    if (!challenge.completed) {
+      challenge.currentCount++;
+      if (challenge.currentCount >= challenge.targetCount) {
+        challenge.completed = true;
+      }
+      challengeRepository.persistAndFlush(challenge);
+    }
   }
 
   @Override
