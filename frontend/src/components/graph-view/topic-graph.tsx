@@ -79,8 +79,21 @@ const TopicGraphView = ({
   const forceHandleRef = useRef<ForceLayoutHandle | null>(null);
 
   useEffect(() => {
-    setInternalNodes(nodes);
-  }, [nodes, setInternalNodes]);
+    if (layoutMode === 'force') {
+      // In force mode, the simulation owns positions. When new nodes arrive
+      // via props (e.g. on expansion), keep existing nodes at their current
+      // force position and only adopt prop position for genuinely new nodes.
+      setInternalNodes((current) => {
+        const currentPosById = new Map(current.map((n) => [n.id, n.position]));
+        return nodes.map((n) => ({
+          ...n,
+          position: currentPosById.get(n.id) ?? n.position,
+        }));
+      });
+    } else {
+      setInternalNodes(nodes);
+    }
+  }, [nodes, setInternalNodes, layoutMode]);
 
   useEffect(() => {
     setInternalEdges(edges);

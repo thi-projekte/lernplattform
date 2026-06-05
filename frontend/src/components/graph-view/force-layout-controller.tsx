@@ -13,7 +13,7 @@ const ForceLayoutController = ({
   edges,
   onHandleReady,
 }: ForceLayoutControllerProps) => {
-  const { setNodes, fitView } = useReactFlow();
+  const { setNodes, getNodes, fitView } = useReactFlow();
   const handleRef = useRef<ForceLayoutHandle | null>(null);
   // First sim creation seeds from dagre — needs full alpha to spread out, and
   // a fitView so the user sees the freshly arranged graph. Subsequent
@@ -55,8 +55,20 @@ const ForceLayoutController = ({
     const isFirstSim = !hasInitializedRef.current;
     const initialAlpha = isFirstSim ? 1 : 0.3;
     hasInitializedRef.current = true;
+
+    // Seed from the live React Flow store so existing nodes start at their
+    // current force-positions rather than the (stale) tree positions from
+    // the parent's nodes prop. New nodes (just added by expansion) fall back
+    // to the prop position which home.tsx places near the parent.
+    const liveNodes = getNodes();
+    const livePosById = new Map(liveNodes.map((n) => [n.id, n.position]));
+    const seedNodes = baseNodesRef.current.map((n) => ({
+      id: n.id,
+      position: livePosById.get(n.id) ?? n.position,
+    }));
+
     const handle = applyForceLayout(
-      baseNodesRef.current,
+      seedNodes,
       edgesRef.current,
       (positions) => {
         setNodes((current) =>
@@ -87,7 +99,7 @@ const ForceLayoutController = ({
       handleRef.current = null;
       onHandleReady?.(null);
     };
-  }, [topologyKey, setNodes, fitView, onHandleReady]);
+  }, [topologyKey, setNodes, getNodes, fitView, onHandleReady]);
 
   return null;
 };

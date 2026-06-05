@@ -132,6 +132,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
               border: `2px solid ${accentColor}`,
               outline: `4px solid color-mix(in srgb, ${accentColor} 22%, transparent)`,
               outlineOffset: '2px',
+              transformOrigin: 'bottom center',
               animation: 'cardEntrance 0.18s ease-out both',
             }}
           >
