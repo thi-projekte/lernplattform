@@ -10,16 +10,15 @@ public final class ChallengeDtoMapper extends AbstractMappingProcessor<Challenge
   @Override
   public ChallengeDto mapAndEnrich(Challenge entity) {
     return ChallengeDto.builder()
-            .id(entity.id)
-            .type(entity.type)
-            .startDate(entity.startDate)
-            .endDate(entity.endDate)
-            .targetCount(entity.targetCount)
-            .currentCount(entity.currentCount)
-            .completed(entity.completed)
-            .rewardClaimed(entity.rewardClaimed)
-            .build();
-
+        .id(entity.id)
+        .type(entity.type)
+        .startDate(entity.startDate)
+        .endDate(entity.endDate)
+        .targetCount(entity.targetCount)
+        .currentCount(entity.currentCount)
+        .completed(entity.completed)
+        .rewardClaimed(entity.rewardClaimed)
+        .build();
   }
 
   @Override
