@@ -19,6 +19,7 @@ import {
   IconShieldCheck,
   IconUser,
 } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { Layout } from '../components/layout.tsx';
 
 const Section = ({ title, children }: { title: string; children: React.ReactNode }) => {
@@ -66,6 +67,8 @@ const InfoBlock = ({
 };
 
 const LegalPage = () => {
+  const { t } = useTranslation();
+
   return (
     <Layout>
       <Box py="xl" px="md">
@@ -83,62 +86,62 @@ const LegalPage = () => {
               </ThemeIcon>
 
               <Text fw={800} ta="center" style={{ fontSize: 30 }}>
-                Impressum & Datenschutzerklärung
+                {t('legal.pageTitle')}
               </Text>
 
               <Text ta="center" c="dimmed" size="md" maw={620}>
-                Rechtliche Informationen zur Plattform MYnd und Hinweise zur Verarbeitung
-                personenbezogener Daten.
+                {t('legal.pageDescription')}
               </Text>
             </Stack>
 
-            <Section title="Impressum">
+            <Section title={t('legal.imprint.title')}>
               <Divider />
 
-              <InfoBlock icon={<IconBuilding size={18} />} title="Anbieter">
+              <InfoBlock icon={<IconBuilding size={18} />} title={t('legal.imprint.provider')}>
                 <Text size="sm">
-                  MYnd GmbH
+                  {t('legal.imprint.providerName')}
                   <br />
-                  Musterstraße 12
+                  {t('legal.imprint.street')}
                   <br />
-                  85049 Ingolstadt
+                  {t('legal.imprint.city')}
                   <br />
-                  Deutschland
+                  {t('legal.imprint.country')}
                 </Text>
               </InfoBlock>
 
               <Divider />
 
               <Box>
-                <Text fw={700}>Vertreten durch</Text>
+                <Text fw={700}>{t('legal.imprint.representedBy')}</Text>
                 <Text size="sm" mt={6}>
-                  Florian Weisenberger
+                  {t('legal.imprint.representedByName')}
                 </Text>
               </Box>
 
               <Divider />
 
-              <InfoBlock icon={<IconMail size={18} />} title="Kontakt">
+              <InfoBlock icon={<IconMail size={18} />} title={t('legal.imprint.contact')}>
                 <Text size="sm">
-                  E-Mail: <Anchor href="mailto:support@mynd.de">support@mynd.de</Anchor>
+                  {t('legal.imprint.email')}:{' '}
+                  <Anchor href="mailto:support@mynd.de">support@mynd.de</Anchor>
                   <br />
-                  Telefon: +49 89 12345678
+                  {t('legal.imprint.phone')}: +49 89 12345678
                 </Text>
               </InfoBlock>
 
               <Divider />
 
               <Box>
-                <Text fw={700}>Registereintrag</Text>
+                <Text fw={700}>{t('legal.imprint.registerEntry')}</Text>
                 <Text size="sm" mt={6}>
-                  Amtsgericht Ingolstadt, HRB 123456
+                  {t('legal.imprint.registerText')}
                 </Text>
               </Box>
 
               <Divider />
 
               <Box>
-                <Text fw={700}>Umsatzsteuer-ID</Text>
+                <Text fw={700}>{t('legal.imprint.vatId')}</Text>
                 <Text size="sm" mt={6}>
                   DE123456789
                 </Text>
@@ -147,77 +150,68 @@ const LegalPage = () => {
               <Divider />
 
               <Box>
-                <Text fw={700}>Verantwortlich für den Inhalt</Text>
+                <Text fw={700}>{t('legal.imprint.contentResponsible')}</Text>
                 <Text size="sm" mt={6}>
-                  Florian Weisenberger
+                  {t('legal.imprint.contentResponsibleName')}
                   <br />
-                  Musterstraße 12
+                  {t('legal.imprint.contentResponsibleStreet')}
                   <br />
-                  85049 Ingolstadt
+                  {t('legal.imprint.contentResponsibleCity')}
                 </Text>
               </Box>
             </Section>
 
-            <Section title="Datenschutzerklärung">
-              <Text>
-                MYnd verarbeitet personenbezogene Daten ausschließlich zur Bereitstellung der
-                Plattform auf Grundlage von Art. 6 DSGVO.
-              </Text>
+            <Section title={t('legal.privacy.title')}>
+              <Text>{t('legal.privacy.intro')}</Text>
 
               <Divider />
 
-              <InfoBlock icon={<IconDatabase size={18} />} title="Erhobene Daten">
+              <InfoBlock icon={<IconDatabase size={18} />} title={t('legal.privacy.collectedData')}>
                 <List spacing="xs" size="sm">
-                  <List.Item>Name und E-Mail-Adresse</List.Item>
-                  <List.Item>Benutzerkonto- und Profildaten</List.Item>
-                  <List.Item>Lernfortschritt und Nutzungsdaten der Plattform</List.Item>
-                  <List.Item>Rollen- und Berechtigungsdaten</List.Item>
+                  <List.Item>{t('legal.privacy.collectedDataItems.nameEmail')}</List.Item>
+                  <List.Item>{t('legal.privacy.collectedDataItems.accountProfile')}</List.Item>
+                  <List.Item>{t('legal.privacy.collectedDataItems.learningUsage')}</List.Item>
+                  <List.Item>{t('legal.privacy.collectedDataItems.rolesPermissions')}</List.Item>
                 </List>
               </InfoBlock>
 
               <Divider />
 
-              <InfoBlock icon={<IconLock size={18} />} title="Zweck der Verarbeitung">
+              <InfoBlock icon={<IconLock size={18} />} title={t('legal.privacy.processingPurpose')}>
                 <List spacing="xs" size="sm">
-                  <List.Item>Bereitstellung und Verwaltung der Lernplattform</List.Item>
-                  <List.Item>Verwaltung von Benutzerkonten und Rollen</List.Item>
-                  <List.Item>Speicherung und Anzeige von Lernfortschritten</List.Item>
-                  <List.Item>Verbesserung der Lerninhalte und Plattformfunktionen</List.Item>
+                  <List.Item>{t('legal.privacy.processingPurposeItems.platform')}</List.Item>
+                  <List.Item>{t('legal.privacy.processingPurposeItems.accountsRoles')}</List.Item>
+                  <List.Item>
+                    {t('legal.privacy.processingPurposeItems.learningProgress')}
+                  </List.Item>
+                  <List.Item>{t('legal.privacy.processingPurposeItems.improvement')}</List.Item>
                 </List>
               </InfoBlock>
 
               <Divider />
 
-              <InfoBlock icon={<IconShieldCheck size={18} />} title="Weitergabe">
-                <Text size="sm">
-                  Eine Weitergabe erfolgt nur an technische Hosting- und Infrastrukturdienstleister,
-                  sofern dies für den Betrieb der Plattform notwendig ist.
-                </Text>
+              <InfoBlock icon={<IconShieldCheck size={18} />} title={t('legal.privacy.disclosure')}>
+                <Text size="sm">{t('legal.privacy.disclosureText')}</Text>
               </InfoBlock>
 
               <Divider />
 
-              <InfoBlock icon={<IconDatabase size={18} />} title="Speicherung">
-                <Text size="sm">
-                  Personenbezogene Daten werden nur so lange gespeichert, wie dies für die Nutzung
-                  der Plattform und zur Erfüllung gesetzlicher Pflichten erforderlich ist.
-                </Text>
+              <InfoBlock icon={<IconDatabase size={18} />} title={t('legal.privacy.storage')}>
+                <Text size="sm">{t('legal.privacy.storageText')}</Text>
               </InfoBlock>
 
               <Divider />
 
-              <InfoBlock icon={<IconUser size={18} />} title="Rechte der Nutzer">
-                <Text size="sm">
-                  Nutzer haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der
-                  Verarbeitung und Widerspruch gegen die Verarbeitung.
-                </Text>
+              <InfoBlock icon={<IconUser size={18} />} title={t('legal.privacy.userRights')}>
+                <Text size="sm">{t('legal.privacy.userRightsText')}</Text>
               </InfoBlock>
 
               <Divider />
 
-              <InfoBlock icon={<IconMail size={18} />} title="Kontakt Datenschutz">
+              <InfoBlock icon={<IconMail size={18} />} title={t('legal.privacy.privacyContact')}>
                 <Text size="sm">
-                  E-Mail: <Anchor href="mailto:datenschutz@mynd.de">datenschutz@mynd.de</Anchor>
+                  {t('legal.imprint.email')}:{' '}
+                  <Anchor href="mailto:datenschutz@mynd.de">datenschutz@mynd.de</Anchor>
                 </Text>
               </InfoBlock>
             </Section>

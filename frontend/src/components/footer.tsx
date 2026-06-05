@@ -1,8 +1,10 @@
 import { Anchor, Box, Container, Group, Text, useMantineTheme } from '@mantine/core';
 import { Link } from 'react-router';
+import { useTranslation } from 'react-i18next';
 
 export const Footer = () => {
   const theme = useMantineTheme();
+  const { t } = useTranslation();
 
   return (
     <Box
@@ -26,7 +28,7 @@ export const Footer = () => {
           </Text>
 
           <Anchor component={Link} to="/legal" size="sm" c="dimmed" underline="hover">
-            Impressum & Datenschutz
+            {t('footer.legal')}
           </Anchor>
         </Group>
       </Container>
