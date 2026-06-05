@@ -1,5 +1,7 @@
 package de.thi.mynd.progressTracking.entity;
 
+import de.thi.mynd.common.entity.BaseEntityWithCreatorIdPk;
+import de.thi.mynd.common.entity.BaseEntityWithId;
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -7,12 +9,7 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "challenge")
-public class Challenge extends PanacheEntityBase {
-
-  @Id @GeneratedValue public UUID id;
-
-  @Column(nullable = false)
-  public String creatorId;
+public class Challenge extends BaseEntityWithId {
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
