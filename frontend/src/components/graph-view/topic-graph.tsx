@@ -147,11 +147,7 @@ const TopicGraphView = ({
       zoomActivationKeyCode={null}
     >
       {layoutMode === 'force' && (
-        <ForceLayoutController
-          baseNodes={nodes}
-          edges={edges}
-          onHandleReady={handleForceReady}
-        />
+        <ForceLayoutController baseNodes={nodes} edges={edges} onHandleReady={handleForceReady} />
       )}
       {showViewportToolbar && (
         <ViewportToolbar
