@@ -8,12 +8,13 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
+import java.util.UUID;
 
 @Path("/challenges")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RolesAllowed("authorizedUser")
-public class ChallengeResource {
+public final class ChallengeResource {
 
   @Inject ChallengeService challengeService;
 
@@ -24,9 +25,9 @@ public class ChallengeResource {
   }
 
   @POST
-  @Path("/current/claim")
-  public Response claimReward() {
-    return Response.ok(challengeService.claimReward()).build();
+  @Path("/claim/{id}")
+  public Response claimReward(UUID id) {
+    return Response.ok(challengeService.claimReward(id)).build();
   }
 
   @GET
