@@ -107,7 +107,7 @@ const TopicAssociationsGraph = ({
     }
   };
 
-  const handleNodeDragStop: OnNodeDrag<Node> = (_event, node) => {
+  const handleNodeDragStop: OnNodeDrag = (_event, node) => {
     onNodePositionChange?.(node.id, node.position);
   };
 

@@ -24,7 +24,7 @@ interface TopicGraphViewProps {
   nodeTypes: NodeTypes;
   edgeTypes?: EdgeTypes;
   onNodeClick?: NodeMouseHandler;
-  onNodeDragStop?: OnNodeDrag<Node>;
+  onNodeDragStop?: OnNodeDrag;
   onEdgeClick?: EdgeMouseHandler;
   onMoveEnd?: OnMoveEnd;
   onConnect?: OnConnect;

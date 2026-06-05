@@ -202,6 +202,11 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
         identity.getPrincipal().getName(), contentElementId);
   }
 
+  @Override
+  public List<UUID> getLastNUncompletedTopicsForUser(int n, String creatorId) {
+    return learnProgressTopicRepository.getLastNUncompletedTopicIdsForUser(n, creatorId);
+  }
+
   private Optional<LearnProgressTopic> getByTopicIdAndCurrentCreator(UUID topicId) {
     String creatorId = identity.getPrincipal().getName();
     LearnProgressTopicId id = new LearnProgressTopicId();

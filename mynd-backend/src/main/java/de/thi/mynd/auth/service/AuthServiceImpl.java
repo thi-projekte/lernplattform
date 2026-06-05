@@ -20,6 +20,9 @@ public final class AuthServiceImpl implements AuthService {
   @ConfigProperty(name = "mynd.invitations.buidlerRegisterReward")
   int builderRegistrationReward;
 
+  @ConfigProperty(name = "mynd.invitations.learnerRegisterReward")
+  int learnerRegistrationReward;
+
   @Override
   public boolean checkUserIsBuilder(String username) {
     return identityService.getMyndRoles(username).stream()
@@ -43,6 +46,10 @@ public final class AuthServiceImpl implements AuthService {
     List<String> newRoles = new ArrayList<>();
     newRoles.add("learner");
     identityService.addRolesToUser(username, newRoles);
+
+    UserProfile userProfile = getUserProfileOfCurrentUser();
+    userProfile.invitationsLeft += learnerRegistrationReward;
+    userProfileService.updateUserProfile(userProfile);
 
     Log.infof("Successfully made user %s a learner", username);
   }

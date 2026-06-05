@@ -56,6 +56,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
 
   const createAssociation = useCallback(
     (topicId: string) => {
+      if ((topic.relatedTopics ?? []).length >= 3) {
+        return;
+      }
+
       const topicToAdd = searchSuggestions.find((topic) => topic.id === topicId);
 
       if (!topicToAdd) {
@@ -231,9 +235,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
               </Text>
             </div>
             <TopicSearchbar
-              onAdd={(newTopic) =>
-                setTopic({ ...topic, relatedTopics: [...(topic.relatedTopics ?? []), newTopic] })
-              }
+              onAdd={(newTopic) => {
+                if ((topic.relatedTopics ?? []).length >= 3) return;
+                setTopic({ ...topic, relatedTopics: [...(topic.relatedTopics ?? []), newTopic] });
+              }}
               existingIds={existingIds}
               onSuggestionsChange={handleSuggestionsChange}
             />
@@ -257,8 +262,11 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                 <div>
                   <Group justify="space-between" align="center" wrap="nowrap">
                     <Title order={4}>{t('topic.graph.graphModeRailTitle')}</Title>
-                    <Badge variant="light" color="gray">
-                      {(topic.relatedTopics ?? []).length}
+                    <Badge
+                      variant="light"
+                      color={(topic.relatedTopics ?? []).length >= 3 ? 'red' : 'gray'}
+                    >
+                      {(topic.relatedTopics ?? []).length} / 3
                     </Badge>
                   </Group>
                   <Text size="xs" c="dimmed">
@@ -307,6 +315,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                                     color="blue"
                                     size="sm"
                                     aria-label={t('topic.graph.addAssociation')}
+                                    disabled={(topic.relatedTopics ?? []).length >= 3}
                                     onClick={() => createAssociation(suggestion.id)}
                                   >
                                     <IconLink size={14} />
