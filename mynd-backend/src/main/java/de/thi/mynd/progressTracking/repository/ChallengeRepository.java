@@ -1,16 +1,15 @@
 package de.thi.mynd.progressTracking.repository;
 
+import de.thi.mynd.common.repository.MyndBaseRepository;
 import de.thi.mynd.progressTracking.entity.Challenge;
 import de.thi.mynd.progressTracking.entity.ChallengeType;
-import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @ApplicationScoped
-public class ChallengeRepository implements PanacheRepositoryBase<Challenge, UUID> {
+public final class ChallengeRepository extends MyndBaseRepository<Challenge> {
 
   public Optional<Challenge> findCurrentForUser(
       String creatorId, ChallengeType type, LocalDate today) {
