@@ -26,8 +26,7 @@ const AcceptInvitePage = ({ invitationId, redemptionSecret }: AcceptInvitePagePr
             message: t('invitation.accept.successMessage'),
           });
           setTimeout(() => {
-            window.location.replace('/');
-            window.location.reload();
+            window.location.href = '/';
           }, 1500);
         },
         onError: () => {
