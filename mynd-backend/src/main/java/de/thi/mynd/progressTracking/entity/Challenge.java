@@ -1,11 +1,8 @@
 package de.thi.mynd.progressTracking.entity;
 
-import de.thi.mynd.common.entity.BaseEntityWithCreatorIdPk;
 import de.thi.mynd.common.entity.BaseEntityWithId;
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Entity
 @Table(name = "challenge")

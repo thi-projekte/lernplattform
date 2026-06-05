@@ -7,18 +7,18 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public final class ChallengeDtoMapper extends AbstractMappingProcessor<Challenge, ChallengeDto> {
-    @Override
-    public ChallengeDto mapAndEnrich(Challenge entity) {
-        return null;
-    }
+  @Override
+  public ChallengeDto mapAndEnrich(Challenge entity) {
+    return null;
+  }
 
-    @Override
-    public Class<Challenge> getEntityType() {
-        return Challenge.class;
-    }
+  @Override
+  public Class<Challenge> getEntityType() {
+    return Challenge.class;
+  }
 
-    @Override
-    public Class<ChallengeDto> getDtoType() {
-        return ChallengeDto.class;
-    }
+  @Override
+  public Class<ChallengeDto> getDtoType() {
+    return ChallengeDto.class;
+  }
 }
