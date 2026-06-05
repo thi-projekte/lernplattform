@@ -28,7 +28,7 @@ const ChallengePage = () => {
   const { mutate: claim, isPending } = useClaimRewardMutation();
 
   const handleClaim = () => {
-    claim(undefined, {
+    claim(`${challenge?.id}`, {
       onSuccess: () =>
         notifications.show({
           color: 'green',

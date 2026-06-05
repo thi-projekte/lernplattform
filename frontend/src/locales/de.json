@@ -14,10 +14,10 @@
   },
   "challenge": {
     "title": "Wöchentliche Challenge",
-    "subtitle": "Schließe Nodes ab und verdiene Belohnungen.",
+    "subtitle": "Schließe Content Elemente ab und verdiene Belohnungen.",
     "weekly": "Wöchentliche Challenge",
-    "description": "Schließe diese Woche {{target}} Nodes ab.",
-    "nodes": "Nodes abgeschlossen",
+    "description": "Schließe diese Woche {{target}} Content Elemente ab.",
+    "nodes": "Content Elemente abgeschlossen",
     "reward": "Belohnung: +{{count}} Einladungs-Credits",
     "completed": "Abgeschlossen!",
     "claimed": "Belohnung erhalten",

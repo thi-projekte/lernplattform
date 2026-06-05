@@ -14,10 +14,10 @@
   },
   "challenge": {
     "title": "Weekly Challenge",
-    "subtitle": "Complete nodes to earn rewards.",
+    "subtitle": "Complete content elements to earn rewards.",
     "weekly": "Weekly Challenge",
-    "description": "Complete {{target}} nodes this week.",
-    "nodes": "nodes completed",
+    "description": "Complete {{target}} content elements this week.",
+    "nodes": "content elements completed",
     "reward": "Reward: +{{count}} invite credits",
     "completed": "Completed!",
     "claimed": "Reward claimed",

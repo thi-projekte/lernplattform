@@ -3,7 +3,7 @@ import { z } from 'zod';
 export const ChallengeTypeSchema = z.enum(['WEEKLY']);
 
 export const ChallengeDtoSchema = z.object({
-  id: z.string().uuid(),
+  id: z.string(),
   type: ChallengeTypeSchema,
   startDate: z.string(),
   endDate: z.string(),
