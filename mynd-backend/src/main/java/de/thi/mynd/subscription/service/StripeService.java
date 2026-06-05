@@ -1,7 +1,6 @@
 package de.thi.mynd.subscription.service;
 
 import com.stripe.model.*;
-import com.stripe.model.entitlements.ActiveEntitlement;
 import io.quarkus.cache.CacheResult;
 import java.util.List;
 

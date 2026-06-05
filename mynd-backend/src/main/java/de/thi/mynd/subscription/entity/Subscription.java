@@ -2,11 +2,10 @@ package de.thi.mynd.subscription.entity;
 
 import de.thi.mynd.common.entity.BaseEntityWithCreatorIdPk;
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "subscription")

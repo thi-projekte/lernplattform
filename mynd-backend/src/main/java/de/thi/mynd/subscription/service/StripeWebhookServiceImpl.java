@@ -9,7 +9,6 @@ import de.thi.mynd.subscription.exception.ProductNotFoundException;
 import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -78,7 +77,8 @@ public final class StripeWebhookServiceImpl implements StripeWebhookService {
 
       String tier = product.getMetadata().get("tier");
       SubscriptionStatus status = SubscriptionStatus.valueOf(tier);
-      subscriptionService.setSubscriptionStatusForSubscriptionId(subscription.getId(), status, features);
+      subscriptionService.setSubscriptionStatusForSubscriptionId(
+          subscription.getId(), status, features);
 
       Log.infof("Updated subscription info locally coming from webhook");
     }

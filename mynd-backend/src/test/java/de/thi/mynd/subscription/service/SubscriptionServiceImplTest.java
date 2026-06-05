@@ -233,7 +233,10 @@ class SubscriptionServiceImplTest {
             SubscriptionNotFoundException.class,
             () ->
                 subscriptionService.setSubscriptionIdAndStatusForCustomerId(
-                    CUSTOMER_ID, STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM, new ArrayList<>()));
+                    CUSTOMER_ID,
+                    STRIPE_SUBSCRIPTION_ID,
+                    SubscriptionStatus.PREMIUM,
+                    new ArrayList<>()));
 
     assertEquals("This subscription does not exist", ex.getMessage());
     verify(subscriptionRepository, never()).persistAndFlush(any());

@@ -4,7 +4,6 @@ import com.stripe.StripeClient;
 import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
-import com.stripe.model.entitlements.ActiveEntitlement;
 import com.stripe.param.*;
 import com.stripe.param.checkout.SessionCreateParams;
 import de.thi.mynd.subscription.exception.HandledStripeException;
@@ -28,10 +27,8 @@ public final class StripeServiceImpl implements StripeService {
   @Override
   public List<Product> getAllProductsWithPricesAndMetaData() {
 
-    ProductListParams params = ProductListParams.builder()
-            .setActive(true)
-            .addExpand("data.marketing_features")
-            .build();
+    ProductListParams params =
+        ProductListParams.builder().setActive(true).addExpand("data.marketing_features").build();
 
     try {
       return stripeClient.v1().products().list(params).getData();
