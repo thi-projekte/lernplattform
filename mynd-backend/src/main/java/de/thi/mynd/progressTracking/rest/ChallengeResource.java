@@ -15,23 +15,23 @@ import java.util.List;
 @RolesAllowed("authorizedUser")
 public class ChallengeResource {
 
-    @Inject ChallengeService challengeService;
+  @Inject ChallengeService challengeService;
 
-    @GET
-    @Path("/current")
-    public ChallengeDto getCurrentChallenge() {
-        return challengeService.getCurrentChallenge();
-    }
+  @GET
+  @Path("/current")
+  public ChallengeDto getCurrentChallenge() {
+    return challengeService.getCurrentChallenge();
+  }
 
-    @POST
-    @Path("/current/claim")
-    public Response claimReward() {
-        return Response.ok(challengeService.claimReward()).build();
-    }
+  @POST
+  @Path("/current/claim")
+  public Response claimReward() {
+    return Response.ok(challengeService.claimReward()).build();
+  }
 
-    @GET
-    @Path("/history")
-    public List<ChallengeDto> getChallengeHistory() {
-        return challengeService.getChallengeHistory();
-    }
+  @GET
+  @Path("/history")
+  public List<ChallengeDto> getChallengeHistory() {
+    return challengeService.getChallengeHistory();
+  }
 }

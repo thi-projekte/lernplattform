@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
-import de.thi.mynd.progressTracking.service.ChallengeService;
 
 @ApplicationScoped
 public final class LearnProgressServiceImpl implements LearnProgressService {

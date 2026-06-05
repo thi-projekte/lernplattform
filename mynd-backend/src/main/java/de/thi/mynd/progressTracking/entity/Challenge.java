@@ -9,32 +9,30 @@ import java.util.UUID;
 @Table(name = "challenge")
 public class Challenge extends PanacheEntityBase {
 
-    @Id
-    @GeneratedValue
-    public UUID id;
+  @Id @GeneratedValue public UUID id;
 
-    @Column(nullable = false)
-    public String creatorId;
+  @Column(nullable = false)
+  public String creatorId;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    public ChallengeType type;
+  @Enumerated(EnumType.STRING)
+  @Column(nullable = false)
+  public ChallengeType type;
 
-    @Column(nullable = false)
-    public LocalDate startDate;
+  @Column(nullable = false)
+  public LocalDate startDate;
 
-    @Column(nullable = false)
-    public LocalDate endDate;
+  @Column(nullable = false)
+  public LocalDate endDate;
 
-    @Column(nullable = false)
-    public int targetCount;
+  @Column(nullable = false)
+  public int targetCount;
 
-    @Column(nullable = false)
-    public int currentCount = 0;
+  @Column(nullable = false)
+  public int currentCount = 0;
 
-    @Column(nullable = false)
-    public boolean completed = false;
+  @Column(nullable = false)
+  public boolean completed = false;
 
-    @Column(nullable = false)
-    public boolean rewardClaimed = false;
+  @Column(nullable = false)
+  public boolean rewardClaimed = false;
 }
