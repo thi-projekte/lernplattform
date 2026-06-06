@@ -1,5 +1,6 @@
 import { type ReactNode, useState } from 'react';
 import { Button, Group, Stepper } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 
 export interface StepperStep {
@@ -12,12 +13,20 @@ export interface StepperStep {
 interface StepperProgressProps {
   steps: StepperStep[];
   onComplete: () => void;
+  onBack?: () => void;
   isLoading?: boolean;
   lastStepLabel?: string;
 }
 
-const StepperProgress = ({ steps, onComplete, isLoading, lastStepLabel }: StepperProgressProps) => {
+const StepperProgress = ({
+  steps,
+  onComplete,
+  onBack,
+  isLoading,
+  lastStepLabel,
+}: StepperProgressProps) => {
   const [active, setActive] = useState(0);
+  const isMobile = useMediaQuery('(max-width: 768px)');
 
   const nextStep = () => setActive((current) => (current < 3 ? current + 1 : current));
   const prevStep = () => setActive((current) => (current > 0 ? current - 1 : current));
@@ -30,19 +39,29 @@ const StepperProgress = ({ steps, onComplete, isLoading, lastStepLabel }: Steppe
 
   return (
     <>
-      <Stepper active={active} onStepClick={setActive}>
+      <Stepper
+        active={active}
+        onStepClick={setActive}
+        orientation={isMobile ? 'vertical' : 'horizontal'}
+      >
         {steps.map((step, i) => (
           <Stepper.Step
             label={step.label}
             description={step.description}
             allowStepSelect={canProceed(i - 1)}
+            key={step.label + i}
           >
             {step.step}
           </Stepper.Step>
         ))}
       </Stepper>
       <Group justify="space-between" mt="xl">
-        <Button variant="default" onClick={prevStep} disabled={active === 1 || isLoading}>
+        <Button
+          variant="default"
+          onClick={active === 0 ? onBack : prevStep}
+          disabled={active === 0 ? !onBack : false}
+          loading={isLoading && active === 0}
+        >
           {t('common.back')}
         </Button>
         <Button

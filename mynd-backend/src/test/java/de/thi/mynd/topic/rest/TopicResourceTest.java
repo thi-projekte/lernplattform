@@ -10,8 +10,8 @@ import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.dto.ListTopicDto;
 import de.thi.mynd.topic.dto.TopicDto;
-import de.thi.mynd.topic.requests.AssociatedContentElementRequest;
-import de.thi.mynd.topic.requests.TopicRequest;
+import de.thi.mynd.topic.request.AssociatedContentElementRequest;
+import de.thi.mynd.topic.request.TopicRequest;
 import de.thi.mynd.topic.service.TopicService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
@@ -30,7 +30,9 @@ public class TopicResourceTest {
   @InjectMock TopicService topicService;
 
   @Test
-  @TestSecurity(user = "alice", roles = "builder")
+  @TestSecurity(
+      user = "alice",
+      roles = {"builder", "authorizedUser"})
   public void testGetPersonalTopicsSuccess() {
     ListTopicDto dto =
         ListTopicDto.builder()
@@ -63,7 +65,9 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "bob", roles = "builder")
+  @TestSecurity(
+      user = "bob",
+      roles = {"builder", "authorizedUser"})
   public void testPaginationParameters() {
     given()
         .queryParam("page", 5)
@@ -77,7 +81,7 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "alice")
+  @TestSecurity(user = "alice", roles = "authorizedUser")
   public void testSearchTopics() {
     ListTopicDto dto = ListTopicDto.builder().title("Found Topic").build();
     when(topicService.findTopicsBySearchMax5("search-term")).thenReturn(List.of(dto));
@@ -94,7 +98,9 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "builder-user", roles = "builder")
+  @TestSecurity(
+      user = "builder-user",
+      roles = {"builder", "authorizedUser"})
   public void testCreateTopicAsBuilderWithInvalidRequestBody() {
     TopicRequest request = new TopicRequest();
     request.title = "New Title";
@@ -113,7 +119,9 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "builder-user", roles = "builder")
+  @TestSecurity(
+      user = "builder-user",
+      roles = {"builder", "authorizedUser"})
   public void testCreateTopicAsBuilderWithValidRequestBody() {
 
     AssociatedContentElementRequest contentElementRequest = new AssociatedContentElementRequest();
@@ -150,7 +158,7 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "regular-user", roles = "user")
+  @TestSecurity(user = "regular-user", roles = "authorizedUser")
   public void testCreateTopicForbiddenForRegularUser() {
     TopicRequest request = new TopicRequest();
     request.title = "Forbidden Title";
@@ -165,7 +173,9 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "builder-user", roles = "builder")
+  @TestSecurity(
+      user = "builder-user",
+      roles = {"builder", "authorizedUser"})
   public void testUpdateTopicAsBuilderWithValidRequestBody()
       throws EntityInstanceNotFoundException {
 
@@ -206,7 +216,7 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "regular-user", roles = "user")
+  @TestSecurity(user = "regular-user", roles = "authorizedUser")
   public void testUpdateTopicForbiddenForRegularUser() {
     TopicRequest request = new TopicRequest();
     request.title = "Forbidden Title";
@@ -221,14 +231,16 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "builder-user", roles = "builder")
+  @TestSecurity(
+      user = "builder-user",
+      roles = {"builder", "authorizedUser"})
   public void testDeleteTopic() {
 
     given().when().delete("/topics/" + UUID.randomUUID()).then().statusCode(200);
   }
 
   @Test
-  @TestSecurity(user = "user")
+  @TestSecurity(user = "user", roles = "authorizedUser")
   public void testGetTopicWithValidId() throws EntityInstanceNotFoundException {
     when(topicService.getTopic(any(), eq(false))).thenReturn(TopicDto.builder().build());
 
@@ -236,7 +248,7 @@ public class TopicResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "user")
+  @TestSecurity(user = "user", roles = "authorizedUser")
   public void testGetTopicWithInvalidId() throws EntityInstanceNotFoundException {
     when(topicService.getTopic(any(), eq(false)))
         .thenThrow(new EntityInstanceNotFoundException(""));

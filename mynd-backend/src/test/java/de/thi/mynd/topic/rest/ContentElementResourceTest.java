@@ -8,7 +8,7 @@ import static org.mockito.Mockito.when;
 
 import de.thi.mynd.topic.dto.content.ContentElementDto;
 import de.thi.mynd.topic.dto.content.PdfElementDto;
-import de.thi.mynd.topic.requests.content.PdfElementRequest;
+import de.thi.mynd.topic.request.content.PdfElementRequest;
 import de.thi.mynd.topic.service.ContentElementService;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
@@ -24,7 +24,9 @@ class ContentElementResourceTest {
   @InjectMock ContentElementService contentElementService;
 
   @Test
-  @TestSecurity(user = "test-builder", roles = "builder")
+  @TestSecurity(
+      user = "test-builder",
+      roles = {"builder", "authorizedUser"})
   void testCreateContentElement() {
     // Arrange
     String jsonBody =
@@ -56,7 +58,9 @@ class ContentElementResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "test-builder", roles = "builder")
+  @TestSecurity(
+      user = "test-builder",
+      roles = {"builder", "authorizedUser"})
   void testDeleteContentElement() {
     // Arrange
     UUID elementId = UUID.randomUUID();
@@ -73,7 +77,7 @@ class ContentElementResourceTest {
   }
 
   @Test
-  @TestSecurity(user = "unauthorized-user", roles = "user")
+  @TestSecurity(user = "unauthorized-user", roles = "authorizedUser")
   void testDeleteContentElement_Forbidden() {
     // Arrange
     UUID elementId = UUID.randomUUID();

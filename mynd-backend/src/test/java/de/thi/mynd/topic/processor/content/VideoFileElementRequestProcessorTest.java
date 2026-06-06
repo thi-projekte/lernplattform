@@ -11,7 +11,7 @@ import de.thi.mynd.common.service.ObjectStorageService;
 import de.thi.mynd.topic.entity.ContentType;
 import de.thi.mynd.topic.entity.VideoFileElement;
 import de.thi.mynd.topic.repository.ContentElementRepository;
-import de.thi.mynd.topic.requests.content.VideoFileElementRequest;
+import de.thi.mynd.topic.request.content.VideoFileElementRequest;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -93,6 +93,6 @@ class VideoFileElementRequestProcessorTest {
   void testSupports() {
     assertTrue(processor.supports(new VideoFileElementRequest()));
     assertFalse(
-        processor.supports(mock(de.thi.mynd.topic.requests.content.UriElementRequest.class)));
+        processor.supports(mock(de.thi.mynd.topic.request.content.UriElementRequest.class)));
   }
 }

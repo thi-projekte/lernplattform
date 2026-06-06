@@ -32,7 +32,7 @@ jobs:
         working-directory: mynd-backend
         run: |
           chmod +x mvnw
-          ./mvnw package -Dnative -DskipTests
+          ./mvnw package -DskipTests
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -46,7 +46,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./mynd-backend
-          file: mynd-backend/src/main/docker/Dockerfile.native-micro
+          file: mynd-backend/src/main/docker/Dockerfile
           push: true
           load: true
           tags: ghcr.io/thi-projekte/lernplattform-mynd-backend:${{ github.ref_name }}
@@ -84,9 +84,9 @@ jobs:
             VITE_KEYCLOAK_REALM=master
             VITE_KEYCLOAK_CLIENT_ID=mynd
             VITE_MYND_BACKEND_URI=${{ secrets.MYND_BACKEND_URL }}
-  
-  
-
+            VITE_ANALYTICS_URI=${{ secrets.PLAUSIBLE_TRACKING_URL }}
+            VITE_ANALYTICS_INSTANCE=${{ secrets.PLAUSIBLE_BASE_URL }}
+            VITE_SENTRY_DSN=${{ secrets.SENTRY_DSN }}            
 
   build-and-push-keycloak:
     name: Build and push keycloak image to registry

@@ -3,7 +3,50 @@
     "dashboard": "Dashboard",
     "builderMode": "Builder Modus",
     "createTopic": "Thema erstellen",
-    "editTopic": "Thema bearbeiten"
+    "becomeBuilder": "Zum Builder werden",
+    "editTopic": "Thema bearbeiten",
+    "account": "Mein Profil",
+    "invitations": "Einladungen",
+    "subscription": "Abonnement",
+    "streaks": "Meine Streaks",
+    "adminCategories": "Kategorien",
+    "challenges": "Meine Challenge"
+  },
+  "challenge": {
+    "title": "Wöchentliche Challenge",
+    "subtitle": "Schließe Content Elemente ab und verdiene Belohnungen.",
+    "weekly": "Wöchentliche Challenge",
+    "description": "Schließe diese Woche {{target}} Content Elemente ab.",
+    "nodes": "Content Elemente abgeschlossen",
+    "reward": "Belohnung: +{{count}} Einladungs-Credits",
+    "completed": "Abgeschlossen!",
+    "claimed": "Belohnung erhalten",
+    "claimButton": "+2 Einladungs-Credits einlösen",
+    "rewardClaimed": "Belohnung eingelöst! Du hast 2 Einladungs-Credits erhalten.",
+    "history": "Vergangene Challenges",
+    "noHistory": "Noch keine vergangenen Challenges."
+  },
+  "streak": {
+    "title": "Meine Streaks",
+    "subtitle": "Verfolge deine Lernkontinuität über die Zeit.",
+    "currentStreak": "Aktueller Streak",
+    "noActiveStreak": "Noch kein aktiver Streak. Fang an zu lernen!",
+    "satisfied": "Im Plan",
+    "notSatisfied": "Noch nicht erfüllt",
+    "history": "Streak-Verlauf",
+    "present": "heute",
+    "type": {
+      "DAILY": "Tage",
+      "WEEKLY": "Wochen",
+      "MONTHLY": "Monate"
+    },
+    "preference": "Streak-Typ",
+    "preferenceDescription": "Wähle, welcher Streak-Typ im Header angezeigt wird.",
+    "typeLabel": {
+      "DAILY": "Täglich",
+      "WEEKLY": "Wöchentlich",
+      "MONTHLY": "Monatlich"
+    }
   },
   "journey": {
     "title": "Deine Journey Map",
@@ -52,7 +95,10 @@
     "selectedTopic": "Ausgewählte Node",
     "unknownCreator": "Unbekannter Ersteller",
     "loadingNeighbors": "Verbundene Themen werden geladen...",
-    "openDetails": "Detailansicht öffnen"
+    "openDetails": "Detailansicht öffnen",
+    "expandNeighbors": "Verbindungen laden",
+    "hideNode": "Node ausblenden",
+    "showHidden": "{{count}} ausgeblendet anzeigen"
   },
   "common": {
     "rowsPerPage": "Einträge pro Seite",
@@ -85,23 +131,37 @@
       "personalTopics": "Eigene Themen",
       "createContentElement": "Inhalt anlegen"
     },
-
     "myna": {
       "subtitle": "KI-Assistent",
       "description": "Myna kann die gespeicherten Inhalte zusammenfassen und passende nächste Quellen vorschlagen.",
-      "askButton": "Myna fragen"
+      "askButton": "Myna fragen",
+      "comingSoon": "Chat folgt in Kürze",
+      "inputPlaceholder": "Myna etwas fragen..."
     },
-
     "tabs": {
       "visual": "Visuell",
       "notes": "Notizen",
       "notesPlaceholder": "Noch keine Notizen vorhanden."
     },
-
     "actions": {
       "create": "Thema erstellen",
       "createContentElement": "Inhalt anlegen",
-      "start": "Thema starten"
+      "start": "Thema starten",
+      "complete": "Thema abschließen",
+      "completeBlockedHint": "Markiere zuerst alle Inhalte als abgeschlossen.",
+      "completed": "Abgeschlossen",
+      "markContentElementCompleted": "Als abgeschlossen markieren",
+      "contentElementCompleted": "Abgeschlossen",
+      "resetProgress": "Fortschritt zurücksetzen",
+      "overview": "Themenübersicht",
+      "importJson": "JSON importieren",
+      "importJsonSubmit": "Importieren",
+      "importJsonSuccess": "Themen erfolgreich importiert",
+      "importJsonError": "Ungültiges JSON-Format"
+    },
+    "progress": {
+      "label": "Fortschritt",
+      "elementsCompleted": "Inhalte abgeschlossen"
     },
     "fields": {
       "title": "Titel",
@@ -115,6 +175,10 @@
     },
     "contentElementForm": {
       "incompleteFormError": "Bitte fülle alle Pflichtfelder aus, bevor du fortfährst."
+    },
+    "contentElements": {
+      "limitReached": "Maximal 12 Inhalte pro Thema erlaubt.",
+      "countLabel": "{{count}} / {{max}} Inhalte"
     },
     "errors": {
       "titleMissing": "Titel fehlt",
@@ -178,7 +242,7 @@
     "personalGraph": {
       "selectedTopic": "Ausgewähltes Thema",
       "emptySelection": "Klicke auf eine Node, um das Thema zu prüfen.",
-      "graphDescription": "Wechsle zwischen der Liste und einer Graphenansicht deiner eigenen Themen.",
+      "graphDescription": "Liste oder Graphansicht deiner Themen.",
       "searchHintSelectOwned": "Wähle zuerst eines deiner eigenen Themen aus, um ein fremdes Thema zu verknüpfen.",
       "keepAtLeastOneAssociation": "Mindestens ein verknüpftes Thema muss bestehen bleiben.",
       "linkToSelectedTopic": "Mit ausgewähltem Thema verknüpfen",
@@ -188,16 +252,177 @@
       "removeOwnTopic": "Aus Graph entfernen"
     }
   },
+  "categoryAdmin": {
+    "title": "Kategorieverwaltung",
+    "treeTitle": "Kategoriebaum",
+    "createCategory": "Kategorie erstellen",
+    "createTitle": "Kategorie erstellen",
+    "editTitle": "Kategorie bearbeiten",
+    "empty": "Keine Kategorien gefunden.",
+    "createSuccess": "Kategorie erfolgreich erstellt",
+    "updateSuccess": "Kategorie erfolgreich aktualisiert",
+    "saveError": "Kategorie konnte nicht gespeichert werden. Bitte versuche es erneut.",
+    "deleteSuccess": "Kategorie erfolgreich gelöscht",
+    "deleteError": "Kategorie konnte nicht gelöscht werden. Bitte versuche es erneut.",
+    "fields": {
+      "title": "Titel",
+      "color": "Farbe",
+      "parentCategory": "Übergeordnete Kategorie",
+      "parentPlaceholder": "Keine (Hauptkategorie)"
+    }
+  },
   "auth": {
     "accessDenied": "Zugriff verweigert",
     "noAccessPageText": "Anscheinend verfügen Sie nicht über die erforderlichen Berechtigungen, um diese Seite anzuzeigen. Wenn Sie glauben, dass es sich um einen Fehler handelt, wenden Sie sich bitte an Ihren Administrator.",
     "role_builder": "Builder",
     "role_learner": "Learner"
   },
+  "layout": {
+    "openAccount": "Benutzerkonto öffnen"
+  },
+  "account": {
+    "title": "Mein Profil",
+    "profilePicture": "Profilbild",
+    "deleteProfilePicture": "Profilbild löschen",
+    "editInKeycloak": "Profil in Keycloak bearbeiten",
+    "logout": "Abmelden"
+  },
   "onboarding": {
     "title": "Onboarding",
     "role_selection_label": "Rolle auswählen",
     "role_selection_placeholder": "Wähle deine Rolle",
-    "submit": "Bestätigen"
+    "submit": "Bestätigen",
+    "upgradeToBuilderText": "Klicke auf den Button unten, um dein Konto auf Builder hochzustufen und eigene Lerninhalte zu erstellen."
+  },
+  "subscription": {
+    "title": "Wähle deinen Plan",
+    "subtitle": "Schalte mehr Funktionen frei und bringe dein Lernen auf das nächste Level.",
+    "perMonth": "/ Monat",
+    "popular": "Beliebt",
+    "bestValue": "Bestes Preis-Leistungs-Verhältnis",
+    "currentPlan": "Aktueller Plan",
+    "managePlan": "Abo verwalten",
+    "switchPlan": "Plan wechseln",
+    "billingPortal": "Abrechnungsportal",
+    "free": {
+      "title": "Free",
+      "price": "€0",
+      "description": "Kostenlos starten.",
+      "feature1": "Zugriff auf öffentliche Themen",
+      "feature2": "Einfacher Skill Tree",
+      "feature3": "Community-Support",
+      "button": "Aktueller Plan"
+    },
+    "plus": {
+      "title": "Plus",
+      "price": "€9",
+      "description": "Für engagierte Lernende.",
+      "feature1": "Alles aus Free",
+      "feature2": "Unbegrenzte Themen",
+      "feature3": "Myna KI-Assistent",
+      "feature4": "Prioritäts-Support",
+      "button": "Plus abonnieren"
+    },
+    "pro": {
+      "title": "Pro",
+      "price": "€19",
+      "description": "Maximale Lernpower.",
+      "feature1": "Alles aus Plus",
+      "feature2": "Erweiterte Analysen",
+      "feature3": "Eigene Kategorien",
+      "feature4": "Team-Zusammenarbeit",
+      "feature5": "Früher Zugang zu neuen Funktionen",
+      "button": "Pro abonnieren"
+    }
+  },
+  "invitation": {
+    "manage": {
+      "title": "Einladungen",
+      "left": "übrig",
+      "leftDetail": "{{count}} Einladung(en) verbleibend",
+      "sentDetail": "{{count}} Einladung(en) verschickt",
+      "sendTitle": "Einladung versenden",
+      "emailPlaceholder": "E-Mail-Adresse",
+      "send": "Senden",
+      "sent": "Einladung an {{email}} gesendet",
+      "sendError": "Einladung konnte nicht gesendet werden. Bitte versuche es erneut.",
+      "noInvitationsLeft": "Du hast keine Einladungen mehr übrig.",
+      "historyTitle": "Gesendete Einladungen",
+      "noHistory": "Noch keine Einladungen gesendet.",
+      "acceptedTrue": "Akzeptiert",
+      "acceptedFalse": "Ausstehend",
+      "columns": {
+        "date": "Datum",
+        "sentTo": "Gesendet at",
+        "accepted": "Akzeptiert?"
+      }
+    },
+    "accept": {
+      "title": "Einladung annehmen",
+      "description": "Du wurdest eingeladen, der Plattform beizutreten. Klicke auf den Button, um die Einladung anzunehmen.",
+      "button": "Einladung annehmen",
+      "successMessage": "Einladung angenommen! Weiterleitung...",
+      "errorMessage": "Einladung konnte nicht angenommen werden. Der Link ist möglicherweise abgelaufen oder wurde bereits verwendet.",
+      "invalidLink": "Dieser Einladungslink ist ungültig oder unvollständig."
+    },
+    "noAccess": {
+      "title": "Zugriff gesperrt",
+      "description": "Du benötigst eine Einladung, um auf diese Plattform zuzugreifen.",
+      "acceptButton": "Einladung annehmen",
+      "contactHint": "Wende dich an einen Builder, um eine Einladung zu erhalten."
+    }
+  },
+  "footer": {
+    "legal": "Impressum & Datenschutz"
+  },
+
+  "legal": {
+    "pageTitle": "Impressum & Datenschutzerklärung",
+    "pageDescription": "Rechtliche Informationen zur Plattform MYnd und Hinweise zur Verarbeitung personenbezogener Daten.",
+    "imprint": {
+      "title": "Impressum",
+      "provider": "Anbieter",
+      "providerName": "Technische Hochschule Ingolstadt",
+      "street": "Esplanade 10",
+      "city": "85049 Ingolstadt",
+      "country": "Deutschland",
+      "representedBy": "Vertreten durch",
+      "representedByName": "Florian Weisenberger",
+      "contact": "Kontakt",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "registerEntry": "Registereintrag",
+      "registerText": "Amtsgericht Ingolstadt, HRB 123456",
+      "vatId": "Umsatzsteuer-ID",
+      "contentResponsible": "Verantwortlich für den Inhalt",
+      "contentResponsibleName": "Florian Weisenberger",
+      "contentResponsibleStreet": "Musterstraße 12",
+      "contentResponsibleCity": "85049 Ingolstadt"
+    },
+    "privacy": {
+      "title": "Datenschutzerklärung",
+      "intro": "MYnd verarbeitet personenbezogene Daten ausschließlich zur Bereitstellung der Plattform auf Grundlage von Art. 6 DSGVO.",
+      "collectedData": "Erhobene Daten",
+      "collectedDataItems": {
+        "nameEmail": "Name und E-Mail-Adresse",
+        "accountProfile": "Benutzerkonto- und Profildaten",
+        "learningUsage": "Lernfortschritt und Nutzungsdaten der Plattform",
+        "rolesPermissions": "Rollen- und Berechtigungsdaten"
+      },
+      "processingPurpose": "Zweck der Verarbeitung",
+      "processingPurposeItems": {
+        "platform": "Bereitstellung und Verwaltung der Lernplattform",
+        "accountsRoles": "Verwaltung von Benutzerkonten und Rollen",
+        "learningProgress": "Speicherung und Anzeige von Lernfortschritten",
+        "improvement": "Verbesserung der Lerninhalte und Plattformfunktionen"
+      },
+      "disclosure": "Weitergabe",
+      "disclosureText": "Eine Weitergabe erfolgt nur an technische Hosting- und Infrastrukturdienstleister, sofern dies für den Betrieb der Plattform notwendig ist.",
+      "storage": "Speicherung",
+      "storageText": "Personenbezogene Daten werden nur so lange gespeichert, wie dies für die Nutzung der Plattform und zur Erfüllung gesetzlicher Pflichten erforderlich ist.",
+      "userRights": "Rechte der Nutzer",
+      "userRightsText": "Nutzer haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung und Widerspruch gegen die Verarbeitung.",
+      "privacyContact": "Kontakt Datenschutz"
+    }
   }
 }

@@ -14,6 +14,7 @@ import AssociatedTopicsStep from '../../components/topic/associated-topics-step.
 import ContentElementsDnd from '../../components/topic/content-elements-dnd.tsx';
 import { useCreateTopicMutation } from '../../api/topic.ts';
 import { useNavigate } from 'react-router';
+import { track } from '@plausible-analytics/tracker';
 
 const CreateTopicPage = () => {
   const { t } = useTranslation();
@@ -25,27 +26,24 @@ const CreateTopicPage = () => {
   const steps: StepperStep[] = [
     {
       label: t('topic.steps.coreDataTitle'),
-      description: t('topic.steps.coreDataDescription'),
       canProceed: TopicCoreDataSchema.safeParse(topic).success ?? false,
       step: <CoreDataStep topic={topic} setTopic={setTopic} />,
     },
     {
       label: t('topic.steps.associatedTopicsTitle'),
-      description: t('topic.steps.associatedTopicsDescription'),
       canProceed: TopicAssociatedTopicsSchema.safeParse(topic).success ?? false,
       step: <AssociatedTopicsStep topic={topic} setTopic={setTopic} />,
     },
     {
       label: t('topic.steps.contentElementsTitle'),
-      description: t('topic.steps.contentElementsDescription'),
       canProceed: TopicContentElementsSchema.safeParse(topic).success ?? false,
       step: <ContentElementsDnd topic={topic} setTopic={setTopic} />,
     },
   ];
 
   const onComplete = async () => {
-    const result = await mutateAsync(topic);
-    console.log(result);
+    await mutateAsync(topic);
+    track('topicCreation', { props: { topicTitle: topic.title ?? '' } });
     navigate('/builder-mode');
   };
 
@@ -56,6 +54,7 @@ const CreateTopicPage = () => {
         <StepperProgress
           steps={steps}
           onComplete={onComplete}
+          onBack={() => navigate('/builder-mode')}
           isLoading={isPending}
           lastStepLabel={t('topic.actions.create')}
         />

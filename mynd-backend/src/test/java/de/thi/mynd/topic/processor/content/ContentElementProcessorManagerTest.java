@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import de.thi.mynd.topic.entity.ContentElement;
-import de.thi.mynd.topic.requests.content.ContentElementRequest;
+import de.thi.mynd.topic.request.content.ContentElementRequest;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;

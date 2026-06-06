@@ -5,7 +5,6 @@ import { Loader, MultiSelect, type MultiSelectProps, Pill } from '@mantine/core'
 import { useTranslation } from 'react-i18next';
 import { useQueryCategories } from '../../api/topic.ts';
 import type { GetInputPropsReturnType } from '@mantine/form';
-import { getContrastColor } from '../../utils/color.ts';
 
 const CategorySelect = ({ onChange, value, error, onFocus, onBlur }: GetInputPropsReturnType) => {
   const { t } = useTranslation();
@@ -42,19 +41,31 @@ const CategorySelect = ({ onChange, value, error, onFocus, onBlur }: GetInputPro
     onChange(newlySelectedObjects);
   };
 
+  const normalizeColor = (color?: string) => {
+    if (!color) return '#8b5cf6';
+    return color.startsWith('#') ? color : `#${color}`;
+  };
+
   const renderMultiSelectPill: MultiSelectProps['renderPill'] = (props) => {
     const category = selectedCategories.find((c) => c.id === props.value);
+    const categoryColor = normalizeColor(category?.color);
+
     return (
       <Pill
         withRemoveButton
         onRemove={props.onRemove}
         styles={{
           root: {
-            backgroundColor: category?.color ? `#${category.color}` : undefined,
-            color: category?.color ? getContrastColor(category.color) : undefined,
+            color: `color-mix(in srgb, ${categoryColor} 85%, black)`,
+            background: `color-mix(in srgb, ${categoryColor} 22%, white)`,
+            border: `1px solid color-mix(in srgb, ${categoryColor} 45%, white)`,
+            textTransform: 'none',
+            fontWeight: 700,
+          },
+          remove: {
+            color: `color-mix(in srgb, ${categoryColor} 85%, black)`,
           },
         }}
-        variant="filled"
       >
         {props.option.label}
       </Pill>

@@ -2,8 +2,8 @@ package de.thi.mynd.topic.rest;
 
 import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.service.TopicGraphService;
-import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.DefaultValue;
 import jakarta.ws.rs.GET;
@@ -18,7 +18,7 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestQuery;
 
 @Path("/topics/graph")
-@Authenticated
+@RolesAllowed("authorizedUser")
 @Tag(name = "Topics Graph")
 @SecurityRequirement(name = "keycloak")
 public final class TopicGraphResource {
@@ -26,36 +26,21 @@ public final class TopicGraphResource {
   @Inject TopicGraphService topicGraphService;
   @Inject SecurityIdentity securityIdentity;
 
-  @Path("/most-popular")
   @GET
   @Operation(
       summary = "Get most popular topics",
       description =
           "Returns the most popular topics in the graph along with their direct neighbors. "
               + "Without filters returns the top 10 globally, or top 100 when personalized for the current user.")
-  @Parameter(
-      name = "categories",
-      description =
-          "Optional list of category IDs to filter topics by. If empty, all categories are considered.")
-  @Parameter(
-      name = "personal",
-      description =
-          "If true, results are personalized for the current user and the limit is increased to 100.")
+  @Parameter(name = "builderMode", description = "If true, results are for the current builder")
   @APIResponse(
       responseCode = "200",
       description = "List of popular topics with their direct neighbors")
-  public List<GraphTopicDto> getMostPopular(
-      @RestQuery List<UUID> categories, @RestQuery @DefaultValue("false") boolean personal) {
-    if (categories.isEmpty()) {
-      return personal
-          ? topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
-              100, securityIdentity.getPrincipal().getName())
-          : topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10);
-    }
-    return personal
+  public List<GraphTopicDto> getMostPopular(@RestQuery @DefaultValue("false") boolean builderMode) {
+    return builderMode
         ? topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
-            100, categories, securityIdentity.getPrincipal().getName())
-        : topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10, categories);
+            100, securityIdentity.getPrincipal().getName())
+        : topicGraphService.getLearnGraph();
   }
 
   @Path("/{topicId}/neighbors")
@@ -69,18 +54,19 @@ public final class TopicGraphResource {
       name = "topicId",
       description = "The unique ID of the topic whose neighbors should be retrieved.")
   @Parameter(
-      name = "personal",
+      name = "builderMode",
       description = "If true, only neighbors owned by the current user are returned.")
   @APIResponse(responseCode = "200", description = "List of neighboring topics")
   @APIResponse(responseCode = "404", description = "Topic not found")
   public List<GraphTopicDto> getNeighbors(
-      UUID topicId, @RestQuery @DefaultValue("false") boolean personal) {
-    return personal
+      UUID topicId, @RestQuery @DefaultValue("false") boolean builderMode) {
+    return builderMode
         ? topicGraphService.getOwnedNeighborsOfTopic(topicId)
         : topicGraphService.getNeighborsOfTopic(topicId);
   }
 
   @GET
+  @Path("/search")
   @Operation(
       summary = "Search topics",
       description = "Searches for topics in the graph by name. Returns up to 5 matching results.")

@@ -2,21 +2,24 @@ package de.thi.mynd.topic.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import de.thi.mynd.common.entity.BaseEntityWithId;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import de.thi.mynd.common.entity.LtreeType;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "category")
 public class Category extends BaseEntityWithId {
 
-  @Column(nullable = false)
+  @Column(nullable = false, unique = true)
   public String title;
 
   @Column public String color;
+
+  @Column(columnDefinition = "ltree")
+  @Type(LtreeType.class)
+  public String path;
 
   @ManyToMany(mappedBy = "categories")
   @JsonIgnore

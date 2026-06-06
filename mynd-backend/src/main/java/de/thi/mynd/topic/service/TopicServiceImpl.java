@@ -13,7 +13,7 @@ import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicRepository;
-import de.thi.mynd.topic.requests.TopicRequest;
+import de.thi.mynd.topic.request.TopicRequest;
 import de.thi.mynd.topic.security.TopicVoter;
 import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -123,6 +123,7 @@ public final class TopicServiceImpl implements TopicService {
   }
 
   private void updateTopicFieldsAndAssociations(Topic topic, TopicRequest request) {
+
     topic.title = request.title;
     topic.teaser = request.teaser;
     topic.creatorId = identity.getPrincipal().getName();

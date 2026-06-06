@@ -1,9 +1,11 @@
 import { z } from 'zod';
 import i18n from '../i18n.ts';
-import { BaseEntitySchema, createPaginatedSchema } from './common.ts';
-import { AnyContentElementDtoSchema } from './content-element.ts';
+import { createPaginatedSchema } from './common.ts';
+import { AnyContentElementDtoSchema, ImportableContentElements } from './content-element.ts';
+import { TopicLearnProgressDtoSchema } from './learn-progress.ts';
 
-export const CategorySchema = BaseEntitySchema.extend({
+export const CategorySchema = z.object({
+  id: z.string().uuid(),
   title: z.string(),
   color: z.string().optional(),
 });
@@ -37,7 +39,7 @@ export const TopicCoreDataSchema = z.object({
 });
 
 export const TopicAssociatedTopicsSchema = z.object({
-  relatedTopics: z.array(ListTopicDtoSchema).min(1).max(4),
+  relatedTopics: z.array(ListTopicDtoSchema).min(1).max(3),
 });
 
 export const TopicContentElementsSchema = z.object({
@@ -49,9 +51,40 @@ export const TopicSchema = z
     id: z.uuid().optional(),
     creatorId: z.string().optional(),
     creatorFullName: z.string().optional(),
+    learnProgress: TopicLearnProgressDtoSchema.nullish(),
   })
   .extend(TopicCoreDataSchema.shape)
   .extend(TopicAssociatedTopicsSchema.shape)
   .extend(TopicContentElementsSchema.shape);
 
 export type Topic = z.infer<typeof TopicSchema>;
+
+const ImportTopicSchema = z.object({
+  identifier: z.string().trim().min(1, 'Identifier cannot be blank'),
+  title: z.string().trim().min(1, 'Title cannot be blank'),
+  teaser: z.string().trim().min(1, 'Teaser cannot be blank'),
+
+  categories: z
+    .array(z.string().trim().min(1))
+    .min(1, 'Must contain at least 1 category reference')
+    .max(2, 'Cannot exceed 2 category entries'),
+
+  duration: z.number().int('Duration must be a whole integer'),
+
+  contentElements: z
+    .array(ImportableContentElements)
+    .min(1, 'Must have at least 1 content element')
+    .max(12, 'Cannot exceed 12 nested content elements'),
+});
+
+export const FullImportSchema = z.object({
+  topics: z.array(ImportTopicSchema).min(1, 'Topics array cannot be empty'),
+
+  associations: z.record(
+    z.string().trim().min(1),
+    z
+      .array(z.string().trim().min(1))
+      .min(1, 'Association targets must contain at least 1 relation link')
+      .max(3, 'Associations map value list caps out at a depth of 3 items')
+  ),
+});

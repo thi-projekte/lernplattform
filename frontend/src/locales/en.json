@@ -2,8 +2,51 @@
   "routes": {
     "dashboard": "Dashboard",
     "builderMode": "Builder Mode",
+    "becomeBuilder": "Become a Builder",
     "createTopic": "Create topic",
-    "editTopic": "Edit topic"
+    "editTopic": "Edit topic",
+    "account": "My profile",
+    "invitations": "Invitations",
+    "subscription": "Subscription",
+    "streaks": "My Streaks",
+    "adminCategories": "Categories",
+    "challenges": "My Challenge"
+  },
+  "challenge": {
+    "title": "Weekly Challenge",
+    "subtitle": "Complete content elements to earn rewards.",
+    "weekly": "Weekly Challenge",
+    "description": "Complete {{target}} content elements this week.",
+    "nodes": "content elements completed",
+    "reward": "Reward: +{{count}} invite credits",
+    "completed": "Completed!",
+    "claimed": "Reward claimed",
+    "claimButton": "Claim +2 Invite Credits",
+    "rewardClaimed": "Reward successfully claimed! You received 2 invite credits.",
+    "history": "Past Challenges",
+    "noHistory": "No past challenges yet."
+  },
+  "streak": {
+    "title": "My Streaks",
+    "subtitle": "Track your learning consistency over time.",
+    "currentStreak": "Current streak",
+    "noActiveStreak": "No active streak yet. Start learning to build one!",
+    "satisfied": "On track",
+    "notSatisfied": "Not satisfied yet",
+    "history": "Streak history",
+    "present": "today",
+    "type": {
+      "DAILY": "days",
+      "WEEKLY": "weeks",
+      "MONTHLY": "months"
+    },
+    "preference": "Streak type",
+    "preferenceDescription": "Choose which streak type to display in the header.",
+    "typeLabel": {
+      "DAILY": "Daily",
+      "WEEKLY": "Weekly",
+      "MONTHLY": "Monthly"
+    }
   },
   "journey": {
     "title": "Your journey map",
@@ -52,7 +95,10 @@
     "selectedTopic": "Selected topic",
     "unknownCreator": "Unknown creator",
     "loadingNeighbors": "Loading connected topics...",
-    "openDetails": "Open detail view"
+    "openDetails": "Open detail view",
+    "expandNeighbors": "Load connections",
+    "hideNode": "Hide node",
+    "showHidden": "Show {{count}} hidden"
   },
   "common": {
     "rowsPerPage": "Rows per page",
@@ -85,23 +131,37 @@
       "personalTopics": "Personal topics",
       "createContentElement": "Create content element"
     },
-
     "myna": {
       "subtitle": "AI Assistant",
       "description": "Myna can summarize the saved content and suggest suitable next sources.",
-      "askButton": "Ask Myna"
+      "askButton": "Ask Myna",
+      "comingSoon": "Chat coming soon",
+      "inputPlaceholder": "Ask Myna something..."
     },
-
     "tabs": {
       "visual": "Visual",
       "notes": "Notes",
       "notesPlaceholder": "No notes yet."
     },
-
     "actions": {
       "create": "Create topic",
       "createContentElement": "Create content element",
-      "start": "Start Topic"
+      "start": "Start Topic",
+      "complete": "Complete topic",
+      "completeBlockedHint": "Mark all content elements as completed first.",
+      "completed": "Completed",
+      "markContentElementCompleted": "Mark as completed",
+      "contentElementCompleted": "Completed",
+      "resetProgress": "Reset progress",
+      "overview": "Topic overview",
+      "importJson": "Import JSON",
+      "importJsonSubmit": "Import",
+      "importJsonSuccess": "Topics imported successfully",
+      "importJsonError": "Invalid JSON format"
+    },
+    "progress": {
+      "label": "Progress",
+      "elementsCompleted": "elements completed"
     },
     "fields": {
       "title": "Title",
@@ -115,6 +175,10 @@
     },
     "contentElementForm": {
       "incompleteFormError": "Please fill in all required fields before continuing."
+    },
+    "contentElements": {
+      "limitReached": "Maximum of 12 content elements per topic.",
+      "countLabel": "{{count}} / {{max}} content elements"
     },
     "errors": {
       "titleMissing": "Title missing",
@@ -178,7 +242,7 @@
     "personalGraph": {
       "selectedTopic": "Selected topic",
       "emptySelection": "Click on a node to inspect the topic.",
-      "graphDescription": "Switch between the list and a graph view of your personal topics.",
+      "graphDescription": "List or graph view of your topics.",
       "searchHintSelectOwned": "Select one of your own topics first before linking a foreign topic.",
       "keepAtLeastOneAssociation": "At least one associated topic must remain linked.",
       "linkToSelectedTopic": "Link to selected topic",
@@ -188,16 +252,176 @@
       "removeOwnTopic": "Remove from graph"
     }
   },
+  "categoryAdmin": {
+    "title": "Category management",
+    "treeTitle": "Category tree",
+    "createCategory": "Create category",
+    "createTitle": "Create category",
+    "editTitle": "Edit category",
+    "empty": "No categories found.",
+    "createSuccess": "Category created successfully",
+    "updateSuccess": "Category updated successfully",
+    "saveError": "Failed to save category. Please try again.",
+    "deleteSuccess": "Category deleted successfully",
+    "deleteError": "Failed to delete category. Please try again.",
+    "fields": {
+      "title": "Title",
+      "color": "Color",
+      "parentCategory": "Parent category",
+      "parentPlaceholder": "None (root category)"
+    }
+  },
   "auth": {
     "accessDenied": "Access Denied",
     "noAccessPageText": "It looks like you don't have the necessary permissions to view this page. If you think this is a mistake, please contact your administrator.",
     "role_builder": "Builder",
     "role_learner": "Learner"
   },
+  "layout": {
+    "openAccount": "Open user account"
+  },
+  "account": {
+    "title": "My profile",
+    "profilePicture": "Profile picture",
+    "deleteProfilePicture": "Delete profile picture",
+    "editInKeycloak": "Edit profile in Keycloak",
+    "logout": "Log out"
+  },
   "onboarding": {
     "title": "Onboarding",
     "role_selection_label": "Select role",
     "role_selection_placeholder": "Select your role",
     "submit": "Submit"
+  },
+  "subscription": {
+    "title": "Choose your plan",
+    "subtitle": "Unlock more features and take your learning to the next level.",
+    "perMonth": "/ month",
+    "popular": "Popular",
+    "bestValue": "Best value",
+    "currentPlan": "Current plan",
+    "managePlan": "Manage subscription",
+    "switchPlan": "Switch plan",
+    "billingPortal": "Billing portal",
+    "free": {
+      "title": "Free",
+      "price": "€0",
+      "description": "Get started at no cost.",
+      "feature1": "Access to public topics",
+      "feature2": "Basic skill tree",
+      "feature3": "Community support",
+      "button": "Current plan"
+    },
+    "plus": {
+      "title": "Plus",
+      "price": "€9",
+      "description": "For dedicated learners.",
+      "feature1": "Everything in Free",
+      "feature2": "Unlimited topics",
+      "feature3": "Myna AI assistant",
+      "feature4": "Priority support",
+      "button": "Subscribe to Plus"
+    },
+    "pro": {
+      "title": "Pro",
+      "price": "€19",
+      "description": "Maximum learning power.",
+      "feature1": "Everything in Plus",
+      "feature2": "Advanced analytics",
+      "feature3": "Custom categories",
+      "feature4": "Team collaboration",
+      "feature5": "Early access to new features",
+      "button": "Subscribe to Pro"
+    }
+  },
+  "invitation": {
+    "manage": {
+      "title": "Invitations",
+      "left": "left",
+      "leftDetail": "{{count}} invitation(s) remaining",
+      "sentDetail": "{{count}} invitation(s) sent",
+      "sendTitle": "Send invitation",
+      "emailPlaceholder": "Email address",
+      "send": "Send",
+      "sent": "Invitation sent to {{email}}",
+      "sendError": "Failed to send invitation. Please try again.",
+      "noInvitationsLeft": "You have no invitations left.",
+      "historyTitle": "Sent invitations",
+      "noHistory": "No invitations sent yet.",
+      "acceptedTrue": "Accepeted",
+      "acceptedFalse": "Pending",
+      "columns": {
+        "date": "Date",
+        "sentTo": "Sent to",
+        "accepted": "Accepted?"
+      }
+    },
+    "accept": {
+      "title": "Accept invitation",
+      "description": "You have been invited to join the platform. Click the button below to accept.",
+      "button": "Accept invitation",
+      "successMessage": "Invitation accepted! Redirecting...",
+      "errorMessage": "Could not accept the invitation. The link may be expired or already used.",
+      "invalidLink": "This invitation link is invalid or incomplete."
+    },
+    "noAccess": {
+      "title": "Access restricted",
+      "description": "You need an invitation to access this platform.",
+      "acceptButton": "Accept my invitation",
+      "contactHint": "Contact a builder to receive an invitation."
+    }
+  },
+  "footer": {
+    "legal": "Legal notice & privacy policy"
+  },
+
+  "legal": {
+    "pageTitle": "Legal Notice & Privacy Policy",
+    "pageDescription": "Legal information about the MYnd platform and information on the processing of personal data.",
+    "imprint": {
+      "title": "Legal Notice",
+      "provider": "Provider",
+      "providerName": "Technische Hochschule Ingolstadt",
+      "street": "Esplanade 10",
+      "city": "85049 Ingolstadt",
+      "country": "Germany",
+      "representedBy": "Represented by",
+      "representedByName": "Florian Weisenberger",
+      "contact": "Contact",
+      "email": "Email",
+      "phone": "Phone",
+      "registerEntry": "Commercial Register Entry",
+      "registerText": "Local Court of Ingolstadt, HRB 123456",
+      "vatId": "VAT ID",
+      "contentResponsible": "Responsible for content",
+      "contentResponsibleName": "Florian Weisenberger",
+      "contentResponsibleStreet": "Musterstraße 12",
+      "contentResponsibleCity": "85049 Ingolstadt"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "MYnd processes personal data exclusively to provide the platform on the basis of Art. 6 GDPR.",
+      "collectedData": "Collected data",
+      "collectedDataItems": {
+        "nameEmail": "Name and email address",
+        "accountProfile": "User account and profile data",
+        "learningUsage": "Learning progress and platform usage data",
+        "rolesPermissions": "Role and permission data"
+      },
+      "processingPurpose": "Purpose of processing",
+      "processingPurposeItems": {
+        "platform": "Provision and administration of the learning platform",
+        "accountsRoles": "Management of user accounts and roles",
+        "learningProgress": "Storage and display of learning progress",
+        "improvement": "Improvement of learning content and platform features"
+      },
+      "disclosure": "Disclosure",
+      "disclosureText": "Data is only disclosed to technical hosting and infrastructure service providers where this is necessary for operating the platform.",
+      "storage": "Storage",
+      "storageText": "Personal data is stored only for as long as necessary for the use of the platform and to comply with legal obligations.",
+      "userRights": "User rights",
+      "userRightsText": "Users have the right to access, rectify, delete, restrict processing of, and object to the processing of their personal data.",
+      "privacyContact": "Privacy contact"
+    }
   }
 }

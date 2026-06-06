@@ -1,12 +1,10 @@
 package de.thi.mynd.auth.rest;
 
 import de.thi.mynd.auth.service.AuthService;
-import io.quarkus.security.Authenticated;
 import io.quarkus.security.identity.SecurityIdentity;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.GET;
-import jakarta.ws.rs.POST;
-import jakarta.ws.rs.Path;
+import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
@@ -14,6 +12,7 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 
 @Path("/auth")
+@RolesAllowed("authorizedUser")
 @Tag(name = "Authorization")
 @SecurityRequirement(name = "keycloak")
 public final class AuthResource {
@@ -24,7 +23,6 @@ public final class AuthResource {
 
   @GET
   @Path("/check-is-builder")
-  @Authenticated
   @Operation(
       summary = "Check if the user is builder",
       description = "Checks whether the current user has the builder role assigned.")
@@ -42,7 +40,6 @@ public final class AuthResource {
 
   @POST
   @Path("/register-as-builder")
-  @Authenticated
   @Operation(
       summary = "Register the current user as builder",
       description = "Assigns the current user the builder role")
@@ -56,7 +53,6 @@ public final class AuthResource {
 
   @POST
   @Path("/register-as-learner")
-  @Authenticated
   @Operation(
       summary = "Register the current user as learner",
       description = "Assigns the current user the learner role")

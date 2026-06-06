@@ -3,66 +3,102 @@
     "identifier": "technology",
     "creatorId": "admin",
     "title": "Technology",
-    "color": "EE4B2B"
+    "color": "2563EB"
   },
   {
     "identifier": "health",
     "creatorId": "admin",
     "title": "Health",
-    "color": "32CD32"
+    "color": "15803D"
   },
   {
     "identifier": "languages",
     "creatorId": "admin",
     "title": "Languages",
-    "color": "00CEC8"
+    "color": "0E7490"
   },
   {
     "identifier": "ki",
     "creatorId": "admin",
     "title": "Künstliche Intelligenz",
-    "color": "bd34eb"
+    "color": "7C3AED"
   },
   {
     "identifier": "digitalTechnlogies",
     "creatorId": "admin",
     "title": "Digitale Technologien",
-    "color": "34eb6b"
+    "color": "0369A1"
   },
   {
     "identifier": "projectManagementBasics",
     "creatorId": "admin",
     "title": "Projektmanagement Grundlagen",
-    "color": "2563EB"
+    "color": "1D4ED8"
   },
   {
     "identifier": "projectPlanning",
     "creatorId": "admin",
     "title": "Projektplanung",
-    "color": "7C3AED"
+    "color": "6D28D9"
   },
   {
     "identifier": "communication",
     "creatorId": "admin",
     "title": "Kommunikation",
-    "color": "F59E0B"
+    "color": "B45309"
   },
   {
     "identifier": "projectControl",
     "creatorId": "admin",
     "title": "Projektsteuerung",
-    "color": "DC2626"
+    "color": "B91C1C"
   },
   {
     "identifier": "agileWorking",
     "creatorId": "admin",
     "title": "Agiles Arbeiten",
-    "color": "16A34A"
+    "color": "047857"
   },
   {
     "identifier": "projectCompletion",
     "creatorId": "admin",
     "title": "Projektabschluss",
-    "color": "0891B2"
+    "color": "0F766E"
+  },
+  {
+    "identifier": "personalDevelopment",
+    "creatorId": "admin",
+    "title": "Persönliche Entwicklung",
+    "color": "9333EA"
+  },
+  {
+    "identifier": "motivationJoy",
+    "creatorId": "admin",
+    "title": "Motivation & Lebensfreude",
+    "color": "D97706"
+  },
+  {
+    "identifier": "strengthsTalents",
+    "creatorId": "admin",
+    "title": "Stärken & Talente",
+    "color": "059669"
+  },
+  {
+    "identifier": "valuesDecisions",
+    "creatorId": "admin",
+    "title": "Werte & Entscheidungen",
+    "color": "1D4ED8"
+  },
+  {
+    "identifier": "lifePlanning",
+    "creatorId": "admin",
+    "title": "Lebensplanung",
+    "color": "BE185D"
+  },
+  {
+    "identifier": "reflectionMindset",
+    "creatorId": "admin",
+    "title": "Reflexion & Mindset",
+    "color": "475569"
   }
 ]

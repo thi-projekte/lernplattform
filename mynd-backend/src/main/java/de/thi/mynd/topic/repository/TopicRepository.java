@@ -11,10 +11,15 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
 public final class TopicRepository extends MyndBaseRepository<Topic> {
+
+  public Optional<Topic> findByTitleOptional(String title) {
+    return find("title = ?1", title).singleResultOptional();
+  }
 
   public PaginationDto<Topic> findForCreatorPaginated(String creatorId, int page, int pageSize) {
     PanacheQuery<Topic> query = find("creatorId = ?1", creatorId);

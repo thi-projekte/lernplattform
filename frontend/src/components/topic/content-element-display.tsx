@@ -10,7 +10,7 @@ import type {
   YouTubeLinkElementDto,
 } from '../../schemas/content-element.ts';
 import YouTubeEmbed from './content/youtube-embed.tsx';
-import { AspectRatio, Button, Group, Image, Text } from '@mantine/core';
+import { AspectRatio, Button, Box, Group, Image, Text } from '@mantine/core';
 import { IconDownload, IconFileTypePdf } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import SpotifyEmbed from './content/spotify-embed.tsx';
@@ -25,7 +25,9 @@ const ContentElementDisplay = ({ contentElement }: ContentElementDisplayProps) =
   if (contentElement.type === 'RTF') {
     return (
       <div
+        // react-doctor-disable-next-line react/no-danger
         dangerouslySetInnerHTML={{
+          // react-doctor-disable-next-line react/no-danger
           __html: (contentElement as RtfElementDto).rtfText,
         }}
       />
@@ -37,7 +39,13 @@ const ContentElementDisplay = ({ contentElement }: ContentElementDisplayProps) =
   }
 
   if (contentElement.type === 'YOUTUBE_LINK') {
-    return <YouTubeEmbed url={(contentElement as YouTubeLinkElementDto).uri} />;
+    return (
+      <Box maw={480} w="100%" mx="auto" mt="sm">
+        <AspectRatio ratio={16 / 9}>
+          <YouTubeEmbed url={(contentElement as YouTubeLinkElementDto).uri} />
+        </AspectRatio>
+      </Box>
+    );
   }
 
   if (contentElement.type === 'URI') {

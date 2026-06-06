@@ -20,6 +20,11 @@ body,
 .mynd-register-page {
   position: relative;
   min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
   background:
     radial-gradient(
       circle at 50% 0%,
@@ -31,15 +36,22 @@ body,
   background-attachment: fixed;
   background-repeat: no-repeat;
   background-size: cover;
-  padding-bottom: 56px;
 }
 
 .mynd-register-header {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  z-index: 2;
   display: flex;
   justify-content: flex-end;
-  width: 100%;
-  padding: 24px 32px 0;
+  padding: 0;
   box-sizing: border-box;
+}
+
+.mynd-register-container {
+  width: min(520px, 100%);
+  margin: 0 auto;
 }
 
 .mynd-language-button {

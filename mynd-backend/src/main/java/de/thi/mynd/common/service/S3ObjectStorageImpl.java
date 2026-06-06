@@ -69,6 +69,14 @@ public final class S3ObjectStorageImpl implements ObjectStorageService {
   }
 
   @Override
+  public String uploadObject(String objectKey, File file) {
+    byte[] bytes = getBytesFromFile(file);
+    uploadAsync(objectKey, bytes);
+
+    return objectKey;
+  }
+
+  @Override
   public void tryDeleteObject(String objectKey) {
     DeleteObjectRequest request =
         DeleteObjectRequest.builder().bucket(bucketName).key(objectKey).build();

@@ -11,7 +11,7 @@ import { useQueryClient } from '@tanstack/react-query';
 import EntityTable from '../../components/entity-table.tsx';
 import {
   ActionIcon,
-  Badge,
+  Box,
   Button,
   Flex,
   Group,
@@ -21,10 +21,13 @@ import {
   Text,
   Title,
   Tooltip,
+  useMantineTheme,
 } from '@mantine/core';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
+import ImportTopicsModal from '../../components/topic/import-topics-modal.tsx';
 import { useTranslation } from 'react-i18next';
 import type { OnConnect } from '@xyflow/react';
-import { IconLink, IconPlusFilled, IconTrash } from '@tabler/icons-react';
+import { IconFileImport, IconLink, IconPlusFilled, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
 import LayoutLoader from '../../components/layout-loader.tsx';
@@ -36,8 +39,11 @@ import type { GraphTopicDto } from '../../schemas/topic-graph.ts';
 import { useCreateAssociation } from '../../api/association.ts';
 import TopicSearchbar from '../../components/topic/topic-searchbar.tsx';
 import type { ListTopicDto, Topic } from '../../schemas/topic.ts';
+import CategoryBadge from '../../components/category-badge.tsx';
 
 const BuilderModeListPage = () => {
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const [pagination, setPagination] = useState<PaginationState>({ pageSize: 20, pageIndex: 0 });
   const [viewMode, setViewMode] = useState<'list' | 'graph'>('list');
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
@@ -50,11 +56,12 @@ const BuilderModeListPage = () => {
     data: graphTopics,
     isLoading: isGraphLoading,
     refetch: refetchGraphTopics,
-  } = useFetchMostPopularTopicsWithNeighbors(undefined, true, viewMode === 'graph');
+  } = useFetchMostPopularTopicsWithNeighbors(true, viewMode === 'graph');
 
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { mutate } = useDeleteTopicMutation();
+  const [importOpen, { open: openImport, close: closeImport }] = useDisclosure(false);
   const { mutateAsync: createAssociation, isPending: isCreatingAssociation } =
     useCreateAssociation();
   const columns = useTopicColumns({
@@ -255,19 +262,28 @@ const BuilderModeListPage = () => {
   return (
     <Layout>
       <Title>{t('topic.headings.personalTopics')}</Title>
-      <Flex justify="flex-end" w="100%" mt={12}>
-        <Flex justify="center" w={190}>
-          <Button variant="filled" onClick={() => navigate('/builder-mode/topics/create')}>
-            <IconPlusFilled />
-            &nbsp;{t('topic.actions.create')}
-          </Button>
-        </Flex>
+      <Flex justify="flex-end" w="100%" mt={12} gap="sm" wrap="wrap">
+        <Button
+          variant="default"
+          leftSection={<IconFileImport size={16} />}
+          onClick={openImport}
+          fullWidth={isMobile}
+        >
+          {t('topic.actions.importJson')}
+        </Button>
+        <Button
+          variant="filled"
+          onClick={() => navigate('/builder-mode/topics/create')}
+          fullWidth={isMobile}
+        >
+          <IconPlusFilled />
+          &nbsp;{t('topic.actions.create')}
+        </Button>
       </Flex>
+
+      <ImportTopicsModal opened={importOpen} onClose={closeImport} />
       <Stack gap="md" mt={12}>
         <Stack gap="xs" align="center">
-          <Text c="dimmed" size="sm" ta="center">
-            {t('topic.personalGraph.graphDescription')}
-          </Text>
           <Group justify="center" w="100%">
             <SegmentedControl
               value={viewMode}
@@ -284,31 +300,30 @@ const BuilderModeListPage = () => {
 
         {viewMode === 'list' ? (
           data && (
-            <EntityTable
-              data={data.results}
-              columns={columns}
-              pageCount={data.totalPages}
-              pagination={pagination}
-              isFetching={isLoading}
-              setPagination={setPagination}
-            />
+            <Box style={{ overflowX: 'auto' }}>
+              <EntityTable
+                data={data.results}
+                columns={columns}
+                pageCount={data.totalPages}
+                pagination={pagination}
+                isFetching={isLoading}
+                setPagination={setPagination}
+              />
+            </Box>
           )
         ) : (
           <div
             style={{
               display: 'grid',
               gap: '1rem',
-              gridTemplateColumns: '240px minmax(0, 1fr)',
+              gridTemplateColumns: isMobile ? '1fr' : '240px minmax(0, 1fr)',
               alignItems: 'start',
             }}
           >
-            <Paper withBorder radius="md" p="sm" h={760}>
+            <Paper withBorder radius="md" p="sm" h={isMobile ? 400 : 760}>
               <Stack gap="md" h="100%" style={{ minHeight: 0 }}>
                 <div>
                   <Title order={4}>{t('topic.graph.graphModeRailTitle')}</Title>
-                  <Text size="xs" c="dimmed">
-                    {t('topic.graph.graphModeRailDescription')}
-                  </Text>
                 </div>
 
                 {selectedGraphTopic && (
@@ -318,27 +333,25 @@ const BuilderModeListPage = () => {
                       {selectedGraphTopic.categories.length > 0 && (
                         <Group gap={6}>
                           {selectedGraphTopic.categories.map((category) => (
-                            <Badge
+                            <CategoryBadge
                               key={category.id}
-                              color={category.color}
-                              variant="light"
+                              title={category.title}
+                              color={category.color ?? '8b5cf6'}
                               size="sm"
-                            >
-                              {category.title}
-                            </Badge>
+                            />
                           ))}
                         </Group>
                       )}
-                      <Badge
+                      <CategoryBadge
                         w="fit-content"
-                        color={selectedGraphTopicIsOwned ? 'orange' : 'blue'}
-                        variant="light"
                         size="sm"
-                      >
-                        {selectedGraphTopicIsOwned
-                          ? t('topic.personalGraph.ownedTopic')
-                          : t('topic.personalGraph.foreignTopic')}
-                      </Badge>
+                        title={
+                          selectedGraphTopicIsOwned
+                            ? t('topic.personalGraph.ownedTopic')
+                            : t('topic.personalGraph.foreignTopic')
+                        }
+                        color={selectedGraphTopicIsOwned ? '#f08c00' : '#228be6'}
+                      />
                       {selectedGraphTopic.creatorFullName && (
                         <Text size="xs" c="dimmed">
                           {selectedGraphTopic.creatorFullName}
@@ -397,15 +410,13 @@ const BuilderModeListPage = () => {
                                 {suggestion.creatorFullName}
                               </Text>
                             )}
-                            {suggestion.categories.length > 0 && (
-                              <Group gap={6} mt={8}>
-                                {suggestion.categories.slice(0, 1).map((category) => (
-                                  <Badge key={category.id} color={category.color} variant="light">
-                                    {category.title}
-                                  </Badge>
-                                ))}
-                              </Group>
-                            )}
+                            {suggestion.categories.slice(0, 1).map((category) => (
+                              <CategoryBadge
+                                key={category.id}
+                                title={category.title}
+                                color={category.color ?? '8b5cf6'}
+                              />
+                            ))}
                           </div>
                           <Group gap="xs" wrap="nowrap">
                             {canLink && (
@@ -452,7 +463,13 @@ const BuilderModeListPage = () => {
               </Stack>
             </Paper>
 
-            <Paper withBorder radius="md" p="md" h={760} style={{ background: '#f1f3f5e0' }}>
+            <Paper
+              withBorder
+              radius="md"
+              p="md"
+              h={isMobile ? 400 : 760}
+              style={{ background: theme.other.graphBg }}
+            >
               <PersonalTopicsGraph
                 topics={personalGraphTopics}
                 currentUsername={userService.account.username}

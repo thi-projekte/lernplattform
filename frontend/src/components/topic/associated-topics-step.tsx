@@ -10,8 +10,10 @@ import {
   Text,
   Title,
   Tooltip,
+  useMantineTheme,
 } from '@mantine/core';
-import { useCallback, useMemo, useState } from 'react';
+import { useMediaQuery } from '@mantine/hooks';
+import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { IconEyeOff, IconLink, IconTrash } from '@tabler/icons-react';
 import TopicSearchbar from './topic-searchbar.tsx';
@@ -22,16 +24,20 @@ import type {
   GraphTopicNodeData,
   TopicGraphNodePositions,
 } from '../graph-view/topic-graph.types.ts';
+import { buildTopicAssociationsGraph } from '../graph-view/topic-graph.utils.ts';
 import type { ListTopicDto } from '../../schemas/topic.ts';
 import { useUserService } from '../../provider/user-provider.tsx';
+import CategoryBadge from '../category-badge.tsx';
 
 interface AssociatedTopicsStepProps {
   topic: Partial<Topic>;
-  setTopic: (topic: Partial<Topic>) => void;
+  setTopic: Dispatch<SetStateAction<Partial<Topic>>>;
 }
 
 const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) => {
   const { t } = useTranslation();
+  const theme = useMantineTheme();
+  const isMobile = useMediaQuery('(max-width: 768px)');
   const userService = useUserService();
   const [editorMode, setEditorMode] = useState<'list' | 'graph'>('graph');
   const [selectedTopicNode, setSelectedTopicNode] = useState<GraphTopicNodeData | null>(null);
@@ -40,33 +46,81 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
   const [isViewportLocked, setIsViewportLocked] = useState(false);
 
   const removeTopic = (topicId: string) => {
-    setTopic({
-      ...topic,
-      relatedTopics: (topic.relatedTopics ?? []).filter((ass) => ass.id !== topicId),
-    });
+    setTopic((prev) => ({
+      ...prev,
+      relatedTopics: (prev.relatedTopics ?? []).filter((ass) => ass.id !== topicId),
+    }));
 
     setSelectedTopicNode((current) => (current && current.payload.id === topicId ? null : current));
   };
 
-  const createAssociation = (topicId: string) => {
-    const topicToAdd = searchSuggestions.find((topic) => topic.id === topicId);
+  const createAssociation = useCallback(
+    (topicId: string) => {
+      if ((topic.relatedTopics ?? []).length >= 3) {
+        return;
+      }
 
-    if (!topicToAdd) {
-      return;
-    }
+      const topicToAdd = searchSuggestions.find((topic) => topic.id === topicId);
 
-    setTopic({
-      ...topic,
-      relatedTopics: [...(topic.relatedTopics ?? []), topicToAdd],
-    });
+      if (!topicToAdd) {
+        return;
+      }
 
-    setSelectedTopicNode({
-      kind: 'topic',
-      title: topicToAdd.title,
-      creatorFullName: topicToAdd.creatorFullName,
-      payload: topicToAdd,
-    });
-  };
+      const currentGraph = buildTopicAssociationsGraph(
+        {
+          id: topic.id,
+          title: topic.title,
+          categories: topic.categories,
+          relatedTopics: topic.relatedTopics,
+          isolatedTopics: searchSuggestions,
+        },
+        nodePositions,
+        userService.account.username
+      );
+
+      setNodePositions((current) => {
+        const next = { ...current };
+
+        currentGraph.nodes.forEach((node) => {
+          next[node.id] = node.position;
+        });
+
+        const isolatedNodeId = `isolated-topic-${topicId}`;
+        const relatedNodeId = `related-topic-${topicId}`;
+
+        if (next[isolatedNodeId]) {
+          next[relatedNodeId] = next[isolatedNodeId];
+          delete next[isolatedNodeId];
+        }
+
+        return next;
+      });
+
+      setTopic((prev) => ({
+        ...prev,
+        relatedTopics: [...(prev.relatedTopics ?? []), topicToAdd],
+      }));
+
+      setSearchSuggestions((current) => current.filter((suggestion) => suggestion.id !== topicId));
+
+      setSelectedTopicNode({
+        kind: 'topic',
+        title: topicToAdd.title,
+        creatorFullName: topicToAdd.creatorFullName,
+        payload: topicToAdd,
+      });
+    },
+    [
+      nodePositions,
+      searchSuggestions,
+      setTopic,
+      topic.categories,
+      topic.id,
+      topic.relatedTopics,
+      topic.title,
+      userService.account.username,
+    ]
+  );
 
   const hideIsolatedTopic = (topicId: string) => {
     setSearchSuggestions((current) => current.filter((topic) => topic.id !== topicId));
@@ -87,6 +141,29 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
     selectedTopicNode && typeof selectedTopicNode.payload.id === 'string'
       ? selectedTopicNode.payload.id
       : null;
+  const selectedGraphTopicId = useMemo(() => {
+    if (!selectedTopicNode) {
+      return undefined;
+    }
+
+    if (selectedTopicNode.graphNodeId) {
+      return selectedTopicNode.graphNodeId;
+    }
+
+    if (!selectedTopicId) {
+      return topic.id ? `topic-${topic.id}` : 'topic-root';
+    }
+
+    if ((topic.relatedTopics ?? []).some((relatedTopic) => relatedTopic.id === selectedTopicId)) {
+      return `related-topic-${selectedTopicId}`;
+    }
+
+    if (searchSuggestions.some((suggestion) => suggestion.id === selectedTopicId)) {
+      return `isolated-topic-${selectedTopicId}`;
+    }
+
+    return topic.id && selectedTopicId === topic.id ? `topic-${topic.id}` : undefined;
+  }, [searchSuggestions, selectedTopicId, selectedTopicNode, topic.id, topic.relatedTopics]);
   const isolatedTopicCount = searchSuggestions.length;
 
   const handleSuggestionsChange = useCallback((topics: ListTopicDto[], searchTerm: string) => {
@@ -121,6 +198,20 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
     []
   );
 
+  const handleGraphTopicClick = useCallback(
+    (graphNode: GraphTopicNodeData) => {
+      const topicId = typeof graphNode.payload.id === 'string' ? graphNode.payload.id : null;
+
+      if (graphNode.isIsolated && topicId) {
+        createAssociation(topicId);
+        return;
+      }
+
+      setSelectedTopicNode(graphNode);
+    },
+    [createAssociation]
+  );
+
   return (
     <Stack>
       <Group justify="center">
@@ -144,9 +235,10 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
               </Text>
             </div>
             <TopicSearchbar
-              onAdd={(newTopic) =>
-                setTopic({ ...topic, relatedTopics: [...(topic.relatedTopics ?? []), newTopic] })
-              }
+              onAdd={(newTopic) => {
+                if ((topic.relatedTopics ?? []).length >= 3) return;
+                setTopic({ ...topic, relatedTopics: [...(topic.relatedTopics ?? []), newTopic] });
+              }}
               existingIds={existingIds}
               onSuggestionsChange={handleSuggestionsChange}
             />
@@ -160,18 +252,21 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
           style={{
             display: 'grid',
             gap: '1rem',
-            gridTemplateColumns: '260px minmax(0, 1fr)',
+            gridTemplateColumns: isMobile ? '1fr' : '260px minmax(0, 1fr)',
             alignItems: 'start',
           }}
         >
           <div>
-            <Paper withBorder radius="md" p="sm" h={760}>
+            <Paper withBorder radius="md" p="sm" h={isMobile ? 400 : 760}>
               <Stack gap="md" h="100%">
                 <div>
                   <Group justify="space-between" align="center" wrap="nowrap">
                     <Title order={4}>{t('topic.graph.graphModeRailTitle')}</Title>
-                    <Badge variant="light" color="gray">
-                      {(topic.relatedTopics ?? []).length}
+                    <Badge
+                      variant="light"
+                      color={(topic.relatedTopics ?? []).length >= 3 ? 'red' : 'gray'}
+                    >
+                      {(topic.relatedTopics ?? []).length} / 3
                     </Badge>
                   </Group>
                   <Text size="xs" c="dimmed">
@@ -220,6 +315,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                                     color="blue"
                                     size="sm"
                                     aria-label={t('topic.graph.addAssociation')}
+                                    disabled={(topic.relatedTopics ?? []).length >= 3}
                                     onClick={() => createAssociation(suggestion.id)}
                                   >
                                     <IconLink size={14} />
@@ -281,9 +377,11 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                           {relatedTopic.categories.length > 0 && (
                             <Group gap={6} mt={8}>
                               {relatedTopic.categories.slice(0, 1).map((category) => (
-                                <Badge key={category.id} color={category.color} variant="light">
-                                  {category.title}
-                                </Badge>
+                                <CategoryBadge
+                                  key={category.id}
+                                  title={category.title}
+                                  color={category.color ?? '8b5cf6'}
+                                />
                               ))}
                             </Group>
                           )}
@@ -306,7 +404,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
             </Paper>
           </div>
           <div>
-            <Paper withBorder radius="md" p="md" h={760}>
+            <Paper withBorder radius="md" p="md" h={isMobile ? 400 : 760}>
               <Stack gap="md" h="100%">
                 <Group justify="space-between" align="flex-start" wrap="nowrap">
                   <div style={{ minWidth: 0 }}>
@@ -323,7 +421,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                     overflow: 'hidden',
                     border: '1px dashed #ced4da',
                     borderRadius: 12,
-                    background: '#f1f3f5e0',
+                    background: theme.other.graphBg,
                   }}
                 >
                   <TopicAssociationsGraph
@@ -335,7 +433,8 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       isolatedTopics: searchSuggestions,
                     }}
                     currentUsername={userService.account.username}
-                    onTopicClick={setSelectedTopicNode}
+                    selectedTopicId={selectedGraphTopicId}
+                    onTopicClick={handleGraphTopicClick}
                     onAssociationClick={removeTopic}
                     onNodePositionChange={handleNodePositionChange}
                     canEditAssociations

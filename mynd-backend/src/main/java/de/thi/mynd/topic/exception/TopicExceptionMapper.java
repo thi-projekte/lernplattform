@@ -9,4 +9,24 @@ public final class TopicExceptionMapper {
   public Response mapAssociationAlreadyExistsException(AssociationAlreadyExistsException e) {
     return Response.status(Response.Status.FOUND).entity(e.getMessage()).build();
   }
+
+  @ServerExceptionMapper
+  public Response mapImportException(ImportException e) {
+    return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+  }
+
+  @ServerExceptionMapper
+  public Response mapCategoryAlreadyExistsException(CategoryAlreadyExistsException e) {
+    return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
+  }
+
+  @ServerExceptionMapper
+  public Response mapCategoryNotFoundException(CategoryNotFoundException e) {
+    return Response.status(Response.Status.NOT_FOUND).entity(e.getMessage()).build();
+  }
+
+  @ServerExceptionMapper
+  public Response mapCategoryMoveException(CategoryMoveException e) {
+    return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
+  }
 }

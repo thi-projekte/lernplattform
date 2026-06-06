@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 import de.thi.mynd.topic.entity.ContentType;
 import de.thi.mynd.topic.entity.UriElement;
 import de.thi.mynd.topic.repository.ContentElementRepository;
-import de.thi.mynd.topic.requests.content.UriElementRequest;
+import de.thi.mynd.topic.request.content.UriElementRequest;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

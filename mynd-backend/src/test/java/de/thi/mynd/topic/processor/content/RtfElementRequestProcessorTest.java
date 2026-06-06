@@ -7,7 +7,7 @@ import static org.mockito.Mockito.*;
 import de.thi.mynd.topic.entity.ContentType;
 import de.thi.mynd.topic.entity.RtfElement;
 import de.thi.mynd.topic.repository.ContentElementRepository;
-import de.thi.mynd.topic.requests.content.RtfElementRequest;
+import de.thi.mynd.topic.request.content.RtfElementRequest;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -50,6 +50,6 @@ class RtfElementRequestProcessorTest {
   void testSupports() {
     assertTrue(processor.supports(new RtfElementRequest()));
     assertFalse(
-        processor.supports(mock(de.thi.mynd.topic.requests.content.PdfElementRequest.class)));
+        processor.supports(mock(de.thi.mynd.topic.request.content.PdfElementRequest.class)));
   }
 }

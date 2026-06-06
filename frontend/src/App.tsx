@@ -6,6 +6,8 @@ import { MantineProvider } from '@mantine/core';
 import { theme } from './theme.ts';
 
 import './i18n.ts';
+import './index.css';
+import './app.css';
 
 import '@mantine/core/styles.css';
 import '@mantine/dropzone/styles.css';
@@ -14,18 +16,32 @@ import '@mantine/notifications/styles.css';
 import { ModalsProvider } from '@mantine/modals';
 import { Notifications } from '@mantine/notifications';
 import RegistrationProvider from './provider/registration-provider.tsx';
+import { SubscriptionProvider } from './provider/subscription-provider.tsx';
+import type { KeycloakResourceAccess } from 'keycloak-js';
+import keycloak from './keycloak.ts';
+import { track } from '@plausible-analytics/tracker';
 
 const queryClient = new QueryClient();
 
 function App() {
+  const resourceAccess: KeycloakResourceAccess = keycloak.tokenParsed
+    ?.resource_access as KeycloakResourceAccess;
+  const roles = resourceAccess['mynd']?.roles ?? [];
+  for (const role of roles) {
+    if (role) {
+      track('role', { props: { role: role } });
+    }
+  }
   return (
-    <MantineProvider theme={theme}>
+    <MantineProvider theme={theme} defaultColorScheme="auto">
       <ModalsProvider>
         <QueryClientProvider client={queryClient}>
           <UserProvider>
             <Notifications />
             <RegistrationProvider>
-              <RouterProvider router={router} />
+              <SubscriptionProvider>
+                <RouterProvider router={router} />
+              </SubscriptionProvider>
             </RegistrationProvider>
           </UserProvider>
         </QueryClientProvider>

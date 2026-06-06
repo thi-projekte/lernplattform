@@ -4,7 +4,11 @@
     "title": "Was ist Künstliche Intelligenz?",
     "teaser": "Ein Einstieg in die Grundidee von KI und warum sie heute relevant ist.",
     "creatorId": "admin",
-    "categories": ["technology", "ki", "digitalTechnlogies"],
+    "categories": [
+      "technology",
+      "ki",
+      "digitalTechnlogies"
+    ],
     "duration": 20,
     "contentElements": [
       {
@@ -29,7 +33,11 @@
     "title": "KI, Machine Learning und Deep Learning",
     "teaser": "Abgrenzung der wichtigsten Begriffe im KI-Umfeld.",
     "creatorId": "admin",
-    "categories": ["technology", "ki", "digitalTechnlogies"],
+    "categories": [
+      "technology",
+      "ki",
+      "digitalTechnlogies"
+    ],
     "duration": 20,
     "contentElements": [
       {
@@ -54,7 +62,9 @@
     "title": "Supervised Learning",
     "teaser": "Wie Maschinen mit Beispieldaten und bekannten Zielwerten lernen.",
     "creatorId": "admin",
-    "categories": ["ki"],
+    "categories": [
+      "ki"
+    ],
     "duration": 80,
     "contentElements": [
       {
@@ -79,7 +89,9 @@
     "title": "Entscheidungsbäume",
     "teaser": "Ein einfach verständliches ML-Modell mit Wenn-Dann-Logik.",
     "creatorId": "admin",
-    "categories": ["ki"],
+    "categories": [
+      "ki"
+    ],
     "duration": 60,
     "contentElements": [
       {
@@ -104,7 +116,9 @@
     "title": "Neuronale Netze",
     "teaser": "Grundidee künstlicher neuronaler Netze.",
     "creatorId": "admin",
-    "categories": ["ki"],
+    "categories": [
+      "ki"
+    ],
     "duration": 60,
     "contentElements": [
       {
@@ -129,7 +143,9 @@
     "title": "Generative KI",
     "teaser": "KI-Systeme, die neue Inhalte wie Text, Bilder oder Code erzeugen.",
     "creatorId": "admin",
-    "categories": ["ki"],
+    "categories": [
+      "ki"
+    ],
     "duration": 45,
     "contentElements": [
       {
@@ -154,7 +170,9 @@
     "title": "Prompting-Grundlagen",
     "teaser": "Wie man bessere Eingaben für generative KI formuliert.",
     "creatorId": "admin",
-    "categories": ["ki"],
+    "categories": [
+      "ki"
+    ],
     "duration": 60,
     "contentElements": [
       {
@@ -179,7 +197,9 @@
     "title": "Chancen und Risiken von KI",
     "teaser": "Einordnung von Nutzen, Grenzen und Risiken künstlicher Intelligenz.",
     "creatorId": "admin",
-    "categories": ["ki"],
+    "categories": [
+      "ki"
+    ],
     "duration": 20,
     "contentElements": [
       {
@@ -422,6 +442,589 @@
         "title": "Reflexionsfragen",
         "type": "RTF",
         "rtfText": "<p>Was lief gut? Was war unklar? Was blockierte uns? Was ändern wir beim nächsten Schritt?</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "lifeManualIntro",
+    "title": "Warum ein Reisehandbuch zum Leben?",
+    "teaser": "Einstieg in die Idee, das eigene Leben wie eine Reise mit Orientierungspunkten zu betrachten.",
+    "creatorId": "admin",
+    "categories": [
+      "personalDevelopment",
+      "lifePlanning"
+    ],
+    "duration": 25,
+    "contentElements": [
+      {
+        "title": "Grundlagen-Text",
+        "type": "RTF",
+        "rtfText": "<p>Das Reisehandbuch nutzt die Metapher einer Reise: Wer irgendwo ankommen will, braucht nicht nur einen großen Wunsch, sondern Orientierung, Zwischenziele und die Fähigkeit, den eigenen Standort realistisch einzuschätzen. Auf das Leben übertragen heißt das: Viele Menschen haben Vorstellungen, Träume und offene Fragen, aber selten ein klares System, um diese Gedanken zu ordnen.</p><p>Der Kern dieses Nodes ist deshalb nicht Selbstoptimierung um jeden Preis, sondern Navigation. Es geht darum, herauszufinden, was einem wichtig ist, welche Erfahrungen bereits prägend waren und welche nächsten Schritte sinnvoll sind. Für die Demo ist dieser Knoten der Startpunkt, weil er das gesamte Thema als Lernreise rahmt: vom Verstehen der eigenen Vergangenheit über Stärken und Werte bis hin zu Zielen und konkreter Lebensplanung.</p><p>In der Lernplattform funktioniert dieser Node gut als Einstiegsknoten. Er zeigt, dass ein Lernknoten nicht nur aus einem Link besteht, sondern einen eigenen erklärenden Text, weiterführende Quellen und Reflexionsfragen enthalten kann. Gleichzeitig macht er die Journey Map logisch: Die folgenden Knoten sind keine zufällige Liste, sondern Etappen auf dem Weg zu mehr Klarheit.</p>"
+      },
+      {
+        "title": "Offizielle Brand Yourself Website",
+        "type": "URI",
+        "uri": "https://www.brand-yourself.de/"
+      },
+      {
+        "title": "Reflexionsfrage",
+        "type": "RTF",
+        "rtfText": "<p>Welche drei Fragen über dein Leben oder deine Zukunft würdest du gern besser beantworten können?</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "connectingDots",
+    "title": "Zusammenhänge erkennen: Rückblick statt Zufall",
+    "teaser": "Warum manche Erfahrungen erst später Sinn ergeben und wie Rückblick Orientierung schafft.",
+    "creatorId": "admin",
+    "categories": [
+      "reflectionMindset",
+      "personalDevelopment"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Erklärung: Zusammenhänge erkennen",
+        "type": "RTF",
+        "rtfText": "<p>Ein zentrales Motiv des Buches ist die Idee, dass sich viele Zusammenhänge erst im Rückblick zeigen. Während man mitten in einer Situation steckt, wirkt vieles zufällig, chaotisch oder sogar falsch. Erst später erkennt man, dass bestimmte Entscheidungen, Begegnungen oder Umwege wichtige Bausteine für die eigene Entwicklung waren.</p><p>Für die persönliche Entwicklung ist dieser Gedanke wertvoll, weil er den Blick auf die Vergangenheit verändert. Statt nur Fehler, Brüche oder Zufälle zu sehen, kann man fragen: Was habe ich daraus gelernt? Welche Fähigkeiten sind dadurch entstanden? Welche Interessen wurden sichtbar? Wo habe ich trotz Schwierigkeiten etwas geschafft? Dieser Rückblick erzeugt nicht automatisch eine perfekte Erklärung für alles, aber er hilft, die eigene Geschichte bewusster zu verstehen.</p><p>In der Klickdemo kann dieser Node als erster Reflexionsknoten nach dem Einstieg dienen. Er verbindet die Reise-Metapher mit konkreter Selbstreflexion: Wer seinen bisherigen Weg nicht betrachtet, plant die nächsten Schritte oft blind. Die Lernplattform kann hier zeigen, wie ein Node neben Theorie auch eine persönliche Denkaufgabe enthalten kann.</p>"
+      },
+      {
+        "title": "Steve Jobs Stanford Commencement",
+        "type": "URI",
+        "uri": "https://news.stanford.edu/stories/2005/06/youve-got-find-love-jobs-says"
+      },
+      {
+        "title": "Video-Suche: Connecting the dots",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=5BSbOc5VYY8"
+      }
+    ]
+  },
+  {
+    "identifier": "joyInLife",
+    "title": "Spaß am Leben als Erfolgsfaktor",
+    "teaser": "Warum Lebensfreude, Lächeln und positive Energie mehr sind als nette Nebensachen.",
+    "creatorId": "admin",
+    "categories": [
+      "motivationJoy",
+      "personalDevelopment"
+    ],
+    "duration": 25,
+    "contentElements": [
+      {
+        "title": "Spaß und Lebensfreude",
+        "type": "RTF",
+        "rtfText": "<p>Das Buch stellt Spaß und Lebensfreude nicht als oberflächliche Ablenkung dar, sondern als Energiequelle. Wer regelmäßig Freude an Tätigkeiten, Menschen oder Momenten erlebt, hat mehr Kraft, um auch schwierige Phasen durchzuhalten. Spaß ist dabei nicht dasselbe wie dauernde Unterhaltung. Gemeint ist ein grundsätzlich positiver Zugang zu Dingen, die wirklich zu einem passen.</p><p>Ein wichtiger Gedanke ist: Wenn Menschen herausfinden, was ihnen wirklich wichtig ist, steigt die Wahrscheinlichkeit, dass sie bei Arbeit, Lernen oder Freizeit mehr Begeisterung entwickeln. Diese Begeisterung wirkt nach innen und außen. Nach innen gibt sie Motivation. Nach außen kann sie andere mitreißen. Genau deshalb eignet sich dieser Node gut für eine Lernplattform: Er zeigt einen emotionalen, aber trotzdem gut strukturierbaren Lerninhalt.</p><p>Der praktische Nutzen liegt darin, dass Lernende nicht nur abstrakt über Erfolg nachdenken, sondern konkrete Energiequellen suchen. Welche Menschen tun gut? Welche Tätigkeiten laden auf? Wo entsteht ein echtes Lächeln und wo nur Pflichtgefühl? Der Node kann mit Reflexionsfragen ergänzt werden und eignet sich als guter Übergang zu Talenten und Stärken.</p>"
+      },
+      {
+        "title": "TED Talk: The hidden power of smiling",
+        "type": "URI",
+        "uri": "https://www.ted.com/talks/ron_gutman_the_hidden_power_of_smiling"
+      },
+      {
+        "title": "Reflexion: Energiequellen",
+        "type": "RTF",
+        "rtfText": "<p>Welche drei Situationen haben dir in den letzten Wochen sichtbar Energie gegeben?</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "talentSearch",
+    "title": "Talente entdecken statt nur Schwächen reparieren",
+    "teaser": "Wie man persönliche Talente erkennt und warum Talent allein nicht reicht.",
+    "creatorId": "admin",
+    "categories": [
+      "strengthsTalents",
+      "reflectionMindset"
+    ],
+    "duration": 35,
+    "contentElements": [
+      {
+        "title": "Talente erkennen",
+        "type": "RTF",
+        "rtfText": "<p>Das Buch beschreibt Talent nicht als magische Garantie für Erfolg. Talent kann eine natürliche Begabung sein, aber auch ein außergewöhnliches Interesse, das jemanden dazu bringt, sich lange und intensiv mit einer Sache zu beschäftigen. Entscheidend ist: Talent entfaltet Wirkung erst, wenn es mit Training, Wiederholung und echter Begeisterung verbunden wird.</p><p>Damit verschiebt sich der Blick. Es geht nicht darum, überall mittelmäßig gut zu werden oder jede Schwäche zwanghaft auszubügeln. Sinnvoller ist es, die eigenen starken Muster zu erkennen: Was fällt leicht? Wofür bekommt man oft Anerkennung? Bei welchen Tätigkeiten vergisst man die Zeit? Welche Aufgaben geben Energie statt nur Energie zu ziehen? Solche Hinweise zeigen, wo Talente oder Interessen liegen könnten.</p><p>Für die Demo ist dieser Node stark, weil er sehr konkrete Interaktion ermöglicht. Ein Lernender kann sich nicht nur Wissen anzeigen lassen, sondern direkt eine kleine Selbstanalyse starten. Als Journey-Node passt er nach Lebensfreude und vor Stärkenprofil, weil Talente erst einmal entdeckt werden müssen, bevor man daraus stabile Stärken oder Entwicklungsziele ableitet.</p>"
+      },
+      {
+        "title": "Gallup CliftonStrengths",
+        "type": "URI",
+        "uri": "https://www.gallup.com/cliftonstrengths/de/home.aspx"
+      },
+      {
+        "title": "Übung: Talent-Hinweise",
+        "type": "RTF",
+        "rtfText": "<p>Notiere drei Tätigkeiten, die dir leichtfallen, und drei Tätigkeiten, bei denen du besonders schnell in einen Flow kommst.</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "strengthFormula",
+    "title": "Von Talent zu Stärke: Talent mal Training",
+    "teaser": "Warum aus Begabung erst durch Übung eine verlässliche Stärke wird.",
+    "creatorId": "admin",
+    "categories": [
+      "strengthsTalents"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Talent-zu-Stärke-Modell",
+        "type": "RTF",
+        "rtfText": "<p>Ein zentraler Zusammenhang im Buch lautet sinngemäß: Talent wird erst durch Übung, Training und Wissensaufbau zu einer Stärke. Eine Stärke ist also nicht nur etwas, das man irgendwie kann. Sie zeigt sich darin, dass eine Person in einem Bereich wiederholt gute oder sehr gute Leistung bringen kann und dabei vergleichsweise sicher agiert.</p><p>Dieser Gedanke ist wichtig, weil er zwei Extreme vermeidet. Das erste Extrem wäre: ‚Ich habe kein Talent, also bringt Üben nichts.‘ Das zweite Extrem wäre: ‚Ich habe Talent, also muss ich nicht üben.‘ Beides ist falsch. Talent erleichtert den Einstieg oder sorgt für Interesse, aber ohne Wiederholung entsteht keine verlässliche Qualität. Umgekehrt kann starkes Interesse durch viel Übung ebenfalls zu hoher Leistung führen.</p><p>In der Lernplattform kann dieser Node als Methoden-Node dargestellt werden. Er enthält eine einfache Denkformel und eignet sich gut für kurze Übungen: Welche Fähigkeit möchte ich ausbauen? Welches Talent oder Interesse steckt dahinter? Welche Trainingsroutine wäre realistisch? Dadurch wird aus einer abstrakten Idee ein kleiner, planbarer Lernschritt.</p>"
+      },
+      {
+        "title": "CliftonStrengths 34 Report",
+        "type": "URI",
+        "uri": "https://www.gallup.com/cliftonstrengths/en/403127/cliftonstrengths-34-report.aspx"
+      },
+      {
+        "title": "Video-Suche: Stärken entwickeln",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=psknhSue-kI"
+      }
+    ]
+  },
+  {
+    "identifier": "comfortZone",
+    "title": "Komfortzone sinnvoll nutzen und erweitern",
+    "teaser": "Warum die Komfortzone nicht der Feind ist und wann man sie gezielt erweitern sollte.",
+    "creatorId": "admin",
+    "categories": [
+      "reflectionMindset",
+      "motivationJoy"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Komfortzone differenziert betrachten",
+        "type": "RTF",
+        "rtfText": "<p>Das Buch behandelt die Komfortzone deutlich nüchterner als viele Motivationssprüche. Die Komfortzone ist nicht automatisch schlecht. Sie ist der Bereich, in dem Menschen Energie sammeln, sicher handeln und oft gute Leistung bringen können. Wer permanent außerhalb der Komfortzone lebt, riskiert Überforderung statt Entwicklung.</p><p>Trotzdem kann es notwendig sein, die Komfortzone zu erweitern. Der entscheidende Punkt ist das Warum: Nicht jede unbequeme Situation ist sinnvoll. Wachstum lohnt sich besonders dann, wenn die Anstrengung zu eigenen Zielen, Werten oder langfristigen Plänen passt. Wer sich nur quält, um Erwartungen anderer zu erfüllen, zahlt oft einen hohen Preis ohne echten inneren Nutzen.</p><p>Dieser Node eignet sich gut als Reflexionsknoten, weil er eine klare Entscheidungsmatrix ermöglicht: Ist eine Herausforderung wichtig? Passt sie zu meinen Zielen? Welche Unterstützung brauche ich? Was kann ich auslagern, lernen oder bewusst ablehnen? In der Journey Map kann er als Verbindung zwischen Stärken, Glaubenssätzen und Lebensplanung liegen.</p>"
+      },
+      {
+        "title": "Reflexion: Herausforderung bewerten",
+        "type": "RTF",
+        "rtfText": "<p>Welche aktuelle Herausforderung erweitert deine Komfortzone sinnvoll - und welche kostet nur Energie ohne echten Nutzen?</p>"
+      },
+      {
+        "title": "Video-Suche: Komfortzone erweitern",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=cE3VWK2ZK-Y"
+      }
+    ]
+  },
+  {
+    "identifier": "beliefsSelfSabotage",
+    "title": "Glaubenssätze und Selbstsabotage erkennen",
+    "teaser": "Wie innere Sätze Entscheidungen blockieren und warum Bewusstsein der erste Schritt ist.",
+    "creatorId": "admin",
+    "categories": [
+      "reflectionMindset",
+      "valuesDecisions"
+    ],
+    "duration": 35,
+    "contentElements": [
+      {
+        "title": "Glaubenssätze erklärt",
+        "type": "RTF",
+        "rtfText": "<p>Glaubenssätze sind innere Überzeugungen, die oft durch Erziehung, Erfahrung oder Wiederholung entstehen. Manche davon helfen, weil sie Mut geben oder Orientierung schaffen. Andere bremsen aus, bevor überhaupt ausprobiert wurde, ob etwas möglich ist. Typische Muster sind: ‚Das kann ich nicht‘, ‚Dafür bin ich zu alt‘, ‚Das macht man bei uns nicht‘ oder ‚Das hat noch keiner geschafft‘.</p><p>Selbstsabotage entsteht, wenn solche Sätze Entscheidungen prägen, ohne dass man sie bewusst bemerkt. Dann werden Chancen nicht genutzt, Ziele kleiner gemacht oder Vorhaben abgebrochen, bevor sie ernsthaft getestet wurden. Das Buch betont, dass man solche Muster nicht einfach durch einen Beschluss loswird. Zuerst muss man sie erkennen, dann Gegenbeispiele sammeln und schließlich neue Erfahrungen machen, die den alten Satz schwächen.</p><p>Als Demo-Node ist das Thema stark, weil es Theorie und Anwendung verbindet. Der Node kann einen erklärenden Text, eine Reflexionsfrage und eine kleine Übung enthalten: alten Satz identifizieren, Ursprung überlegen, Gegenbeweis suchen, neuen hilfreichen Satz formulieren. Dadurch wird sichtbar, dass die Plattform nicht nur Wissen konsumierbar macht, sondern aktive Selbstreflexion unterstützen kann.</p>"
+      },
+      {
+        "title": "Übung: Satz ersetzen",
+        "type": "RTF",
+        "rtfText": "<p>Formuliere einen einschränkenden Satz aus deinem Alltag. Schreibe darunter einen realistischeren Satz, der dich nicht blockiert, aber ehrlich bleibt.</p>"
+      },
+      {
+        "title": "Video-Suche: Glaubenssätze erkennen",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=z6Jk0vfV79w"
+      }
+    ]
+  },
+  {
+    "identifier": "valuesBasics",
+    "title": "Werte verstehen: Was steckt dahinter?",
+    "teaser": "Warum Werte Entscheidungen, Beziehungen und Motivation beeinflussen.",
+    "creatorId": "admin",
+    "categories": [
+      "valuesDecisions",
+      "personalDevelopment"
+    ],
+    "duration": 35,
+    "contentElements": [
+      {
+        "title": "Werte als Orientierung",
+        "type": "RTF",
+        "rtfText": "<p>Werte sind im Buch die Grundpfeiler dafür, warum Menschen bestimmte Dinge wichtig finden und andere ablehnen. Sie stecken hinter Entscheidungen, Vorlieben, Konflikten und auch hinter dem Gefühl, ob eine Situation stimmig ist oder nicht. Zwei Personen können denselben Begriff verwenden, zum Beispiel Respekt oder Freiheit, aber völlig Unterschiedliches darunter verstehen.</p><p>Deshalb reicht es nicht, einfach eine Liste schöner Werte aufzuschreiben. Entscheidend ist die persönliche Definition. Was bedeutet Ehrlichkeit konkret? Wann fühlt sich Loyalität erfüllt an? Welche Form von Freiheit ist gemeint? Erst wenn Werte konkretisiert werden, werden sie als Orientierung brauchbar. Sonst bleiben sie Schlagworte, die gut klingen, aber im Alltag wenig helfen.</p><p>Für die Lernplattform eignet sich dieser Node als wichtiger Konzept-Knoten. Er führt von Stärken und Komfortzone hin zu Entscheidungen. Außerdem bietet er gute Content-Varianten: erklärender Text, Werte-Liste, Reflexionsfrage und Beispiel. In der Journey Map kann dieser Node als zentraler Knoten dargestellt werden, weil viele spätere Entscheidungen auf Werten basieren.</p>"
+      },
+      {
+        "title": "Werte-Liste als Startpunkt",
+        "type": "RTF",
+        "rtfText": "<p>Beispiele für Werte: Freiheit, Verantwortung, Liebe, Ehrlichkeit, Kreativität, Loyalität, Respekt, Sicherheit, Abenteuer, Zuverlässigkeit. Wichtig ist nicht der schönste Begriff, sondern deine konkrete Definition.</p>"
+      },
+      {
+        "title": "Video-Suche: persönliche Werte finden",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=4GD9uTuTDm0"
+      }
+    ]
+  },
+  {
+    "identifier": "gutDecisions",
+    "title": "Bauchentscheidungen bewusster treffen",
+    "teaser": "Wie Intuition mit Werten zusammenhängt und warum Bauchgefühl trotzdem geprüft werden sollte.",
+    "creatorId": "admin",
+    "categories": [
+      "valuesDecisions",
+      "reflectionMindset"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Bauchentscheidungen verstehen",
+        "type": "RTF",
+        "rtfText": "<p>Das Buch verbindet Bauchentscheidungen stark mit den eigenen Werten. Viele Entscheidungen wirken spontan, sind aber nicht zufällig. Sie entstehen aus Erfahrung, Prägung und persönlichen Prioritäten. Wenn jemand auf eine Situation impulsiv reagiert, kann dahinter ein Wert stehen, der berührt oder verletzt wurde.</p><p>Das bedeutet nicht, dass jedes Bauchgefühl automatisch richtig ist. Es bedeutet eher: Bauchgefühl ist ein Signal, das ernst genommen und geprüft werden sollte. Wer seine Werte kennt, kann besser verstehen, warum eine Entscheidung richtig oder falsch wirkt. Dadurch wird man weniger von spontanen Reaktionen gesteuert und kann bewusster handeln.</p><p>In der Demo kann dieser Node als Methode zur Entscheidungsreflexion eingesetzt werden. Ein einfacher Ablauf wäre: Bauchgefühl wahrnehmen, betroffenen Wert benennen, mögliche Folgen prüfen, bewusst entscheiden. Dadurch bekommt der Lernpfad eine praktische Funktion: Er führt nicht nur zu Wissen über Werte, sondern zeigt, wie daraus bessere Entscheidungen entstehen können.</p>"
+      },
+      {
+        "title": "Mini-Methode: Bauchcheck",
+        "type": "RTF",
+        "rtfText": "<p>1. Was sagt mein erster Impuls? 2. Welcher Wert steckt dahinter? 3. Was wären die Folgen? 4. Würde ich morgen noch genauso entscheiden?</p>"
+      },
+      {
+        "title": "Video-Suche: Intuition und Entscheidungen",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=6j8t-0xnvS0"
+      }
+    ]
+  },
+  {
+    "identifier": "livingInNow",
+    "title": "Das Jetzt bewusster wahrnehmen",
+    "teaser": "Warum Gegenwart, Dankbarkeit und kleine Momente für Zufriedenheit wichtig sind.",
+    "creatorId": "admin",
+    "categories": [
+      "motivationJoy",
+      "reflectionMindset"
+    ],
+    "duration": 25,
+    "contentElements": [
+      {
+        "title": "Im Jetzt leben",
+        "type": "RTF",
+        "rtfText": "<p>Ein weiteres großes Motiv des Buches ist die Gegenwart. Viele Menschen hängen gedanklich entweder in der Vergangenheit oder in der Zukunft: früher war alles besser, morgen wird alles besser, irgendwann beginnt das richtige Leben. Das Problem daran ist, dass der aktuelle Tag dabei leicht übersehen wird.</p><p>Bewusst im Jetzt zu leben bedeutet nicht, keine Ziele mehr zu haben. Es bedeutet, den aktuellen Zustand nicht nur als Wartezimmer für die Zukunft zu betrachten. Kleine Dinge wie ein gutes Gespräch, ein Essen ohne Ablenkung, ein Moment Ruhe oder Dankbarkeit für bereits Erreichtes können helfen, den Alltag wieder aktiver wahrzunehmen.</p><p>In der Lernplattform funktioniert dieser Node als ruhiger Reflexionspunkt. Nach Stärken, Werten und Entscheidungen erinnert er daran, dass ein Lebensplan nicht nur aus Zukunft besteht. Für die Klickdemo kann er zeigen, wie ein Node kurze Übungen enthalten kann, etwa eine Tagesreflexion oder eine Dankbarkeitsfrage.</p>"
+      },
+      {
+        "title": "Übung: Drei Dinge heute",
+        "type": "RTF",
+        "rtfText": "<p>Notiere drei konkrete Dinge, die heute bereits gut waren oder für die du dankbar bist. Keine großen Antworten erzwingen - Kleinigkeiten reichen.</p>"
+      },
+      {
+        "title": "Video-Suche: Dankbarkeit und Gegenwart",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=pCSfAw3UsSs"
+      }
+    ]
+  },
+  {
+    "identifier": "successRedefined",
+    "title": "Erfolg neu definieren",
+    "teaser": "Warum Erfolg mehr ist als Job, Geld und Außenwirkung.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning",
+      "valuesDecisions"
+    ],
+    "duration": 35,
+    "contentElements": [
+      {
+        "title": "Eigene Erfolgsdefinition",
+        "type": "RTF",
+        "rtfText": "<p>Das Buch kritisiert eine enge Erfolgsdefinition, die fast nur auf Beruf, Geld, Status und Außenwirkung schaut. Diese Sicht kann motivieren, aber sie ist gefährlich, wenn sie das ganze Leben auf einen einzigen Bereich reduziert. Erfolg wird dann abhängig davon, ob andere neidisch sind, beeindruckt reagieren oder bestimmte Statussymbole anerkennen.</p><p>Eine persönlichere Definition fragt anders: Was macht mein Leben für mich gelungen? Welche Menschen, Tätigkeiten, Werte und Ziele gehören dazu? Worauf möchte ich später stolz sein? Welche Opfer bin ich bereit zu bringen und welche nicht? Diese Fragen verschieben Erfolg von einer fremden Messlatte hin zu einem eigenen Modell.</p><p>Als Lernknoten ist das Thema sehr demo-tauglich, weil es mehrere vorherige Nodes zusammenführt: Werte, Bauchentscheidungen, Jetzt-Bewusstsein und Talente. In der Journey Map kann dieser Node ein wichtiger Sammelpunkt sein, bevor es in die konkrete Lebensplanung mit der Penthouse Theorie geht.</p>"
+      },
+      {
+        "title": "Reflexionsfrage: Erfolg ohne Publikum",
+        "type": "RTF",
+        "rtfText": "<p>Welche Ziele würdest du weiterhin verfolgen, wenn niemand sie sehen, bewerten oder bewundern würde?</p>"
+      },
+      {
+        "title": "Video-Suche: Erfolg neu definieren",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=yN00Zfupcn8"
+      }
+    ]
+  },
+  {
+    "identifier": "energyAndFlow",
+    "title": "Energie, Flow und positive Umfelder",
+    "teaser": "Welche Rahmenbedingungen Motivation, Zusammenarbeit und Begeisterung fördern.",
+    "creatorId": "admin",
+    "categories": [
+      "motivationJoy",
+      "personalDevelopment"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Energie und Flow",
+        "type": "RTF",
+        "rtfText": "<p>Das Buch beschreibt Energie nicht nur körperlich, sondern auch als Qualität eines Umfelds. Menschen kommen leichter in Motivation und Flow, wenn sie Sinn erkennen, sich zugehörig fühlen, offen kommunizieren können und Konflikte nicht verdrängt werden. Energie entsteht also nicht nur im Einzelnen, sondern auch in Teams, Beziehungen und Orten.</p><p>Flow meint einen Zustand, in dem eine Tätigkeit fordert, aber nicht dauerhaft überfordert. Genau das ist für Lernen und Arbeiten zentral: Unterforderung macht träge, Überforderung macht kaputt, passende Herausforderung motiviert. Wer seine Stärken kennt und ein gutes Umfeld schafft, erhöht die Chance, regelmäßig in diesen Zustand zu kommen.</p><p>Dieser Node passt gut in die Demo, weil er die Brücke zwischen persönlicher Entwicklung und Team-/Projektkontext schlägt. Auch für eure Lernplattform ist das relevant: Eine gute Journey Map soll Orientierung geben, Überforderung reduzieren und Lernende mit sinnvollen nächsten Schritten in Bewegung bringen.</p>"
+      },
+      {
+        "title": "Flow Begriff",
+        "type": "URI",
+        "uri": "https://de.wikipedia.org/wiki/Flow_(Psychologie)"
+      },
+      {
+        "title": "Video-Suche: Flow Zustand erklärt",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=ek4lXriA4fw"
+      }
+    ]
+  },
+  {
+    "identifier": "penthouseTheory",
+    "title": "Penthouse Theorie: Lebensbereiche planen",
+    "teaser": "Ein Modell, um Vergangenheit, Gegenwart und Zukunft in sechs Lebensbereichen zu betrachten.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning",
+      "personalDevelopment"
+    ],
+    "duration": 45,
+    "contentElements": [
+      {
+        "title": "Penthouse Theorie erklärt",
+        "type": "RTF",
+        "rtfText": "<p>Die Penthouse Theorie ist im Buch das zentrale Planungsmodell. Sie teilt das Leben in sechs Bereiche: Gesundheit und Wohlbefinden, Familie/Freunde/privates Umfeld, Bildung und Weiterbildung, Berufung und Tätigkeit, persönlicher Ausgleich sowie Träume und Realisierung. Dadurch wird Lebensplanung greifbarer, weil nicht alles in einen einzigen großen Zielblock gepresst wird.</p><p>Der Nutzen liegt in der Struktur. In jedem Bereich kann man fragen: Wo stehe ich gerade? Was habe ich bereits erreicht? Was wäre für mich ein nächster sinnvoller Schritt? Was wäre mein persönliches Penthouse in diesem Bereich? Wichtig ist: Es geht nicht darum, überall höher, schneller und weiter zu kommen. Manche Bereiche können bereits gut sein. Andere brauchen vielleicht Aufmerksamkeit.</p><p>Für eure Plattform ist dieser Node ideal als zentraler Methoden-Knoten. Er lässt sich stark visuell darstellen, erzeugt mehrere Cluster in der Journey Map und kann später mit einzelnen Bereichs-Nodes verbunden werden. Genau dadurch zeigt der Demo-Content den eigentlichen Nutzen der Lernplattform: Aus einem Buchkapitel wird ein vernetzter, klickbarer Lernpfad mit Struktur und Tiefe.</p>"
+      },
+      {
+        "title": "Kaizen als kontinuierliche Verbesserung",
+        "type": "URI",
+        "uri": "https://de.wikipedia.org/wiki/Kaizen"
+      },
+      {
+        "title": "Übung: Lebensbereiche scannen",
+        "type": "RTF",
+        "rtfText": "<p>Bewerte jeden der sechs Bereiche spontan von 1 bis 10. Wähle danach nur einen Bereich aus, in dem ein kleiner nächster Schritt sinnvoll wäre.</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "sixLifeAreas",
+    "title": "Die sechs Lebensbereiche konkretisieren",
+    "teaser": "Aus der Penthouse Theorie werden konkrete Reflexionsfelder für den eigenen Alltag.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning",
+      "reflectionMindset"
+    ],
+    "duration": 40,
+    "contentElements": [
+      {
+        "title": "Sechs Bereiche anwenden",
+        "type": "RTF",
+        "rtfText": "<p>Nachdem die Penthouse Theorie als Modell verstanden wurde, geht es in diesem Node um Anwendung. Die sechs Bereiche werden nicht abstrakt betrachtet, sondern mit eigenen Antworten gefüllt. Gesundheit kann zum Beispiel Schlaf, Bewegung, Stress oder mentale Belastung betreffen. Familie und Umfeld können Partnerschaft, Freundschaften oder Menschen sein, mit denen man bewusst mehr oder weniger Zeit verbringen möchte.</p><p>Bildung und Weiterbildung fragt danach, welches Wissen wirklich für den eigenen Weg gebraucht wird. Berufung und Tätigkeit richtet den Blick auf Arbeit, Sinn und Alltag. Persönlicher Ausgleich fragt, wie Akkus aufgeladen werden. Träume und Realisierung macht sichtbar, welche besonderen Wünsche nicht ewig verschoben werden sollen.</p><p>In der Demo kann dieser Node als Praxisabschluss dienen. Er zeigt, wie ein abstraktes Buchmodell in konkrete Aufgaben übersetzt wird. Gleichzeitig kann die Journey Map dadurch erweitert werden: Jeder Lebensbereich könnte später ein eigener Cluster werden. Für den MVP reicht aber ein sauberer Praxis-Node, der die sechs Bereiche zusammenführt.</p>"
+      },
+      {
+        "title": "Arbeitsauftrag für die Node-Detailansicht",
+        "type": "RTF",
+        "rtfText": "<p>Fülle zu jedem Bereich einen Satz aus: Aktuell ist..., wichtig wäre mir..., der nächste kleine Schritt ist...</p>"
+      },
+      {
+        "title": "Video-Suche: Lebensbereiche planen",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=o0zF4fw8Arw"
+      }
+    ]
+  },
+  {
+    "identifier": "healthWellbeingPlan",
+    "title": "Gesundheit und Wohlbefinden als Basis",
+    "teaser": "Warum persönliche Ziele ohne Energie, Erholung und körperliches Wohlbefinden schnell instabil werden.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Erklärung: Gesundheit als Fundament",
+        "type": "RTF",
+        "rtfText": "<p>Im Reisehandbuch wird Gesundheit nicht als Nebenthema behandelt, sondern als Grundlage für alles Weitere. Wer dauerhaft erschöpft ist, schlecht regeneriert oder Warnsignale des Körpers ignoriert, kann Ziele zwar kurzfristig durchdrücken, aber selten stabil leben. Deshalb beginnt gute Lebensplanung nicht bei Karriere, Status oder großen Träumen, sondern bei der Frage: Habe ich genug Kraft, um meinen Weg überhaupt gehen zu können?</p><p>Der wichtige Punkt ist die Balance zwischen Belastung und Regeneration. Stress ist nicht automatisch schlecht, aber permanenter Stress ohne Ausgleich macht aus Motivation irgendwann Druck. Gesundheit und Wohlbefinden bedeuten daher mehr als Sport oder Ernährung. Es geht auch um Schlaf, mentale Ruhe, soziale Unterstützung, Pausen, Konzentrationsfähigkeit und die Fähigkeit, rechtzeitig langsamer zu werden.</p><p>Für die Lernplattform ist dieser Node ein guter Anschluss an die Penthouse Theorie. Er zeigt, dass ein Lebensbereich nicht nur beschrieben, sondern als konkrete Reflexionsfläche genutzt werden kann. Der Lernende kann prüfen, welche Energiequellen bereits vorhanden sind und welche Warnsignale im Alltag vielleicht übersehen werden. In der Journey Map sollte dieser Node als erster konkreter Lebensbereich nach den sechs Aktivitätsfeldern stehen.</p>"
+      },
+      {
+        "title": "Vertiefung: Wohlbefinden und Gesundheit",
+        "type": "URI",
+        "uri": "https://www.bdp-verband.de/fileadmin/user_upload/BDP/verband/Untergliederungen/Sektionen/Gesundheits-und-Umweltpsychologie/Gesundheitspsychologie/Gesund-leben/Gesundheit-psychologisch-gesund-leben.pdf"
+      },
+      {
+        "title": "Video-Suche: Stress und Regeneration",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=6GKQrn1OcAI"
+      },
+      {
+        "title": "Reflexionsfrage",
+        "type": "RTF",
+        "rtfText": "<p>Welche drei Dinge geben dir im Alltag wirklich Energie und welche drei Dinge ziehen dir regelmäßig Energie?</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "socialEnvironmentSupport",
+    "title": "Familie, Freunde und privates Umfeld bewusst gestalten",
+    "teaser": "Wie das persönliche Umfeld Halt gibt, aber auch Energie kosten kann.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Erklärung: Das Netz und der doppelte Boden",
+        "type": "RTF",
+        "rtfText": "<p>Ein zentrales Aktivitätsfeld im Reisehandbuch ist das private Umfeld. Gemeint sind nicht nur Familie im engen Sinn, sondern alle Menschen, mit denen man freiwillig Zeit verbringt, denen man vertraut und die im Alltag Rückhalt geben. Dieses Umfeld kann ein echter doppelter Boden sein: Es stabilisiert, wenn Dinge schwierig werden, und macht gute Erlebnisse wertvoller, weil man sie teilen kann.</p><p>Gleichzeitig ist das private Umfeld kein Selbstläufer. Manche Kontakte geben Energie, andere kosten sie dauerhaft. Lebensplanung bedeutet deshalb auch, ehrlich zu prüfen, mit welchen Menschen man mehr Zeit verbringen möchte und wo klare Grenzen nötig sind. Das ist nicht kalt, sondern notwendig. Wer jedes private Verhältnis aus Pflichtgefühl gleich behandelt, verliert schnell Zeit für die Menschen, die wirklich wichtig sind.</p><p>Als Demo-Node ist dieses Thema stark, weil es die Plattform menschlicher macht. Der Lernpfad bleibt nicht abstrakt bei Zielen und Methoden, sondern fragt konkret nach Beziehungen, Unterstützung und Alltag. In der Journey Map kann der Node mit Gesundheit verbunden werden, weil ein stabiles Umfeld auch Wohlbefinden beeinflusst. Außerdem passt er zur Reflexion über Werte und Bauchentscheidungen.</p>"
+      },
+      {
+        "title": "Externe Ressource: Soziale Beziehungen und Gesundheit",
+        "type": "URI",
+        "uri": "https://www.gesundheit.gv.at/leben/lebenswelt/soziale-netzwerke/gesundheit-soziale-beziehungen.html"
+      },
+      {
+        "title": "Video-Suche: Soziale Beziehungen und Wohlbefinden",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=EBC_8xAjLbc"
+      },
+      {
+        "title": "Mini-Übung",
+        "type": "RTF",
+        "rtfText": "<p>Notiere drei Personen, die dir Energie geben, und eine konkrete Handlung, wie du den Kontakt zu ihnen bewusster pflegen kannst.</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "educationGrowthPath",
+    "title": "Bildung und Weiterbildung als Werkzeugkasten",
+    "teaser": "Warum Lernen dann sinnvoll ist, wenn es zum eigenen Weg und zu echten Zielen passt.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning"
+    ],
+    "duration": 35,
+    "contentElements": [
+      {
+        "title": "Erklärung: Lernen mit Richtung",
+        "type": "RTF",
+        "rtfText": "<p>Das Reisehandbuch beschreibt Bildung und Weiterbildung als Handwerkszeug für den eigenen Weg. Wissen ist nicht automatisch wertvoll, nur weil es gesammelt wird. Wertvoll wird es, wenn es dabei hilft, ein persönliches Ziel zu erreichen, neue Möglichkeiten zu öffnen oder eine Fähigkeit aufzubauen, die wirklich gebraucht wird.</p><p>Genau deshalb sollte Weiterbildung bewusst ausgewählt werden. Ein Kurs, ein Studium oder ein Zertifikat kann sinnvoll sein, wenn es zum Plan passt. Es kann aber auch bloßer Aktionismus sein, wenn man nur lernt, weil andere es erwarten oder weil man sich dadurch kurzfristig produktiv fühlt. Gute Lebensplanung fragt daher: Welches Wissen brauche ich wirklich? Welche Fähigkeit bringt mich weiter? Welche Weiterbildung passt zu meinen Stärken, Werten und Zielen?</p><p>In der Klickdemo zeigt dieser Node, wie sich persönliche Entwicklung und klassische Lernplattform-Logik verbinden lassen. Das Thema passt perfekt zur Plattform selbst: Ein Lernpfad soll nicht beliebige Inhalte sammeln, sondern Orientierung geben. Dieser Node kann deshalb als Meta-Beispiel dienen: Die Plattform zeigt an ihrem eigenen Inhalt, warum strukturierte Lernpfade sinnvoller sind als lose Links.</p>"
+      },
+      {
+        "title": "Externe Ressource: Weiterbildung planen",
+        "type": "URI",
+        "uri": "https://erwachsenenbildung.at/bildungsinfo/orientierung/bildungsberatung.php"
+      },
+      {
+        "title": "Video-Suche: Lebenslanges Lernen",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=ZzlUmZt1Wag"
+      },
+      {
+        "title": "Reflexionsfrage",
+        "type": "RTF",
+        "rtfText": "<p>Welche Fähigkeit würde dir in den nächsten zwölf Monaten am meisten helfen und warum genau diese?</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "vocationActivityMeaning",
+    "title": "Beruf, Tätigkeit und Berufung hinterfragen",
+    "teaser": "Wie Arbeit mehr sein kann als Einkommen und warum Sinn, Stärken und Alltag zusammenpassen müssen.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning"
+    ],
+    "duration": 35,
+    "contentElements": [
+      {
+        "title": "Erklärung: Arbeit mit Sinn prüfen",
+        "type": "RTF",
+        "rtfText": "<p>Der Bereich Beruf und Tätigkeit nimmt im Leben vieler Menschen enorm viel Raum ein. Deshalb reicht es nicht, Arbeit nur als Einkommensquelle zu betrachten. Natürlich muss ein Job Geld bringen und realistisch in das Leben passen. Aber wenn Arbeit dauerhaft gegen die eigenen Werte, Stärken oder Interessen läuft, wird sie schnell zu einer Energiequelle in die falsche Richtung.</p><p>Das Reisehandbuch stellt hier keine naive Forderung nach dem perfekten Traumjob auf. Es geht eher darum, ehrlich zu prüfen, was die eigene Arbeit im Alltag auslöst. Gibt sie Sinn? Nutzt sie eigene Stärken? Passt sie zum gewünschten Leben? Oder wird Freizeit gegen Geld getauscht, ohne dass klar ist, wofür? Wichtig ist auch: Veränderung muss nicht radikal sein. Man kann testen, schnuppern, Nebenprojekte starten, Gespräche führen und kleine Schritte gehen, bevor man große Entscheidungen trifft.</p><p>Für die Demo eignet sich dieser Node, weil er sehr nah an den Personas Student, Angestellte und Unternehmer liegt. Fast jeder Nutzer kann sich dazu positionieren. In der Journey Map kann der Node nach Bildung folgen, weil Weiterbildung häufig ein Werkzeug ist, um berufliche Möglichkeiten zu verändern oder zu erweitern.</p>"
+      },
+      {
+        "title": "Externe Ressource: Berufliche Orientierung",
+        "type": "URI",
+        "uri": "https://www.arbeitsagentur.de/bildung/berufsinformationszentrum-biz"
+      },
+      {
+        "title": "Video-Suche: Berufung finden",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=qF7CkNprhJA"
+      },
+      {
+        "title": "Mini-Übung",
+        "type": "RTF",
+        "rtfText": "<p>Bewerte deinen aktuellen Beruf oder dein Studium in drei Punkten: Energie, Sinn und Entwicklung. Wo ist der stärkste Bereich, wo der schwächste?</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "personalBalanceRecharge",
+    "title": "Persönlicher Ausgleich: Akkus bewusst aufladen",
+    "teaser": "Warum Erholung geplant werden muss, bevor Überlastung den Plan übernimmt.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "Erklärung: Ausgleich ist kein Luxus",
+        "type": "RTF",
+        "rtfText": "<p>Persönlicher Ausgleich meint die Dinge, die man für sich selbst tut, damit die eigenen Akkus wieder voll werden. Das kann Sport sein, Musik, Lesen, Spaziergänge, Kreativität, Zeit allein oder Zeit mit bestimmten Menschen. Entscheidend ist nicht, ob die Aktivität beeindruckend klingt, sondern ob sie wirklich regeneriert.</p><p>Viele Menschen behandeln Ausgleich wie eine Belohnung, die erst erlaubt ist, wenn alles andere erledigt wurde. Das Problem: Alles andere ist selten erledigt. Dann wird Erholung ständig verschoben, bis der Körper oder die Psyche den Stopp selbst erzwingt. Das Reisehandbuch denkt Ausgleich deshalb als festen Lebensbereich. Wer langfristig motiviert und leistungsfähig bleiben will, muss Pausen, Freude und persönliche Energiequellen ernst nehmen.</p><p>In der Lernplattform ist dieser Node ein guter Praxis- und Reflexionsknoten. Er kann mit Gesundheit, Beruf und Träumen verbunden werden, weil Ausgleich überall hineinwirkt. Für die Klickdemo ist außerdem gut sichtbar: Ein Node kann nicht nur Wissen vermitteln, sondern eine konkrete Selbstbeobachtung auslösen.</p>"
+      },
+      {
+        "title": "Externe Ressource: Erholung im Alltag",
+        "type": "URI",
+        "uri": "https://www.tk.de/techniker/gesundheit-foerdern/stress-entspannung/aktiv-entspannen/entspannung-im-alltag-2006846"
+      },
+      {
+        "title": "Audio-Suche: Entspannung und Balance",
+        "type": "SPOTIFY_LINK",
+        "uri": "https://open.spotify.com/episode/6ehOs0kopAdjTqUFoPK0Fx?si=c13bedd4993e4bb4"
+      },
+      {
+        "title": "Reflexionsfrage",
+        "type": "RTF",
+        "rtfText": "<p>Welche Aktivität lädt dich zuverlässig auf, obwohl du sie im Alltag oft zu spät einplanst?</p>"
+      }
+    ]
+  },
+  {
+    "identifier": "dreamsRealizationSteps",
+    "title": "Träume und Realisierung in konkrete Schritte übersetzen",
+    "teaser": "Wie aus großen Wünschen kleine machbare Etappen werden.",
+    "creatorId": "admin",
+    "categories": [
+      "lifePlanning"
+    ],
+    "duration": 40,
+    "contentElements": [
+      {
+        "title": "Erklärung: Vom Wunsch zur Etappe",
+        "type": "RTF",
+        "rtfText": "<p>Träume sind im Reisehandbuch nicht nur schöne Gedanken, sondern Orientierungspunkte. Sie zeigen, was einen reizt, begeistert oder innerlich nicht loslässt. Das Problem entsteht erst, wenn Träume nur als vage Bilder existieren. Dann bleiben sie weit weg und werden im Alltag von dringenden Aufgaben verdrängt.</p><p>Realisierung bedeutet, einen großen Wunsch in kleinere, machbare Etappen zu übersetzen. Aus „Ich will mehr erleben“ wird zum Beispiel: ein konkretes Ziel auswählen, Zeitfenster suchen, Kosten einschätzen, erste Handlung festlegen und einen Termin setzen. Dadurch wird der Traum nicht garantiert erreicht, aber er wird bearbeitbar. Genau wie ein Navigationssystem nicht teleportiert, sondern die nächste Abzweigung zeigt, braucht Lebensplanung kleine Schritte statt nur große Sehnsucht.</p><p>Dieser Node eignet sich als Abschluss der Erweiterung. Er verbindet Gesundheit, Umfeld, Bildung, Beruf und Ausgleich mit der Frage, was daraus entstehen soll. In der Journey Map kann er als Zielknoten nach den konkreten Lebensbereichen stehen. Für die Demo ist das stark, weil der Lernpfad nicht einfach endet, sondern zu einer Handlung auffordert.</p>"
+      },
+      {
+        "title": "Externe Ressource: Ziele setzen",
+        "type": "URI",
+        "uri": "https://karrierebibel.de/smart-methode/"
+      },
+      {
+        "title": "Video-Suche: Ziele in Schritte planen",
+        "type": "YOUTUBE_LINK",
+        "uri": "https://www.youtube.com/watch?v=yN00Zfupcn8"
+      },
+      {
+        "title": "Mini-Übung",
+        "type": "RTF",
+        "rtfText": "<p>Wähle einen Wunsch aus und formuliere daraus den nächsten kleinsten Schritt, den du innerhalb von sieben Tagen erledigen kannst.</p>"
       }
     ]
   }

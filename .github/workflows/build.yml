@@ -34,7 +34,7 @@ jobs:
         working-directory: mynd-backend
         run: |
           chmod +x mvnw
-          ./mvnw package -Dnative -DskipTests
+          ./mvnw package -DskipTests
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -42,7 +42,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: ./mynd-backend
-          file: mynd-backend/src/main/docker/Dockerfile.native-micro
+          file: mynd-backend/src/main/docker/Dockerfile
           push: false
           load: true
           tags: local-test-image:latest

@@ -1,0 +1,26 @@
+name: React Doctor
+
+on:
+  pull_request:
+    branches:
+      - dev
+  push:
+    branches:
+      - dev
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  react-doctor:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: millionco/react-doctor@main
+        with:
+          diff: dev
+          directory: './frontend'
+          github-token: ${{ secrets.GITHUB_TOKEN }}

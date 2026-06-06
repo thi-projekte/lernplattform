@@ -11,7 +11,7 @@ import de.thi.mynd.common.service.ObjectStorageService;
 import de.thi.mynd.topic.entity.ContentType;
 import de.thi.mynd.topic.entity.ImageElement;
 import de.thi.mynd.topic.repository.ContentElementRepository;
-import de.thi.mynd.topic.requests.content.ImageElementRequest;
+import de.thi.mynd.topic.request.content.ImageElementRequest;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;

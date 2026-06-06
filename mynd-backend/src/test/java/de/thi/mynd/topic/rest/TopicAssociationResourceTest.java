@@ -21,7 +21,7 @@ public class TopicAssociationResourceTest {
   @Test
   @TestSecurity(
       user = "testUser",
-      roles = {"builder"})
+      roles = {"builder", "authorizedUser"})
   void testCreateAssociationSuccess() {
     UUID owningId = UUID.randomUUID();
     UUID foreignId = UUID.randomUUID();
@@ -49,7 +49,7 @@ public class TopicAssociationResourceTest {
   @Test
   @TestSecurity(
       user = "testUser",
-      roles = {"builder"})
+      roles = {"builder", "authorizedUser"})
   void testCreateAssociationValidationError() {
     // Missing query parameters should trigger a 400 due to @NotNull
     given()
@@ -64,7 +64,7 @@ public class TopicAssociationResourceTest {
   @Test
   @TestSecurity(
       user = "testUser",
-      roles = {"builder"})
+      roles = {"builder", "authorizedUser"})
   void testDeleteAssociationSuccess() {
     UUID assocId = UUID.randomUUID();
 
