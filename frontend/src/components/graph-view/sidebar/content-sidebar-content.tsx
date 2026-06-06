@@ -96,9 +96,7 @@ const ContentSidebarContent = ({
       ) : (
         <Stack gap="xs" style={{ alignSelf: 'flex-start' }}>
           <Tooltip
-            label={
-              !canLearnTopics ? t('subscription.upgradeToLearn') : t('topic.actions.start')
-            }
+            label={!canLearnTopics ? t('subscription.upgradeToLearn') : t('topic.actions.start')}
             disabled={canLearnTopics && topicStarted}
             withArrow
           >
