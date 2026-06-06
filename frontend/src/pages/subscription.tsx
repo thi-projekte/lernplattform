@@ -12,7 +12,7 @@ import {
   UnstyledButton,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconCrown, IconExternalLink, IconStar } from '@tabler/icons-react';
+import { IconCheck, IconCrown, IconExternalLink, IconStar } from '@tabler/icons-react';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Layout } from '../components/layout.tsx';
@@ -135,6 +135,10 @@ const ProductCard = ({
       ? yearlyPrice.amount / 12
       : (selectedPrice?.amount ?? 0);
 
+  const featureNames = (product.features ?? [])
+    .map((f) => f.entitlementFeature?.name)
+    .filter((name): name is string => !!name);
+
   return (
     <Paper
       p="lg"
@@ -186,10 +190,6 @@ const ProductCard = ({
           </Text>
         </Group>
 
-        <Text size="sm" c="dimmed">
-          {t('subscription.paidTagline')}
-        </Text>
-
         <Box>
           <Group align="baseline" gap={4}>
             <Text fw={800} style={{ fontSize: 30, lineHeight: 1, color: accentColor }}>
@@ -212,6 +212,27 @@ const ProductCard = ({
         </Box>
 
         <Divider opacity={0.3} mt="xs" />
+
+        {featureNames.length > 0 ? (
+          <Stack gap={6}>
+            {featureNames.map((name) => (
+              <Group key={name} gap={8} wrap="nowrap" align="center">
+                <ThemeIcon
+                  size={18}
+                  radius="xl"
+                  style={{ background: `color-mix(in srgb, ${accentColor} 18%, transparent)` }}
+                >
+                  <IconCheck size={12} style={{ color: accentColor }} />
+                </ThemeIcon>
+                <Text size="sm">{name}</Text>
+              </Group>
+            ))}
+          </Stack>
+        ) : (
+          <Text size="sm" c="dimmed">
+            {t('subscription.paidTagline')}
+          </Text>
+        )}
 
         <Stack gap="xs" mt="xs">
           {product.canHaveTrial && !isCurrent && selectedPrice && (
@@ -337,9 +358,6 @@ const FreeCard = ({ currentPlan }: { currentPlan: SubscriptionStatus }) => {
             {t('subscription.free.title')}
           </Text>
         </Group>
-        <Text size="sm" c="dimmed">
-          {t('subscription.free.description')}
-        </Text>
         <Box>
           <Group align="baseline" gap={4}>
             <Text fw={800} style={{ fontSize: 30, lineHeight: 1, color: accentColor }}>
@@ -349,6 +367,9 @@ const FreeCard = ({ currentPlan }: { currentPlan: SubscriptionStatus }) => {
               {t('subscription.perMonth')}
             </Text>
           </Group>
+          <Text size="sm" c="dimmed" mt={4}>
+            {t('subscription.free.description')}
+          </Text>
         </Box>
       </Stack>
     </Paper>
