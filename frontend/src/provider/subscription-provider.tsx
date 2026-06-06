@@ -25,7 +25,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       value={{
         subscriptionStatus: data?.subscriptionStatus ?? 'FREE',
         canAccessBillingPortal: data?.canAccessBillingPortal ?? false,
-        canLearnTopics: data?.canLearnTopics ?? false,
+        canLearnTopics: data?.canLearnTopics ?? true,
         isLoading,
       }}
     >
