@@ -14,7 +14,9 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconChevronLeft, IconFlame, IconTrophy, IconUser } from '@tabler/icons-react';
+import { IconChevronLeft, IconFlame, IconTrophy, IconUser, IconSearch } from '@tabler/icons-react';
+import { spotlight } from '@mantine/spotlight';
+import { TopicSpotlight } from './topic-spotlight.tsx';
 import { useQueryProfilePicture } from '../api/profile-picture.ts';
 import { useFetchStreakPreferences, useFetchStreaks } from '../api/streak.ts';
 import { useFetchCurrentChallenge } from '../api/challenge.ts';
@@ -147,6 +149,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       }}
       padding={0}
     >
+      <TopicSpotlight />
       <AppShell.Header
         style={{
           background: theme.other.layoutHeaderBg,
@@ -187,6 +190,9 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               style={{ display: 'flex', alignItems: 'center' }}
             >
               <Image src="/mynd-logo.png" alt="MYnd Logo" h={58} w="auto" fit="contain" />
+            </UnstyledButton>
+            <UnstyledButton onClick={() => spotlight.open()} aria-label="Suche öffnen">
+              <IconSearch size={24} stroke={1.5} />
             </UnstyledButton>
           </Group>
           <Group px="md" gap="xs">
