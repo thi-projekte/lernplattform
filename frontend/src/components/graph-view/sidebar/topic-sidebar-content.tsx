@@ -144,41 +144,77 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           >
             {t('topic.actions.completed')}
           </Button>
-        ) : isStarted && canLearnTopics ? (
-          <Tooltip
-            label={t('topic.actions.completeBlockedHint')}
-            disabled={progressPercent >= 100}
-            withArrow
-          >
-            <Button
-              size="sm"
-              color="green.7"
-              loading={isCompleting}
-              onClick={() => {
-                if (topicId) {
-                  track('topicLearnCompletedManually', { props: { topicId } });
-                  completeTopic(topicId);
-                }
-              }}
-            >
-              {t('topic.actions.complete')}
-            </Button>
-          </Tooltip>
-        ) : !isStarted && canLearnTopics ? (
-          <Button
-            size="sm"
-            color="blue"
-            loading={isStarting}
-            onClick={() => {
-              if (topicId) {
-                track('topicLearnStarted', { props: { topicId } });
-                startTopic(topicId);
+        ) : isStarted ? (
+          <>
+            <Tooltip
+              label={
+                !canLearnTopics
+                  ? t('subscription.upgradeToLearn')
+                  : t('topic.actions.completeBlockedHint')
               }
-            }}
-          >
-            {t('topic.actions.start')}
-          </Button>
-        ) : null}
+              disabled={canLearnTopics && progressPercent >= 100}
+              withArrow
+            >
+              <Button
+                size="sm"
+                color="green.7"
+                loading={isCompleting}
+                disabled={!canLearnTopics}
+                onClick={() => {
+                  if (topicId) {
+                    track('topicLearnCompletedManually', { props: { topicId } });
+                    completeTopic(topicId);
+                  }
+                }}
+              >
+                {t('topic.actions.complete')}
+              </Button>
+            </Tooltip>
+            {!canLearnTopics && (
+              <Button
+                size="sm"
+                color="yellow"
+                variant="light"
+                onClick={() => navigate('/subscription')}
+              >
+                {t('subscription.goPremium')}
+              </Button>
+            )}
+          </>
+        ) : (
+          <>
+            <Tooltip
+              label={t('subscription.upgradeToLearn')}
+              disabled={canLearnTopics}
+              withArrow
+            >
+              <Button
+                size="sm"
+                color="blue"
+                loading={isStarting}
+                disabled={!canLearnTopics}
+                onClick={() => {
+                  if (topicId) {
+                    track('topicLearnStarted', { props: { topicId } });
+                    startTopic(topicId);
+                  }
+                }}
+              >
+                {t('topic.actions.start')}
+              </Button>
+            </Tooltip>
+            {!canLearnTopics && (
+              <Button
+                size="sm"
+                color="yellow"
+                variant="light"
+                onClick={() => navigate('/subscription')}
+              >
+                {t('subscription.goPremium')}
+              </Button>
+            )}
+          </>
+        )}
       </Group>
 
       {learnProgress && (

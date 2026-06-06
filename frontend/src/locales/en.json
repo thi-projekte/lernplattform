@@ -303,6 +303,8 @@
     "managePlan": "Manage subscription",
     "switchPlan": "Switch plan",
     "billingPortal": "Billing portal",
+    "upgradeToLearn": "Upgrade to Premium to keep learning",
+    "goPremium": "Get Premium",
     "free": {
       "title": "Free",
       "price": "€0",
