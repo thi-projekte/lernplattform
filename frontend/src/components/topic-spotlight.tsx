@@ -5,7 +5,6 @@ import { IconSearch } from '@tabler/icons-react';
 import { useQuerySearchTopic } from '../api/topic.ts';
 import { useNavigate } from 'react-router';
 
-
 export function TopicSpotlight() {
   const [query, setQuery] = useState('');
   const [debouncedQuery] = useDebouncedValue(query, 300);
