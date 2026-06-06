@@ -4,7 +4,6 @@ import { router } from './routing.ts';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import { MantineProvider } from '@mantine/core';
 import { theme } from './theme.ts';
-import { TopicSpotlight } from './components/topic-spotlight.tsx';
 
 import './i18n.ts';
 import './index.css';
