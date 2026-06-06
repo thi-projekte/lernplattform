@@ -30,6 +30,7 @@ import {
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
+import { useSubscription } from '../../../provider/subscription-provider.tsx';
 import CategoryBadge from '../../category-badge.tsx';
 import {
   useCompleteTopicManuallyMutation,
@@ -46,6 +47,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const userService = useUserService();
+  const { canLearnTopics } = useSubscription();
   const currentUsername = userService.account.username?.toLowerCase();
   const isOwner =
     !!selectedElement.creatorId &&
@@ -142,7 +144,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           >
             {t('topic.actions.completed')}
           </Button>
-        ) : isStarted ? (
+        ) : isStarted && canLearnTopics ? (
           <Tooltip
             label={t('topic.actions.completeBlockedHint')}
             disabled={progressPercent >= 100}
@@ -162,7 +164,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
               {t('topic.actions.complete')}
             </Button>
           </Tooltip>
-        ) : (
+        ) : !isStarted && canLearnTopics ? (
           <Button
             size="sm"
             color="blue"
@@ -176,7 +178,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           >
             {t('topic.actions.start')}
           </Button>
-        )}
+        ) : null}
       </Group>
 
       {learnProgress && (

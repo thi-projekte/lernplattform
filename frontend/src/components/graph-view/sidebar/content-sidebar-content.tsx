@@ -13,6 +13,7 @@ import {
 } from '../../../api/learn-progress.ts';
 import type { TopicLearnProgressDto } from '../../../schemas/learn-progress.ts';
 import { track } from '@plausible-analytics/tracker';
+import { useSubscription } from '../../../provider/subscription-provider.tsx';
 
 interface ContentSidebarContentProps {
   selectedElement: AnyContentElementDto;
@@ -31,6 +32,7 @@ const ContentSidebarContent = ({
 
   const { mutate: completeContentElement, isPending } = useCompleteContentElementMutation();
   const { mutate: resetContentElement, isPending: isResetting } = useResetContentElementMutation();
+  const { canLearnTopics } = useSubscription();
 
   const topicStarted = !!topicLearnProgress;
   const isElementCompleted = !!topicLearnProgress?.completedContentElementIds.includes(
@@ -89,7 +91,7 @@ const ContentSidebarContent = ({
             {t('topic.actions.resetProgress')}
           </Button>
         </Stack>
-      ) : (
+      ) : canLearnTopics ? (
         <Tooltip label={t('topic.actions.start')} disabled={topicStarted} withArrow>
           <Button
             color="blue"
@@ -108,7 +110,7 @@ const ContentSidebarContent = ({
             {t('topic.actions.markContentElementCompleted')}
           </Button>
         </Tooltip>
-      )}
+      ) : null}
 
       <Modal
         opened={opened}

@@ -6,12 +6,14 @@ import type { SubscriptionStatus } from '../schemas/payment.ts';
 interface SubscriptionContextValue {
   subscriptionStatus: SubscriptionStatus;
   canAccessBillingPortal: boolean;
+  canLearnTopics: boolean;
   isLoading: boolean;
 }
 
 const SubscriptionContext = createContext<SubscriptionContextValue>({
   subscriptionStatus: 'FREE',
   canAccessBillingPortal: false,
+  canLearnTopics: true,
   isLoading: true,
 });
 
@@ -23,6 +25,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
       value={{
         subscriptionStatus: data?.subscriptionStatus ?? 'FREE',
         canAccessBillingPortal: data?.canAccessBillingPortal ?? false,
+        canLearnTopics: data?.canLearnTopics ?? true,
         isLoading,
       }}
     >
