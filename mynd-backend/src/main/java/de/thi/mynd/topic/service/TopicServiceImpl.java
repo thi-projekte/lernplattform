@@ -37,31 +37,30 @@ public final class TopicServiceImpl implements TopicService {
   @Override
   public PaginationDto<ListTopicDto> findPersonalTopicsPaginated(int page, int pageSize) {
     PaginationDto<Topic> paginatedTopics =
-            topicRepository.findForCreatorPaginated(identity.getPrincipal().getName(), page, pageSize);
+        topicRepository.findForCreatorPaginated(identity.getPrincipal().getName(), page, pageSize);
 
     List<ListTopicDto> listDtos =
-            mappingRegistry.mapList(paginatedTopics.results, ListTopicDto.class);
+        mappingRegistry.mapList(paginatedTopics.results, ListTopicDto.class);
 
     return PaginationDto.<ListTopicDto>builder()
-            .results(listDtos)
-            .totalPages(paginatedTopics.totalPages)
-            .build();
+        .results(listDtos)
+        .totalPages(paginatedTopics.totalPages)
+        .build();
   }
 
   @Override
   public List<ListTopicDto> findTopicsBySearchMax5(String search) {
-    List<Topic> topics = topicRepository.findBySearch(search, 5);
     if (search == null || search.isBlank()) {
       return List.of();
     }
 
-    topics = topicRepository.findBySearch(search.trim(), 5);
+    List<Topic> topics = topicRepository.findBySearch(search, 5);
     return mappingRegistry.mapList(topics, ListTopicDto.class);
   }
 
   @Override
   public TopicDto getTopic(UUID topicId, boolean withOwnedRelatedTopics)
-          throws EntityInstanceNotFoundException {
+      throws EntityInstanceNotFoundException {
     Topic topic = getTopicByIdElseException(topicId);
 
     if (withOwnedRelatedTopics) {
@@ -130,14 +129,12 @@ public final class TopicServiceImpl implements TopicService {
     topic.categories = categoryService.findByAssociatedEntities(request.categories);
     topic.ownedAssociations.clear();
     topic.ownedAssociations.addAll(
-            topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
-                    topic, request.relatedTopics, identity.getPrincipal().getName()));
+        topicAssociationService.findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
+            topic, request.relatedTopics, identity.getPrincipal().getName()));
     topic.estimatedLearningDuration = request.estimatedLearningDuration;
 
     topicRepository.persist(topic);
     topicRepository.flush();
-
-    topicRepository.updateSearchVectors(topic.id, topic.title, topic.teaser);
 
     contentElementService.updateTopicAssociation(topic, request.contentElements);
   }

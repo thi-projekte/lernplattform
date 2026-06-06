@@ -296,8 +296,6 @@ const BuilderModeListPage = () => {
           </Group>
         </Stack>
 
-        <TopicSearchbar onSuggestionsChange={handleSuggestionsChange} />
-
         {viewMode === 'list' ? (
           data && (
             <Box style={{ overflowX: 'auto' }}>
