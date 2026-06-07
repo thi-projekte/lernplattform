@@ -10,9 +10,11 @@ import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Root;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public final class TopicRepository extends MyndBaseRepository<Topic> {
@@ -26,11 +28,23 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
     return buildPaginationFromQuery(query, page, pageSize);
   }
 
+  @SuppressWarnings("unchecked")
   public List<Topic> findBySearch(String search, int limit) {
-    String formattedSearch = ("%" + search + "%").toLowerCase();
-    return find("lower(title) like ?1 or lower(teaser) like ?2", formattedSearch, formattedSearch)
-        .range(0, limit)
-        .list();
+
+    return getEntityManager()
+        .createNativeQuery(
+            "WITH search_query AS (SELECT to_tsquery('german', :search) AS query) "
+                + "SELECT topic.* FROM topic, search_query "
+                + "WHERE title_search_vector @@ search_query.query "
+                + "OR teaser_search_vector @@ search_query.query "
+                + "ORDER BY "
+                + "ts_rank_cd(title_search_vector, search_query.query) DESC, "
+                + "ts_rank_cd(teaser_search_vector, search_query.query) DESC "
+                + "LIMIT :limit",
+            Topic.class)
+        .setParameter("search", safeGermanPrefixSearch(search))
+        .setParameter("limit", limit)
+        .getResultList();
   }
 
   public List<Topic> findByOwningTopicId(UUID topicId) {
@@ -42,5 +56,19 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
     cq.where(cb.equal(secondJoin.get("id"), topicId));
 
     return getEntityManager().createQuery(cq).getResultList();
+  }
+
+  private String safeGermanPrefixSearch(String search) {
+    if (search == null || search.trim().isEmpty()) {
+      return "";
+    }
+    String sanitized = search.replaceAll("[^a-zA-Z0-9äöüÄÖÜß\\s]", " ");
+
+    String tsQuery =
+        Arrays.stream(sanitized.trim().split("\\s+"))
+            .filter(token -> !token.isEmpty())
+            .collect(Collectors.joining(":* & "));
+
+    return tsQuery.isEmpty() ? "" : tsQuery + ":*";
   }
 }

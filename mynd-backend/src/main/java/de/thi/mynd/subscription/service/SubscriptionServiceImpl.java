@@ -14,6 +14,7 @@ import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 @ApplicationScoped
@@ -28,24 +29,35 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
 
   @Override
   public Subscription getSubscriptionForCurrentUser() {
+    return getSubscriptionForUser(identity.getPrincipal().getName());
+  }
+
+  @Override
+  public Subscription getSubscriptionForUser(String userId) {
     CreatorIdKey id = new CreatorIdKey();
-    id.creatorId = identity.getPrincipal().getName();
+    id.creatorId = userId;
 
     return subscriptionRepository
         .findByIdOptional(id)
-        .orElseGet(this::createDefaultSubscriptionForCurrentUser);
+        .orElseGet(() -> createDefaultSubscriptionForUser(userId));
   }
 
   @Override
   public SubscriptionDto getSubscriptionForCurrentUserAsDto() {
+
     return mappingRegistry.map(getSubscriptionForCurrentUser(), SubscriptionDto.class);
   }
 
   @Override
-  @Transactional
   public Subscription createDefaultSubscriptionForCurrentUser() {
+    return createDefaultSubscriptionForUser(identity.getPrincipal().getName());
+  }
+
+  @Override
+  @Transactional
+  public Subscription createDefaultSubscriptionForUser(String userId) {
     CreatorIdKey id = new CreatorIdKey();
-    id.creatorId = identity.getPrincipal().getName();
+    id.creatorId = userId;
     Subscription subscription = new Subscription();
     subscription.id = id;
     subscription.subscriptionStatus = SubscriptionStatus.FREE;
@@ -82,7 +94,7 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
   @Override
   @Transactional
   public void setSubscriptionStatusForSubscriptionId(
-      String stripeSubscriptionId, SubscriptionStatus status) {
+      String stripeSubscriptionId, SubscriptionStatus status, List<String> features) {
     Optional<Subscription> subscriptionOptional =
         subscriptionRepository.findByStripeSubscriptionId(stripeSubscriptionId);
     if (subscriptionOptional.isEmpty()) {
@@ -90,6 +102,7 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     Subscription subscription = subscriptionOptional.get();
+    subscription.features = features;
     subscription.subscriptionStatus = status;
 
     subscriptionRepository.persistAndFlush(subscription);
@@ -98,7 +111,7 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
   @Override
   @Transactional
   public void setSubscriptionIdAndStatusForCustomerId(
-      String customerId, String subscriptionId, SubscriptionStatus status) {
+      String customerId, String subscriptionId, SubscriptionStatus status, List<String> features) {
     Optional<Subscription> subscriptionOptional =
         subscriptionRepository.findByStripeCustomerId(customerId);
     if (subscriptionOptional.isEmpty()) {
@@ -106,8 +119,23 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     Subscription subscription = subscriptionOptional.get();
+    subscription.features = features;
     subscription.stripeSubscriptionId = subscriptionId;
     subscription.subscriptionStatus = status;
+
+    subscriptionRepository.persistAndFlush(subscription);
+  }
+
+  @Override
+  @Transactional
+  public void setTrialUsed(CreatorIdKey id) {
+    Optional<Subscription> subscriptionOptional = subscriptionRepository.findByIdOptional(id);
+    if (subscriptionOptional.isEmpty()) {
+      throw new SubscriptionNotFoundException("This subscription does not exist");
+    }
+
+    Subscription subscription = subscriptionOptional.get();
+    subscription.usedTrial = true;
 
     subscriptionRepository.persistAndFlush(subscription);
   }

@@ -1,11 +1,14 @@
 import {
+  ActionIcon,
   AppShell,
   Avatar,
   Box,
   Burger,
   Button,
+  Center,
   Group,
   Image,
+  Kbd,
   NavLink,
   Text,
   ThemeIcon,
@@ -14,9 +17,12 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconChevronLeft, IconFlame, IconUser } from '@tabler/icons-react';
+import { IconChevronLeft, IconFlame, IconTrophy, IconUser, IconSearch } from '@tabler/icons-react';
+import { spotlight } from '@mantine/spotlight';
+import { TopicSpotlight } from './topic-spotlight.tsx';
 import { useQueryProfilePicture } from '../api/profile-picture.ts';
 import { useFetchStreakPreferences, useFetchStreaks } from '../api/streak.ts';
+import { useFetchCurrentChallenge } from '../api/challenge.ts';
 import { type FC, type ReactNode, useMemo, useState } from 'react';
 import LanguagePicker from './language-picker.tsx';
 import ColorSchemeToggle from './color-scheme-toggle.tsx';
@@ -27,6 +33,7 @@ import { useLocation, useMatches, useNavigate } from 'react-router';
 import { isGranted } from '../auth.ts';
 import AccessDenied from './access-denied.tsx';
 import { useUserService } from '../provider/user-provider.tsx';
+import { Footer } from './footer.tsx';
 
 const StreakBadge = () => {
   const { t } = useTranslation();
@@ -53,6 +60,54 @@ const StreakBadge = () => {
         </Group>
       </UnstyledButton>
     </Tooltip>
+  );
+};
+
+const ChallengeBadge = () => {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const { data: challenge } = useFetchCurrentChallenge();
+
+  return (
+    <Tooltip label={t('challenge.claimButton')} withArrow>
+      <UnstyledButton onClick={() => navigate('/challenges')}>
+        <Group gap={6} align="center">
+          <ThemeIcon
+            size="md"
+            radius="xl"
+            color={challenge?.completed ? 'yellow' : 'gray'}
+            variant="light"
+          >
+            <IconTrophy size={16} />
+          </ThemeIcon>
+        </Group>
+      </UnstyledButton>
+    </Tooltip>
+  );
+};
+
+const SearchBadge = () => {
+  const { t } = useTranslation();
+
+  return (
+    <Center>
+      <div onClick={() => spotlight.open()}>
+        <Group gap={6} align="center" justify="center">
+          <Group gap={4} align="center">
+            <Kbd>⌘</Kbd>
+            <Kbd>K</Kbd>
+          </Group>
+
+          <Text size="sm" c="dimmed">
+            {t('common.or')}
+          </Text>
+
+          <ActionIcon variant="default" radius="md" size="md">
+            <IconSearch />
+          </ActionIcon>
+        </Group>
+      </div>
+    </Center>
   );
 };
 
@@ -113,6 +168,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
   );
 
   const desktopNavbarWidth = desktopExpanded ? 280 : 76;
+  const showLabels = desktopExpanded || opened;
 
   return (
     <AppShell
@@ -124,6 +180,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       }}
       padding={0}
     >
+      <TopicSpotlight />
       <AppShell.Header
         style={{
           background: theme.other.layoutHeaderBg,
@@ -165,9 +222,14 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             >
               <Image src="/mynd-logo.png" alt="MYnd Logo" h={58} w="auto" fit="contain" />
             </UnstyledButton>
+            <UnstyledButton onClick={() => spotlight.open()} aria-label="Suche öffnen">
+              <IconSearch size={24} stroke={1.5} />
+            </UnstyledButton>
           </Group>
           <Group px="md" gap="xs">
+            <SearchBadge />
             <StreakBadge />
+            <ChallengeBadge />
             <ColorSchemeToggle />
             <LanguagePicker />
           </Group>
@@ -181,7 +243,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
         style={{
           background: theme.other.layoutNavbarBg,
           borderRight: `1px solid ${theme.other.layoutBorder}`,
-          transition: 'width 150ms ease',
+          transition: 'width 150ms ease, transform 200ms ease',
           overflowX: 'hidden',
           display: 'flex',
           flexDirection: 'column',
@@ -194,7 +256,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
             return (
               <NavLink
-                label={desktopExpanded ? routeLabel : undefined}
+                label={showLabels ? routeLabel : undefined}
                 leftSection={route.icon ? <route.icon size={32} stroke={1.5} /> : undefined}
                 active={isActive(route.path ?? '')}
                 onClick={() => navigate(route.path ?? '')}
@@ -204,14 +266,15 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                 styles={{
                   root: {
                     borderRadius: 12,
-                    paddingInline: desktopExpanded ? undefined : 0,
+                    paddingInline: showLabels ? undefined : 0,
                   },
                   body: {
-                    display: desktopExpanded ? undefined : 'none',
+                    display: showLabels ? undefined : 'none',
+                    whiteSpace: 'nowrap',
                   },
                   section: {
-                    marginInlineEnd: desktopExpanded ? undefined : 0,
-                    width: desktopExpanded ? undefined : '100%',
+                    marginInlineEnd: showLabels ? undefined : 0,
+                    width: showLabels ? undefined : '100%',
                     justifyContent: 'center',
                   },
                 }}
@@ -225,8 +288,8 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             active={pathname === '/account'}
             title={t('layout.openAccount')}
             aria-label={t('layout.openAccount')}
-            label={desktopExpanded ? userDisplayName : undefined}
-            description={desktopExpanded ? userRole : undefined}
+            label={showLabels ? userDisplayName : undefined}
+            description={showLabels ? userRole : undefined}
             leftSection={
               <Box
                 style={{
@@ -249,7 +312,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               root: {
                 height: 56,
                 borderRadius: 12,
-                paddingInline: desktopExpanded ? undefined : 0,
+                paddingInline: showLabels ? undefined : 0,
                 overflow: 'hidden',
                 transition: 'background-color 150ms ease, color 150ms ease',
               },
@@ -257,13 +320,14 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                 fontWeight: 700,
               },
               body: {
-                display: desktopExpanded ? undefined : 'none',
+                display: showLabels ? undefined : 'none',
                 minWidth: 0,
+                whiteSpace: 'nowrap',
               },
               section: {
-                marginInlineEnd: desktopExpanded ? undefined : 0,
-                width: desktopExpanded ? 44 : '100%',
-                minWidth: desktopExpanded ? 44 : '100%',
+                marginInlineEnd: showLabels ? undefined : 0,
+                width: showLabels ? 44 : '100%',
+                minWidth: showLabels ? 44 : '100%',
                 justifyContent: 'center',
               },
             }}
@@ -273,31 +337,36 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
 
       <AppShell.Main>
         <Box
-          px="md"
-          py="md"
           style={{
             minHeight: 'calc(100vh - 104px)',
             background: theme.other.layoutMainBg,
+            display: 'flex',
+            flexDirection: 'column',
           }}
         >
-          {pathname !== '/' && (
-            <Button
-              variant="subtle"
-              color="gray"
-              leftSection={<IconChevronLeft size={16} stroke={2} />}
-              onClick={() => navigate(-1)}
-              mb="md"
-              px="xs"
-              size="sm"
-              styles={{
-                root: { color: 'var(--mantine-color-dimmed)' },
-                label: { fontWeight: 400 },
-              }}
-            >
-              {t('common.back')}
-            </Button>
-          )}
-          {isCurrentRouteGranted ? children : <AccessDenied />}
+          <Box px="md" py="md" style={{ flex: 1 }}>
+            {pathname !== '/' && (
+              <Button
+                variant="subtle"
+                color="gray"
+                leftSection={<IconChevronLeft size={16} stroke={2} />}
+                onClick={() => navigate(-1)}
+                mb="md"
+                px="xs"
+                size="sm"
+                styles={{
+                  root: { color: 'var(--mantine-color-dimmed)' },
+                  label: { fontWeight: 400 },
+                }}
+              >
+                {t('common.back')}
+              </Button>
+            )}
+
+            {isCurrentRouteGranted ? children : <AccessDenied />}
+          </Box>
+
+          <Footer />
         </Box>
       </AppShell.Main>
     </AppShell>

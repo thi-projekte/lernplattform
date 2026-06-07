@@ -39,7 +39,7 @@ export const TopicCoreDataSchema = z.object({
 });
 
 export const TopicAssociatedTopicsSchema = z.object({
-  relatedTopics: z.array(ListTopicDtoSchema).min(1).max(4),
+  relatedTopics: z.array(ListTopicDtoSchema).min(1).max(3),
 });
 
 export const TopicContentElementsSchema = z.object({

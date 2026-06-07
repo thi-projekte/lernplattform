@@ -5,73 +5,153 @@ import {
   Container,
   Divider,
   Group,
-  List,
   Paper,
   Stack,
   Text,
   ThemeIcon,
+  UnstyledButton,
 } from '@mantine/core';
-import { IconCheck, IconCrown, IconExternalLink, IconRocket, IconStar } from '@tabler/icons-react';
+import { useMediaQuery } from '@mantine/hooks';
+import { IconCheck, IconCrown, IconExternalLink, IconStar } from '@tabler/icons-react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Layout } from '../components/layout.tsx';
 import {
   useCreateBillingPortalSession,
   useCreateInitialCheckoutSessionForSubscription,
+  useCreateInitialCheckoutSessionForTrial,
+  useFetchProducts,
 } from '../api/subscription.ts';
 import { useSubscription } from '../provider/subscription-provider.tsx';
 import { notifications } from '@mantine/notifications';
-import type { SubscriptionStatus } from '../schemas/payment.ts';
+import type { PriceDto, ProductDto, SubscriptionStatus } from '../schemas/payment.ts';
+import { useQueryClient } from '@tanstack/react-query';
+import LayoutLoader from '../components/layout-loader.tsx';
 
-interface PlanCardProps {
-  plan: SubscriptionStatus;
-  title: string;
-  price: string;
-  priceSuffix?: string;
-  description: string;
-  features: string[];
-  badge?: string;
-  badgeColor?: string;
-  accentColor: string;
-  icon: React.ReactNode;
+type Interval = 'month' | 'year';
+
+const FREE_COLOR = '#74c0fc';
+const PAID_COLOR = '#f59f00';
+
+const getPlanColor = (status: SubscriptionStatus) => (status === 'FREE' ? FREE_COLOR : PAID_COLOR);
+
+const getPlanIcon = (status: SubscriptionStatus) =>
+  status === 'FREE' ? <IconStar size={18} /> : <IconCrown size={18} />;
+
+interface IntervalToggleProps {
+  value: Interval;
+  onChange: (value: Interval) => void;
+  savingsPercent: number;
+}
+
+const IntervalToggle = ({ value, onChange, savingsPercent }: IntervalToggleProps) => {
+  const { t } = useTranslation();
+  const options: { value: Interval; label: string }[] = [
+    { value: 'month', label: t('subscription.monthly') },
+    { value: 'year', label: t('subscription.yearly') },
+  ];
+
+  return (
+    <Box
+      style={{
+        display: 'inline-flex',
+        alignItems: 'center',
+        padding: 4,
+        borderRadius: 999,
+        background: 'var(--card-border)',
+        gap: 4,
+      }}
+    >
+      {options.map((option) => {
+        const isActive = value === option.value;
+        const showSavings = option.value === 'year' && savingsPercent > 0;
+        return (
+          <UnstyledButton
+            key={option.value}
+            onClick={() => onChange(option.value)}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '8px 18px',
+              borderRadius: 999,
+              background: isActive ? 'var(--card-bg)' : 'transparent',
+              boxShadow: isActive ? '0 2px 8px rgba(0,0,0,0.08)' : 'none',
+              transition: 'background 120ms ease',
+            }}
+          >
+            <Text fw={600} size="sm" c={isActive ? undefined : 'dimmed'}>
+              {option.label}
+            </Text>
+            {showSavings && (
+              <Badge size="xs" color="green" variant="filled" radius="sm">
+                {t('subscription.savePercent', { percent: savingsPercent })}
+              </Badge>
+            )}
+          </UnstyledButton>
+        );
+      })}
+    </Box>
+  );
+};
+
+const formatAmount = (amount: number) => {
+  const formatted = amount % 1 === 0 ? amount.toFixed(0) : amount.toFixed(2);
+  return `€${formatted}`;
+};
+
+interface ProductCardProps {
+  product: ProductDto;
+  selectedInterval: Interval;
   currentPlan: SubscriptionStatus;
   canAccessBillingPortal: boolean;
-  onSubscribe: (plan: 'PLUS' | 'PRO') => void;
+  onSubscribe: (priceId: string) => void;
+  onCreateTrial: (priceId: string) => void;
   onBillingPortal: () => void;
   isSubscribing: boolean;
-  isSubscribingPlan?: 'PLUS' | 'PRO';
+  subscribingPriceId?: string;
   isBillingPortalLoading: boolean;
 }
 
-const PlanCard = ({
-  plan,
-  title,
-  price,
-  priceSuffix,
-  description,
-  features,
-  badge,
-  badgeColor,
-  accentColor,
-  icon,
+const ProductCard = ({
+  product,
+  selectedInterval,
   currentPlan,
   canAccessBillingPortal,
   onSubscribe,
+  onCreateTrial,
   onBillingPortal,
   isSubscribing,
-  isSubscribingPlan,
+  subscribingPriceId,
   isBillingPortalLoading,
-}: PlanCardProps) => {
+}: ProductCardProps) => {
   const { t } = useTranslation();
-  const isCurrent = currentPlan === plan;
+  const isCurrent = currentPlan === product.subscriptionStatus;
+  const accentColor = getPlanColor(product.subscriptionStatus);
+  const icon = getPlanIcon(product.subscriptionStatus);
+
+  const monthlyPrice = product.prices.find((p) => p.interval === 'month');
+  const yearlyPrice = product.prices.find((p) => p.interval === 'year');
+  const selectedPrice: PriceDto | undefined =
+    selectedInterval === 'year' ? (yearlyPrice ?? monthlyPrice) : (monthlyPrice ?? yearlyPrice);
+
+  const displayAmount =
+    selectedInterval === 'year' && yearlyPrice
+      ? yearlyPrice.amount / 12
+      : (selectedPrice?.amount ?? 0);
+
+  const featureNames = (product.features ?? [])
+    .map((f) => f.entitlementFeature?.name)
+    .filter((name): name is string => !!name);
 
   return (
     <Paper
-      p={28}
-      radius="xl"
+      p="lg"
+      radius="lg"
       style={{
         border: isCurrent ? `2px solid ${accentColor}` : '1.5px solid var(--card-border)',
         background: isCurrent
-          ? `linear-gradient(160deg, color-mix(in srgb, ${accentColor} 8%, var(--card-bg)) 0%, var(--card-bg) 100%)`
+          ? `linear-gradient(160deg, color-mix(in srgb, ${accentColor} 10%, var(--card-bg)) 0%, var(--card-bg) 100%)`
           : 'var(--card-bg)',
         boxShadow: isCurrent
           ? `0 8px 32px color-mix(in srgb, ${accentColor} 18%, transparent)`
@@ -83,28 +163,13 @@ const PlanCard = ({
         position: 'relative',
       }}
     >
-      {badge && !isCurrent && (
-        <Badge
-          size="sm"
-          style={{
-            position: 'absolute',
-            top: 16,
-            right: 16,
-            background: badgeColor,
-            color: '#fff',
-            fontWeight: 700,
-          }}
-        >
-          {badge}
-        </Badge>
-      )}
       {isCurrent && (
         <Badge
           size="sm"
           style={{
             position: 'absolute',
-            top: 16,
-            right: 16,
+            top: 14,
+            right: 14,
             background: accentColor,
             color: '#fff',
             fontWeight: 700,
@@ -114,10 +179,10 @@ const PlanCard = ({
         </Badge>
       )}
 
-      <Stack gap="md" style={{ flex: 1 }}>
+      <Stack gap="sm" style={{ flex: 1 }}>
         <Group gap="sm">
           <ThemeIcon
-            size={40}
+            size={36}
             radius="xl"
             style={{ background: `color-mix(in srgb, ${accentColor} 18%, transparent)` }}
           >
@@ -126,96 +191,191 @@ const PlanCard = ({
             </span>
           </ThemeIcon>
           <Text fw={800} size="lg">
-            {title}
+            {product.title}
           </Text>
         </Group>
 
         <Box>
           <Group align="baseline" gap={4}>
-            <Text fw={800} style={{ fontSize: 32, lineHeight: 1, color: accentColor }}>
-              {price}
+            <Text fw={800} style={{ fontSize: 30, lineHeight: 1, color: accentColor }}>
+              {formatAmount(displayAmount)}
             </Text>
-            {priceSuffix && (
-              <Text size="sm" c="dimmed">
-                {priceSuffix}
-              </Text>
-            )}
+            <Text size="sm" c="dimmed">
+              {t('subscription.perMonth')}
+            </Text>
           </Group>
-          <Text size="sm" c="dimmed" mt={4}>
-            {description}
-          </Text>
+          {selectedInterval === 'year' && yearlyPrice && (
+            <Text size="xs" c="dimmed" mt={4}>
+              {t('subscription.billedAnnually', { total: formatAmount(yearlyPrice.amount) })}
+            </Text>
+          )}
+          {selectedInterval === 'month' && (
+            <Text size="xs" c="dimmed" mt={4}>
+              {t('subscription.billedMonthly')}
+            </Text>
+          )}
         </Box>
 
-        <Divider opacity={0.4} />
+        <Divider opacity={0.3} mt="xs" />
 
-        <List
-          spacing="xs"
-          size="sm"
-          style={{ flex: 1 }}
-          icon={
-            <ThemeIcon
-              size={18}
-              radius="xl"
-              style={{ background: `color-mix(in srgb, ${accentColor} 18%, transparent)` }}
-            >
-              <IconCheck size={11} style={{ color: accentColor }} />
-            </ThemeIcon>
-          }
-        >
-          {features.map((f, i) => (
-            <List.Item key={i}>{f}</List.Item>
-          ))}
-        </List>
-
-        {plan === 'FREE' ? null : isCurrent ? (
-          <Button
-            fullWidth
-            radius="md"
-            size="sm"
-            leftSection={<IconExternalLink size={14} />}
-            loading={isBillingPortalLoading || isSubscribing}
-            onClick={currentPlan === 'FREE' ? () => onSubscribe(plan) : onBillingPortal}
-            style={{
-              marginTop: 'auto',
-              background: accentColor,
-              color: '#fff',
-              fontWeight: 700,
-              boxShadow: `0 4px 14px color-mix(in srgb, ${accentColor} 38%, transparent)`,
-            }}
-          >
-            {t('subscription.managePlan')}
-          </Button>
-        ) : canAccessBillingPortal ? (
-          <Button
-            fullWidth
-            radius="md"
-            size="sm"
-            variant="outline"
-            leftSection={<IconExternalLink size={14} />}
-            loading={isBillingPortalLoading || isSubscribing}
-            onClick={currentPlan === 'FREE' ? () => onSubscribe(plan) : onBillingPortal}
-            style={{ marginTop: 'auto', borderColor: accentColor, color: accentColor }}
-          >
-            {t('subscription.switchPlan')}
-          </Button>
+        {featureNames.length > 0 ? (
+          <Stack gap={6}>
+            {featureNames.map((name) => (
+              <Group key={name} gap={8} wrap="nowrap" align="center">
+                <ThemeIcon
+                  size={18}
+                  radius="xl"
+                  style={{ background: `color-mix(in srgb, ${accentColor} 18%, transparent)` }}
+                >
+                  <IconCheck size={12} style={{ color: accentColor }} />
+                </ThemeIcon>
+                <Text size="sm">{name}</Text>
+              </Group>
+            ))}
+          </Stack>
         ) : (
-          <Button
-            fullWidth
-            radius="md"
-            size="sm"
-            loading={isSubscribing && isSubscribingPlan === plan}
-            onClick={() => onSubscribe(plan as 'PLUS' | 'PRO')}
-            style={{
-              marginTop: 'auto',
-              background: accentColor,
-              color: '#fff',
-              fontWeight: 700,
-              boxShadow: `0 4px 14px color-mix(in srgb, ${accentColor} 38%, transparent)`,
-            }}
-          >
-            {plan === 'PLUS' ? t('subscription.plus.button') : t('subscription.pro.button')}
-          </Button>
+          <Text size="sm" c="dimmed">
+            {t('subscription.paidTagline')}
+          </Text>
         )}
+
+        <Stack gap="xs" mt="xs">
+          {product.canHaveTrial && !isCurrent && selectedPrice && (
+            <Button
+              fullWidth
+              radius="md"
+              size="sm"
+              variant="outline"
+              loading={isSubscribing && subscribingPriceId === selectedPrice.id}
+              onClick={() => onCreateTrial(selectedPrice.id)}
+              style={{ borderColor: accentColor, color: accentColor }}
+            >
+              {t('subscription.startTrial')}
+            </Button>
+          )}
+
+          {isCurrent ? (
+            <Button
+              fullWidth
+              radius="md"
+              size="sm"
+              leftSection={<IconExternalLink size={14} />}
+              loading={isBillingPortalLoading || isSubscribing}
+              onClick={onBillingPortal}
+              style={{
+                background: accentColor,
+                color: '#fff',
+                fontWeight: 700,
+                boxShadow: `0 4px 14px color-mix(in srgb, ${accentColor} 38%, transparent)`,
+              }}
+            >
+              {t('subscription.managePlan')}
+            </Button>
+          ) : canAccessBillingPortal && currentPlan !== 'FREE' ? (
+            <Button
+              fullWidth
+              radius="md"
+              size="sm"
+              variant="outline"
+              leftSection={<IconExternalLink size={14} />}
+              loading={isBillingPortalLoading || isSubscribing}
+              onClick={onBillingPortal}
+              style={{ borderColor: accentColor, color: accentColor }}
+            >
+              {t('subscription.switchPlan')}
+            </Button>
+          ) : (
+            selectedPrice && (
+              <Button
+                fullWidth
+                radius="md"
+                size="sm"
+                loading={isSubscribing && subscribingPriceId === selectedPrice.id}
+                onClick={() => onSubscribe(selectedPrice.id)}
+                style={{
+                  background: accentColor,
+                  color: '#fff',
+                  fontWeight: 700,
+                  boxShadow: `0 4px 14px color-mix(in srgb, ${accentColor} 38%, transparent)`,
+                }}
+              >
+                {t('subscription.subscribeNow')}
+              </Button>
+            )
+          )}
+        </Stack>
+      </Stack>
+    </Paper>
+  );
+};
+
+const FreeCard = ({ currentPlan }: { currentPlan: SubscriptionStatus }) => {
+  const { t } = useTranslation();
+  const isCurrent = currentPlan === 'FREE';
+  const accentColor = FREE_COLOR;
+
+  return (
+    <Paper
+      p="lg"
+      radius="lg"
+      style={{
+        border: isCurrent ? `2px solid ${accentColor}` : '1.5px solid var(--card-border)',
+        background: isCurrent
+          ? `linear-gradient(160deg, color-mix(in srgb, ${accentColor} 10%, var(--card-bg)) 0%, var(--card-bg) 100%)`
+          : 'var(--card-bg)',
+        boxShadow: isCurrent
+          ? `0 8px 32px color-mix(in srgb, ${accentColor} 18%, transparent)`
+          : '0 2px 12px rgba(0,0,0,0.06)',
+        flex: 1,
+        minWidth: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        position: 'relative',
+      }}
+    >
+      {isCurrent && (
+        <Badge
+          size="sm"
+          style={{
+            position: 'absolute',
+            top: 14,
+            right: 14,
+            background: accentColor,
+            color: '#fff',
+            fontWeight: 700,
+          }}
+        >
+          {t('subscription.currentPlan')}
+        </Badge>
+      )}
+      <Stack gap="sm" style={{ flex: 1 }}>
+        <Group gap="sm">
+          <ThemeIcon
+            size={36}
+            radius="xl"
+            style={{ background: `color-mix(in srgb, ${accentColor} 18%, transparent)` }}
+          >
+            <span style={{ color: accentColor, display: 'flex', alignItems: 'center' }}>
+              <IconStar size={18} />
+            </span>
+          </ThemeIcon>
+          <Text fw={800} size="lg">
+            {t('subscription.free.title')}
+          </Text>
+        </Group>
+        <Box>
+          <Group align="baseline" gap={4}>
+            <Text fw={800} style={{ fontSize: 30, lineHeight: 1, color: accentColor }}>
+              €0
+            </Text>
+            <Text size="sm" c="dimmed">
+              {t('subscription.perMonth')}
+            </Text>
+          </Group>
+          <Text size="sm" c="dimmed" mt={4}>
+            {t('subscription.free.description')}
+          </Text>
+        </Box>
       </Stack>
     </Paper>
   );
@@ -224,19 +384,37 @@ const PlanCard = ({
 const SubscriptionPage = () => {
   const { t } = useTranslation();
   const { subscriptionStatus, canAccessBillingPortal } = useSubscription();
+  const [selectedInterval, setSelectedInterval] = useState<Interval>('month');
+  const isMobile = useMediaQuery('(max-width: 768px)');
+
+  const queryClient = useQueryClient();
+
+  const { data: products = [], isLoading: productsLoading } = useFetchProducts();
 
   const {
     mutate: subscribe,
     isPending: isSubscribing,
-    variables: subscribingPlan,
+    variables: subscribingPriceId,
   } = useCreateInitialCheckoutSessionForSubscription();
+
+  const { mutate: createTrial, isPending: isCreatingTrial } =
+    useCreateInitialCheckoutSessionForTrial();
   const { mutate: openBillingPortal, isPending: isBillingPortalLoading } =
     useCreateBillingPortalSession();
 
-  const handleSubscribe = (plan: 'PLUS' | 'PRO') => {
-    subscribe(plan, {
+  const handleSubscribe = (priceId: string) => {
+    subscribe(priceId, {
       onSuccess: (res) => {
         window.location.href = res.data.url;
+      },
+      onError: () => notifications.show({ color: 'red', message: t('common.serverError') }),
+    });
+  };
+
+  const handleCreateTrial = (priceId: string) => {
+    createTrial(priceId, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['subscription'] });
       },
       onError: () => notifications.show({ color: 'red', message: t('common.serverError') }),
     });
@@ -251,15 +429,31 @@ const SubscriptionPage = () => {
     });
   };
 
+  const hasYearlyPrices = products.some((p) => p.prices.some((price) => price.interval === 'year'));
+
+  const maxSavingsPercent = products.reduce((max, product) => {
+    const monthly = product.prices.find((p) => p.interval === 'month');
+    const yearly = product.prices.find((p) => p.interval === 'year');
+    if (!monthly || !yearly) return max;
+    const saving = Math.round((1 - yearly.amount / 12 / monthly.amount) * 100);
+    return Math.max(max, saving);
+  }, 0);
+
   const cardProps = {
     currentPlan: subscriptionStatus,
     canAccessBillingPortal,
     onSubscribe: handleSubscribe,
     onBillingPortal: handleBillingPortal,
-    isSubscribing,
-    isSubscribingPlan: subscribingPlan as 'PLUS' | 'PRO' | undefined,
+    isSubscribing: isSubscribing || isCreatingTrial,
+    subscribingPriceId: subscribingPriceId as string | undefined,
     isBillingPortalLoading,
+    selectedInterval,
+    onCreateTrial: handleCreateTrial,
   };
+
+  if (productsLoading) {
+    return <LayoutLoader />;
+  }
 
   return (
     <Layout>
@@ -270,10 +464,20 @@ const SubscriptionPage = () => {
               <Text fw={800} ta="center" style={{ fontSize: 28 }}>
                 {t('subscription.title')}
               </Text>
-              <Text ta="center" c="dimmed" size="md" maw={480}>
+              <Text ta="center" c="dimmed" size="sm" maw={420}>
                 {t('subscription.subtitle')}
               </Text>
             </Stack>
+
+            {hasYearlyPrices && (
+              <Group justify="center">
+                <IntervalToggle
+                  value={selectedInterval}
+                  onChange={setSelectedInterval}
+                  savingsPercent={maxSavingsPercent}
+                />
+              </Group>
+            )}
 
             {canAccessBillingPortal && subscriptionStatus === 'FREE' && (
               <Group justify="center">
@@ -289,58 +493,15 @@ const SubscriptionPage = () => {
               </Group>
             )}
 
-            <Group align="stretch" gap="lg" style={{ flexWrap: 'wrap' }}>
-              <PlanCard
-                plan="FREE"
-                title={t('subscription.free.title')}
-                price={t('subscription.free.price')}
-                description={t('subscription.free.description')}
-                features={[
-                  t('subscription.free.feature1'),
-                  t('subscription.free.feature2'),
-                  t('subscription.free.feature3'),
-                ]}
-                accentColor="#74c0fc"
-                icon={<IconStar size={18} />}
-                {...cardProps}
-              />
-              <PlanCard
-                plan="PLUS"
-                title={t('subscription.plus.title')}
-                price={t('subscription.plus.price')}
-                priceSuffix={t('subscription.perMonth')}
-                description={t('subscription.plus.description')}
-                features={[
-                  t('subscription.plus.feature1'),
-                  t('subscription.plus.feature2'),
-                  t('subscription.plus.feature3'),
-                  t('subscription.plus.feature4'),
-                ]}
-                badge={t('subscription.popular')}
-                badgeColor="#339af0"
-                accentColor="#339af0"
-                icon={<IconRocket size={18} />}
-                {...cardProps}
-              />
-              <PlanCard
-                plan="PRO"
-                title={t('subscription.pro.title')}
-                price={t('subscription.pro.price')}
-                priceSuffix={t('subscription.perMonth')}
-                description={t('subscription.pro.description')}
-                features={[
-                  t('subscription.pro.feature1'),
-                  t('subscription.pro.feature2'),
-                  t('subscription.pro.feature3'),
-                  t('subscription.pro.feature4'),
-                  t('subscription.pro.feature5'),
-                ]}
-                badge={t('subscription.bestValue')}
-                badgeColor="#f59f00"
-                accentColor="#f59f00"
-                icon={<IconCrown size={18} />}
-                {...cardProps}
-              />
+            <Group
+              align="stretch"
+              gap="lg"
+              style={{ flexWrap: 'wrap', flexDirection: isMobile ? 'column' : 'row' }}
+            >
+              <FreeCard currentPlan={subscriptionStatus} />
+              {products.map((product) => (
+                <ProductCard key={product.title} product={product} {...cardProps} />
+              ))}
             </Group>
           </Stack>
         </Container>

@@ -100,6 +100,7 @@ public class TopicServiceImplTest {
 
     // Assert
     verify(topicRepository).persist(any(Topic.class));
+    verify(topicRepository).flush();
     verify(contentElementService)
         .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
   }
@@ -108,7 +109,17 @@ public class TopicServiceImplTest {
   void testFindTopicsBySearchMax5() {
     when(topicRepository.findBySearch("test", 5)).thenReturn(new ArrayList<>());
     topicService.findTopicsBySearchMax5("test");
+    topicService.findTopicsBySearchMax5("  test  ");
     verify(topicRepository).findBySearch("test", 5);
+  }
+
+  @Test
+  void testFindTopicsBySearchMax5WithBlankSearch() {
+    List<ListTopicDto> result = topicService.findTopicsBySearchMax5("   ");
+
+    Assertions.assertTrue(result.isEmpty());
+    verify(topicRepository, never()).findBySearch(anyString(), anyInt());
+    verify(mappingRegistry, never()).mapList(anyList(), eq(ListTopicDto.class));
   }
 
   @Test
@@ -135,7 +146,6 @@ public class TopicServiceImplTest {
     contentElement.title = "Content";
     contentElement.creatorId = "creator";
     contentElement.type = ContentType.PDF;
-
     UUID topicId = UUID.randomUUID();
 
     Topic topic = new Topic();
@@ -227,6 +237,7 @@ public class TopicServiceImplTest {
 
     // Assert
     verify(topicRepository).persist(any(Topic.class));
+    verify(topicRepository).flush();
     verify(contentElementService)
         .updateTopicAssociation(any(Topic.class), eq(request.contentElements));
   }

@@ -18,6 +18,7 @@ import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.persistence.EntityManager;
 import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,7 +51,7 @@ class SubscriptionServiceImplTest {
 
   @Test
   void getSubscriptionForCurrentUser_whenSubscriptionExists_returnsIt() {
-    Subscription existing = subscriptionWithStatus(SubscriptionStatus.PRO);
+    Subscription existing = subscriptionWithStatus(SubscriptionStatus.PREMIUM);
     when(subscriptionRepository.findByIdOptional(
             argThat(key -> CREATOR_ID.equals(((CreatorIdKey) key).creatorId))))
         .thenReturn(Optional.of(existing));
@@ -179,12 +180,12 @@ class SubscriptionServiceImplTest {
 
   @Test
   void setSubscriptionStatusForSubscriptionId_withValidId_updatesStatus() {
-    Subscription subscription = subscriptionWithStatus(SubscriptionStatus.PRO);
+    Subscription subscription = subscriptionWithStatus(SubscriptionStatus.PREMIUM);
     when(subscriptionRepository.findByStripeSubscriptionId(STRIPE_SUBSCRIPTION_ID))
         .thenReturn(Optional.of(subscription));
 
     subscriptionService.setSubscriptionStatusForSubscriptionId(
-        STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.FREE);
+        STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.FREE, new ArrayList<>());
 
     assertEquals(SubscriptionStatus.FREE, subscription.subscriptionStatus);
     verify(subscriptionRepository).persistAndFlush(subscription);
@@ -200,7 +201,7 @@ class SubscriptionServiceImplTest {
             SubscriptionNotFoundException.class,
             () ->
                 subscriptionService.setSubscriptionStatusForSubscriptionId(
-                    STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.FREE));
+                    STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.FREE, new ArrayList<>()));
 
     assertEquals("This subscription does not exist", ex.getMessage());
     verify(subscriptionRepository, never()).persistAndFlush(any());
@@ -215,10 +216,10 @@ class SubscriptionServiceImplTest {
         .thenReturn(Optional.of(subscription));
 
     subscriptionService.setSubscriptionIdAndStatusForCustomerId(
-        CUSTOMER_ID, STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.PRO);
+        CUSTOMER_ID, STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM, new ArrayList<>());
 
     assertEquals(STRIPE_SUBSCRIPTION_ID, subscription.stripeSubscriptionId);
-    assertEquals(SubscriptionStatus.PRO, subscription.subscriptionStatus);
+    assertEquals(SubscriptionStatus.PREMIUM, subscription.subscriptionStatus);
     verify(subscriptionRepository).persistAndFlush(subscription);
   }
 
@@ -232,10 +233,56 @@ class SubscriptionServiceImplTest {
             SubscriptionNotFoundException.class,
             () ->
                 subscriptionService.setSubscriptionIdAndStatusForCustomerId(
-                    CUSTOMER_ID, STRIPE_SUBSCRIPTION_ID, SubscriptionStatus.PRO));
+                    CUSTOMER_ID,
+                    STRIPE_SUBSCRIPTION_ID,
+                    SubscriptionStatus.PREMIUM,
+                    new ArrayList<>()));
 
     assertEquals("This subscription does not exist", ex.getMessage());
     verify(subscriptionRepository, never()).persistAndFlush(any());
+  }
+
+  @Test
+  void testSetTrialUsed_Success() {
+    // Arrange
+    CreatorIdKey id = new CreatorIdKey();
+    id.creatorId = "creator";
+
+    // Setup a mock entity entity where usedTrial is initially false
+    Subscription mockSubscription = new Subscription();
+    mockSubscription.id = id;
+    mockSubscription.usedTrial = false;
+
+    when(subscriptionRepository.findByIdOptional(id)).thenReturn(Optional.of(mockSubscription));
+
+    // Act
+    subscriptionService.setTrialUsed(id);
+
+    // Assert
+    assertTrue(mockSubscription.usedTrial, "The usedTrial flag should be set to true");
+
+    // Verify that the repository actually persisted and flushed the updated entity
+    verify(subscriptionRepository, times(1)).persistAndFlush(mockSubscription);
+  }
+
+  @Test
+  void testSetTrialUsed_SubscriptionNotFound_ThrowsException() {
+    // Arrange
+    CreatorIdKey id = new CreatorIdKey();
+    id.creatorId = "creator";
+
+    // Simulate repository returning an empty Optional
+    when(subscriptionRepository.findByIdOptional(id)).thenReturn(Optional.empty());
+
+    // Act & Assert
+    SubscriptionNotFoundException exception =
+        assertThrows(
+            SubscriptionNotFoundException.class, () -> subscriptionService.setTrialUsed(id));
+
+    assertEquals("This subscription does not exist", exception.getMessage());
+
+    // Verify that persistAndFlush was never called because the method should fail early
+    verify(subscriptionRepository, never()).persistAndFlush(any(Subscription.class));
   }
 
   // --- Helpers ---
@@ -250,7 +297,7 @@ class SubscriptionServiceImplTest {
   }
 
   private Subscription subscriptionWithCustomer() {
-    Subscription s = subscriptionWithStatus(SubscriptionStatus.PRO);
+    Subscription s = subscriptionWithStatus(SubscriptionStatus.PREMIUM);
     s.stripeCustomerId = SubscriptionServiceImplTest.CUSTOMER_ID;
     return s;
   }

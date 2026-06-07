@@ -5,16 +5,20 @@ import static org.mockito.Mockito.*;
 
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
+import de.thi.mynd.progressTracking.service.LearnProgressService;
 import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.entity.TopicAssociation;
 import de.thi.mynd.topic.repository.TopicGraphRepository;
 import de.thi.mynd.topic.repository.TopicRepository;
+import io.quarkus.security.identity.SecurityIdentity;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
+import java.security.Principal;
 import java.util.*;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 @QuarkusTest
@@ -27,6 +31,10 @@ class TopicGraphServiceImplTest {
   @InjectMock TopicRepository topicRepository;
 
   @InjectMock MappingRegistry mappingRegistry;
+
+  @InjectMock LearnProgressService learnProgressService;
+
+  @InjectMock SecurityIdentity identity;
 
   private Topic testTopic;
   private GraphTopicDto testDto;
@@ -42,48 +50,10 @@ class TopicGraphServiceImplTest {
     testTopic.ownedAssociations = new ArrayList<>();
     testDto = GraphTopicDto.builder().build();
     creatorId = "user-123";
-  }
 
-  @Test
-  void testGetNMostPopularTopicsInGraphAndTheirDirectNeighbors() {
-    // Arrange
-    int n = 5;
-    List<Topic> mockTopics = List.of(testTopic);
-    when(topicGraphRepository.findNMostPopular(n)).thenReturn(mockTopics);
-    when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.ofNullable(testTopic));
-    when(mappingRegistry.mapListWithAdditionalData(mockTopics, GraphTopicDto.class))
-        .thenReturn(List.of(testDto));
-
-    // Act
-    List<GraphTopicDto> result =
-        topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(n);
-
-    // Assert
-    assertNotNull(result);
-    assertEquals(1, result.size());
-    verify(topicGraphRepository, times(1)).findNMostPopular(n);
-  }
-
-  @Test
-  void testGetNMostPopularTopicsWithCategoryFilter() {
-    // Arrange
-    int n = 3;
-    List<UUID> categoryIds = List.of(UUID.randomUUID());
-    List<Topic> mockTopics = List.of(testTopic);
-
-    when(topicGraphRepository.findNMostPopularFilterByCategoryIds(n, categoryIds))
-        .thenReturn(mockTopics);
-    when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.ofNullable(testTopic));
-    when(mappingRegistry.mapListWithAdditionalData(mockTopics, GraphTopicDto.class))
-        .thenReturn(List.of(testDto));
-
-    // Act
-    List<GraphTopicDto> result =
-        topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(n, categoryIds);
-
-    // Assert
-    assertEquals(1, result.size());
-    verify(topicGraphRepository).findNMostPopularFilterByCategoryIds(n, categoryIds);
+    Principal mockPrincipal = mock(Principal.class);
+    when(mockPrincipal.getName()).thenReturn(creatorId);
+    when(identity.getPrincipal()).thenReturn(mockPrincipal);
   }
 
   @Test
@@ -170,5 +140,75 @@ class TopicGraphServiceImplTest {
     // Assert
     verify(topicRepository).findBySearch(query, limit);
     verify(mappingRegistry).mapListWithAdditionalData(anyList(), eq(GraphTopicDto.class));
+  }
+
+  @Test
+  @DisplayName("Should fetch popular topics and map their neighbors when user has no progress")
+  void testGetLearnGraph_NoProgress_FetchesNeighbors() {
+    // Arrange
+    when(learnProgressService.getLastNUncompletedTopicsForUser(10, creatorId))
+        .thenReturn(Collections.emptyList());
+
+    // 1. Setup Mock Topics & Relationships
+    UUID popularTopicId = UUID.randomUUID();
+    Topic popularTopic = mock(Topic.class);
+    popularTopic.id = popularTopicId; // Ensure ID matches what the loop extracts
+
+    // Set up associations for the neighbor lookup
+    Topic neighborTopic = mock(Topic.class);
+    neighborTopic.id = UUID.randomUUID();
+
+    when(popularTopic.ownedAssociations).thenReturn(Collections.emptyList());
+    when(popularTopic.foreignAssociations).thenReturn(Collections.emptyList());
+
+    List<Topic> popularTopics = List.of(popularTopic);
+    when(topicGraphRepository.findNMostPopular(10)).thenReturn(popularTopics);
+
+    // Mock repository lookup inside getNeighborsOfTopic
+    when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(popularTopic));
+
+    // 2. Mock the mapping registry calls
+    GraphTopicDto popularDto = GraphTopicDto.builder().id(UUID.randomUUID()).build();
+    GraphTopicDto neighborDto = GraphTopicDto.builder().id(UUID.randomUUID()).build();
+
+    // Mapping for the primary popular topics list
+    when(mappingRegistry.mapListWithAdditionalData(popularTopics, GraphTopicDto.class))
+        .thenReturn(List.of(popularDto));
+    // Mapping for the neighbors list
+    when(mappingRegistry.mapListWithAdditionalData(List.of(neighborTopic), GraphTopicDto.class))
+        .thenReturn(List.of(neighborDto));
+
+    // Act
+    List<GraphTopicDto> result = topicGraphService.getLearnGraph();
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertTrue(result.contains(popularDto));
+  }
+
+  @Test
+  @DisplayName(
+      "Should throw exception or bubble up if a topic's neighbor lookup finds a missing topic ID")
+  void testGetLearnGraph_NeighborTopicNotFound_ThrowsException() {
+    // Arrange
+    when(learnProgressService.getLastNUncompletedTopicsForUser(10, creatorId))
+        .thenReturn(Collections.emptyList());
+
+    UUID missingTopicId = UUID.randomUUID();
+    Topic targetTopic = mock(Topic.class);
+    targetTopic.id = missingTopicId;
+
+    when(topicGraphRepository.findNMostPopular(10)).thenReturn(List.of(targetTopic));
+
+    // Simulate database returning empty for the topic lookup inside getNeighborsOfTopic
+    when(topicRepository.findByIdOptional(missingTopicId)).thenReturn(Optional.empty());
+
+    // Act & Assert
+    assertThrows(
+        EntityInstanceNotFoundException.class,
+        () -> {
+          topicGraphService.getLearnGraph();
+        });
   }
 }

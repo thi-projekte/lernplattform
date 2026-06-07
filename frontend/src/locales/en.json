@@ -9,7 +9,22 @@
     "invitations": "Invitations",
     "subscription": "Subscription",
     "streaks": "My Streaks",
-    "adminCategories": "Categories"
+    "adminCategories": "Categories",
+    "challenges": "My Challenge"
+  },
+  "challenge": {
+    "title": "Weekly Challenge",
+    "subtitle": "Complete content elements to earn rewards.",
+    "weekly": "Weekly Challenge",
+    "description": "Complete {{target}} content elements this week.",
+    "nodes": "content elements completed",
+    "reward": "Reward: +{{count}} invite credits",
+    "completed": "Completed!",
+    "claimed": "Reward claimed",
+    "claimButton": "Claim +2 Invite Credits",
+    "rewardClaimed": "Reward successfully claimed! You received 2 invite credits.",
+    "history": "Past Challenges",
+    "noHistory": "No past challenges yet."
   },
   "streak": {
     "title": "My Streaks",
@@ -109,7 +124,8 @@
     "success": "Success",
     "edit": "Edit",
     "clickOnANodeToSeeContent": "Click on a node to see content",
-    "saveAndView": "Save and view"
+    "saveAndView": "Save and view",
+    "or": "Or"
   },
   "topic": {
     "headings": {
@@ -288,36 +304,20 @@
     "managePlan": "Manage subscription",
     "switchPlan": "Switch plan",
     "billingPortal": "Billing portal",
+    "upgradeToLearn": "Upgrade to Premium to keep learning",
+    "goPremium": "Get Premium",
     "free": {
       "title": "Free",
-      "price": "€0",
-      "description": "Get started at no cost.",
-      "feature1": "Access to public topics",
-      "feature2": "Basic skill tree",
-      "feature3": "Community support",
-      "button": "Current plan"
+      "description": "Get started at no cost."
     },
-    "plus": {
-      "title": "Plus",
-      "price": "€9",
-      "description": "For dedicated learners.",
-      "feature1": "Everything in Free",
-      "feature2": "Unlimited topics",
-      "feature3": "Myna AI assistant",
-      "feature4": "Priority support",
-      "button": "Subscribe to Plus"
-    },
-    "pro": {
-      "title": "Pro",
-      "price": "€19",
-      "description": "Maximum learning power.",
-      "feature1": "Everything in Plus",
-      "feature2": "Advanced analytics",
-      "feature3": "Custom categories",
-      "feature4": "Team collaboration",
-      "feature5": "Early access to new features",
-      "button": "Subscribe to Pro"
-    }
+    "paidTagline": "Unlock everything MYnd has to offer.",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "savePercent": "Save {{percent}}%",
+    "startTrial": "Start free trial",
+    "subscribeNow": "Subscribe",
+    "billedAnnually": "{{total}} billed annually",
+    "billedMonthly": "Billed monthly"
   },
   "invitation": {
     "manage": {
@@ -354,6 +354,59 @@
       "description": "You need an invitation to access this platform.",
       "acceptButton": "Accept my invitation",
       "contactHint": "Contact a builder to receive an invitation."
+    }
+  },
+  "footer": {
+    "legal": "Legal notice & privacy policy"
+  },
+
+  "legal": {
+    "pageTitle": "Legal Notice & Privacy Policy",
+    "pageDescription": "Legal information about the MYnd platform and information on the processing of personal data.",
+    "imprint": {
+      "title": "Legal Notice",
+      "provider": "Provider",
+      "providerName": "Technische Hochschule Ingolstadt",
+      "street": "Esplanade 10",
+      "city": "85049 Ingolstadt",
+      "country": "Germany",
+      "representedBy": "Represented by",
+      "representedByName": "Florian Weisenberger",
+      "contact": "Contact",
+      "email": "Email",
+      "phone": "Phone",
+      "registerEntry": "Commercial Register Entry",
+      "registerText": "Local Court of Ingolstadt, HRB 123456",
+      "vatId": "VAT ID",
+      "contentResponsible": "Responsible for content",
+      "contentResponsibleName": "Florian Weisenberger",
+      "contentResponsibleStreet": "Musterstraße 12",
+      "contentResponsibleCity": "85049 Ingolstadt"
+    },
+    "privacy": {
+      "title": "Privacy Policy",
+      "intro": "MYnd processes personal data exclusively to provide the platform on the basis of Art. 6 GDPR.",
+      "collectedData": "Collected data",
+      "collectedDataItems": {
+        "nameEmail": "Name and email address",
+        "accountProfile": "User account and profile data",
+        "learningUsage": "Learning progress and platform usage data",
+        "rolesPermissions": "Role and permission data"
+      },
+      "processingPurpose": "Purpose of processing",
+      "processingPurposeItems": {
+        "platform": "Provision and administration of the learning platform",
+        "accountsRoles": "Management of user accounts and roles",
+        "learningProgress": "Storage and display of learning progress",
+        "improvement": "Improvement of learning content and platform features"
+      },
+      "disclosure": "Disclosure",
+      "disclosureText": "Data is only disclosed to technical hosting and infrastructure service providers where this is necessary for operating the platform.",
+      "storage": "Storage",
+      "storageText": "Personal data is stored only for as long as necessary for the use of the platform and to comply with legal obligations.",
+      "userRights": "User rights",
+      "userRightsText": "Users have the right to access, rectify, delete, restrict processing of, and object to the processing of their personal data.",
+      "privacyContact": "Privacy contact"
     }
   }
 }

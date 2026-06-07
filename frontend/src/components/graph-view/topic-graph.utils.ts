@@ -1,5 +1,15 @@
 import type { Edge } from '@xyflow/react';
 import dagre from 'dagre';
+import {
+  forceCenter,
+  forceCollide,
+  forceLink,
+  forceManyBody,
+  forceSimulation,
+  type Simulation,
+  type SimulationLinkDatum,
+  type SimulationNodeDatum,
+} from 'd3-force';
 import type { ListTopicDto, Topic } from '../../schemas/topic';
 import type { GraphTopicDto } from '../../schemas/topic-graph.ts';
 import type {
@@ -72,6 +82,151 @@ const applyDagreLayout = <T extends { id: string; position: { x: number; y: numb
       },
     };
   });
+};
+
+export interface ForceLayoutNode {
+  id: string;
+  position: { x: number; y: number };
+}
+
+export interface ForceLayoutHandle {
+  stop: () => void;
+  beginDrag: (id: string, position: { x: number; y: number }) => void;
+  drag: (id: string, position: { x: number; y: number }) => void;
+  endDrag: (id: string) => void;
+}
+
+interface ForceSimNode extends SimulationNodeDatum {
+  id: string;
+}
+
+// Approximate visual size of a Mynd topic card. The simulation operates on
+// node centers, while React Flow positions are top-left corners, so we shift
+// by half this size when seeding and writing back positions.
+const NODE_HALF_WIDTH = 110;
+const NODE_HALF_HEIGHT = 60;
+
+export const applyForceLayout = (
+  nodes: ForceLayoutNode[],
+  edges: Edge[],
+  onTick: (positions: Map<string, { x: number; y: number }>) => void,
+  initialAlpha: number = 1,
+  warmupTicks: number = 0
+): ForceLayoutHandle => {
+  // Seed simulation in CENTER coordinates (React Flow stores top-left).
+  const simNodes: ForceSimNode[] = nodes.map((node) => ({
+    id: node.id,
+    x: node.position.x + NODE_HALF_WIDTH,
+    y: node.position.y + NODE_HALF_HEIGHT,
+  }));
+
+  const nodeIds = new Set(simNodes.map((n) => n.id));
+  const simLinks: SimulationLinkDatum<ForceSimNode>[] = edges
+    .filter((edge) => nodeIds.has(edge.source) && nodeIds.has(edge.target))
+    .map((edge) => ({ source: edge.source, target: edge.target }));
+
+  // Custom soft-boundary force: nodes feel zero pull while inside BOUND_RADIUS
+  // (so link forces fully drive layout), but get gently pulled back once they
+  // drift beyond it. Prevents isolated nodes from disappearing off-screen
+  // without distorting the natural shape of connected components.
+  const BOUND_RADIUS = 700;
+  const boundary = (alpha: number) => {
+    simNodes.forEach((node) => {
+      if (typeof node.x !== 'number' || typeof node.y !== 'number') return;
+      const dist = Math.sqrt(node.x * node.x + node.y * node.y);
+      if (dist <= BOUND_RADIUS) return;
+      const pull = (1 - BOUND_RADIUS / dist) * alpha * 0.4;
+      node.vx = (node.vx ?? 0) - node.x * pull;
+      node.vy = (node.vy ?? 0) - node.y * pull;
+    });
+  };
+
+  const REST_CHARGE = -200;
+  const DRAG_CHARGE = -60;
+  const chargeForce = forceManyBody<ForceSimNode>().strength(REST_CHARGE);
+
+  const simulation: Simulation<ForceSimNode, SimulationLinkDatum<ForceSimNode>> = forceSimulation(
+    simNodes
+  )
+    .force(
+      'link',
+      forceLink<ForceSimNode, SimulationLinkDatum<ForceSimNode>>(simLinks)
+        .id((d) => d.id)
+        .distance(220)
+        .strength(1)
+        .iterations(2)
+    )
+    .force('charge', chargeForce)
+    .force('center', forceCenter(0, 0))
+    .force('collide', forceCollide(120).strength(0.6))
+    .force('boundary', boundary)
+    .velocityDecay(0.25)
+    .alpha(initialAlpha);
+
+  const emitPositions = () => {
+    const positions = new Map<string, { x: number; y: number }>();
+    simNodes.forEach((node) => {
+      if (typeof node.x === 'number' && typeof node.y === 'number') {
+        positions.set(node.id, {
+          x: node.x - NODE_HALF_WIDTH,
+          y: node.y - NODE_HALF_HEIGHT,
+        });
+      }
+    });
+    onTick(positions);
+  };
+
+  // Pre-tick the simulation synchronously so nodes arrive on screen at their
+  // resolved positions immediately, without the user having to wait for the
+  // live tick loop to settle them.
+  if (warmupTicks > 0) {
+    simulation.stop();
+    for (let i = 0; i < warmupTicks; i += 1) {
+      simulation.tick();
+    }
+    emitPositions();
+    simulation.alpha(initialAlpha).restart();
+  }
+
+  simulation.on('tick', emitPositions);
+
+  const findNode = (id: string) => simNodes.find((n) => n.id === id);
+
+  return {
+    stop: () => simulation.stop(),
+    beginDrag: (id, position) => {
+      const node = findNode(id);
+      if (!node) return;
+      // Pin the node at the drag start position (translated to center coords).
+      node.fx = position.x + NODE_HALF_WIDTH;
+      node.fy = position.y + NODE_HALF_HEIGHT;
+      // Soften repulsion so connected nodes can compress and visibly chase
+      // the pinned node instead of being held back by mutual charge.
+      chargeForce.strength(DRAG_CHARGE);
+      // Hard-set alpha to 1 so forces fire at full strength from the very
+      // first tick (no slow ramp-up from a settled state). alphaTarget keeps
+      // it sustained during the drag.
+      simulation.alpha(1).alphaTarget(0.7).restart();
+    },
+    drag: (id, position) => {
+      const node = findNode(id);
+      if (!node) return;
+      node.fx = position.x + NODE_HALF_WIDTH;
+      node.fy = position.y + NODE_HALF_HEIGHT;
+    },
+    endDrag: (id) => {
+      const node = findNode(id);
+      if (!node) return;
+      // Release the pin so future drags can pull this node via link forces.
+      // The simulation is immediately cooled (alphaTarget = 0) so the node
+      // doesn't drift far from where it was dropped — without an energy
+      // source the released node stays approximately in place.
+      node.fx = null;
+      node.fy = null;
+      chargeForce.strength(REST_CHARGE);
+      simulation.alphaTarget(0);
+    },
+  };
 };
 
 const overlapsExistingTopicNode = (
@@ -713,6 +868,7 @@ export const buildSkillTreeGraph = (
         id: topic.id,
         type: 'skillTreeTopic',
         position,
+        dragHandle: '.mynd-drag-handle',
         data: {
           kind: 'skill-topic',
           title: topic.title,
@@ -756,6 +912,7 @@ export const buildSkillTreeGraph = (
         id: topic.id,
         type: 'skillTreeTopic',
         position,
+        dragHandle: '.mynd-drag-handle',
         data: {
           kind: 'skill-topic',
           title: topic.title,

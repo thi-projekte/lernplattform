@@ -8,14 +8,19 @@ import {
   type EdgeMouseHandler,
   type Node,
   type NodeMouseHandler,
+  type OnNodeDrag,
   type OnConnect,
   type OnMoveEnd,
   type NodeTypes,
   type EdgeTypes,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
-import { useEffect } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import ViewportToolbar from './viewport-toolbar.tsx';
+import { type ForceLayoutHandle } from './topic-graph.utils.ts';
+import ForceLayoutController from './force-layout-controller.tsx';
+
+export type GraphLayoutMode = 'tree' | 'force';
 
 interface TopicGraphViewProps {
   nodes: Node[];
@@ -23,7 +28,7 @@ interface TopicGraphViewProps {
   nodeTypes: NodeTypes;
   edgeTypes?: EdgeTypes;
   onNodeClick?: NodeMouseHandler;
-  onNodeDragStop?: NodeMouseHandler;
+  onNodeDragStop?: OnNodeDrag;
   onEdgeClick?: EdgeMouseHandler;
   onMoveEnd?: OnMoveEnd;
   onConnect?: OnConnect;
@@ -35,6 +40,8 @@ interface TopicGraphViewProps {
   showViewportToolbar?: boolean;
   viewportLocked?: boolean;
   onToggleViewportLock?: () => void;
+  layoutMode?: GraphLayoutMode;
+  onChangeLayoutMode?: (mode: GraphLayoutMode) => void;
   fitView?: boolean;
   fitViewPadding?: number;
   fitViewMaxZoom?: number;
@@ -59,6 +66,8 @@ const TopicGraphView = ({
   showViewportToolbar = false,
   viewportLocked = false,
   onToggleViewportLock,
+  layoutMode = 'tree',
+  onChangeLayoutMode,
   fitView = true,
   fitViewPadding = 0.2,
   fitViewMaxZoom,
@@ -67,14 +76,45 @@ const TopicGraphView = ({
 }: TopicGraphViewProps) => {
   const [internalNodes, setInternalNodes, onNodesChange] = useNodesState(nodes);
   const [internalEdges, setInternalEdges, onEdgesChange] = useEdgesState(edges);
+  const forceHandleRef = useRef<ForceLayoutHandle | null>(null);
 
   useEffect(() => {
-    setInternalNodes(nodes);
-  }, [nodes, setInternalNodes]);
+    if (layoutMode === 'force') {
+      // In force mode, the simulation owns positions. When new nodes arrive
+      // via props (e.g. on expansion), keep existing nodes at their current
+      // force position and only adopt prop position for genuinely new nodes.
+      setInternalNodes((current) => {
+        const currentPosById = new Map(current.map((n) => [n.id, n.position]));
+        return nodes.map((n) => ({
+          ...n,
+          position: currentPosById.get(n.id) ?? n.position,
+        }));
+      });
+    } else {
+      setInternalNodes(nodes);
+    }
+  }, [nodes, setInternalNodes, layoutMode]);
 
   useEffect(() => {
     setInternalEdges(edges);
   }, [edges, setInternalEdges]);
+
+  const handleForceReady = useCallback((handle: ForceLayoutHandle | null) => {
+    forceHandleRef.current = handle;
+  }, []);
+
+  const handleNodeDragStart: OnNodeDrag = (_event, node) => {
+    forceHandleRef.current?.beginDrag(node.id, node.position);
+  };
+
+  const handleNodeDrag: OnNodeDrag = (_event, node) => {
+    forceHandleRef.current?.drag(node.id, node.position);
+  };
+
+  const handleNodeDragStop: OnNodeDrag = (event, node, nodes) => {
+    forceHandleRef.current?.endDrag(node.id);
+    onNodeDragStop?.(event, node, nodes);
+  };
 
   return (
     <ReactFlow
@@ -83,7 +123,9 @@ const TopicGraphView = ({
       nodeTypes={nodeTypes}
       edgeTypes={edgeTypes}
       onNodeClick={onNodeClick}
-      onNodeDragStop={onNodeDragStop}
+      onNodeDragStart={layoutMode === 'force' ? handleNodeDragStart : undefined}
+      onNodeDrag={layoutMode === 'force' ? handleNodeDrag : undefined}
+      onNodeDragStop={layoutMode === 'force' ? handleNodeDragStop : onNodeDragStop}
       onEdgeClick={onEdgeClick}
       onMoveEnd={onMoveEnd}
       onNodesChange={onNodesChange}
@@ -104,12 +146,17 @@ const TopicGraphView = ({
       elevateEdgesOnSelect
       zoomActivationKeyCode={null}
     >
+      {layoutMode === 'force' && (
+        <ForceLayoutController baseNodes={nodes} edges={edges} onHandleReady={handleForceReady} />
+      )}
       {showViewportToolbar && (
         <ViewportToolbar
           fitViewPadding={fitViewPadding}
           fitViewMaxZoom={fitViewMaxZoom}
           viewportLocked={viewportLocked}
           onToggleViewportLock={onToggleViewportLock}
+          layoutMode={layoutMode}
+          onChangeLayoutMode={onChangeLayoutMode}
         />
       )}
       <Background color={backgroundColor} gap={backgroundGap} />

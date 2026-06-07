@@ -34,4 +34,9 @@ public final class SubscriptionExceptionMapper {
   public Response mapSubscriptionNotFoundException(SubscriptionNotFoundException e) {
     return Response.status(Response.Status.BAD_REQUEST).entity(e.getMessage()).build();
   }
+
+  @ServerExceptionMapper
+  public Response mapFeatureQuotaHitException(FeatureQuotaHitException e) {
+    return Response.status(Response.Status.CONFLICT).entity(e.getMessage()).build();
+  }
 }

@@ -6,5 +6,5 @@ import de.thi.mynd.progressTracking.entity.StreakPreference;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public class StreakPreferenceRepository
+public final class StreakPreferenceRepository
     extends MyndBaseCustomIdRepository<StreakPreference, CreatorIdKey> {}

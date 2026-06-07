@@ -9,7 +9,22 @@
     "invitations": "Einladungen",
     "subscription": "Abonnement",
     "streaks": "Meine Streaks",
-    "adminCategories": "Kategorien"
+    "adminCategories": "Kategorien",
+    "challenges": "Meine Challenge"
+  },
+  "challenge": {
+    "title": "Wöchentliche Challenge",
+    "subtitle": "Schließe Content Elemente ab und verdiene Belohnungen.",
+    "weekly": "Wöchentliche Challenge",
+    "description": "Schließe diese Woche {{target}} Content Elemente ab.",
+    "nodes": "Content Elemente abgeschlossen",
+    "reward": "Belohnung: +{{count}} Einladungs-Credits",
+    "completed": "Abgeschlossen!",
+    "claimed": "Belohnung erhalten",
+    "claimButton": "+2 Einladungs-Credits einlösen",
+    "rewardClaimed": "Belohnung eingelöst! Du hast 2 Einladungs-Credits erhalten.",
+    "history": "Vergangene Challenges",
+    "noHistory": "Noch keine vergangenen Challenges."
   },
   "streak": {
     "title": "Meine Streaks",
@@ -109,7 +124,8 @@
     "success": "Erfolg",
     "edit": "Bearbeiten",
     "clickOnANodeToSeeContent": "Klicke auf einen Knoten um den Inhalt zu sehen",
-    "saveAndView": "Speichern und ansehen"
+    "saveAndView": "Speichern und ansehen",
+    "or": "Oder"
   },
   "topic": {
     "headings": {
@@ -289,36 +305,20 @@
     "managePlan": "Abo verwalten",
     "switchPlan": "Plan wechseln",
     "billingPortal": "Abrechnungsportal",
+    "upgradeToLearn": "Upgrade auf Premium um weiter zu lernen",
+    "goPremium": "Premium freischalten",
     "free": {
       "title": "Free",
-      "price": "€0",
-      "description": "Kostenlos starten.",
-      "feature1": "Zugriff auf öffentliche Themen",
-      "feature2": "Einfacher Skill Tree",
-      "feature3": "Community-Support",
-      "button": "Aktueller Plan"
+      "description": "Kostenlos starten."
     },
-    "plus": {
-      "title": "Plus",
-      "price": "€9",
-      "description": "Für engagierte Lernende.",
-      "feature1": "Alles aus Free",
-      "feature2": "Unbegrenzte Themen",
-      "feature3": "Myna KI-Assistent",
-      "feature4": "Prioritäts-Support",
-      "button": "Plus abonnieren"
-    },
-    "pro": {
-      "title": "Pro",
-      "price": "€19",
-      "description": "Maximale Lernpower.",
-      "feature1": "Alles aus Plus",
-      "feature2": "Erweiterte Analysen",
-      "feature3": "Eigene Kategorien",
-      "feature4": "Team-Zusammenarbeit",
-      "feature5": "Früher Zugang zu neuen Funktionen",
-      "button": "Pro abonnieren"
-    }
+    "paidTagline": "Schalte alles frei, was MYnd zu bieten hat.",
+    "monthly": "Monatlich",
+    "yearly": "Jährlich",
+    "savePercent": "{{percent}}% sparen",
+    "startTrial": "Kostenlos testen",
+    "subscribeNow": "Abonnieren",
+    "billedAnnually": "{{total}} jährlich abgerechnet",
+    "billedMonthly": "Monatlich abgerechnet"
   },
   "invitation": {
     "manage": {
@@ -355,6 +355,59 @@
       "description": "Du benötigst eine Einladung, um auf diese Plattform zuzugreifen.",
       "acceptButton": "Einladung annehmen",
       "contactHint": "Wende dich an einen Builder, um eine Einladung zu erhalten."
+    }
+  },
+  "footer": {
+    "legal": "Impressum & Datenschutz"
+  },
+
+  "legal": {
+    "pageTitle": "Impressum & Datenschutzerklärung",
+    "pageDescription": "Rechtliche Informationen zur Plattform MYnd und Hinweise zur Verarbeitung personenbezogener Daten.",
+    "imprint": {
+      "title": "Impressum",
+      "provider": "Anbieter",
+      "providerName": "Technische Hochschule Ingolstadt",
+      "street": "Esplanade 10",
+      "city": "85049 Ingolstadt",
+      "country": "Deutschland",
+      "representedBy": "Vertreten durch",
+      "representedByName": "Florian Weisenberger",
+      "contact": "Kontakt",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "registerEntry": "Registereintrag",
+      "registerText": "Amtsgericht Ingolstadt, HRB 123456",
+      "vatId": "Umsatzsteuer-ID",
+      "contentResponsible": "Verantwortlich für den Inhalt",
+      "contentResponsibleName": "Florian Weisenberger",
+      "contentResponsibleStreet": "Musterstraße 12",
+      "contentResponsibleCity": "85049 Ingolstadt"
+    },
+    "privacy": {
+      "title": "Datenschutzerklärung",
+      "intro": "MYnd verarbeitet personenbezogene Daten ausschließlich zur Bereitstellung der Plattform auf Grundlage von Art. 6 DSGVO.",
+      "collectedData": "Erhobene Daten",
+      "collectedDataItems": {
+        "nameEmail": "Name und E-Mail-Adresse",
+        "accountProfile": "Benutzerkonto- und Profildaten",
+        "learningUsage": "Lernfortschritt und Nutzungsdaten der Plattform",
+        "rolesPermissions": "Rollen- und Berechtigungsdaten"
+      },
+      "processingPurpose": "Zweck der Verarbeitung",
+      "processingPurposeItems": {
+        "platform": "Bereitstellung und Verwaltung der Lernplattform",
+        "accountsRoles": "Verwaltung von Benutzerkonten und Rollen",
+        "learningProgress": "Speicherung und Anzeige von Lernfortschritten",
+        "improvement": "Verbesserung der Lerninhalte und Plattformfunktionen"
+      },
+      "disclosure": "Weitergabe",
+      "disclosureText": "Eine Weitergabe erfolgt nur an technische Hosting- und Infrastrukturdienstleister, sofern dies für den Betrieb der Plattform notwendig ist.",
+      "storage": "Speicherung",
+      "storageText": "Personenbezogene Daten werden nur so lange gespeichert, wie dies für die Nutzung der Plattform und zur Erfüllung gesetzlicher Pflichten erforderlich ist.",
+      "userRights": "Rechte der Nutzer",
+      "userRightsText": "Nutzer haben das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung und Widerspruch gegen die Verarbeitung.",
+      "privacyContact": "Kontakt Datenschutz"
     }
   }
 }

@@ -2,10 +2,12 @@ package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
+import de.thi.mynd.progressTracking.service.LearnProgressService;
 import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicGraphRepository;
 import de.thi.mynd.topic.repository.TopicRepository;
+import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.*;
@@ -16,24 +18,36 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
 
   @Inject TopicGraphRepository topicGraphRepository;
 
+  @Inject LearnProgressService learnProgressService;
+
   @Inject TopicRepository topicRepository;
 
   @Inject MappingRegistry mappingRegistry;
 
-  @Override
-  public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(int n) {
-    List<Topic> topics = topicGraphRepository.findNMostPopular(n);
-
-    return getGraphTopicDtosWithNeighbors(topics);
-  }
+  @Inject SecurityIdentity identity;
 
   @Override
-  public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
-      int n, List<UUID> categoryFilter) {
-    List<Topic> topics =
-        topicGraphRepository.findNMostPopularFilterByCategoryIds(n, categoryFilter);
+  public List<GraphTopicDto> getLearnGraph() {
+    String creatorId = identity.getPrincipal().getName();
 
-    return getGraphTopicDtosWithNeighbors(topics);
+    List<UUID> lastLearnedTopicIds =
+        learnProgressService.getLastNUncompletedTopicsForUser(10, creatorId);
+    if (lastLearnedTopicIds.isEmpty()) {
+      List<Topic> topics = topicGraphRepository.findNMostPopular(10);
+
+      return getGraphTopicDtosWithNeighbors(topics);
+    }
+    List<Topic> initialTopics = topicRepository.findByIdsTypeSafe(lastLearnedTopicIds);
+    Set<GraphTopicDto> dtos = new HashSet<>(getGraphTopicDtosWithNeighbors(initialTopics));
+
+    List<Topic> topicGraph =
+        topicGraphRepository.findForAssociatedTopicsNotStartedAllCompleted(
+            lastLearnedTopicIds, creatorId);
+    List<GraphTopicDto> additionalDtos =
+        mappingRegistry.mapListWithAdditionalData(topicGraph, GraphTopicDto.class);
+
+    dtos.addAll(additionalDtos);
+    return dtos.stream().toList();
   }
 
   @Override
