@@ -33,7 +33,7 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
 
     return getEntityManager()
         .createNativeQuery(
-            "WITH search_query AS (SELECT to_tsquery('german', plainto_tsquery(:search)) AS query) "
+            "WITH search_query AS (SELECT to_tsquery('german', :search) AS query) "
                 + "SELECT topic.* FROM topic, search_query "
                 + "WHERE title_search_vector @@ search_query.query "
                 + "OR teaser_search_vector @@ search_query.query "
@@ -42,7 +42,7 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
                 + "ts_rank_cd(teaser_search_vector, search_query.query) DESC "
                 + "LIMIT :limit",
             Topic.class)
-        .setParameter("search", search)
+        .setParameter("search", safeGermanPrefixSearch(search))
         .setParameter("limit", limit)
         .getResultList();
   }
@@ -56,5 +56,19 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
     cq.where(cb.equal(secondJoin.get("id"), topicId));
 
     return getEntityManager().createQuery(cq).getResultList();
+  }
+
+  private String safeGermanPrefixSearch(String search) {
+    if (search == null || search.trim().isEmpty()) {
+      return "";
+    }
+    String sanitized = search.replaceAll("[^a-zA-Z0-9äöüÄÖÜß\\s]", " ");
+
+    String tsQuery =
+        Arrays.stream(sanitized.trim().split("\\s+"))
+            .filter(token -> !token.isEmpty())
+            .collect(Collectors.joining(":* & "));
+
+    return tsQuery.isEmpty() ? "" : tsQuery + ":*";
   }
 }
