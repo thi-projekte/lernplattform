@@ -203,7 +203,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
                 {t('topic.actions.start')}
               </Button>
             </Tooltip>
-            {!canLearnTopics && !canStartNewTopics && (
+            {(!canLearnTopics || !canStartNewTopics) && (
               <Button
                 size="sm"
                 color="yellow"
