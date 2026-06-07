@@ -38,7 +38,8 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
 
   @Override
   public SubscriptionDto getSubscriptionForCurrentUserAsDto() {
-    SubscriptionDto dto =  mappingRegistry.map(getSubscriptionForCurrentUser(), SubscriptionDto.class);
+    SubscriptionDto dto =
+        mappingRegistry.map(getSubscriptionForCurrentUser(), SubscriptionDto.class);
 
     dto.canLearnTopics = true;
     dto.canStartNewTopics = true;
