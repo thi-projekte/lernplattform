@@ -266,7 +266,7 @@ const ProductCard = ({
             >
               {t('subscription.managePlan')}
             </Button>
-          ) : canAccessBillingPortal ? (
+          ) : canAccessBillingPortal && currentPlan !== "FREE" ? (
             <Button
               fullWidth
               radius="md"
