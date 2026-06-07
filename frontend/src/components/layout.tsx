@@ -1,11 +1,14 @@
 import {
+  ActionIcon,
   AppShell,
   Avatar,
   Box,
   Burger,
   Button,
+  Center,
   Group,
   Image,
+  Kbd,
   NavLink,
   Text,
   ThemeIcon,
@@ -65,18 +68,41 @@ const ChallengeBadge = () => {
   const navigate = useNavigate();
   const { data: challenge } = useFetchCurrentChallenge();
 
-  if (!challenge?.completed || challenge.rewardClaimed) return null;
-
   return (
     <Tooltip label={t('challenge.claimButton')} withArrow>
       <UnstyledButton onClick={() => navigate('/challenges')}>
         <Group gap={6} align="center">
-          <ThemeIcon size="md" radius="xl" color="yellow" variant="light">
+          <ThemeIcon size="md" radius="xl" color={challenge?.completed ? "yellow" : "gray"} variant="light">
             <IconTrophy size={16} />
           </ThemeIcon>
         </Group>
       </UnstyledButton>
     </Tooltip>
+  );
+};
+
+const SearchBadge = () => {
+  const { t } = useTranslation();
+
+  return (
+    <Center>
+      <div onClick={() => spotlight.open()}>
+        <Group gap={6} align="center" justify="center">
+          <Group gap={4} align="center">
+            <Kbd>⌘</Kbd>
+            <Kbd>K</Kbd>
+          </Group>
+
+          <Text size="sm" c="dimmed">
+            {t('common.or')}
+          </Text>
+
+          <ActionIcon variant="default" radius="md" size="md">
+            <IconSearch />
+          </ActionIcon>
+        </Group>
+      </div>
+    </Center>
   );
 };
 
@@ -196,6 +222,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             </UnstyledButton>
           </Group>
           <Group px="md" gap="xs">
+            <SearchBadge />
             <StreakBadge />
             <ChallengeBadge />
             <ColorSchemeToggle />
