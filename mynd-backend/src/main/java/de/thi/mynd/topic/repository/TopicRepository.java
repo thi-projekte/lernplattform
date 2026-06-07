@@ -31,12 +31,9 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
   @SuppressWarnings("unchecked")
   public List<Topic> findBySearch(String search, int limit) {
 
-    String tsQuery =
-        Arrays.stream(search.trim().split("\\s+")).collect(Collectors.joining(" & ")) + ":*";
-
     return getEntityManager()
         .createNativeQuery(
-            "WITH search_query AS (SELECT to_tsquery('german', :search) AS query) "
+            "WITH search_query AS (SELECT to_tsquery('german', plainto_tsquery(:search)) AS query) "
                 + "SELECT topic.* FROM topic, search_query "
                 + "WHERE title_search_vector @@ search_query.query "
                 + "OR teaser_search_vector @@ search_query.query "
@@ -45,7 +42,7 @@ public final class TopicRepository extends MyndBaseRepository<Topic> {
                 + "ts_rank_cd(teaser_search_vector, search_query.query) DESC "
                 + "LIMIT :limit",
             Topic.class)
-        .setParameter("search", tsQuery)
+        .setParameter("search", search)
         .setParameter("limit", limit)
         .getResultList();
   }
