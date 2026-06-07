@@ -183,7 +183,11 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           </>
         ) : (
           <>
-            <Tooltip label={t('subscription.upgradeToLearn')} disabled={canStartNewTopics} withArrow>
+            <Tooltip
+              label={t('subscription.upgradeToLearn')}
+              disabled={canStartNewTopics}
+              withArrow
+            >
               <Button
                 size="sm"
                 color="blue"

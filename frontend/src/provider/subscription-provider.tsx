@@ -33,11 +33,7 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
         isLoading,
       }}
     >
-      <LoadingOverlay
-        zIndex={9999}
-        visible={isLoading}
-        loaderProps={{ type: 'bars' }}
-      />
+      <LoadingOverlay zIndex={9999} visible={isLoading} loaderProps={{ type: 'bars' }} />
       {children}
     </SubscriptionContext>
   );
