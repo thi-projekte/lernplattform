@@ -8,8 +8,7 @@ import java.time.LocalDate;
 @Table(name = "feature_quota_tracking")
 public class FeatureQuota extends BaseEntity {
 
-    @EmbeddedId
-    public FeatureQuotaId id;
+  @EmbeddedId public FeatureQuotaId id;
 
   @Column public LocalDate dayAccountedFor;
 

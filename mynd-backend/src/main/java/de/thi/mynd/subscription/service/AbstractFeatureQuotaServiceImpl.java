@@ -1,15 +1,13 @@
 package de.thi.mynd.subscription.service;
 
-import de.thi.mynd.common.entity.CreatorIdKey;
 import de.thi.mynd.subscription.entity.Feature;
 import de.thi.mynd.subscription.entity.FeatureQuota;
 import de.thi.mynd.subscription.entity.FeatureQuotaId;
 import de.thi.mynd.subscription.repository.FeatureQuotaRepository;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.Optional;
-
-import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 public abstract class AbstractFeatureQuotaServiceImpl {
