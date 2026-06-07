@@ -308,34 +308,16 @@
     "goPremium": "Premium freischalten",
     "free": {
       "title": "Free",
-      "price": "€0",
-      "description": "Kostenlos starten.",
-      "feature1": "Zugriff auf öffentliche Themen",
-      "feature2": "Einfacher Skill Tree",
-      "feature3": "Community-Support",
-      "button": "Aktueller Plan"
+      "description": "Kostenlos starten."
     },
-    "plus": {
-      "title": "Plus",
-      "price": "€9",
-      "description": "Für engagierte Lernende.",
-      "feature1": "Alles aus Free",
-      "feature2": "Unbegrenzte Themen",
-      "feature3": "Myna KI-Assistent",
-      "feature4": "Prioritäts-Support",
-      "button": "Plus abonnieren"
-    },
-    "pro": {
-      "title": "Pro",
-      "price": "€19",
-      "description": "Maximale Lernpower.",
-      "feature1": "Alles aus Plus",
-      "feature2": "Erweiterte Analysen",
-      "feature3": "Eigene Kategorien",
-      "feature4": "Team-Zusammenarbeit",
-      "feature5": "Früher Zugang zu neuen Funktionen",
-      "button": "Pro abonnieren"
-    }
+    "paidTagline": "Schalte alles frei, was MYnd zu bieten hat.",
+    "monthly": "Monatlich",
+    "yearly": "Jährlich",
+    "savePercent": "{{percent}}% sparen",
+    "startTrial": "Kostenlos testen",
+    "subscribeNow": "Abonnieren",
+    "billedAnnually": "{{total}} jährlich abgerechnet",
+    "billedMonthly": "Monatlich abgerechnet"
   },
   "invitation": {
     "manage": {

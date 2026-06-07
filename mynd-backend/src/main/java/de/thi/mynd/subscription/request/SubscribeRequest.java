@@ -1,8 +1,8 @@
 package de.thi.mynd.subscription.request;
 
-import de.thi.mynd.subscription.entity.SubscriptionStatus;
+import jakarta.validation.constraints.NotBlank;
 
 public final class SubscribeRequest {
 
-  public SubscriptionStatus subscriptionStatus;
+  @NotBlank public String priceId;
 }
