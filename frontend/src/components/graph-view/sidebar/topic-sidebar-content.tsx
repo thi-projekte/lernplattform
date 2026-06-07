@@ -30,6 +30,7 @@ import {
 } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useUserService } from '../../../provider/user-provider';
+import { useSubscription } from '../../../provider/subscription-provider.tsx';
 import CategoryBadge from '../../category-badge.tsx';
 import {
   useCompleteTopicManuallyMutation,
@@ -46,6 +47,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const userService = useUserService();
+  const { canLearnTopics, canStartNewTopics } = useSubscription();
   const currentUsername = userService.account.username?.toLowerCase();
   const isOwner =
     !!selectedElement.creatorId &&
@@ -143,39 +145,75 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
             {t('topic.actions.completed')}
           </Button>
         ) : isStarted ? (
-          <Tooltip
-            label={t('topic.actions.completeBlockedHint')}
-            disabled={progressPercent >= 100}
-            withArrow
-          >
-            <Button
-              size="sm"
-              color="green.7"
-              loading={isCompleting}
-              onClick={() => {
-                if (topicId) {
-                  track('topicLearnCompletedManually', { props: { topicId } });
-                  completeTopic(topicId);
-                }
-              }}
-            >
-              {t('topic.actions.complete')}
-            </Button>
-          </Tooltip>
-        ) : (
-          <Button
-            size="sm"
-            color="blue"
-            loading={isStarting}
-            onClick={() => {
-              if (topicId) {
-                track('topicLearnStarted', { props: { topicId } });
-                startTopic(topicId);
+          <>
+            <Tooltip
+              label={
+                !canLearnTopics
+                  ? t('subscription.upgradeToLearn')
+                  : t('topic.actions.completeBlockedHint')
               }
-            }}
-          >
-            {t('topic.actions.start')}
-          </Button>
+              disabled={canLearnTopics && progressPercent >= 100}
+              withArrow
+            >
+              <Button
+                size="sm"
+                color="green.7"
+                loading={isCompleting}
+                disabled={!canLearnTopics}
+                onClick={() => {
+                  if (topicId) {
+                    track('topicLearnCompletedManually', { props: { topicId } });
+                    completeTopic(topicId);
+                  }
+                }}
+              >
+                {t('topic.actions.complete')}
+              </Button>
+            </Tooltip>
+            {!canLearnTopics && (
+              <Button
+                size="sm"
+                color="yellow"
+                variant="light"
+                onClick={() => navigate('/subscription')}
+              >
+                {t('subscription.goPremium')}
+              </Button>
+            )}
+          </>
+        ) : (
+          <>
+            <Tooltip
+              label={t('subscription.upgradeToLearn')}
+              disabled={canStartNewTopics}
+              withArrow
+            >
+              <Button
+                size="sm"
+                color="blue"
+                loading={isStarting}
+                disabled={!canStartNewTopics}
+                onClick={() => {
+                  if (topicId) {
+                    track('topicLearnStarted', { props: { topicId } });
+                    startTopic(topicId);
+                  }
+                }}
+              >
+                {t('topic.actions.start')}
+              </Button>
+            </Tooltip>
+            {!canLearnTopics && !canStartNewTopics && (
+              <Button
+                size="sm"
+                color="yellow"
+                variant="light"
+                onClick={() => navigate('/subscription')}
+              >
+                {t('subscription.goPremium')}
+              </Button>
+            )}
+          </>
         )}
       </Group>
 

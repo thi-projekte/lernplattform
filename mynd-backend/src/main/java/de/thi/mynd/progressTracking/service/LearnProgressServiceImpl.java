@@ -8,6 +8,7 @@ import de.thi.mynd.progressTracking.exception.TopicLearnProgressAlreadyStartedEx
 import de.thi.mynd.progressTracking.exception.TopicLearnProgressNotStartedException;
 import de.thi.mynd.progressTracking.repository.LearnProgressContentElementRepository;
 import de.thi.mynd.progressTracking.repository.LearnProgressTopicRepository;
+import de.thi.mynd.subscription.service.FeatureQuotaActionsService;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.service.ContentElementService;
 import io.quarkus.logging.Log;
@@ -37,6 +38,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
   @Inject StreakService streakService;
 
   @Inject ChallengeService challengeService;
+
+  @Inject FeatureQuotaActionsService featureQuotaActionsService;
 
   @Override
   public Map<UUID, TopicLearnProgressDto> getLearnProgressMappingForTopics(List<UUID> topicIds) {
@@ -78,6 +81,9 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
 
     String creatorId = identity.getPrincipal().getName();
 
+    // Fails if we cannot start learning a new topic
+    featureQuotaActionsService.startNewTopic(creatorId);
+
     LearnProgressTopicId id = new LearnProgressTopicId();
     id.topicId = topicId;
     id.creatorId = creatorId;
@@ -103,6 +109,11 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     if (learnProgressTopicOptional.isEmpty()) {
       throw new TopicLearnProgressNotStartedException("This topic has not been started yet");
     }
+
+    String creatorId = identity.getPrincipal().getName();
+
+    featureQuotaActionsService.learnContentElement(creatorId);
+    featureQuotaActionsService.completeTopic(creatorId);
 
     LearnProgressTopic learnProgressTopic = learnProgressTopicOptional.get();
     learnProgressTopic.status = LearnProgressStatus.COMPLETED_MANUALLY;
@@ -138,6 +149,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     LearnProgressTopic progressTopic = learnProgressTopicOptional.get();
     String creatorId = identity.getPrincipal().getName();
 
+    featureQuotaActionsService.learnContentElement(creatorId);
+
     LearnProgressContentElementId id = new LearnProgressContentElementId();
     id.topicId = contentElement.topic.id;
     id.contentElementId = contentElementId;
@@ -152,6 +165,9 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     progressTopic.contentElements.add(progressElement);
 
     if (progressTopic.contentElements.size() == progressTopic.contentElementsToComplete) {
+
+      featureQuotaActionsService.completeTopic(creatorId);
+
       progressTopic.status = LearnProgressStatus.ALL_CONTENT_ELEMENTS_COMPLETED;
       Log.infof("User %s successfully completed topic %s", creatorId, progressTopic.id.topicId);
     }
