@@ -8,4 +8,6 @@ public final class SubscriptionDto {
   public String creatorId;
   public SubscriptionStatus subscriptionStatus;
   public boolean canAccessBillingPortal;
+  public boolean canLearnTopics;
+  public boolean canStartNewTopics;
 }

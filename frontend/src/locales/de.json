@@ -304,6 +304,8 @@
     "managePlan": "Abo verwalten",
     "switchPlan": "Plan wechseln",
     "billingPortal": "Abrechnungsportal",
+    "upgradeToLearn": "Upgrade auf Premium um weiter zu lernen",
+    "goPremium": "Premium freischalten",
     "free": {
       "title": "Free",
       "description": "Kostenlos starten."

@@ -11,9 +11,13 @@ public interface SubscriptionService {
 
   Subscription getSubscriptionForCurrentUser();
 
+  Subscription getSubscriptionForUser(String userId);
+
   SubscriptionDto getSubscriptionForCurrentUserAsDto();
 
   Subscription createDefaultSubscriptionForCurrentUser();
+
+  Subscription createDefaultSubscriptionForUser(String userId);
 
   Subscription updateCustomerId(Subscription subscription, String customerId);
 

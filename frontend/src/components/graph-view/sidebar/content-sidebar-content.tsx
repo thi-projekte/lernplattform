@@ -13,6 +13,8 @@ import {
 } from '../../../api/learn-progress.ts';
 import type { TopicLearnProgressDto } from '../../../schemas/learn-progress.ts';
 import { track } from '@plausible-analytics/tracker';
+import { useSubscription } from '../../../provider/subscription-provider.tsx';
+import { useNavigate } from 'react-router';
 
 interface ContentSidebarContentProps {
   selectedElement: AnyContentElementDto;
@@ -31,6 +33,8 @@ const ContentSidebarContent = ({
 
   const { mutate: completeContentElement, isPending } = useCompleteContentElementMutation();
   const { mutate: resetContentElement, isPending: isResetting } = useResetContentElementMutation();
+  const { canLearnTopics } = useSubscription();
+  const navigate = useNavigate();
 
   const topicStarted = !!topicLearnProgress;
   const isElementCompleted = !!topicLearnProgress?.completedContentElementIds.includes(
@@ -90,24 +94,39 @@ const ContentSidebarContent = ({
           </Button>
         </Stack>
       ) : (
-        <Tooltip label={t('topic.actions.start')} disabled={topicStarted} withArrow>
-          <Button
-            color="blue"
-            size="sm"
-            disabled={!canMarkCompleted}
-            loading={isPending}
-            onClick={() => {
-              completeContentElement(selectedElement.id);
-              track('contentElementCompleted', {
-                props: { contentElementId: selectedElement.id },
-              });
-            }}
-            leftSection={<IconCheck size={14} />}
-            style={{ alignSelf: 'flex-start' }}
+        <Stack gap="xs" style={{ alignSelf: 'flex-start' }}>
+          <Tooltip
+            label={!canLearnTopics ? t('subscription.upgradeToLearn') : t('topic.actions.start')}
+            disabled={canLearnTopics && topicStarted}
+            withArrow
           >
-            {t('topic.actions.markContentElementCompleted')}
-          </Button>
-        </Tooltip>
+            <Button
+              color="blue"
+              size="sm"
+              disabled={!canLearnTopics || !canMarkCompleted}
+              loading={isPending}
+              onClick={() => {
+                completeContentElement(selectedElement.id);
+                track('contentElementCompleted', {
+                  props: { contentElementId: selectedElement.id },
+                });
+              }}
+              leftSection={<IconCheck size={14} />}
+            >
+              {t('topic.actions.markContentElementCompleted')}
+            </Button>
+          </Tooltip>
+          {!canLearnTopics && (
+            <Button
+              size="sm"
+              color="yellow"
+              variant="light"
+              onClick={() => navigate('/subscription')}
+            >
+              {t('subscription.goPremium')}
+            </Button>
+          )}
+        </Stack>
       )}
 
       <Modal
