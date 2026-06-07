@@ -36,6 +36,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
 
   @Inject StreakService streakService;
 
+  @Inject ChallengeService challengeService;
+
   @Override
   public Map<UUID, TopicLearnProgressDto> getLearnProgressMappingForTopics(List<UUID> topicIds) {
     String creatorId = identity.getPrincipal().getName();
@@ -157,6 +159,7 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     learnProgressTopicRepository.persistAndFlush(progressTopic);
 
     streakService.continueOrStartStreaksForCurrentUser();
+    challengeService.trackContentElementCompletion();
     Log.infof(
         "User %s successfully completed learning content element %s", creatorId, contentElementId);
   }
@@ -197,6 +200,11 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     Log.infof(
         "User %s reset content element %s learning progress",
         identity.getPrincipal().getName(), contentElementId);
+  }
+
+  @Override
+  public List<UUID> getLastNUncompletedTopicsForUser(int n, String creatorId) {
+    return learnProgressTopicRepository.getLastNUncompletedTopicIdsForUser(n, creatorId);
   }
 
   private Optional<LearnProgressTopic> getByTopicIdAndCurrentCreator(UUID topicId) {

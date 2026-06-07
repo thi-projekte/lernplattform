@@ -3,20 +3,14 @@ import { useQueries, useQuery } from '@tanstack/react-query';
 import { type GraphTopicDto, GraphTopicDtoSchema } from '../schemas/topic-graph.ts';
 import { z } from 'zod';
 
-const fetchMostPopularWithNeighbors = async (
-  categoryIds?: string[],
-  personal?: boolean
-): Promise<GraphTopicDto[]> => {
+const fetchMostPopularWithNeighbors = async (builderMode?: boolean): Promise<GraphTopicDto[]> => {
   const search = new URLSearchParams();
-  if (categoryIds) {
-    search.set('categoryFiltter', categoryIds.join(','));
-  }
-  if (personal) {
-    search.set('personal', 'true');
+  if (builderMode) {
+    search.set('builderMode', 'true');
   }
 
   const result = await apiClient.get(
-    `/topics/graph/most-popular${search.size > 0 ? `?${search.toString()}` : ''}`,
+    `/topics/graph${search.size > 0 ? `?${search.toString()}` : ''}`,
     {
       validateStatus: (status) => status <= 204,
     }
@@ -24,14 +18,10 @@ const fetchMostPopularWithNeighbors = async (
   return safeValidateApiResponseContent(z.array(GraphTopicDtoSchema), result.data);
 };
 
-export const useFetchMostPopularTopicsWithNeighbors = (
-  categoryIds?: string[],
-  personal?: boolean,
-  enabled = true
-) => {
+export const useFetchMostPopularTopicsWithNeighbors = (builderMode?: boolean, enabled = true) => {
   return useQuery({
-    queryKey: ['mostPopularTopics', categoryIds, personal],
-    queryFn: () => fetchMostPopularWithNeighbors(categoryIds, personal),
+    queryKey: ['mostPopularTopics', builderMode],
+    queryFn: () => fetchMostPopularWithNeighbors(builderMode),
     enabled,
   });
 };

@@ -1,9 +1,21 @@
 {
-  "whatIsAi": ["aiMlAndDl"],
-  "aiMlAndDl": ["supervisedLearning", "neuralNetworks"],
-  "supervisedLearning": ["decTrees"],
-  "neuralNetworks": ["genAi"],
-  "genAi": ["prompting", "risksAndChances"],
+  "whatIsAi": [
+    "aiMlAndDl"
+  ],
+  "aiMlAndDl": [
+    "supervisedLearning",
+    "neuralNetworks"
+  ],
+  "supervisedLearning": [
+    "decTrees"
+  ],
+  "neuralNetworks": [
+    "genAi"
+  ],
+  "genAi": [
+    "prompting",
+    "risksAndChances"
+  ],
   "pmIntro": [
     "pmScope"
   ],
@@ -71,5 +83,29 @@
   ],
   "penthouseTheory": [
     "sixLifeAreas"
+  ],
+  "sixLifeAreas": [
+    "healthWellbeingPlan",
+    "socialEnvironmentSupport",
+    "educationGrowthPath",
+    "vocationActivityMeaning",
+    "personalBalanceRecharge",
+    "dreamsRealizationSteps"
+  ],
+  "healthWellbeingPlan": [
+    "personalBalanceRecharge",
+    "socialEnvironmentSupport"
+  ],
+  "socialEnvironmentSupport": [
+    "educationGrowthPath"
+  ],
+  "educationGrowthPath": [
+    "vocationActivityMeaning"
+  ],
+  "vocationActivityMeaning": [
+    "dreamsRealizationSteps"
+  ],
+  "personalBalanceRecharge": [
+    "dreamsRealizationSteps"
   ]
 }

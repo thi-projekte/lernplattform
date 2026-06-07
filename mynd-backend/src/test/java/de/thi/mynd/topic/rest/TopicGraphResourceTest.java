@@ -24,48 +24,6 @@ public class TopicGraphResourceTest {
   @TestSecurity(
       user = "alice",
       roles = {"builder", "authorizedUser"})
-  public void testGetMostPopularNoCategories() {
-    UUID topicId = UUID.randomUUID();
-    GraphTopicDto dto = GraphTopicDto.builder().id(topicId).build();
-
-    when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(10))
-        .thenReturn(List.of(dto));
-
-    given()
-        .when()
-        .get("/topics/graph/most-popular")
-        .then()
-        .statusCode(200)
-        .contentType(ContentType.JSON)
-        .body("size()", is(1))
-        .body("[0].id", is(topicId.toString()));
-  }
-
-  @Test
-  @TestSecurity(
-      user = "alice",
-      roles = {"builder", "authorizedUser"})
-  public void testGetMostPopularWithCategories() {
-    UUID categoryId = UUID.randomUUID();
-    List<UUID> categories = List.of(categoryId);
-
-    when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
-            eq(10), eq(categories)))
-        .thenReturn(List.of(GraphTopicDto.builder().build()));
-
-    given()
-        .queryParam("categories", categoryId.toString())
-        .when()
-        .get("/topics/graph/most-popular")
-        .then()
-        .statusCode(200)
-        .body("size()", is(1));
-  }
-
-  @Test
-  @TestSecurity(
-      user = "alice",
-      roles = {"builder", "authorizedUser"})
   public void testGetNeighbors() {
     UUID topicId = UUID.randomUUID();
 
@@ -93,8 +51,8 @@ public class TopicGraphResourceTest {
 
     given()
         .when()
-        .queryParam("personal", "true")
-        .get("/topics/graph/most-popular")
+        .queryParam("builderMode", "true")
+        .get("/topics/graph")
         .then()
         .statusCode(200)
         .contentType(ContentType.JSON)
@@ -115,8 +73,8 @@ public class TopicGraphResourceTest {
 
     given()
         .when()
-        .queryParam("personal", "true")
-        .get("/topics/graph/most-popular")
+        .queryParam("builderMode", "true")
+        .get("/topics/graph")
         .then()
         .statusCode(200)
         .contentType(ContentType.JSON)
@@ -139,33 +97,11 @@ public class TopicGraphResourceTest {
     given()
         .queryParam("categories", categoryId.toString())
         .when()
-        .queryParam("personal", "true")
-        .get("/topics/graph/most-popular")
+        .queryParam("builderMode", "true")
+        .get("/topics/graph")
         .then()
         .statusCode(200)
         .body("size()", is(0));
-  }
-
-  @Test
-  @TestSecurity(
-      user = "alice",
-      roles = {"builder", "authorizedUser"})
-  public void testGetMostPopularWithCategoriesPersonalSuccess() {
-    UUID categoryId = UUID.randomUUID();
-    List<UUID> categories = List.of(categoryId);
-
-    when(topicGraphService.getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
-            eq(100), eq(categories), eq("alice")))
-        .thenReturn(List.of(GraphTopicDto.builder().build()));
-
-    given()
-        .queryParam("categories", categoryId.toString())
-        .when()
-        .queryParam("personal", "true")
-        .get("/topics/graph/most-popular")
-        .then()
-        .statusCode(200)
-        .body("size()", is(1));
   }
 
   @Test
@@ -181,7 +117,7 @@ public class TopicGraphResourceTest {
     given()
         .pathParam("topicId", topicId.toString())
         .when()
-        .queryParam("personal", "true")
+        .queryParam("builderMode", "true")
         .get("/topics/graph/{topicId}/neighbors")
         .then()
         .statusCode(200)
@@ -201,7 +137,7 @@ public class TopicGraphResourceTest {
     given()
         .pathParam("topicId", topicId.toString())
         .when()
-        .queryParam("personal", "true")
+        .queryParam("builderMode", "true")
         .get("/topics/graph/{topicId}/neighbors")
         .then()
         .statusCode(200)

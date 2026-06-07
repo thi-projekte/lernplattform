@@ -101,6 +101,10 @@ const HomePage = () => {
     localStorage.setItem(POSITIONS_STORAGE_KEY, JSON.stringify(nodePositionsByOrientation));
   }, [nodePositionsByOrientation]);
   const [isViewportLocked, setIsViewportLocked] = useState(false);
+  const [layoutMode, setLayoutMode] = useState<'tree' | 'force'>(() => {
+    const stored = localStorage.getItem('mynd:graph-layout-mode');
+    return stored === 'force' ? 'force' : 'tree';
+  });
   const [lastExpandedNode, setLastExpandedNode] = useState<{
     id: string;
     position: { x: number; y: number };
@@ -339,7 +343,10 @@ const HomePage = () => {
                 edges={visibleEdges}
                 nodeTypes={nodeTypes}
                 onNodeClick={onNodeClick}
-                onNodeDragStop={(_event, node) => handleNodePositionChange(node.id, node.position)}
+                onNodeDragStop={(_event, node) => {
+                  if (layoutMode === 'force') return;
+                  handleNodePositionChange(node.id, node.position);
+                }}
                 allowCanvasPanning={!isViewportLocked}
                 allowPanOnScroll={!isViewportLocked}
                 allowNodeDragging={!isViewportLocked}
@@ -347,6 +354,11 @@ const HomePage = () => {
                 showViewportToolbar
                 viewportLocked={isViewportLocked}
                 onToggleViewportLock={() => setIsViewportLocked((current) => !current)}
+                layoutMode={layoutMode}
+                onChangeLayoutMode={(mode) => {
+                  setLayoutMode(mode);
+                  localStorage.setItem('mynd:graph-layout-mode', mode);
+                }}
                 fitView
                 fitViewPadding={orientation === 'horizontal' ? 0.22 : 0.3}
                 backgroundColor={theme.other.graphDots}
