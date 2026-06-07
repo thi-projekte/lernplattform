@@ -6,6 +6,9 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "feature_quota_tracking")
+@AttributeOverride(
+        name = "creatorId",
+        column = @Column(name = "creatorId", insertable = false, updatable = false))
 public class FeatureQuota extends BaseEntity {
 
   @EmbeddedId public FeatureQuotaId id;
