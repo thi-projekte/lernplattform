@@ -39,7 +39,7 @@ public final class ProductDtoMapper extends AbstractMappingProcessor<Product, Pr
 
     return ProductDto.builder()
         .title(entity.getName())
-        .canHaveTrial(true)
+        .canHaveTrial(false)
         .subscriptionStatus(status)
         .prices(priceDtos)
         .features(stripeService.getProductFeatures(entity.getId()))
@@ -49,7 +49,7 @@ public final class ProductDtoMapper extends AbstractMappingProcessor<Product, Pr
   @Override
   public ProductDto mapAndEnrich(Product entity, Object... additionalData) {
     ProductDto enriched = super.mapAndEnrich(entity, additionalData);
-    enriched.canHaveTrial = (boolean) additionalData[0];
+    enriched.canHaveTrial = !(boolean) additionalData[0];
     return enriched;
   }
 
