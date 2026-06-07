@@ -1,11 +1,14 @@
 import {
+  ActionIcon,
   AppShell,
   Avatar,
   Box,
   Burger,
   Button,
+  Center,
   Group,
   Image,
+  Kbd,
   NavLink,
   Text,
   ThemeIcon,
@@ -14,7 +17,9 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconChevronLeft, IconFlame, IconTrophy, IconUser } from '@tabler/icons-react';
+import { IconChevronLeft, IconFlame, IconTrophy, IconUser, IconSearch } from '@tabler/icons-react';
+import { spotlight } from '@mantine/spotlight';
+import { TopicSpotlight } from './topic-spotlight.tsx';
 import { useQueryProfilePicture } from '../api/profile-picture.ts';
 import { useFetchStreakPreferences, useFetchStreaks } from '../api/streak.ts';
 import { useFetchCurrentChallenge } from '../api/challenge.ts';
@@ -63,18 +68,46 @@ const ChallengeBadge = () => {
   const navigate = useNavigate();
   const { data: challenge } = useFetchCurrentChallenge();
 
-  if (!challenge?.completed || challenge.rewardClaimed) return null;
-
   return (
     <Tooltip label={t('challenge.claimButton')} withArrow>
       <UnstyledButton onClick={() => navigate('/challenges')}>
         <Group gap={6} align="center">
-          <ThemeIcon size="md" radius="xl" color="yellow" variant="light">
+          <ThemeIcon
+            size="md"
+            radius="xl"
+            color={challenge?.completed ? 'yellow' : 'gray'}
+            variant="light"
+          >
             <IconTrophy size={16} />
           </ThemeIcon>
         </Group>
       </UnstyledButton>
     </Tooltip>
+  );
+};
+
+const SearchBadge = () => {
+  const { t } = useTranslation();
+
+  return (
+    <Center>
+      <div onClick={() => spotlight.open()}>
+        <Group gap={6} align="center" justify="center">
+          <Group gap={4} align="center">
+            <Kbd>⌘</Kbd>
+            <Kbd>K</Kbd>
+          </Group>
+
+          <Text size="sm" c="dimmed">
+            {t('common.or')}
+          </Text>
+
+          <ActionIcon variant="default" radius="md" size="md">
+            <IconSearch />
+          </ActionIcon>
+        </Group>
+      </div>
+    </Center>
   );
 };
 
@@ -147,6 +180,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       }}
       padding={0}
     >
+      <TopicSpotlight />
       <AppShell.Header
         style={{
           background: theme.other.layoutHeaderBg,
@@ -188,8 +222,12 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             >
               <Image src="/mynd-logo.png" alt="MYnd Logo" h={58} w="auto" fit="contain" />
             </UnstyledButton>
+            <UnstyledButton onClick={() => spotlight.open()} aria-label="Suche öffnen">
+              <IconSearch size={24} stroke={1.5} />
+            </UnstyledButton>
           </Group>
           <Group px="md" gap="xs">
+            <SearchBadge />
             <StreakBadge />
             <ChallengeBadge />
             <ColorSchemeToggle />

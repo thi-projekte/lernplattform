@@ -124,7 +124,8 @@
     "success": "Success",
     "edit": "Edit",
     "clickOnANodeToSeeContent": "Click on a node to see content",
-    "saveAndView": "Save and view"
+    "saveAndView": "Save and view",
+    "or": "Or"
   },
   "topic": {
     "headings": {

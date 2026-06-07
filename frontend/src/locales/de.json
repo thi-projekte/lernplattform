@@ -124,7 +124,8 @@
     "success": "Erfolg",
     "edit": "Bearbeiten",
     "clickOnANodeToSeeContent": "Klicke auf einen Knoten um den Inhalt zu sehen",
-    "saveAndView": "Speichern und ansehen"
+    "saveAndView": "Speichern und ansehen",
+    "or": "Oder"
   },
   "topic": {
     "headings": {
