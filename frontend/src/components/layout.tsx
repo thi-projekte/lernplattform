@@ -72,7 +72,12 @@ const ChallengeBadge = () => {
     <Tooltip label={t('challenge.claimButton')} withArrow>
       <UnstyledButton onClick={() => navigate('/challenges')}>
         <Group gap={6} align="center">
-          <ThemeIcon size="md" radius="xl" color={challenge?.completed ? "yellow" : "gray"} variant="light">
+          <ThemeIcon
+            size="md"
+            radius="xl"
+            color={challenge?.completed ? 'yellow' : 'gray'}
+            variant="light"
+          >
             <IconTrophy size={16} />
           </ThemeIcon>
         </Group>
