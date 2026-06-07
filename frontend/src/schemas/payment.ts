@@ -10,7 +10,8 @@ export const SubscriptionDtoSchema = z.object({
   creatorId: z.string(),
   subscriptionStatus: SubscriptionStatusSchema,
   canAccessBillingPortal: z.boolean(),
-  canLearnTopics: z.boolean().optional(),
+  canLearnTopics: z.boolean(),
+  canStartNewTopics: z.boolean(),
 });
 export type SubscriptionDto = z.infer<typeof SubscriptionDtoSchema>;
 

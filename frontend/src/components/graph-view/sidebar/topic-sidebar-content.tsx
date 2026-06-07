@@ -47,7 +47,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const userService = useUserService();
-  const { canLearnTopics } = useSubscription();
+  const { canLearnTopics, canStartNewTopics } = useSubscription();
   const currentUsername = userService.account.username?.toLowerCase();
   const isOwner =
     !!selectedElement.creatorId &&
@@ -183,12 +183,12 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
           </>
         ) : (
           <>
-            <Tooltip label={t('subscription.upgradeToLearn')} disabled={canLearnTopics} withArrow>
+            <Tooltip label={t('subscription.upgradeToLearn')} disabled={canStartNewTopics} withArrow>
               <Button
                 size="sm"
                 color="blue"
                 loading={isStarting}
-                disabled={!canLearnTopics}
+                disabled={!canStartNewTopics}
                 onClick={() => {
                   if (topicId) {
                     track('topicLearnStarted', { props: { topicId } });
@@ -199,7 +199,7 @@ const TopicSidebarContent = ({ selectedElement }: TopicSidebarContentProps) => {
                 {t('topic.actions.start')}
               </Button>
             </Tooltip>
-            {!canLearnTopics && (
+            {!canLearnTopics && !canStartNewTopics && (
               <Button
                 size="sm"
                 color="yellow"
