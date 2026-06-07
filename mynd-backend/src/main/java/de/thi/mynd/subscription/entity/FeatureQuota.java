@@ -9,7 +9,7 @@ import java.time.LocalDate;
 @Table(name = "feature_quota_tracking")
 public class FeatureQuota extends BaseEntityWithCreatorIdPk {
 
-  @Column(nullable = false)
+  @Column
   public LocalDate dayAccountedFor;
 
   @Enumerated(EnumType.STRING)
