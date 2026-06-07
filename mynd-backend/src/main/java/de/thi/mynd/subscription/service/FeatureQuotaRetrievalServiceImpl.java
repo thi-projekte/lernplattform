@@ -10,6 +10,8 @@ import java.time.LocalDate;
 @ApplicationScoped
 public final class FeatureQuotaRetrievalServiceImpl extends AbstractFeatureQuotaServiceImpl
     implements FeatureQuotaRetrievalService {
+
+
   @Override
   public boolean canLearn(String userId) {
     FeatureQuota featureQuota =

@@ -1,8 +1,9 @@
 CREATE TABLE feature_quota_tracking (
-    creatorId VARCHAR(255) NOT NULL PRIMARY KEY,
+    creatorId VARCHAR(255) NOT NULL,
+    feature VARCHAR(255) NOT NULL,
     createdAt TIMESTAMP(6) NOT NULL,
     updatedAt TIMESTAMP(6) NOT NULL,
     dayAccountedFor DATE,
-    feature VARCHAR(255) NOT NULL,
-    count INTEGER NOT NULL
+    count INTEGER NOT NULL,
+    PRIMARY KEY (creatorId, feature)
 );

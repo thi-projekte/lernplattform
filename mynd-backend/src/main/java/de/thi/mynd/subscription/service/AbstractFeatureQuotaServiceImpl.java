@@ -3,10 +3,13 @@ package de.thi.mynd.subscription.service;
 import de.thi.mynd.common.entity.CreatorIdKey;
 import de.thi.mynd.subscription.entity.Feature;
 import de.thi.mynd.subscription.entity.FeatureQuota;
+import de.thi.mynd.subscription.entity.FeatureQuotaId;
 import de.thi.mynd.subscription.repository.FeatureQuotaRepository;
 import jakarta.inject.Inject;
 import java.time.LocalDate;
 import java.util.Optional;
+
+import jakarta.transaction.Transactional;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 public abstract class AbstractFeatureQuotaServiceImpl {
@@ -21,6 +24,7 @@ public abstract class AbstractFeatureQuotaServiceImpl {
 
   @Inject FeatureQuotaRepository featureQuotaRepository;
 
+  @Transactional
   protected FeatureQuota findOrUpdateOrCreateDefaultQuota(
       String userId, Feature feature, LocalDate date) {
     Optional<FeatureQuota> featureQuotaOptional =
@@ -45,11 +49,11 @@ public abstract class AbstractFeatureQuotaServiceImpl {
       return featureQuota;
     }
 
-    CreatorIdKey id = new CreatorIdKey();
+    FeatureQuotaId id = new FeatureQuotaId();
     id.creatorId = userId;
+    id.feature = feature;
     FeatureQuota featureQuota = new FeatureQuota();
     featureQuota.id = id;
-    featureQuota.feature = feature;
     featureQuota.dayAccountedFor = date;
     featureQuotaRepository.persistAndFlush(featureQuota);
 
