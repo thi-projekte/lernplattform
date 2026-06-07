@@ -111,7 +111,7 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     }
 
     String creatorId = identity.getPrincipal().getName();
-    featureQuotaService.learnContentElementOrWholeTopic(creatorId);
+    featureQuotaService.completeTopic(creatorId);
 
     LearnProgressTopic learnProgressTopic = learnProgressTopicOptional.get();
     learnProgressTopic.status = LearnProgressStatus.COMPLETED_MANUALLY;
@@ -147,7 +147,7 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     LearnProgressTopic progressTopic = learnProgressTopicOptional.get();
     String creatorId = identity.getPrincipal().getName();
 
-    featureQuotaService.learnContentElementOrWholeTopic(creatorId);
+    featureQuotaService.learnContentElement(creatorId);
 
     LearnProgressContentElementId id = new LearnProgressContentElementId();
     id.topicId = contentElement.topic.id;
@@ -163,6 +163,9 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     progressTopic.contentElements.add(progressElement);
 
     if (progressTopic.contentElements.size() == progressTopic.contentElementsToComplete) {
+
+      featureQuotaService.completeTopic(creatorId);
+
       progressTopic.status = LearnProgressStatus.ALL_CONTENT_ELEMENTS_COMPLETED;
       Log.infof("User %s successfully completed topic %s", creatorId, progressTopic.id.topicId);
     }
