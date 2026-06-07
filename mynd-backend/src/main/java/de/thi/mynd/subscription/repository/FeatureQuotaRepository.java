@@ -15,11 +15,11 @@ public final class FeatureQuotaRepository
   public Optional<FeatureQuota> findByCreatorAndFeatureAndDate(
       String creatorId, Feature feature, LocalDate date) {
     return find(
-            "id.creatorId = ?1 AND feature = ?2 AND dayAccountedFor = ?3", creatorId, feature, date)
+            "id.creatorId = ?1 AND id.feature = ?2 AND dayAccountedFor = ?3", creatorId, feature, date)
         .firstResultOptional();
   }
 
   public Optional<FeatureQuota> findByCreatorAndFeature(String creatorId, Feature feature) {
-    return find("id.creatorId = ?1 AND feature = ?2", creatorId, feature).firstResultOptional();
+    return find("id.creatorId = ?1 AND id.feature = ?2", creatorId, feature).firstResultOptional();
   }
 }

@@ -18,7 +18,7 @@ public final class FeatureQuotaRetrievalServiceImpl extends AbstractFeatureQuota
             userId, Feature.LearnContentElementOrTopic, LocalDate.now());
     Subscription subscription = subscriptionService.getSubscriptionForUser(userId);
 
-    return featureQuota.count <= freeMaxAmountDailyLearning
+    return featureQuota.count < freeMaxAmountDailyLearning
         || subscription.features.contains(StripeFeatureFlagConstants.UnlimitedLearning);
   }
 
@@ -27,7 +27,7 @@ public final class FeatureQuotaRetrievalServiceImpl extends AbstractFeatureQuota
     FeatureQuota featureQuota = findOrUpdateOrCreateDefaultQuota(userId, Feature.StartTopic, null);
     Subscription subscription = subscriptionService.getSubscriptionForUser(userId);
 
-    return featureQuota.count <= freeMaxAmountParallelTopics
+    return featureQuota.count < freeMaxAmountParallelTopics
         || subscription.features.contains(StripeFeatureFlagConstants.UnlimitedParallelTopics);
   }
 }
