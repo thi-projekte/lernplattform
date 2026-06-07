@@ -2,7 +2,7 @@ package de.thi.mynd.subscription.service;
 
 import de.thi.mynd.subscription.exception.FeatureQuotaHitException;
 
-public interface FeatureQuotaService {
+public interface FeatureQuotaActionsService {
 
   void learnContentElement(String userId) throws FeatureQuotaHitException;
 
