@@ -28,12 +28,17 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
 
   @Override
   public Subscription getSubscriptionForCurrentUser() {
+    return getSubscriptionForUser(identity.getPrincipal().getName());
+  }
+
+  @Override
+  public Subscription getSubscriptionForUser(String userId) {
     CreatorIdKey id = new CreatorIdKey();
-    id.creatorId = identity.getPrincipal().getName();
+    id.creatorId = userId;
 
     return subscriptionRepository
-        .findByIdOptional(id)
-        .orElseGet(this::createDefaultSubscriptionForCurrentUser);
+            .findByIdOptional(id)
+            .orElseGet(() -> createDefaultSubscriptionForUser(userId));
   }
 
   @Override
@@ -47,10 +52,15 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
   }
 
   @Override
-  @Transactional
   public Subscription createDefaultSubscriptionForCurrentUser() {
+    return createDefaultSubscriptionForUser(identity.getPrincipal().getName());
+  }
+
+  @Override
+  @Transactional
+  public Subscription createDefaultSubscriptionForUser(String userId) {
     CreatorIdKey id = new CreatorIdKey();
-    id.creatorId = identity.getPrincipal().getName();
+    id.creatorId = userId;
     Subscription subscription = new Subscription();
     subscription.id = id;
     subscription.subscriptionStatus = SubscriptionStatus.FREE;
