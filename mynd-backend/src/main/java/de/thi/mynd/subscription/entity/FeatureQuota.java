@@ -1,9 +1,8 @@
 package de.thi.mynd.subscription.entity;
 
 import de.thi.mynd.common.entity.BaseEntityWithCreatorIdPk;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 @Entity
@@ -13,8 +12,9 @@ public class FeatureQuota extends BaseEntityWithCreatorIdPk {
   @Column(nullable = false)
   public LocalDate dayAccountedFor;
 
+  @Enumerated(EnumType.STRING)
   @Column(nullable = false)
-  public String feature;
+  public Feature feature;
 
   @Column(nullable = false)
   public int count = 0;
