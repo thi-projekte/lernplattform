@@ -87,7 +87,7 @@ class StripeWebhookServiceImplTest {
 
     verify(subscriptionService)
         .setSubscriptionIdAndStatusForCustomerId(
-            CUSTOMER_ID, SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM, any());
+            eq(CUSTOMER_ID), eq(SUBSCRIPTION_ID), eq(SubscriptionStatus.PREMIUM), anyList());
     verify(subscriptionService, never())
         .setSubscriptionStatusForSubscriptionId(any(), any(), any());
   }
@@ -129,7 +129,8 @@ class StripeWebhookServiceImplTest {
     stripeWebhookService.processWebhook(PAYLOAD, SIG_HEADER);
 
     verify(subscriptionService)
-        .setSubscriptionStatusForSubscriptionId(SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM, any());
+        .setSubscriptionStatusForSubscriptionId(
+            eq(SUBSCRIPTION_ID), eq(SubscriptionStatus.PREMIUM), anyList());
     verify(subscriptionService, never())
         .setSubscriptionIdAndStatusForCustomerId(any(), any(), any(), any());
   }
@@ -180,7 +181,8 @@ class StripeWebhookServiceImplTest {
     stripeWebhookService.processWebhook(PAYLOAD, SIG_HEADER);
 
     verify(subscriptionService)
-        .setSubscriptionStatusForSubscriptionId(SUBSCRIPTION_ID, SubscriptionStatus.FREE, any());
+        .setSubscriptionStatusForSubscriptionId(
+            eq(SUBSCRIPTION_ID), eq(SubscriptionStatus.FREE), anyList());
     verifyNoInteractions(stripeService);
   }
 
