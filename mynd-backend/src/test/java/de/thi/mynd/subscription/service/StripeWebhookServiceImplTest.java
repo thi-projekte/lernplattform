@@ -88,7 +88,8 @@ class StripeWebhookServiceImplTest {
     verify(subscriptionService)
         .setSubscriptionIdAndStatusForCustomerId(
             CUSTOMER_ID, SUBSCRIPTION_ID, SubscriptionStatus.PREMIUM, any());
-    verify(subscriptionService, never()).setSubscriptionStatusForSubscriptionId(any(), any(), any());
+    verify(subscriptionService, never())
+        .setSubscriptionStatusForSubscriptionId(any(), any(), any());
   }
 
   @Test
