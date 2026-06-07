@@ -305,34 +305,16 @@
     "billingPortal": "Billing portal",
     "free": {
       "title": "Free",
-      "price": "€0",
-      "description": "Get started at no cost.",
-      "feature1": "Access to public topics",
-      "feature2": "Basic skill tree",
-      "feature3": "Community support",
-      "button": "Current plan"
+      "description": "Get started at no cost."
     },
-    "plus": {
-      "title": "Plus",
-      "price": "€9",
-      "description": "For dedicated learners.",
-      "feature1": "Everything in Free",
-      "feature2": "Unlimited topics",
-      "feature3": "Myna AI assistant",
-      "feature4": "Priority support",
-      "button": "Subscribe to Plus"
-    },
-    "pro": {
-      "title": "Pro",
-      "price": "€19",
-      "description": "Maximum learning power.",
-      "feature1": "Everything in Plus",
-      "feature2": "Advanced analytics",
-      "feature3": "Custom categories",
-      "feature4": "Team collaboration",
-      "feature5": "Early access to new features",
-      "button": "Subscribe to Pro"
-    }
+    "paidTagline": "Unlock everything MYnd has to offer.",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "savePercent": "Save {{percent}}%",
+    "startTrial": "Start free trial",
+    "subscribeNow": "Subscribe",
+    "billedAnnually": "{{total}} billed annually",
+    "billedMonthly": "Billed monthly"
   },
   "invitation": {
     "manage": {

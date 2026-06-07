@@ -4,16 +4,16 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import com.stripe.StripeClient;
+import com.stripe.exception.ApiConnectionException;
 import com.stripe.exception.StripeException;
 import com.stripe.model.*;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.*;
 import com.stripe.param.checkout.SessionCreateParams;
 import com.stripe.service.*;
+import com.stripe.service.SubscriptionService;
 import com.stripe.service.checkout.SessionService;
-import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.exception.HandledStripeException;
-import de.thi.mynd.subscription.exception.ProductNotFoundException;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -37,6 +37,8 @@ class StripeServiceImplTest {
   private CheckoutService checkoutService;
   private SessionService checkoutSessionService;
   private BillingPortalService billingPortalService;
+  private SubscriptionService subscriptionService;
+  private PriceService priceService;
   private com.stripe.service.billingportal.SessionService billingPortalSessionService;
 
   private static final String FRONTEND_URI = "https://app.mynd.de";
@@ -53,75 +55,19 @@ class StripeServiceImplTest {
     checkoutService = mock(CheckoutService.class);
     checkoutSessionService = mock(SessionService.class);
     billingPortalService = mock(BillingPortalService.class);
+    priceService = mock(PriceService.class);
+    subscriptionService = mock(SubscriptionService.class);
     billingPortalSessionService = mock(com.stripe.service.billingportal.SessionService.class);
 
     when(stripeClient.v1()).thenReturn(v1Services);
     when(v1Services.products()).thenReturn(productService);
     when(v1Services.customers()).thenReturn(customerService);
     when(v1Services.checkout()).thenReturn(checkoutService);
+    when(v1Services.prices()).thenReturn(priceService);
     when(checkoutService.sessions()).thenReturn(checkoutSessionService);
     when(v1Services.billingPortal()).thenReturn(billingPortalService);
+    when(v1Services.subscriptions()).thenReturn(subscriptionService);
     when(billingPortalService.sessions()).thenReturn(billingPortalSessionService);
-  }
-
-  // --- obtainPriceForSubscriptionStatus ---
-
-  @Test
-  void obtainPriceForSubscriptionStatus_withMatchingProduct_returnsDefaultPrice()
-      throws StripeException {
-    Price price = mock(Price.class);
-    Product product = mock(Product.class);
-    when(product.getDefaultPriceObject()).thenReturn(price);
-
-    StripeSearchResult<Product> searchResult = mockSearchResult(List.of(product));
-    when(productService.search(any(ProductSearchParams.class))).thenReturn(searchResult);
-
-    Price result = stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PRO);
-
-    assertNotNull(result);
-    assertSame(price, result);
-  }
-
-  @Test
-  void obtainPriceForSubscriptionStatus_withNoMatchingProduct_throwsProductNotFoundException()
-      throws StripeException {
-    StripeSearchResult<Product> emptyResult = mockSearchResult(Collections.emptyList());
-    when(productService.search(any(ProductSearchParams.class))).thenReturn(emptyResult);
-
-    ProductNotFoundException ex =
-        assertThrows(
-            ProductNotFoundException.class,
-            () -> stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PRO));
-
-    assertEquals("The product does not exist", ex.getMessage());
-  }
-
-  @Test
-  void obtainPriceForSubscriptionStatus_whenStripeThrows_throwsProductNotFoundException()
-      throws StripeException {
-    when(productService.search(any(ProductSearchParams.class)))
-        .thenThrow(mock(StripeException.class));
-
-    assertThrows(
-        ProductNotFoundException.class,
-        () -> stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PRO));
-  }
-
-  @Test
-  void obtainPriceForSubscriptionStatus_buildsQueryWithTierAndActiveFilter()
-      throws StripeException {
-    Product product = mock(Product.class);
-    when(product.getDefaultPriceObject()).thenReturn(mock(Price.class));
-
-    StripeSearchResult<Product> searchResult = mockSearchResult(List.of(product));
-    ArgumentCaptor<ProductSearchParams> captor = ArgumentCaptor.forClass(ProductSearchParams.class);
-    when(productService.search(captor.capture())).thenReturn(searchResult);
-
-    stripeService.obtainPriceForSubscriptionStatus(SubscriptionStatus.PRO);
-
-    String query = captor.getValue().toMap().get("query").toString();
-    assertTrue(query.contains("PRO"));
-    assertTrue(query.contains("active:\"true\""));
   }
 
   // --- getFullProductById ---
@@ -154,13 +100,11 @@ class StripeServiceImplTest {
   @Test
   void createCheckoutSessionForSubscriptionPrice_withValidInputs_returnsSession()
       throws StripeException {
-    Price price = mock(Price.class);
-    when(price.getId()).thenReturn(PRICE_ID);
 
     Session session = mock(Session.class);
     when(checkoutSessionService.create(any(SessionCreateParams.class))).thenReturn(session);
 
-    Session result = stripeService.createCheckoutSessionForSubscriptionPrice(price, CUSTOMER_ID);
+    Session result = stripeService.createCheckoutSessionForSubscriptionPrice(PRICE_ID, CUSTOMER_ID);
 
     assertNotNull(result);
     assertSame(session, result);
@@ -175,7 +119,7 @@ class StripeServiceImplTest {
     ArgumentCaptor<SessionCreateParams> captor = ArgumentCaptor.forClass(SessionCreateParams.class);
     when(checkoutSessionService.create(captor.capture())).thenReturn(mock(Session.class));
 
-    stripeService.createCheckoutSessionForSubscriptionPrice(price, CUSTOMER_ID);
+    stripeService.createCheckoutSessionForSubscriptionPrice(PRICE_ID, CUSTOMER_ID);
 
     SessionCreateParams params = captor.getValue();
     assertEquals(CUSTOMER_ID, params.getCustomer());
@@ -193,7 +137,7 @@ class StripeServiceImplTest {
     ArgumentCaptor<SessionCreateParams> captor = ArgumentCaptor.forClass(SessionCreateParams.class);
     when(checkoutSessionService.create(captor.capture())).thenReturn(mock(Session.class));
 
-    stripeService.createCheckoutSessionForSubscriptionPrice(price, CUSTOMER_ID);
+    stripeService.createCheckoutSessionForSubscriptionPrice(PRICE_ID, CUSTOMER_ID);
 
     SessionCreateParams params = captor.getValue();
     assertTrue(params.getSuccessUrl().contains("success=true"));
@@ -212,7 +156,7 @@ class StripeServiceImplTest {
 
     assertThrows(
         HandledStripeException.class,
-        () -> stripeService.createCheckoutSessionForSubscriptionPrice(price, CUSTOMER_ID));
+        () -> stripeService.createCheckoutSessionForSubscriptionPrice(PRICE_ID, CUSTOMER_ID));
   }
 
   // --- createBillingPortalSession ---
@@ -321,6 +265,151 @@ class StripeServiceImplTest {
         .thenThrow(mock(StripeException.class));
 
     assertThrows(HandledStripeException.class, () -> stripeService.getOrCreateCustomer(USERNAME));
+  }
+
+  // ==========================================
+  // Tests for getAllPricesForProduct
+  // ==========================================
+
+  @Test
+  void testGetAllPricesForProduct_Success() throws StripeException {
+    // Arrange
+    String productId = "prod_123";
+    Price mockPrice = new Price();
+    mockPrice.setId("price_ABC");
+
+    // Stripe uses specific Collection classes that extend StripeCollection
+    PriceCollection mockCollection = new PriceCollection();
+    mockCollection.setData(List.of(mockPrice));
+
+    when(priceService.list(any(com.stripe.param.PriceListParams.class))).thenReturn(mockCollection);
+
+    // Act
+    List<Price> result = stripeService.getAllPricesForProduct(productId);
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertEquals("price_ABC", result.get(0).getId());
+  }
+
+  @Test
+  void testGetAllPricesForProduct_ThrowsHandledException() throws StripeException {
+    // Arrange
+    String productId = "prod_123";
+    // Creating a real StripeException subclass to simulate failure
+    StripeException stripeException = new ApiConnectionException("Connection failed", null);
+
+    when(priceService.list(any(com.stripe.param.PriceListParams.class))).thenThrow(stripeException);
+
+    // Act & Assert
+    HandledStripeException exception =
+        assertThrows(
+            HandledStripeException.class,
+            () -> {
+              stripeService.getAllPricesForProduct(productId);
+            });
+
+    assertEquals("Cannot fetch prices for product", exception.getMessage());
+  }
+
+  // ==========================================
+  // Tests for getAllProductsWithPricesAndMetaData
+  // ==========================================
+
+  @Test
+  void testGetAllProductsWithPricesAndMetaData_Success() throws StripeException {
+    // Arrange
+    Product mockProduct = new Product();
+    mockProduct.setId("prod_XYZ");
+
+    ProductCollection mockCollection = new ProductCollection();
+    mockCollection.setData(List.of(mockProduct));
+
+    when(productService.list(any(com.stripe.param.ProductListParams.class)))
+        .thenReturn(mockCollection);
+
+    // Act
+    List<Product> result = stripeService.getAllProductsWithPricesAndMetaData();
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    assertEquals("prod_XYZ", result.get(0).getId());
+  }
+
+  @Test
+  void testGetAllProductsWithPricesAndMetaData_ThrowsHandledException() throws StripeException {
+    // Arrange
+    StripeException stripeException = new ApiConnectionException("API error", null);
+
+    when(productService.list(any(com.stripe.param.ProductListParams.class)))
+        .thenThrow(stripeException);
+
+    // Act & Assert
+    HandledStripeException exception =
+        assertThrows(
+            HandledStripeException.class,
+            () -> {
+              stripeService.getAllProductsWithPricesAndMetaData();
+            });
+
+    assertEquals("Cannot fetch all products", exception.getMessage());
+  }
+
+  @Test
+  void testCreateTrialForPriceId_Success() throws StripeException {
+    // Arrange
+    String priceId = "price_123";
+    String customerId = "cus_abc";
+    Subscription mockSubscription = mock(Subscription.class);
+
+    when(subscriptionService.create(any(SubscriptionCreateParams.class)))
+        .thenReturn(mockSubscription);
+
+    // Act
+    Subscription result = stripeService.createTrialForPriceId(priceId, customerId);
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(mockSubscription, result);
+
+    // Verify the parameters passed to Stripe match your method logic
+    ArgumentCaptor<SubscriptionCreateParams> argumentCaptor =
+        ArgumentCaptor.forClass(SubscriptionCreateParams.class);
+
+    verify(subscriptionService, times(1)).create(argumentCaptor.capture());
+
+    SubscriptionCreateParams capturedParams = argumentCaptor.getValue();
+    assertEquals(customerId, capturedParams.getCustomer());
+    assertEquals(priceId, capturedParams.getItems().get(0).getPrice());
+    assertTrue(capturedParams.getCancelAtPeriodEnd());
+    // If 'trialDays' is a field in your service, you can assert its value here too:
+    // assertEquals(expectedTrialDays, capturedParams.getTrialPeriodDays());
+  }
+
+  @Test
+  void testCreateTrialForPriceId_StripeException_ThrowsHandledStripeException()
+      throws StripeException {
+    // Arrange
+    String priceId = "price_123";
+    String customerId = "cus_abc";
+
+    // Simulating a Stripe API error
+    StripeException stripeException = new ApiConnectionException("Connection failed", null);
+
+    when(subscriptionService.create(any(SubscriptionCreateParams.class)))
+        .thenThrow(stripeException);
+
+    // Act & Assert
+    HandledStripeException exception =
+        assertThrows(
+            HandledStripeException.class,
+            () -> {
+              stripeService.createTrialForPriceId(priceId, customerId);
+            });
+
+    assertEquals("Cannot create trial", exception.getMessage());
   }
 
   // --- Helpers ---

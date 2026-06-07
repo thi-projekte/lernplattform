@@ -1,0 +1,2 @@
+ALTER TABLE subscription ADD COLUMN usedTrial BOOLEAN NOT NULL DEFAULT FALSE;
+ALTER TABLE subscription ADD COLUMN features TEXT[];
