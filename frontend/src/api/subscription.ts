@@ -40,6 +40,25 @@ export const useCreateInitialCheckoutSessionForSubscription = () => {
   });
 };
 
+const createCheckoutSessionForTrial = async (
+  priceId: string
+): Promise<AxiosResponse<StripeSessionDto>> => {
+  return await apiClient.post(
+    `/payments/trial`,
+    { priceId },
+    {
+      validateStatus: (status) => status <= 204,
+    }
+  );
+};
+
+export const useCreateInitialCheckoutSessionForTrial = () => {
+  return useMutation({
+    mutationKey: ['createCheckoutSessionTrial'],
+    mutationFn: createCheckoutSessionForTrial,
+  });
+};
+
 const createBillingPortalSession = async (): Promise<AxiosResponse<StripeSessionDto>> => {
   return await apiClient.post(
     `/subscriptions/billing-portal-session`,

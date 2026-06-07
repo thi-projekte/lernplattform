@@ -19,11 +19,13 @@ import { Layout } from '../components/layout.tsx';
 import {
   useCreateBillingPortalSession,
   useCreateInitialCheckoutSessionForSubscription,
+  useCreateInitialCheckoutSessionForTrial,
   useFetchProducts,
 } from '../api/subscription.ts';
 import { useSubscription } from '../provider/subscription-provider.tsx';
 import { notifications } from '@mantine/notifications';
 import type { PriceDto, ProductDto, SubscriptionStatus } from '../schemas/payment.ts';
+import { useQueryClient } from '@tanstack/react-query';
 
 type Interval = 'month' | 'year';
 
@@ -103,6 +105,7 @@ interface ProductCardProps {
   currentPlan: SubscriptionStatus;
   canAccessBillingPortal: boolean;
   onSubscribe: (priceId: string) => void;
+  onCreateTrial: (priceId: string) => void;
   onBillingPortal: () => void;
   isSubscribing: boolean;
   subscribingPriceId?: string;
@@ -115,6 +118,7 @@ const ProductCard = ({
   currentPlan,
   canAccessBillingPortal,
   onSubscribe,
+  onCreateTrial,
   onBillingPortal,
   isSubscribing,
   subscribingPriceId,
@@ -242,7 +246,7 @@ const ProductCard = ({
               size="sm"
               variant="outline"
               loading={isSubscribing && subscribingPriceId === selectedPrice.id}
-              onClick={() => onSubscribe(selectedPrice.id)}
+              onClick={() => onCreateTrial(selectedPrice.id)}
               style={{ borderColor: accentColor, color: accentColor }}
             >
               {t('subscription.startTrial')}
@@ -382,6 +386,8 @@ const SubscriptionPage = () => {
   const [selectedInterval, setSelectedInterval] = useState<Interval>('month');
   const isMobile = useMediaQuery('(max-width: 768px)');
 
+  const queryClient = useQueryClient();
+
   const { data: products = [] } = useFetchProducts();
 
   const {
@@ -389,6 +395,10 @@ const SubscriptionPage = () => {
     isPending: isSubscribing,
     variables: subscribingPriceId,
   } = useCreateInitialCheckoutSessionForSubscription();
+
+  const {
+    mutate: createTrial,
+    isPending: isCreatingTrial} = useCreateInitialCheckoutSessionForTrial();
   const { mutate: openBillingPortal, isPending: isBillingPortalLoading } =
     useCreateBillingPortalSession();
 
@@ -396,6 +406,15 @@ const SubscriptionPage = () => {
     subscribe(priceId, {
       onSuccess: (res) => {
         window.location.href = res.data.url;
+      },
+      onError: () => notifications.show({ color: 'red', message: t('common.serverError') }),
+    });
+  };
+
+  const handleCreateTrial = (priceId: string) => {
+    createTrial(priceId, {
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ['subscription'] });
       },
       onError: () => notifications.show({ color: 'red', message: t('common.serverError') }),
     });
@@ -425,10 +444,11 @@ const SubscriptionPage = () => {
     canAccessBillingPortal,
     onSubscribe: handleSubscribe,
     onBillingPortal: handleBillingPortal,
-    isSubscribing,
+    isSubscribing: isSubscribing || isCreatingTrial,
     subscribingPriceId: subscribingPriceId as string | undefined,
     isBillingPortalLoading,
     selectedInterval,
+    onCreateTrial: handleCreateTrial
   };
 
   return (
