@@ -11,6 +11,7 @@ import de.thi.mynd.progressTracking.exception.TopicLearnProgressAlreadyStartedEx
 import de.thi.mynd.progressTracking.exception.TopicLearnProgressNotStartedException;
 import de.thi.mynd.progressTracking.repository.LearnProgressContentElementRepository;
 import de.thi.mynd.progressTracking.repository.LearnProgressTopicRepository;
+import de.thi.mynd.subscription.service.FeatureQuotaActionsService;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.PdfElement;
 import de.thi.mynd.topic.entity.Topic;
@@ -34,6 +35,7 @@ class LearnProgressServiceImplTest {
   @InjectMock SecurityIdentity identity;
   @InjectMock MappingRegistry mappingRegistry;
   @InjectMock ContentElementService contentElementService;
+  @InjectMock FeatureQuotaActionsService featureQuotaActionsService;
 
   private static final String CREATOR_ID = "user-123";
   private static final UUID TOPIC_ID = UUID.randomUUID();
@@ -44,6 +46,10 @@ class LearnProgressServiceImplTest {
     Principal principal = mock(Principal.class);
     when(principal.getName()).thenReturn(CREATOR_ID);
     when(identity.getPrincipal()).thenReturn(principal);
+
+    doNothing().when(featureQuotaActionsService).startNewTopic(any());
+    doNothing().when(featureQuotaActionsService).completeTopic(any());
+    doNothing().when(featureQuotaActionsService).learnContentElement(any());
   }
 
   // ---------------------------------------------------------------------------
