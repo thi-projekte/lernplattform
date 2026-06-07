@@ -26,6 +26,7 @@ import { useSubscription } from '../provider/subscription-provider.tsx';
 import { notifications } from '@mantine/notifications';
 import type { PriceDto, ProductDto, SubscriptionStatus } from '../schemas/payment.ts';
 import { useQueryClient } from '@tanstack/react-query';
+import LayoutLoader from '../components/layout-loader.tsx';
 
 type Interval = 'month' | 'year';
 
@@ -388,7 +389,7 @@ const SubscriptionPage = () => {
 
   const queryClient = useQueryClient();
 
-  const { data: products = [] } = useFetchProducts();
+  const { data: products = [], isLoading: productsLoading } = useFetchProducts();
 
   const {
     mutate: subscribe,
@@ -449,6 +450,10 @@ const SubscriptionPage = () => {
     selectedInterval,
     onCreateTrial: handleCreateTrial,
   };
+
+  if (productsLoading) {
+    return <LayoutLoader />;
+  }
 
   return (
     <Layout>
