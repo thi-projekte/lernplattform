@@ -270,7 +270,7 @@ const ProductCard = ({
             >
               {t('subscription.managePlan')}
             </Button>
-          ) : canAccessBillingPortal && currentPlan !== "FREE" ? (
+          ) : canAccessBillingPortal && currentPlan !== 'FREE' ? (
             <Button
               fullWidth
               radius="md"
@@ -396,9 +396,8 @@ const SubscriptionPage = () => {
     variables: subscribingPriceId,
   } = useCreateInitialCheckoutSessionForSubscription();
 
-  const {
-    mutate: createTrial,
-    isPending: isCreatingTrial} = useCreateInitialCheckoutSessionForTrial();
+  const { mutate: createTrial, isPending: isCreatingTrial } =
+    useCreateInitialCheckoutSessionForTrial();
   const { mutate: openBillingPortal, isPending: isBillingPortalLoading } =
     useCreateBillingPortalSession();
 
@@ -448,7 +447,7 @@ const SubscriptionPage = () => {
     subscribingPriceId: subscribingPriceId as string | undefined,
     isBillingPortalLoading,
     selectedInterval,
-    onCreateTrial: handleCreateTrial
+    onCreateTrial: handleCreateTrial,
   };
 
   return (
