@@ -39,8 +39,7 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
 
   @Inject ChallengeService challengeService;
 
-  @Inject
-  FeatureQuotaActionsService featureQuotaActionsService;
+  @Inject FeatureQuotaActionsService featureQuotaActionsService;
 
   @Override
   public Map<UUID, TopicLearnProgressDto> getLearnProgressMappingForTopics(List<UUID> topicIds) {

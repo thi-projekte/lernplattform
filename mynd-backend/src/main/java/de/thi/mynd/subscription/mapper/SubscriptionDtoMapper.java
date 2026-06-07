@@ -11,9 +11,7 @@ import jakarta.inject.Inject;
 public final class SubscriptionDtoMapper
     extends AbstractMappingProcessor<Subscription, SubscriptionDto> {
 
-
-  @Inject
-  FeatureQuotaRetrievalService featureQuotaRetrievalService;
+  @Inject FeatureQuotaRetrievalService featureQuotaRetrievalService;
 
   @Override
   public SubscriptionDto mapAndEnrich(Subscription entity) {
@@ -21,8 +19,8 @@ public final class SubscriptionDtoMapper
         .creatorId(entity.creatorId)
         .subscriptionStatus(entity.subscriptionStatus)
         .canAccessBillingPortal(entity.stripeCustomerId != null)
-            .canLearnTopics(featureQuotaRetrievalService.canLearn(entity.id.creatorId))
-            .canStartNewTopics(featureQuotaRetrievalService.canStartNewTopic(entity.id.creatorId))
+        .canLearnTopics(featureQuotaRetrievalService.canLearn(entity.id.creatorId))
+        .canStartNewTopics(featureQuotaRetrievalService.canStartNewTopic(entity.id.creatorId))
         .build();
   }
 

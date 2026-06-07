@@ -38,14 +38,14 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     id.creatorId = userId;
 
     return subscriptionRepository
-            .findByIdOptional(id)
-            .orElseGet(() -> createDefaultSubscriptionForUser(userId));
+        .findByIdOptional(id)
+        .orElseGet(() -> createDefaultSubscriptionForUser(userId));
   }
 
   @Override
   public SubscriptionDto getSubscriptionForCurrentUserAsDto() {
 
-      return mappingRegistry.map(getSubscriptionForCurrentUser(), SubscriptionDto.class);
+    return mappingRegistry.map(getSubscriptionForCurrentUser(), SubscriptionDto.class);
   }
 
   @Override

@@ -2,15 +2,13 @@ package de.thi.mynd.subscription.entity;
 
 import de.thi.mynd.common.entity.BaseEntityWithCreatorIdPk;
 import jakarta.persistence.*;
-
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "feature_quota_tracking")
 public class FeatureQuota extends BaseEntityWithCreatorIdPk {
 
-  @Column
-  public LocalDate dayAccountedFor;
+  @Column public LocalDate dayAccountedFor;
 
   @Enumerated(EnumType.STRING)
   @Column(nullable = false)
