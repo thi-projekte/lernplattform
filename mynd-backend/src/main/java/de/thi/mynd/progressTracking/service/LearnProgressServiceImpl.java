@@ -111,6 +111,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     }
 
     String creatorId = identity.getPrincipal().getName();
+
+    featureQuotaService.learnContentElement(creatorId);
     featureQuotaService.completeTopic(creatorId);
 
     LearnProgressTopic learnProgressTopic = learnProgressTopicOptional.get();
