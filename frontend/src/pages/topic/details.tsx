@@ -98,7 +98,13 @@ const TopicDetailsPage = () => {
               </Group>
             )}
             {learnProgress && (
-              <Group gap={8} mt={4} align="center" wrap="nowrap">
+              <Group
+                gap={8}
+                mt={4}
+                align="center"
+                wrap="nowrap"
+                style={{ maxWidth: isMobile ? '100%' : '25vw' }}
+              >
                 <Progress
                   value={topicProgressPercent}
                   color={isTopicCompleted ? 'green' : 'blue'}
