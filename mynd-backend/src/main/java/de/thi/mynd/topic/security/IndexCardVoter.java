@@ -16,8 +16,7 @@ public final class IndexCardVoter implements Voter<IndexCard> {
 
   @Override
   public boolean supports(String attribute, Object subject) {
-    return subject instanceof IndexCard
-        && Arrays.asList(allowedAttributes).contains(attribute);
+    return subject instanceof IndexCard && Arrays.asList(allowedAttributes).contains(attribute);
   }
 
   @Override

@@ -15,8 +15,7 @@ import java.util.UUID;
 public final class TopicDtoMapper extends AbstractMappingProcessor<Topic, TopicDto> {
 
   @Inject ContentElementService contentElementService;
-  @Inject
-  IndexCardService indexCardService;
+  @Inject IndexCardService indexCardService;
 
   @Override
   public TopicDto mapAndEnrich(Topic entity) {
@@ -29,7 +28,7 @@ public final class TopicDtoMapper extends AbstractMappingProcessor<Topic, TopicD
         .estimatedLearningDuration(entity.estimatedLearningDuration)
         .categories(entity.categories)
         .contentElements(contentElementService.getContentElementsForTopic(entity.id))
-            .indexCards(indexCardService.getIndexCardsForTopic(entity.id))
+        .indexCards(indexCardService.getIndexCardsForTopic(entity.id))
         .updatedAt(entity.updatedAt)
         .build();
   }

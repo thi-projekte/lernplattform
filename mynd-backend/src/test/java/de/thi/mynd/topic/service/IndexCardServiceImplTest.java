@@ -1,5 +1,10 @@
 package de.thi.mynd.topic.service;
 
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.requests.AssociatedEntityRequest;
@@ -13,166 +18,162 @@ import de.thi.mynd.topic.security.IndexCardVoter;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 @QuarkusTest
 class IndexCardServiceImplTest {
 
-    @Inject
-    IndexCardServiceImpl indexCardService;
+  @Inject IndexCardServiceImpl indexCardService;
 
-    @InjectMock
-    IndexCardRepository indexCardRepository;
+  @InjectMock IndexCardRepository indexCardRepository;
 
-    @InjectMock
-    MappingRegistry mappingRegistry;
+  @InjectMock MappingRegistry mappingRegistry;
 
-    @InjectMock
-    SecurityService securityService;
+  @InjectMock SecurityService securityService;
 
-    private UUID sampleId;
-    private IndexCard sampleCard;
-    private IndexCardDto sampleDto;
+  private UUID sampleId;
+  private IndexCard sampleCard;
+  private IndexCardDto sampleDto;
 
-    @BeforeEach
-    void setUp() {
-        sampleId = UUID.randomUUID();
+  @BeforeEach
+  void setUp() {
+    sampleId = UUID.randomUUID();
 
-        sampleCard = new IndexCard();
-        sampleCard.id = sampleId;
-        sampleCard.question = "What is Quarkus?";
-        sampleCard.answer = "A supersonic subatomic Java framework.";
+    sampleCard = new IndexCard();
+    sampleCard.id = sampleId;
+    sampleCard.question = "What is Quarkus?";
+    sampleCard.answer = "A supersonic subatomic Java framework.";
 
-        sampleDto = IndexCardDto.builder().build();
-        // Assuming your DTO mirrors these fields
-    }
+    sampleDto = IndexCardDto.builder().build();
+    // Assuming your DTO mirrors these fields
+  }
 
-    // ==========================================
-    // TESTS FOR: getIndexCardsForTopic
-    // ==========================================
-    @Test
-    void testGetIndexCardsForTopic_ReturnsMappedDtos() {
-        UUID topicId = UUID.randomUUID();
-        List<IndexCard> mockCards = List.of(sampleCard);
-        List<IndexCardDto> mockDtos = List.of(sampleDto);
+  // ==========================================
+  // TESTS FOR: getIndexCardsForTopic
+  // ==========================================
+  @Test
+  void testGetIndexCardsForTopic_ReturnsMappedDtos() {
+    UUID topicId = UUID.randomUUID();
+    List<IndexCard> mockCards = List.of(sampleCard);
+    List<IndexCardDto> mockDtos = List.of(sampleDto);
 
-        when(indexCardRepository.findByTopicId(topicId)).thenReturn(mockCards);
-        when(mappingRegistry.mapList(mockCards, IndexCardDto.class)).thenReturn(mockDtos);
+    when(indexCardRepository.findByTopicId(topicId)).thenReturn(mockCards);
+    when(mappingRegistry.mapList(mockCards, IndexCardDto.class)).thenReturn(mockDtos);
 
-        List<IndexCardDto> result = indexCardService.getIndexCardsForTopic(topicId);
+    List<IndexCardDto> result = indexCardService.getIndexCardsForTopic(topicId);
 
-        assertNotNull(result);
-        assertEquals(1, result.size());
-        verify(indexCardRepository).findByTopicId(topicId);
-        verify(mappingRegistry).mapList(mockCards, IndexCardDto.class);
-    }
+    assertNotNull(result);
+    assertEquals(1, result.size());
+    verify(indexCardRepository).findByTopicId(topicId);
+    verify(mappingRegistry).mapList(mockCards, IndexCardDto.class);
+  }
 
-    // ==========================================
-    // TESTS FOR: createIndexCard
-    // ==========================================
-    @Test
-    void testCreateIndexCard_PersistsAndReturnsDto() {
-        IndexCardRequest request = new IndexCardRequest();
-        request.question = "What is Quarkus?";
-        request.answer = "A supersonic subatomic Java framework.";
+  // ==========================================
+  // TESTS FOR: createIndexCard
+  // ==========================================
+  @Test
+  void testCreateIndexCard_PersistsAndReturnsDto() {
+    IndexCardRequest request = new IndexCardRequest();
+    request.question = "What is Quarkus?";
+    request.answer = "A supersonic subatomic Java framework.";
 
-        when(mappingRegistry.map(any(IndexCard.class), eq(IndexCardDto.class))).thenReturn(sampleDto);
+    when(mappingRegistry.map(any(IndexCard.class), eq(IndexCardDto.class))).thenReturn(sampleDto);
 
-        IndexCardDto result = indexCardService.createIndexCard(request);
+    IndexCardDto result = indexCardService.createIndexCard(request);
 
-        assertNotNull(result);
-        verify(indexCardRepository).persistAndFlush(any(IndexCard.class));
-        verify(mappingRegistry).map(any(IndexCard.class), eq(IndexCardDto.class));
-    }
+    assertNotNull(result);
+    verify(indexCardRepository).persistAndFlush(any(IndexCard.class));
+    verify(mappingRegistry).map(any(IndexCard.class), eq(IndexCardDto.class));
+  }
 
-    // ==========================================
-    // TESTS FOR: deleteIndexCard
-    // ==========================================
-    @Test
-    void testDeleteIndexCard_Success() {
-        when(indexCardRepository.findByIdOptional(sampleId)).thenReturn(Optional.of(sampleCard));
-        doNothing().when(securityService).denyUnlessGranted(sampleCard, IndexCardVoter.Delete);
+  // ==========================================
+  // TESTS FOR: deleteIndexCard
+  // ==========================================
+  @Test
+  void testDeleteIndexCard_Success() {
+    when(indexCardRepository.findByIdOptional(sampleId)).thenReturn(Optional.of(sampleCard));
+    doNothing().when(securityService).denyUnlessGranted(sampleCard, IndexCardVoter.Delete);
 
-        assertDoesNotThrow(() -> indexCardService.deleteIndexCard(sampleId));
+    assertDoesNotThrow(() -> indexCardService.deleteIndexCard(sampleId));
 
-        verify(indexCardRepository).delete(sampleCard);
-        verify(indexCardRepository).flush();
-        verify(securityService).denyUnlessGranted(sampleCard, IndexCardVoter.Delete);
-    }
+    verify(indexCardRepository).delete(sampleCard);
+    verify(indexCardRepository).flush();
+    verify(securityService).denyUnlessGranted(sampleCard, IndexCardVoter.Delete);
+  }
 
-    @Test
-    void testDeleteIndexCard_ThrowsException_WhenCardNotFound() {
-        when(indexCardRepository.findByIdOptional(sampleId)).thenReturn(Optional.empty());
+  @Test
+  void testDeleteIndexCard_ThrowsException_WhenCardNotFound() {
+    when(indexCardRepository.findByIdOptional(sampleId)).thenReturn(Optional.empty());
 
-        assertThrows(EntityInstanceNotFoundException.class, () -> {
-            indexCardService.deleteIndexCard(sampleId);
+    assertThrows(
+        EntityInstanceNotFoundException.class,
+        () -> {
+          indexCardService.deleteIndexCard(sampleId);
         });
 
-        verify(indexCardRepository, never()).delete(any());
-        verify(securityService, never()).denyUnlessGranted(any(), any());
-    }
+    verify(indexCardRepository, never()).delete(any());
+    verify(securityService, never()).denyUnlessGranted(any(), any());
+  }
 
-    @Test
-    void testDeleteIndexCard_PropagatesSecurityException_WhenDenied() {
-        when(indexCardRepository.findByIdOptional(sampleId)).thenReturn(Optional.of(sampleCard));
+  @Test
+  void testDeleteIndexCard_PropagatesSecurityException_WhenDenied() {
+    when(indexCardRepository.findByIdOptional(sampleId)).thenReturn(Optional.of(sampleCard));
 
-        // Simulating SecurityService throwing an error if voting fails
-        doThrow(new SecurityException("Access Denied"))
-                .when(securityService).denyUnlessGranted(sampleCard, IndexCardVoter.Delete);
+    // Simulating SecurityService throwing an error if voting fails
+    doThrow(new SecurityException("Access Denied"))
+        .when(securityService)
+        .denyUnlessGranted(sampleCard, IndexCardVoter.Delete);
 
-        assertThrows(SecurityException.class, () -> indexCardService.deleteIndexCard(sampleId));
+    assertThrows(SecurityException.class, () -> indexCardService.deleteIndexCard(sampleId));
 
-        verify(indexCardRepository, never()).delete(any());
-    }
+    verify(indexCardRepository, never()).delete(any());
+  }
 
-    // ==========================================
-    // TESTS FOR: updateTopicAssociation
-    // ==========================================
-    @Test
-    void testUpdateTopicAssociation_Success() {
-        Topic topic = new Topic();
-        topic.id = UUID.randomUUID();
+  // ==========================================
+  // TESTS FOR: updateTopicAssociation
+  // ==========================================
+  @Test
+  void testUpdateTopicAssociation_Success() {
+    Topic topic = new Topic();
+    topic.id = UUID.randomUUID();
 
-        AssociatedEntityRequest reqElement = new AssociatedEntityRequest();
-        reqElement.id = sampleId;
-        List<AssociatedEntityRequest> elements = List.of(reqElement);
+    AssociatedEntityRequest reqElement = new AssociatedEntityRequest();
+    reqElement.id = sampleId;
+    List<AssociatedEntityRequest> elements = List.of(reqElement);
 
-        when(indexCardRepository.findByIdsTypeSafe(List.of(sampleId))).thenReturn(List.of(sampleCard));
-        doNothing().when(securityService).denyUnlessGranted(sampleCard, IndexCardVoter.Assign);
+    when(indexCardRepository.findByIdsTypeSafe(List.of(sampleId))).thenReturn(List.of(sampleCard));
+    doNothing().when(securityService).denyUnlessGranted(sampleCard, IndexCardVoter.Assign);
 
-        indexCardService.updateTopicAssociation(topic, elements);
+    indexCardService.updateTopicAssociation(topic, elements);
 
-        assertEquals(topic, sampleCard.topic);
-        verify(indexCardRepository).persistAndFlush(sampleCard);
-        verify(indexCardRepository).flush();
-        verify(securityService).denyUnlessGranted(sampleCard, IndexCardVoter.Assign);
-    }
+    assertEquals(topic, sampleCard.topic);
+    verify(indexCardRepository).persistAndFlush(sampleCard);
+    verify(indexCardRepository).flush();
+    verify(securityService).denyUnlessGranted(sampleCard, IndexCardVoter.Assign);
+  }
 
-    @Test
-    void testUpdateTopicAssociation_Aborts_WhenSecurityDeniesAnElement() {
-        Topic topic = new Topic();
-        AssociatedEntityRequest reqElement = new AssociatedEntityRequest();
-        reqElement.id = sampleId;
+  @Test
+  void testUpdateTopicAssociation_Aborts_WhenSecurityDeniesAnElement() {
+    Topic topic = new Topic();
+    AssociatedEntityRequest reqElement = new AssociatedEntityRequest();
+    reqElement.id = sampleId;
 
-        when(indexCardRepository.findByIdsTypeSafe(any())).thenReturn(List.of(sampleCard));
-        doThrow(new SecurityException("Forbidden"))
-                .when(securityService).denyUnlessGranted(sampleCard, IndexCardVoter.Assign);
+    when(indexCardRepository.findByIdsTypeSafe(any())).thenReturn(List.of(sampleCard));
+    doThrow(new SecurityException("Forbidden"))
+        .when(securityService)
+        .denyUnlessGranted(sampleCard, IndexCardVoter.Assign);
 
-        assertThrows(SecurityException.class, () -> {
-            indexCardService.updateTopicAssociation(topic, List.of(reqElement));
+    assertThrows(
+        SecurityException.class,
+        () -> {
+          indexCardService.updateTopicAssociation(topic, List.of(reqElement));
         });
 
-        // The transaction will roll back, ensuring database consistency
-        verify(indexCardRepository, never()).persistAndFlush(any());
-    }
+    // The transaction will roll back, ensuring database consistency
+    verify(indexCardRepository, never()).persistAndFlush(any());
+  }
 }

@@ -9,18 +9,14 @@ import org.hibernate.annotations.OnDeleteAction;
 @Table(name = "index_card")
 public class IndexCard extends BaseEntityWithId {
 
-    @ManyToOne
-    @JoinColumn(
-            name = "topicId",
-            referencedColumnName = "id",
-            nullable = false
-    )
-    @OnDelete(action = OnDeleteAction.CASCADE)
-    public Topic topic;
+  @ManyToOne
+  @JoinColumn(name = "topicId", referencedColumnName = "id", nullable = false)
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  public Topic topic;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    public String question;
+  @Column(nullable = false, columnDefinition = "TEXT")
+  public String question;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    public String answer;
+  @Column(nullable = false, columnDefinition = "TEXT")
+  public String answer;
 }

@@ -7,22 +7,22 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public final class IndexCardDtoMapper extends AbstractMappingProcessor<IndexCard, IndexCardDto> {
-    @Override
-    public IndexCardDto mapAndEnrich(IndexCard entity) {
-        return IndexCardDto.builder()
-                .id(entity.id)
-                .question(entity.question)
-                .answer(entity.answer)
-                .build();
-    }
+  @Override
+  public IndexCardDto mapAndEnrich(IndexCard entity) {
+    return IndexCardDto.builder()
+        .id(entity.id)
+        .question(entity.question)
+        .answer(entity.answer)
+        .build();
+  }
 
-    @Override
-    public Class<IndexCard> getEntityType() {
-        return IndexCard.class;
-    }
+  @Override
+  public Class<IndexCard> getEntityType() {
+    return IndexCard.class;
+  }
 
-    @Override
-    public Class<IndexCardDto> getDtoType() {
-        return IndexCardDto.class;
-    }
+  @Override
+  public Class<IndexCardDto> getDtoType() {
+    return IndexCardDto.class;
+  }
 }
