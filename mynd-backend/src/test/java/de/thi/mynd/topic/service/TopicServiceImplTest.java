@@ -162,7 +162,7 @@ public class TopicServiceImplTest {
         });
 
     verify(topicRepository, times(1)).findByIdOptional(topicId);
-    verify(contentElementService, times(1)).deleteContentElement(contentElementId);
+    verify(contentElementService, times(1)).deleteContentElementFiles(contentElement);
     verify(topicRepository, times(1)).delete(topic);
   }
 
