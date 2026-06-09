@@ -105,14 +105,13 @@ public final class TopicServiceImpl implements TopicService {
 
     securityService.denyUnlessGranted(topic, TopicVoter.Delete);
 
-    List<UUID> contentElementIds = topic.contentElements.stream()
-            .map(ce -> ce.id)
-            .toList();
-    for (UUID ceId : contentElementIds) {
-      contentElementService.deleteContentElement(ceId);
+    for (ContentElement ce : topic.contentElements) {
+      contentElementService.deleteContentElementFiles(ce);
     }
 
-    topicRepository.deleteById(topicId);
+    topic.contentElements.clear();
+
+    topicRepository.delete(topic);
     topicRepository.flush();
 
     Log.infof("Successfully deleted topic with id: %s", topicId);
