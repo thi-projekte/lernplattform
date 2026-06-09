@@ -96,7 +96,6 @@ public final class ContentElementServiceImpl implements ContentElementService {
         Log.infof("Successfully deleted content element file with ID %s", element.id);
       }
     }
-
   }
 
   @Override
