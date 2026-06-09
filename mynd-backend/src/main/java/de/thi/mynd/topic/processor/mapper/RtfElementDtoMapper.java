@@ -14,6 +14,7 @@ public final class RtfElementDtoMapper extends AbstractMappingProcessor<RtfEleme
         .id(entity.id)
         .title(entity.title)
         .icon(entity.icon)
+        .rank(entity.rank)
         .createdAt(entity.createdAt)
         .updatedAt(entity.updatedAt)
         .rtfText(entity.rtfText)
