@@ -1027,5 +1027,167 @@
         "rtfText": "<p>Wähle einen Wunsch aus und formuliere daraus den nächsten kleinsten Schritt, den du innerhalb von sieben Tagen erledigen kannst.</p>"
       }
     ]
-  }
+  },
+    {
+      "identifier": "nutritionBasics",
+      "title": "Grundlagen ausgewogener Ernährung",
+      "teaser": "Ein Einstieg in die wichtigsten Bausteine einer alltagstauglichen und ausgewogenen Ernährung.",
+      "creatorId": "admin",
+      "categories": [
+        "nutrition"
+      ],
+      "duration": 30,
+      "contentElements": [
+        {
+          "title": "1. Warum Ernährung Struktur braucht",
+          "type": "RTF",
+          "rtfText": "<p>Ausgewogene Ernährung bedeutet nicht, jedes Gramm exakt zu zählen oder sich dauerhaft einzuschränken. Es geht zuerst darum, dem Körper regelmäßig das zu geben, was er für Energie, Konzentration, Leistungsfähigkeit und Wohlbefinden braucht. Dazu gehören Getränke, Gemüse, Obst, Getreideprodukte, Eiweißquellen, Fette und Lebensmittel, die eher Genuss als Grundlage sind.</p><p>Eine gute Orientierung bietet die Ernährungspyramide. Sie hilft dabei, Lebensmittelgruppen nicht isoliert zu betrachten, sondern in ein Verhältnis zu setzen. Wasser, Gemüse und Obst bilden eine wichtige Basis. Vollkornprodukte, Hülsenfrüchte, Milchprodukte, Nüsse, pflanzliche Öle und weitere Eiweißquellen ergänzen diese Basis. Süßes, stark Fettiges oder sehr Salziges ist nicht verboten, sollte aber nicht den Hauptteil der Ernährung ausmachen.</p><p>Für die Demo ist dieser Node der Einstiegspunkt. Er erklärt das Grundproblem: Ernährung wird oft entweder zu kompliziert oder zu beliebig behandelt. Der Lernpfad zeigt stattdessen eine einfache Struktur, die im Alltag nutzbar ist.</p>"
+        },
+        {
+          "title": "2. Externe Quelle: Ernährungspyramide",
+          "type": "URI",
+          "uri": "https://www.bzfe.de/essen-und-gesundheit/ernaehrungspyramide"
+        },
+        {
+          "title": "3. Reflexionsfrage",
+          "type": "RTF",
+          "rtfText": "<p>Welche Lebensmittelgruppe kommt in deinem Alltag wahrscheinlich zu kurz: Wasser, Gemüse, Obst, Vollkorn, Eiweißquellen oder pflanzliche Fette?</p>"
+        }
+      ]
+    },
+    {
+      "identifier": "nutritionHydration",
+      "title": "Trinken und Flüssigkeit im Alltag",
+      "teaser": "Warum Wasser die einfachste Grundlage für Konzentration, Energie und Wohlbefinden ist.",
+      "creatorId": "admin",
+      "categories": [
+        "nutrition"
+      ],
+      "duration": 20,
+      "contentElements": [
+        {
+          "title": "1. Warum Trinken oft unterschätzt wird",
+          "type": "RTF",
+          "rtfText": "<p>Trinken ist einer der einfachsten Hebel für eine bessere Ernährung, wird aber häufig übersehen. Wer zu wenig trinkt, merkt das nicht immer sofort als Durst. Oft zeigen sich eher Konzentrationsprobleme, Müdigkeit, Kopfschmerzen oder ein allgemeines Gefühl von Schlappheit. Gerade beim Lernen, Arbeiten oder Sport kann Flüssigkeitsmangel deshalb schnell die Leistungsfähigkeit drücken.</p><p>Wasser ist dabei die beste Standardlösung. Es liefert Flüssigkeit ohne Zucker, ohne unnötige Kalorien und ohne ständige Geschmackskonditionierung. Ungesüßter Tee kann ebenfalls sinnvoll sein. Softdrinks, Energydrinks oder stark gesüßte Getränke sollten eher als Ausnahme gesehen werden, weil sie viel Zucker enthalten und Durst nicht besser lösen als Wasser.</p><p>In der Klickdemo ist dieser Node bewusst einfach gehalten. Er zeigt, dass ein Lernpfad nicht nur komplexe Themen braucht, sondern auch kleine Alltagsthemen, die sofort umsetzbar sind.</p>"
+        },
+        {
+          "title": "2. Externe Quelle: Warum Trinken wichtig ist",
+          "type": "URI",
+          "uri": "https://www.bzfe.de/einfache-sprache/gut-essen/warum-ist-trinken-so-wichtig"
+        },
+        {
+          "title": "3. Mini-Übung",
+          "type": "RTF",
+          "rtfText": "<p>Stelle dir für einen Tag sichtbar eine Wasserflasche hin und prüfe abends, ob du dadurch automatisch mehr getrunken hast.</p>"
+        }
+      ]
+    },
+    {
+      "identifier": "nutritionVegetablesFruit",
+      "title": "Gemüse und Obst: viel und bunt",
+      "teaser": "Wie Gemüse und Obst Vitamine, Mineralstoffe, Ballaststoffe und Vielfalt in den Alltag bringen.",
+      "creatorId": "admin",
+      "categories": [
+        "nutrition"
+      ],
+      "duration": 25,
+      "contentElements": [
+        {
+          "title": "1. Warum bunt essen sinnvoll ist",
+          "type": "RTF",
+          "rtfText": "<p>Gemüse und Obst sind wichtige Bestandteile einer ausgewogenen Ernährung, weil sie viele Vitamine, Mineralstoffe, Ballaststoffe und sekundäre Pflanzenstoffe liefern. Praktisch bedeutet das: Je bunter und abwechslungsreicher die Auswahl ist, desto breiter wird auch die Versorgung mit unterschiedlichen Inhaltsstoffen.</p><p>Gemüse sollte im Alltag nicht nur als kleine Dekoration auf dem Teller auftauchen. Es kann ein echter Hauptbestandteil einer Mahlzeit sein: als Salat, Ofengemüse, Suppe, Pfannengericht, Rohkost oder Beilage. Obst eignet sich gut als Snack, sollte aber nicht komplett Gemüse ersetzen. Beide Gruppen haben ihren Platz.</p><p>Für den Lernpfad ist dieser Node wichtig, weil er den Einstieg aus der Theorie in konkrete Lebensmittel schafft. Der Nutzer sieht: Ausgewogene Ernährung besteht nicht aus abstrakten Regeln, sondern aus Entscheidungen beim Einkauf, Kochen und Essen.</p>"
+        },
+        {
+          "title": "2. Externe Quelle: DGE-Empfehlungen",
+          "type": "URI",
+          "uri": "https://www.dge.de/gesunde-ernaehrung/gut-essen-und-trinken/dge-empfehlungen/"
+        },
+        {
+          "title": "3. Mini-Übung",
+          "type": "RTF",
+          "rtfText": "<p>Plane für die nächste Mahlzeit mindestens zwei Farben Gemüse oder Obst ein, zum Beispiel Paprika und Spinat oder Beeren und Banane.</p>"
+        }
+      ]
+    },
+    {
+      "identifier": "nutritionWholegrainFiber",
+      "title": "Vollkorn und Ballaststoffe",
+      "teaser": "Warum Vollkornprodukte länger sättigen und Ballaststoffe für eine gesunde Ernährung wichtig sind.",
+      "creatorId": "admin",
+      "categories": [
+        "nutrition"
+      ],
+      "duration": 30,
+      "contentElements": [
+        {
+          "title": "1. Warum Vollkorn mehr kann als Weißmehl",
+          "type": "RTF",
+          "rtfText": "<p>Vollkornprodukte enthalten mehr Bestandteile des Getreidekorns als stark ausgemahlene Weißmehlprodukte. Dadurch liefern sie mehr Ballaststoffe, Vitamine und Mineralstoffe. Ein praktischer Vorteil ist, dass Vollkorn oft länger sättigt. Das kann helfen, Mahlzeiten stabiler zu gestalten und Heißhunger zu reduzieren.</p><p>Ballaststoffe sind unverdauliche oder schwer verdauliche Bestandteile pflanzlicher Lebensmittel. Sie unterstützen die Verdauung, tragen zur Sättigung bei und sind ein wichtiger Grund, warum Vollkorn, Gemüse, Obst, Hülsenfrüchte und Nüsse in Ernährungsempfehlungen eine große Rolle spielen.</p><p>Für die Demo ist dieser Node ein gutes Beispiel für ein Thema mit klarem Lernziel: Der Nutzer soll nicht nur wissen, dass Vollkorn „gesünder“ klingt, sondern verstehen, warum Vollkornprodukte im Alltag sinnvoll sein können.</p>"
+        },
+        {
+          "title": "2. Externe Quelle: Vollkorn ist die beste Wahl",
+          "type": "URI",
+          "uri": "https://www.dge.de/gesunde-ernaehrung/gut-essen-und-trinken/vollkorn/"
+        },
+        {
+          "title": "3. Reflexionsfrage",
+          "type": "RTF",
+          "rtfText": "<p>Wo könntest du ohne großen Aufwand eine Weißmehl-Variante durch Vollkorn ersetzen: Brot, Nudeln, Reis, Müsli oder Wraps?</p>"
+        }
+      ]
+    },
+    {
+      "identifier": "nutritionProteinSources",
+      "title": "Eiweißquellen sinnvoll auswählen",
+      "teaser": "Wie pflanzliche und tierische Eiweißquellen zur Ernährung beitragen und warum High-Protein nicht automatisch besser ist.",
+      "creatorId": "admin",
+      "categories": [
+        "nutrition"
+      ],
+      "duration": 30,
+      "contentElements": [
+        {
+          "title": "1. Eiweiß ohne Marketing-Hype verstehen",
+          "type": "RTF",
+          "rtfText": "<p>Eiweiß, also Protein, ist wichtig für den Körper. Es wird unter anderem für Muskeln, Zellen, Enzyme und viele Körperfunktionen gebraucht. Gute Eiweißquellen können sowohl tierisch als auch pflanzlich sein. Dazu zählen zum Beispiel Milchprodukte, Eier, Fisch, Fleisch, Hülsenfrüchte, Sojaprodukte, Nüsse und Getreideprodukte.</p><p>Wichtig ist aber: Mehr Protein ist nicht automatisch besser. Viele High-Protein-Produkte wirken gesünder, sind aber oft nur teurer oder stärker verarbeitet. Für viele Menschen reicht eine ausgewogene Ernährung bereits aus, wenn regelmäßig passende Eiweißquellen enthalten sind. Besonders Hülsenfrüchte wie Linsen, Bohnen oder Kichererbsen sind interessant, weil sie neben Eiweiß auch Ballaststoffe liefern.</p><p>In der Klickdemo zeigt dieser Node, dass Ernährung nicht nur aus einfachen Regeln besteht. Nutzer lernen, Marketingbegriffe kritisch einzuordnen und Lebensmittel nach echtem Nutzen statt nach Verpackungsversprechen zu bewerten.</p>"
+        },
+        {
+          "title": "2. Externe Quelle: Protein",
+          "type": "URI",
+          "uri": "https://www.dge.de/wissenschaft/referenzwerte/protein/"
+        },
+        {
+          "title": "3. Mini-Übung",
+          "type": "RTF",
+          "rtfText": "<p>Wähle für eine Mahlzeit bewusst eine Eiweißquelle aus und notiere, ob sie pflanzlich oder tierisch ist.</p>"
+        }
+      ]
+    },
+    {
+      "identifier": "nutritionMealPlanning",
+      "title": "Mahlzeiten einfach planen",
+      "teaser": "Wie man aus Ernährungsempfehlungen konkrete Mahlzeiten macht, ohne kompliziert zu zählen.",
+      "creatorId": "admin",
+      "categories": [
+        "nutrition"
+      ],
+      "duration": 35,
+      "contentElements": [
+        {
+          "title": "1. Vom Wissen zur Mahlzeit",
+          "type": "RTF",
+          "rtfText": "<p>Viele Menschen wissen grob, was gesunde Ernährung bedeutet, scheitern aber an der Umsetzung. Genau hier hilft einfache Mahlzeitenplanung. Statt jeden Tag spontan zu entscheiden, kann man mit wenigen Grundbausteinen arbeiten: eine Gemüse- oder Obstkomponente, eine sättigende Kohlenhydratquelle, eine Eiweißquelle, etwas Fett und ein Getränk.</p><p>Ein Beispiel: Vollkornnudeln mit Gemüse, Linsen oder Hähnchen, etwas Olivenöl und Wasser dazu. Oder Brot mit Frischkäse, Ei oder Hummus, dazu Rohkost und ein Glas Wasser. Es geht nicht darum, jede Mahlzeit perfekt zu machen. Es geht darum, regelmäßig brauchbare Entscheidungen einfacher zu machen.</p><p>Als Abschlussnode eignet sich dieses Thema besonders gut, weil es alle vorherigen Inhalte verbindet. Wasser, Gemüse, Vollkorn, Ballaststoffe und Eiweiß werden nicht isoliert gelernt, sondern in eine konkrete Alltagshandlung übersetzt.</p>"
+        },
+        {
+          "title": "2. Externe Quelle: Mahlzeiten planen und genießen",
+          "type": "URI",
+          "uri": "https://www.bzfe.de/essen-und-gesundheit/ernaehrungspyramide/mahlzeiten-planen-und-geniessen"
+        },
+        {
+          "title": "3. Mini-Übung",
+          "type": "RTF",
+          "rtfText": "<p>Plane eine einfache Mahlzeit mit vier Bausteinen: Gemüse oder Obst, Vollkorn oder Kartoffeln, Eiweißquelle und Getränk.</p>"
+        }
+      ]
+    }
 ]
