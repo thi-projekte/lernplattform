@@ -9,21 +9,22 @@ const supportedLanguages = [
 ];
 
 const getPreferredLanguage = () => {
-  return localStorage.getItem("language");
-}
+  return localStorage.getItem('language');
+};
 
 const LanguagePicker = () => {
   const { i18n } = useTranslation();
 
-  const [languageSelected, setSelectedLanguage] = useState<string|null>(getPreferredLanguage() || supportedLanguages[0].value);
+  const [languageSelected, setSelectedLanguage] = useState<string | null>(
+    getPreferredLanguage() || supportedLanguages[0].value
+  );
 
-  const activeLang =
-    supportedLanguages.find((l) => l.value === languageSelected);
+  const activeLang = supportedLanguages.find((l) => l.value === languageSelected);
 
   useEffect(() => {
     if (languageSelected !== null) {
       i18n.changeLanguage(languageSelected);
-      localStorage.setItem("language", languageSelected);
+      localStorage.setItem('language', languageSelected);
     }
   }, [i18n, languageSelected]);
 
