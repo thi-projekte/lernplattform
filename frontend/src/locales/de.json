@@ -148,7 +148,7 @@
       "create": "Thema erstellen",
       "createContentElement": "Inhalt anlegen",
       "start": "Thema starten",
-      "complete": "Thema abschließen",
+      "complete": "Thema manuell abschließen",
       "completeBlockedHint": "Markiere zuerst alle Inhalte als abgeschlossen.",
       "completed": "Abgeschlossen",
       "markContentElementCompleted": "Als abgeschlossen markieren",
