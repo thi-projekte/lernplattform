@@ -104,9 +104,12 @@ public final class TopicServiceImpl implements TopicService {
 
     securityService.denyUnlessGranted(topic, TopicVoter.Delete);
 
-    for (ContentElement contentElement : topic.contentElements) {
-      contentElementService.deleteContentElement(contentElement.id);
+    for (ContentElement ce : topic.contentElements) {
+      contentElementService.deleteContentElementFiles(ce);
     }
+
+    topic.ownedAssociations.clear();
+    topic.foreignAssociations.clear();
 
     topicRepository.delete(topic);
     topicRepository.flush();
