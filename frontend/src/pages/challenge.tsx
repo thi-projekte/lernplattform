@@ -83,7 +83,7 @@ const ChallengePage = () => {
               </Text>
 
               <Text size="xs" c="dimmed">
-                {t('challenge.reward', { count: 2 })}
+                {t('challenge.reward', { count: 1 })}
               </Text>
 
               {challenge.completed && !challenge.rewardClaimed && (

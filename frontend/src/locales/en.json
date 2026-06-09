@@ -21,8 +21,8 @@
     "reward": "Reward: +{{count}} invite credits",
     "completed": "Completed!",
     "claimed": "Reward claimed",
-    "claimButton": "Claim +2 Invite Credits",
-    "rewardClaimed": "Reward successfully claimed! You received 2 invite credits.",
+    "claimButton": "Claim +1 Invite Credits",
+    "rewardClaimed": "Reward successfully claimed! You received 1 invite credits.",
     "history": "Past Challenges",
     "noHistory": "No past challenges yet."
   },
