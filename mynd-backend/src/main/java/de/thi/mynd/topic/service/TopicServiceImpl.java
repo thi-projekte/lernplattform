@@ -109,7 +109,9 @@ public final class TopicServiceImpl implements TopicService {
       contentElementService.deleteContentElementFiles(ce);
     }
 
-    topic.contentElements.clear();
+    topic.ownedAssociations.clear();
+    topic.foreignAssociations.clear();
+
 
     topicRepository.delete(topic);
     topicRepository.flush();
