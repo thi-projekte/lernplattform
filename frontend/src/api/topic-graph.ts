@@ -52,12 +52,9 @@ export const useFetchDirectNeighborQueries = (topicIds: string[]) => {
 };
 
 const searchTopicsInGraph = async (search: string): Promise<GraphTopicDto[]> => {
-  const result = await apiClient.get(
-    `/topics/graph/search?search=${encodeURIComponent(search)}`,
-    {
-      validateStatus: (status) => status <= 204,
-    }
-  );
+  const result = await apiClient.get(`/topics/graph/search?search=${encodeURIComponent(search)}`, {
+    validateStatus: (status) => status <= 204,
+  });
   return safeValidateApiResponseContent(z.array(GraphTopicDtoSchema), result.data);
 };
 
