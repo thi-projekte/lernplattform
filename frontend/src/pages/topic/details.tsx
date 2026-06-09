@@ -58,7 +58,17 @@ const TopicDetailsPage = () => {
     return <LayoutLoader />;
   }
 
-  const contentElements: AnyContentElementDto[] = topic?.contentElements ?? [];
+  const unsortedContentElements: AnyContentElementDto[] = topic?.contentElements ?? [];
+
+  const contentElements = unsortedContentElements.toSorted((a, b) => {
+    const rankA = a.rank ?? Infinity;
+    const rankB = b.rank ?? Infinity;
+
+    return rankA - rankB;
+  });
+
+  console.log(contentElements);
+
   const learnProgress = topic?.learnProgress;
 
   const contentElementIds = new Set(
