@@ -33,6 +33,7 @@ public final class TopicServiceImpl implements TopicService {
   @Inject TopicAssociationService topicAssociationService;
   @Inject SecurityService securityService;
   @Inject LearnProgressService learnProgressService;
+  @Inject IndexCardService indexCardService;
 
   @Override
   public PaginationDto<ListTopicDto> findPersonalTopicsPaginated(int page, int pageSize) {
@@ -140,6 +141,7 @@ public final class TopicServiceImpl implements TopicService {
     topicRepository.flush();
 
     contentElementService.updateTopicAssociation(topic, request.contentElements);
+    indexCardService.updateTopicAssociation(topic, request.indexCards);
   }
 
   private Topic getTopicByIdElseException(UUID topicId) throws EntityInstanceNotFoundException {

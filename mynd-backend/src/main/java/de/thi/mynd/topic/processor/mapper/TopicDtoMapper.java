@@ -5,6 +5,7 @@ import de.thi.mynd.progressTracking.dto.TopicLearnProgressDto;
 import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.service.ContentElementService;
+import de.thi.mynd.topic.service.IndexCardService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import java.util.Map;
@@ -14,6 +15,8 @@ import java.util.UUID;
 public final class TopicDtoMapper extends AbstractMappingProcessor<Topic, TopicDto> {
 
   @Inject ContentElementService contentElementService;
+  @Inject
+  IndexCardService indexCardService;
 
   @Override
   public TopicDto mapAndEnrich(Topic entity) {
@@ -26,6 +29,7 @@ public final class TopicDtoMapper extends AbstractMappingProcessor<Topic, TopicD
         .estimatedLearningDuration(entity.estimatedLearningDuration)
         .categories(entity.categories)
         .contentElements(contentElementService.getContentElementsForTopic(entity.id))
+            .indexCards(indexCardService.getIndexCardsForTopic(entity.id))
         .updatedAt(entity.updatedAt)
         .build();
   }

@@ -50,7 +50,6 @@ public class Topic extends BaseEntityWithId {
   public List<TopicAssociation> foreignAssociations = new ArrayList<>();
 
   @OneToMany(mappedBy = "topic")
-  @BatchSize(size = 20)
   public List<IndexCard> indexCards = new ArrayList<>();
 
   @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
