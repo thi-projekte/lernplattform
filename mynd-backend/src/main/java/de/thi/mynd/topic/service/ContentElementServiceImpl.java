@@ -88,6 +88,7 @@ public final class ContentElementServiceImpl implements ContentElementService {
     }
 
     contentElementRepository.delete(element);
+    contentElementRepository.flush();
     Log.infof("Successfully deleted content element with ID %s", element.id);
   }
 

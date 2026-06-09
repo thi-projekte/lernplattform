@@ -45,10 +45,10 @@ public class Topic extends BaseEntityWithId {
   @BatchSize(size = 20)
   public List<TopicAssociation> ownedAssociations = new ArrayList<>();
 
-  @OneToMany(mappedBy = "foreignTopic", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "foreignTopic", cascade = CascadeType.ALL, orphanRemoval = true)
   @BatchSize(size = 20)
   public List<TopicAssociation> foreignAssociations = new ArrayList<>();
 
-  @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
+  @OneToMany(mappedBy = "topic", cascade = CascadeType.ALL, orphanRemoval = true)
   public List<ContentElement> contentElements = new ArrayList<>();
 }

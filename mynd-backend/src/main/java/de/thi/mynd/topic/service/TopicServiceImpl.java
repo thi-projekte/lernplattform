@@ -12,6 +12,7 @@ import de.thi.mynd.topic.dto.TopicDto;
 import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.Topic;
+import de.thi.mynd.topic.entity.TopicAssociation;
 import de.thi.mynd.topic.repository.TopicRepository;
 import de.thi.mynd.topic.request.TopicRequest;
 import de.thi.mynd.topic.security.TopicVoter;
@@ -104,11 +105,14 @@ public final class TopicServiceImpl implements TopicService {
 
     securityService.denyUnlessGranted(topic, TopicVoter.Delete);
 
-    for (ContentElement contentElement : topic.contentElements) {
-      contentElementService.deleteContentElement(contentElement.id);
+    List<UUID> contentElementIds = topic.contentElements.stream()
+            .map(ce -> ce.id)
+            .toList();
+    for (UUID ceId : contentElementIds) {
+      contentElementService.deleteContentElement(ceId);
     }
 
-    topicRepository.delete(topic);
+    topicRepository.deleteById(topicId);
     topicRepository.flush();
 
     Log.infof("Successfully deleted topic with id: %s", topicId);
