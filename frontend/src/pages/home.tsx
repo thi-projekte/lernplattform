@@ -11,6 +11,7 @@ import {
 import type { Node, NodeMouseHandler } from '@xyflow/react';
 import { IconEye } from '@tabler/icons-react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import {
   useFetchDirectNeighborQueries,
@@ -80,10 +81,35 @@ const HomePage = () => {
   const theme = useMantineTheme();
   const userProfile = useUserService();
   const { data, isLoading } = useFetchMostPopularTopicsWithNeighbors();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   const [orientation, setOrientation] = useState<SkillTreeOrientation>('vertical');
   const [expandedTopicIds, setExpandedTopicIds] = useState<string[]>(cachedExpandedTopicIds);
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(cachedSelectedTopicId);
+  // Topics added to the graph from outside (e.g. via the spotlight search).
+  // We keep them in local state so they survive re-renders without depending
+  // on the most-popular query data.
+  const [forceIncludedTopics, setForceIncludedTopics] = useState<GraphTopicDto[]>([]);
+
+  // When the spotlight (or any caller) navigates here with state.openTopic,
+  // inject the topic into the graph, expand it so its neighbours load, and
+  // select it. setState here is intentional — we're reacting to an incoming
+  // navigation intent that lives in router state.
+  useEffect(() => {
+    const openTopic = (location.state as { openTopic?: GraphTopicDto } | null)?.openTopic;
+    if (!openTopic) return;
+    /* eslint-disable react-hooks/set-state-in-effect */
+    setForceIncludedTopics((current) =>
+      current.some((t) => t.id === openTopic.id) ? current : [...current, openTopic]
+    );
+    setExpandedTopicIds((current) =>
+      current.includes(openTopic.id) ? current : [...current, openTopic.id]
+    );
+    setSelectedTopicId(openTopic.id);
+    /* eslint-enable react-hooks/set-state-in-effect */
+    navigate(location.pathname, { replace: true, state: null });
+  }, [location.pathname, location.state, navigate]);
 
   useEffect(() => {
     cachedExpandedTopicIds = expandedTopicIds;
@@ -112,11 +138,14 @@ const HomePage = () => {
   const directNeighborQueries = useFetchDirectNeighborQueries(expandedTopicIds);
 
   const graphTopics = useMemo(() => {
-    return directNeighborQueries.reduce(
+    const withNeighbours = directNeighborQueries.reduce(
       (current, query) => mergeGraphTopics(current, query.data ?? []),
       data ?? []
     );
-  }, [data, directNeighborQueries]);
+    return forceIncludedTopics.length > 0
+      ? mergeGraphTopics(withNeighbours, forceIncludedTopics)
+      : withNeighbours;
+  }, [data, directNeighborQueries, forceIncludedTopics]);
 
   const { nodes: layoutNodes, edges } = useMemo(
     () => buildSkillTreeGraph(graphTopics, orientation, userProfile.account.username),
