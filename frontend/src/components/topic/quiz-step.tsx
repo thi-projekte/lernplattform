@@ -15,10 +15,7 @@ import { IconPlusFilled, IconTrash } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { notifications } from '@mantine/notifications';
 import type { IndexCardDto, Topic } from '../../schemas/topic.ts';
-import {
-  useCreateIndexCardMutation,
-  useDeleteIndexCardMutation,
-} from '../../api/topic.ts';
+import { useCreateIndexCardMutation, useDeleteIndexCardMutation } from '../../api/topic.ts';
 
 const MAX_CARDS = 20;
 
@@ -30,13 +27,7 @@ interface QuizStepProps {
   isSubmitting?: boolean;
 }
 
-const QuizStep = ({
-  topic,
-  setTopic,
-  onSave,
-  onSaveAndView,
-  isSubmitting,
-}: QuizStepProps) => {
+const QuizStep = ({ topic, setTopic, onSave, onSaveAndView, isSubmitting }: QuizStepProps) => {
   const { t } = useTranslation();
   const { mutateAsync: createIndexCard, isPending: isCreating } = useCreateIndexCardMutation();
   const { mutateAsync: deleteIndexCard, isPending: isDeleting } = useDeleteIndexCardMutation();
