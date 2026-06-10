@@ -54,11 +54,7 @@ const StepperProgress = ({
         orientation={isMobile ? 'vertical' : 'horizontal'}
       >
         {steps.map((step, i) => (
-          <Stepper.Step
-            label={step.label}
-            description={step.description}
-            key={step.label + i}
-          >
+          <Stepper.Step label={step.label} description={step.description} key={step.label + i}>
             {step.step}
           </Stepper.Step>
         ))}
