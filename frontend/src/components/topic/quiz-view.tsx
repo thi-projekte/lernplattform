@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import { Badge, Box, Button, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
-import {
-  IconBulb,
-  IconChevronLeft,
-  IconChevronRight,
-  IconQuestionMark,
-} from '@tabler/icons-react';
+import { IconBulb, IconChevronLeft, IconChevronRight, IconQuestionMark } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { IndexCardDto } from '../../schemas/topic.ts';
 import classes from './quiz-view.module.css';
@@ -105,7 +100,8 @@ const QuizView = ({ indexCards }: QuizViewProps) => {
                 height: 8,
                 borderRadius: 999,
                 cursor: 'pointer',
-                background: i === index ? 'var(--mantine-color-blue-5)' : 'rgba(34, 139, 230, 0.25)',
+                background:
+                  i === index ? 'var(--mantine-color-blue-5)' : 'rgba(34, 139, 230, 0.25)',
                 transition: 'width 0.25s, background 0.25s',
               }}
             />
