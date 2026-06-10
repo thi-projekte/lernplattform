@@ -25,13 +25,7 @@ import ForceLayoutController from './force-layout-controller.tsx';
 // user toggles to tree mode) it waits one frame for ReactFlow to commit the
 // restored tree positions, then re-fits the viewport so the graph is centred
 // instead of leaving the camera wherever force mode left it.
-const TreeLayoutFit = ({
-  padding,
-  maxZoom,
-}: {
-  padding: number;
-  maxZoom?: number;
-}) => {
+const TreeLayoutFit = ({ padding, maxZoom }: { padding: number; maxZoom?: number }) => {
   const { fitView } = useReactFlow();
   useEffect(() => {
     const timeout = window.setTimeout(() => {
@@ -171,9 +165,7 @@ const TopicGraphView = ({
       {layoutMode === 'force' && (
         <ForceLayoutController baseNodes={nodes} edges={edges} onHandleReady={handleForceReady} />
       )}
-      {layoutMode === 'tree' && (
-        <TreeLayoutFit padding={fitViewPadding} maxZoom={fitViewMaxZoom} />
-      )}
+      {layoutMode === 'tree' && <TreeLayoutFit padding={fitViewPadding} maxZoom={fitViewMaxZoom} />}
       {showViewportToolbar && (
         <ViewportToolbar
           fitViewPadding={fitViewPadding}
