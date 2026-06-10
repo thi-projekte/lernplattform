@@ -7,6 +7,6 @@ import lombok.Getter;
 @RegisterForReflection
 @Getter
 public class ImportIndexCardDto {
-    @NotBlank public String question;
-    @NotBlank public String answer;
+  @NotBlank public String question;
+  @NotBlank public String answer;
 }
