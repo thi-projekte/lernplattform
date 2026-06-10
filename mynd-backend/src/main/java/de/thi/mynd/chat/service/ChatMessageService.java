@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface ChatMessageService {
 
-    void sendMessageToTopic(UUID topicId, ChatMessageRequest request);
+    ChatMessageDto sendMessageToTopic(UUID topicId, ChatMessageRequest request);
 
     PaginationDto<ChatMessageDto> getMessages(UUID topicId, int page, int pageSize);
 }
