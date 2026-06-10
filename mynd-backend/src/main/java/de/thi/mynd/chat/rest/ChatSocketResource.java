@@ -12,29 +12,26 @@ import io.quarkus.websockets.next.WebSocketConnection;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
-
 import java.util.UUID;
 
 @BearerTokenAuthentication
 @WebSocket(path = "/topics/{topicId}/websocket-chat")
 public final class ChatSocketResource {
 
-    @Inject
-    WebSocketConnection connection;
+  @Inject WebSocketConnection connection;
 
-    @Inject
-    ChatMessageService chatMessageService;
+  @Inject ChatMessageService chatMessageService;
 
-    @RolesAllowed("authorizedUser")
-    @OnTextMessage(broadcast = true)
-    public ChatMessageDto onMessage(@Valid ChatMessageRequest request) {
+  @RolesAllowed("authorizedUser")
+  @OnTextMessage(broadcast = true)
+  public ChatMessageDto onMessage(@Valid ChatMessageRequest request) {
 
-        UUID topicId = UUID.fromString(connection.pathParam("topicId"));
-        return chatMessageService.sendMessageToTopic(topicId, request);
-    }
+    UUID topicId = UUID.fromString(connection.pathParam("topicId"));
+    return chatMessageService.sendMessageToTopic(topicId, request);
+  }
 
-    @OnError
-    String onError(ForbiddenException e) {
-        return "Access denied";
-    }
+  @OnError
+  String onError(ForbiddenException e) {
+    return "Access denied";
+  }
 }

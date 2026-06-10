@@ -10,5 +10,5 @@ import lombok.Setter;
 @Setter
 public final class ChatMessageRequest {
 
-    @NotBlank String message;
+  @NotBlank String message;
 }

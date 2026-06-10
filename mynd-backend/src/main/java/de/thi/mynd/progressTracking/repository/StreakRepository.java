@@ -4,7 +4,6 @@ import de.thi.mynd.common.repository.MyndBaseRepository;
 import de.thi.mynd.progressTracking.entity.Streak;
 import de.thi.mynd.progressTracking.entity.StreakType;
 import jakarta.enterprise.context.ApplicationScoped;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +15,7 @@ public final class StreakRepository extends MyndBaseRepository<Streak> {
   }
 
   public Optional<Streak> findNotEndedByCreatorIdAndType(String creatorId, StreakType type) {
-    return find("endedAt IS NULL AND creatorId = ?1 AND type = ?2", creatorId, type).firstResultOptional();
+    return find("endedAt IS NULL AND creatorId = ?1 AND type = ?2", creatorId, type)
+        .firstResultOptional();
   }
 }

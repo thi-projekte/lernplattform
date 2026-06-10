@@ -6,7 +6,7 @@ import lombok.Builder;
 @Builder
 public final class MessageSenderDto {
 
-    public String creatorId;
-    public String creatorFullName;
-    public StreakDto streakToDisplay;
+  public String creatorId;
+  public String creatorFullName;
+  public StreakDto streakToDisplay;
 }

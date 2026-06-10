@@ -1,7 +1,6 @@
 package de.thi.mynd.progressTracking.service;
 
 import de.thi.mynd.common.entity.CreatorIdKey;
-import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.progressTracking.dto.StreakDto;
 import de.thi.mynd.progressTracking.dto.StreakPreferenceDto;
@@ -50,7 +49,8 @@ public final class StreakServiceImpl implements StreakService {
   @Transactional
   public StreakDto getLatestPreferredStreakForUser(String creatorId) {
     StreakPreference preference = getStreakPreferenceForUser(creatorId);
-    Optional<Streak> streakOptional = streakRepository.findNotEndedByCreatorIdAndType(creatorId, preference.type);
+    Optional<Streak> streakOptional =
+        streakRepository.findNotEndedByCreatorIdAndType(creatorId, preference.type);
 
     if (streakOptional.isEmpty()) {
       return null;
@@ -191,9 +191,9 @@ public final class StreakServiceImpl implements StreakService {
     CreatorIdKey id = new CreatorIdKey();
     id.creatorId = creatorId;
 
-      return streakPreferenceRepository
-              .findByIdOptional(id)
-              .orElseGet(() -> createStreakPreferenceForUser(creatorId));
+    return streakPreferenceRepository
+        .findByIdOptional(id)
+        .orElseGet(() -> createStreakPreferenceForUser(creatorId));
   }
 
   private StreakPreference createStreakPreferenceForUser(String creatorId) {

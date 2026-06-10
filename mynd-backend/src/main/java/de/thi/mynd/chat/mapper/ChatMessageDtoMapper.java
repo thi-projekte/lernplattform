@@ -9,38 +9,36 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 @ApplicationScoped
-public final class ChatMessageDtoMapper extends AbstractMappingProcessor<ChatMessage, ChatMessageDto> {
+public final class ChatMessageDtoMapper
+    extends AbstractMappingProcessor<ChatMessage, ChatMessageDto> {
 
-    @Inject
-    StreakService streakService;
+  @Inject StreakService streakService;
 
+  @Override
+  public ChatMessageDto mapAndEnrich(ChatMessage entity) {
+    return ChatMessageDto.builder()
+        .id(entity.id)
+        .message(entity.message)
+        .sender(getSender(entity.creatorId))
+        .build();
+  }
 
-    @Override
-    public ChatMessageDto mapAndEnrich(ChatMessage entity) {
-        return ChatMessageDto.builder()
-                .id(entity.id)
-                .message(entity.message)
-                .sender(getSender(entity.creatorId))
-                .build();
+  @Override
+  public Class<ChatMessage> getEntityType() {
+    return ChatMessage.class;
+  }
 
-    }
+  @Override
+  public Class<ChatMessageDto> getDtoType() {
+    return ChatMessageDto.class;
+  }
 
-    @Override
-    public Class<ChatMessage> getEntityType() {
-        return ChatMessage.class;
-    }
+  private MessageSenderDto getSender(String creatorId) {
 
-    @Override
-    public Class<ChatMessageDto> getDtoType() {
-        return ChatMessageDto.class;
-    }
-
-    private MessageSenderDto getSender(String creatorId) {
-
-        return MessageSenderDto.builder()
-                .creatorId(creatorId)
-                .creatorFullName(identityService.getFullNameByUsername(creatorId))
-                .streakToDisplay(streakService.getLatestPreferredStreakForUser(creatorId))
-                .build();
-    }
+    return MessageSenderDto.builder()
+        .creatorId(creatorId)
+        .creatorFullName(identityService.getFullNameByUsername(creatorId))
+        .streakToDisplay(streakService.getLatestPreferredStreakForUser(creatorId))
+        .build();
+  }
 }
