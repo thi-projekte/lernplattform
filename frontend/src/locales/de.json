@@ -142,7 +142,8 @@
     "tabs": {
       "visual": "Visuell",
       "notes": "Notizen",
-      "notesPlaceholder": "Noch keine Notizen vorhanden."
+      "notesPlaceholder": "Noch keine Notizen vorhanden.",
+      "quiz": "Quiz"
     },
     "actions": {
       "create": "Thema erstellen",
@@ -211,7 +212,13 @@
       "emptyHint": "Noch keine Quizfragen. Füge welche hinzu, um deine Lernenden zu testen.",
       "limitReached": "Maximal 20 Quizfragen pro Thema.",
       "countLabel": "{{count}} / {{max}} Quizfragen",
-      "deleteCard": "Frage löschen"
+      "deleteCard": "Frage löschen",
+      "viewTitle": "Teste dein Wissen",
+      "viewEmptyHint": "Dieses Thema hat noch keine Quizfragen.",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "showAnswerHint": "Klicke, um die Antwort anzuzeigen",
+      "showQuestionHint": "Klicke, um die Frage anzuzeigen"
     },
     "contentElementType": {
       "label": "Typ",

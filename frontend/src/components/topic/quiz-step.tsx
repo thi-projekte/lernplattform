@@ -135,7 +135,7 @@ const QuizStep = ({ topic, setTopic, onSave, onSaveAndView, isSubmitting }: Quiz
                     variant="subtle"
                     color="red"
                     onClick={() => handleDelete(card.id)}
-                    loading={isDeleting}
+                    disabled={isDeleting}
                     aria-label={t('topic.quiz.deleteCard')}
                   >
                     <IconTrash size={16} />

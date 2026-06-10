@@ -54,7 +54,10 @@ export const IndexCardDtoSchema = z.object({
 export type IndexCardDto = z.infer<typeof IndexCardDtoSchema>;
 
 export const TopicIndexCardsSchema = z.object({
-  indexCards: z.array(IndexCardDtoSchema).max(20),
+  // nullish: a topic may have no quiz cards, and some topic endpoints return
+  // `indexCards: null` (the builder/edit mapper does not populate the field).
+  // Using .optional() alone rejected null and broke the edit save gate.
+  indexCards: z.array(IndexCardDtoSchema).max(20).nullish(),
 });
 
 export const TopicSchema = z
@@ -70,6 +73,20 @@ export const TopicSchema = z
   .extend(TopicIndexCardsSchema.shape);
 
 export type Topic = z.infer<typeof TopicSchema>;
+
+// Validates whether a topic is ready to be saved (create/edit). It mirrors the
+// backend TopicRequest constraints and intentionally checks array *counts*
+// rather than the full response shape: server-managed fields (content element
+// presigned URLs, timestamps, related-topic details) must never gate the save
+// button. Using the full TopicSchema here silently disabled saving whenever any
+// such nested field failed to parse.
+export const TopicSaveableSchema = TopicCoreDataSchema.extend({
+  relatedTopics: z.array(z.unknown()).min(1).max(4),
+  contentElements: z.array(z.unknown()).min(1).max(12),
+  // nullish: the builder/edit endpoint returns `indexCards: null`; the quiz is
+  // optional and must never block saving.
+  indexCards: z.array(z.unknown()).max(20).nullish(),
+});
 
 const ImportTopicSchema = z.object({
   identifier: z.string().trim().min(1, 'Identifier cannot be blank'),

@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { Layout } from '../../components/layout.tsx';
 import { Button, Container, Group, Tabs, Title } from '@mantine/core';
 import { useEffect, useState } from 'react';
-import { type Topic, TopicSchema } from '../../schemas/topic.ts';
+import { type Topic, TopicSaveableSchema } from '../../schemas/topic.ts';
 import { useEditTopicMutation, useQueryTopic } from '../../api/topic.ts';
 import { useNavigate, useParams } from 'react-router';
 import CoreDataStep from '../../components/topic/core-data-step.tsx';
@@ -28,7 +28,7 @@ const EditTopicPage = () => {
 
   const { mutateAsync, isPending } = useEditTopicMutation(topicId ?? '');
 
-  const canSave = TopicSchema.safeParse(topic).success;
+  const canSave = TopicSaveableSchema.safeParse(topic).success;
 
   useEffect(() => {
     if (data && Object.keys(topic).length === 0) {
@@ -46,7 +46,7 @@ const EditTopicPage = () => {
   const saveChanges = async (saveAndView: boolean) => {
     if (!canSave) return;
     const result = await mutateAsync(topic);
-    if (result.status < 204) {
+    if (result.status < 300) {
       notifications.show({
         title: t('common.success'),
         message: t('topic.other.successfullySavedTopic'),
