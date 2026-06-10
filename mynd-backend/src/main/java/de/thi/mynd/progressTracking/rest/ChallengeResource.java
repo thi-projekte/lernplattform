@@ -7,6 +7,9 @@ import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
+import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
+import org.eclipse.microprofile.openapi.annotations.tags.Tag;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +17,8 @@ import java.util.UUID;
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 @RolesAllowed("authorizedUser")
+@Tag(name = "Challenges")
+@SecurityRequirement(name = "keycloak")
 public final class ChallengeResource {
 
   @Inject ChallengeService challengeService;
