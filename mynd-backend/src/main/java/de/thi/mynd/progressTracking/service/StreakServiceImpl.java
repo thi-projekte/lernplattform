@@ -22,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @ApplicationScoped
 public final class StreakServiceImpl implements StreakService {
@@ -42,6 +43,21 @@ public final class StreakServiceImpl implements StreakService {
     endStreaksIfNotActiveAnymore(latestStreaks);
 
     return mappingRegistry.mapList(latestStreaks, StreakDto.class);
+  }
+
+  @Override
+  @Transactional
+  public StreakDto getLatestPreferredStreakForUser(String creatorId) {
+    StreakPreference preference = getStreakPreferenceForUser(creatorId);
+    Optional<Streak> streakOptional =
+        streakRepository.findNotEndedByCreatorIdAndType(creatorId, preference.type);
+
+    if (streakOptional.isEmpty()) {
+      return null;
+    }
+
+    Streak streak = streakOptional.get();
+    return mappingRegistry.map(streak, StreakDto.class);
   }
 
   @Override
@@ -99,12 +115,8 @@ public final class StreakServiceImpl implements StreakService {
   @Override
   @Transactional
   public StreakPreferenceDto getOrCreateStreakPreferenceForCurrentUser() {
-    CreatorIdKey id = new CreatorIdKey();
-    id.creatorId = identity.getPrincipal().getName();
-    StreakPreference preference =
-        streakPreferenceRepository
-            .findByIdOptional(id)
-            .orElseGet(this::createStreakPreferenceForCurrentUser);
+    String creatorId = identity.getPrincipal().getName();
+    StreakPreference preference = getStreakPreferenceForUser(creatorId);
 
     return mappingRegistry.map(preference, StreakPreferenceDto.class);
   }
@@ -112,19 +124,15 @@ public final class StreakServiceImpl implements StreakService {
   @Override
   @Transactional
   public void updateStreakPreferencesForCurrentUser(StreakPreferenceRequest request) {
-    CreatorIdKey id = new CreatorIdKey();
-    id.creatorId = identity.getPrincipal().getName();
-    StreakPreference preference =
-        streakPreferenceRepository
-            .findByIdOptional(id)
-            .orElseGet(this::createStreakPreferenceForCurrentUser);
+    String creatorId = identity.getPrincipal().getName();
+    StreakPreference preference = getStreakPreferenceForUser(creatorId);
 
     preference.type = request.type;
     preference.isPublic = request.isPublic;
 
     streakPreferenceRepository.persistAndFlush(preference);
 
-    Log.infof("Updated streak preferences for user %s", id.creatorId);
+    Log.infof("Updated streak preferences for user %s", creatorId);
   }
 
   @Override
@@ -179,9 +187,18 @@ public final class StreakServiceImpl implements StreakService {
     }
   }
 
-  private StreakPreference createStreakPreferenceForCurrentUser() {
+  private StreakPreference getStreakPreferenceForUser(String creatorId) {
     CreatorIdKey id = new CreatorIdKey();
-    id.creatorId = identity.getPrincipal().getName();
+    id.creatorId = creatorId;
+
+    return streakPreferenceRepository
+        .findByIdOptional(id)
+        .orElseGet(() -> createStreakPreferenceForUser(creatorId));
+  }
+
+  private StreakPreference createStreakPreferenceForUser(String creatorId) {
+    CreatorIdKey id = new CreatorIdKey();
+    id.creatorId = creatorId;
     StreakPreference preference = new StreakPreference();
     preference.id = id;
     preference.isPublic = false;
