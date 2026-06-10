@@ -4,6 +4,7 @@ import {
   PanOnScrollMode,
   useEdgesState,
   useNodesState,
+  useReactFlow,
   type Edge,
   type EdgeMouseHandler,
   type Node,
@@ -19,6 +20,27 @@ import { useCallback, useEffect, useRef } from 'react';
 import ViewportToolbar from './viewport-toolbar.tsx';
 import { type ForceLayoutHandle } from './topic-graph.utils.ts';
 import ForceLayoutController from './force-layout-controller.tsx';
+
+// Mounts only while the tree layout is active. On mount (i.e. right after the
+// user toggles to tree mode) it waits one frame for ReactFlow to commit the
+// restored tree positions, then re-fits the viewport so the graph is centred
+// instead of leaving the camera wherever force mode left it.
+const TreeLayoutFit = ({
+  padding,
+  maxZoom,
+}: {
+  padding: number;
+  maxZoom?: number;
+}) => {
+  const { fitView } = useReactFlow();
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      fitView({ padding, maxZoom: maxZoom ?? 1.2, duration: 400 });
+    }, 80);
+    return () => window.clearTimeout(timeout);
+  }, [fitView, padding, maxZoom]);
+  return null;
+};
 
 export type GraphLayoutMode = 'tree' | 'force';
 
@@ -148,6 +170,9 @@ const TopicGraphView = ({
     >
       {layoutMode === 'force' && (
         <ForceLayoutController baseNodes={nodes} edges={edges} onHandleReady={handleForceReady} />
+      )}
+      {layoutMode === 'tree' && (
+        <TreeLayoutFit padding={fitViewPadding} maxZoom={fitViewMaxZoom} />
       )}
       {showViewportToolbar && (
         <ViewportToolbar
