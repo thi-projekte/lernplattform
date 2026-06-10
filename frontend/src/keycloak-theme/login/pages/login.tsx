@@ -61,6 +61,20 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: 'log
   const shouldDisplayMessage =
     message !== undefined && (message.type !== 'warning' || !isAppInitiatedAction);
 
+  const languageTag = currentLanguage.languageTag.toLowerCase();
+
+  const footerTexts = (() => {
+    if (languageTag.startsWith('de')) {
+      return {
+        legal: 'Impressum & Datenschutz',
+      };
+    }
+
+    return {
+      legal: 'Legal notice & privacy policy',
+    };
+  })();
+
   return (
     <Box className="mynd-login-page">
       {enabledLanguages.length > 1 && (
@@ -321,6 +335,27 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: 'log
             )}
           </Stack>
         </Paper>
+
+        <Box component="footer" mt="md">
+          <Group justify="center" gap="xs" wrap="wrap">
+            <Text size="xs" style={{ color: '#1F2A44', opacity: 0.72 }}>
+              © {new Date().getFullYear()} MYnd
+            </Text>
+
+            <Text size="xs" style={{ color: '#1F2A44', opacity: 0.72 }}>
+              ·
+            </Text>
+
+            <Anchor
+              href="/legal"
+              size="xs"
+              underline="hover"
+              style={{ color: '#1F2A44', opacity: 0.72 }}
+            >
+              {footerTexts.legal}
+            </Anchor>
+          </Group>
+        </Box>
       </Container>
     </Box>
   );
