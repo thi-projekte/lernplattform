@@ -117,7 +117,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
             bottom: 'calc(100% + 12px)',
             left: '50%',
             transform: 'translateX(-50%)',
-            width: 240,
+            width: 280,
           }}
         >
           <Paper
@@ -136,9 +136,9 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
               animation: 'cardEntrance 0.18s ease-out both',
             }}
           >
-            <Stack gap="xs">
-              <Stack gap={6}>
-                <Text fw={600} size="sm" style={{ lineHeight: 1.3 }}>
+            <Stack gap="sm">
+              <Stack gap={8}>
+                <Text fw={700} size="md" style={{ lineHeight: 1.3 }}>
                   {data.title}
                 </Text>
                 {categoryLabels.length > 0 && (
@@ -148,7 +148,7 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
                         key={category.id}
                         title={category.title}
                         color={category.color}
-                        size="xs"
+                        size="sm"
                       />
                     ))}
                   </Group>
@@ -158,10 +158,10 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
               {topicId &&
                 (DETAIL_BUTTON_VARIANT === 'icon-text' ? (
                   <Button
-                    leftSection={<IconEye size={14} />}
+                    leftSection={<IconEye size={16} />}
                     variant="light"
                     color="blue"
-                    size="xs"
+                    size="sm"
                     fullWidth
                     onClick={(event) => {
                       event.stopPropagation();
@@ -189,10 +189,10 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
 
               {data.onExpand && !data.isExpanded && (
                 <Button
-                  leftSection={<IconLink size={14} />}
+                  leftSection={<IconLink size={16} />}
                   variant="light"
                   color="gray"
-                  size="xs"
+                  size="sm"
                   fullWidth
                   onClick={(event) => {
                     event.stopPropagation();
@@ -205,10 +205,10 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
 
               {data.onHide && (
                 <Button
-                  leftSection={<IconEyeOff size={14} />}
+                  leftSection={<IconEyeOff size={16} />}
                   variant="subtle"
                   color="gray"
-                  size="xs"
+                  size="sm"
                   fullWidth
                   className="hide-node-btn"
                   onClick={(event) => {
@@ -223,17 +223,17 @@ const GenericTopicNode = ({ id, data, selected }: GenericTopicNodeProps) => {
               {learnProgress && (
                 <Group gap="xs" align="center" wrap="nowrap">
                   <Text
-                    size="xs"
+                    size="sm"
                     fw={700}
                     c={isProgressCompleted ? 'green.7' : 'blue.7'}
-                    style={{ minWidth: 36, textAlign: 'left' }}
+                    style={{ minWidth: 40, textAlign: 'left' }}
                   >
                     {progressPercent}%
                   </Text>
                   <Progress
                     value={progressPercent}
                     color={isProgressCompleted ? 'green' : 'blue'}
-                    size="xs"
+                    size="sm"
                     radius="xl"
                     style={{ flex: 1 }}
                   />
