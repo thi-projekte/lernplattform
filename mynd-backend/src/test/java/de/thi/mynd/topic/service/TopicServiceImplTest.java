@@ -47,6 +47,8 @@ public class TopicServiceImplTest {
 
   @InjectMock LearnProgressService learnProgressService;
 
+  @InjectMock IndexCardService indexCardService;
+
   private static final String USERNAME = "test-user";
 
   @Test
@@ -226,6 +228,7 @@ public class TopicServiceImplTest {
         .thenReturn(new ArrayList<>());
     when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(topic));
+    doNothing().when(indexCardService).updateTopicAssociation(any(), anyList());
 
     UUID topicId = UUID.randomUUID();
 
