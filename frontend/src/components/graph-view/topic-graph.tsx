@@ -67,8 +67,7 @@ const NodeFocusKeeper = ({ focusNodeId }: { focusNodeId: string | null | undefin
       const right = screenTopLeft.x + measuredWidth;
 
       const MARGIN = 32;
-      const isClipped =
-        top < MARGIN || left < MARGIN || right > w - MARGIN || bottom > h - MARGIN;
+      const isClipped = top < MARGIN || left < MARGIN || right > w - MARGIN || bottom > h - MARGIN;
       if (!isClipped) return;
 
       // Centre the node (accounting for the popup that pops above it) inside
