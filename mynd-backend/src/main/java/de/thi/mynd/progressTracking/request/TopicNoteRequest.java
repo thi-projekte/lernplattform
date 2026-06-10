@@ -5,5 +5,5 @@ import jakarta.validation.constraints.NotBlank;
 
 @RegisterForReflection
 public final class TopicNoteRequest {
-    @NotBlank public String content;
+  @NotBlank public String content;
 }

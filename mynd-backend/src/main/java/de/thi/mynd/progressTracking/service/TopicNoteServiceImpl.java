@@ -10,61 +10,60 @@ import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
-
-import java.util.Optional;
 import java.util.UUID;
 
 @ApplicationScoped
-public final class TopicNoteServiceImpl implements TopicNoteService{
+public final class TopicNoteServiceImpl implements TopicNoteService {
 
-    @Inject
-    TopicNoteRepository topicNoteRepository;
+  @Inject TopicNoteRepository topicNoteRepository;
 
-    @Inject
-    SecurityIdentity securityIdentity;
+  @Inject SecurityIdentity securityIdentity;
 
-    @Inject
-    MappingRegistry mappingRegistry;
+  @Inject MappingRegistry mappingRegistry;
 
-    @Override
-    public TopicNoteDto getTopicNoteForCurrentUser(UUID topicId) {
-        TopicNoteId id = new TopicNoteId();
-        id.creatorId = securityIdentity.getPrincipal().getName();
-        id.topicId = topicId;
-        TopicNote note = topicNoteRepository.findByIdOptional(id)
-                .orElseGet(() -> createDefaultForCurrentUser(topicId));
+  @Override
+  public TopicNoteDto getTopicNoteForCurrentUser(UUID topicId) {
+    TopicNoteId id = new TopicNoteId();
+    id.creatorId = securityIdentity.getPrincipal().getName();
+    id.topicId = topicId;
+    TopicNote note =
+        topicNoteRepository
+            .findByIdOptional(id)
+            .orElseGet(() -> createDefaultForCurrentUser(topicId));
 
-        return mappingRegistry.map(note, TopicNoteDto.class);
-    }
+    return mappingRegistry.map(note, TopicNoteDto.class);
+  }
 
-    @Override
-    @Transactional
-    public TopicNoteDto updateTopicNoteForCurrentUser(UUID topicId, TopicNoteRequest request) {
-        TopicNoteId id = new TopicNoteId();
-        id.creatorId = securityIdentity.getPrincipal().getName();
-        id.topicId = topicId;
-        TopicNote note = topicNoteRepository.findByIdOptional(id)
-                .orElseGet(() -> createDefaultForCurrentUser(topicId));
+  @Override
+  @Transactional
+  public TopicNoteDto updateTopicNoteForCurrentUser(UUID topicId, TopicNoteRequest request) {
+    TopicNoteId id = new TopicNoteId();
+    id.creatorId = securityIdentity.getPrincipal().getName();
+    id.topicId = topicId;
+    TopicNote note =
+        topicNoteRepository
+            .findByIdOptional(id)
+            .orElseGet(() -> createDefaultForCurrentUser(topicId));
 
-        note.content = request.content;
-        topicNoteRepository.persistAndFlush(note);
+    note.content = request.content;
+    topicNoteRepository.persistAndFlush(note);
 
-        return mappingRegistry.map(note, TopicNoteDto.class);
-    }
+    return mappingRegistry.map(note, TopicNoteDto.class);
+  }
 
-    @Transactional
-    @Override
-    public TopicNote createDefaultForCurrentUser(UUID topicId) {
-        TopicNoteId id = new TopicNoteId();
-        id.creatorId = securityIdentity.getPrincipal().getName();
-        id.topicId = topicId;
+  @Transactional
+  @Override
+  public TopicNote createDefaultForCurrentUser(UUID topicId) {
+    TopicNoteId id = new TopicNoteId();
+    id.creatorId = securityIdentity.getPrincipal().getName();
+    id.topicId = topicId;
 
-        TopicNote topicNote = new TopicNote();
-        topicNote.id = id;
-        topicNote.content = "";
+    TopicNote topicNote = new TopicNote();
+    topicNote.id = id;
+    topicNote.content = "";
 
-        topicNoteRepository.persistAndFlush(topicNote);
+    topicNoteRepository.persistAndFlush(topicNote);
 
-        return topicNote;
-    }
+    return topicNote;
+  }
 }

@@ -7,20 +7,18 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
 public final class TopicNoteDtoMapper extends AbstractMappingProcessor<TopicNote, TopicNoteDto> {
-    @Override
-    public TopicNoteDto mapAndEnrich(TopicNote entity) {
-        return TopicNoteDto.builder()
-                .content(entity.content)
-                .build();
-    }
+  @Override
+  public TopicNoteDto mapAndEnrich(TopicNote entity) {
+    return TopicNoteDto.builder().content(entity.content).build();
+  }
 
-    @Override
-    public Class<TopicNote> getEntityType() {
-        return TopicNote.class;
-    }
+  @Override
+  public Class<TopicNote> getEntityType() {
+    return TopicNote.class;
+  }
 
-    @Override
-    public Class<TopicNoteDto> getDtoType() {
-        return TopicNoteDto.class;
-    }
+  @Override
+  public Class<TopicNoteDto> getDtoType() {
+    return TopicNoteDto.class;
+  }
 }

@@ -4,5 +4,5 @@ import lombok.Builder;
 
 @Builder
 public final class TopicNoteDto {
-    public String content;
+  public String content;
 }

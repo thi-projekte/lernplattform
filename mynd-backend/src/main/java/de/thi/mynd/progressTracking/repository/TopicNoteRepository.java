@@ -6,5 +6,4 @@ import de.thi.mynd.progressTracking.entity.TopicNoteId;
 import jakarta.enterprise.context.ApplicationScoped;
 
 @ApplicationScoped
-public final class TopicNoteRepository extends MyndBaseCustomIdRepository<TopicNote, TopicNoteId> {
-}
+public final class TopicNoteRepository extends MyndBaseCustomIdRepository<TopicNote, TopicNoteId> {}
