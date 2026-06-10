@@ -10,6 +10,8 @@ public interface StreakService {
 
   List<StreakDto> getLatestStreaksForCurrentUser();
 
+  StreakDto getLatestPreferredStreakForUser(String creatorId);
+
   void continueOrStartStreaksForCurrentUser();
 
   void endStreaksIfNotActiveAnymore(List<Streak> streaks);
