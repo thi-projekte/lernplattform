@@ -36,6 +36,52 @@ const TreeLayoutFit = ({ padding, maxZoom }: { padding: number; maxZoom?: number
   return null;
 };
 
+// When `focusNodeId` changes, check whether that node is comfortably inside
+// the viewport. If it is partially clipped (or fully off-screen), pan the
+// camera so it becomes visible. We don't move when the node is already in
+// view — that would feel jumpy.
+const NodeFocusKeeper = ({ focusNodeId }: { focusNodeId: string | null | undefined }) => {
+  const { getNode, getViewport, setCenter, flowToScreenPosition } = useReactFlow();
+  useEffect(() => {
+    if (!focusNodeId) return;
+    // Give React Flow a moment to commit any pending position updates (e.g.
+    // when a click expands the card from a small dot to a wider popup).
+    const timeout = window.setTimeout(() => {
+      const node = getNode(focusNodeId);
+      if (!node) return;
+      const { zoom } = getViewport();
+      const container = document.querySelector<HTMLElement>('.react-flow');
+      if (!container) return;
+      const { width: w, height: h } = container.getBoundingClientRect();
+
+      // Approximate node screen bounds (use a generous box to account for the
+      // expanded popup card rendered above the dot).
+      const screenTopLeft = flowToScreenPosition(node.position);
+      const measuredWidth = (node.measured?.width ?? 200) * zoom;
+      const measuredHeight = (node.measured?.height ?? 200) * zoom;
+      // Card pops UP from the dot — extend the box upwards.
+      const popupHeight = 260 * zoom;
+      const top = screenTopLeft.y - popupHeight;
+      const bottom = screenTopLeft.y + measuredHeight;
+      const left = screenTopLeft.x;
+      const right = screenTopLeft.x + measuredWidth;
+
+      const MARGIN = 32;
+      const isClipped =
+        top < MARGIN || left < MARGIN || right > w - MARGIN || bottom > h - MARGIN;
+      if (!isClipped) return;
+
+      // Centre the node (accounting for the popup that pops above it) inside
+      // the viewport with a smooth transition.
+      const centerX = node.position.x + (node.measured?.width ?? 200) / 2;
+      const centerY = node.position.y + (node.measured?.height ?? 200) / 2 - 80;
+      setCenter(centerX, centerY, { duration: 350, zoom });
+    }, 60);
+    return () => window.clearTimeout(timeout);
+  }, [focusNodeId, getNode, getViewport, setCenter, flowToScreenPosition]);
+  return null;
+};
+
 export type GraphLayoutMode = 'tree' | 'force';
 
 interface TopicGraphViewProps {
@@ -58,6 +104,7 @@ interface TopicGraphViewProps {
   onToggleViewportLock?: () => void;
   layoutMode?: GraphLayoutMode;
   onChangeLayoutMode?: (mode: GraphLayoutMode) => void;
+  focusNodeId?: string | null;
   fitView?: boolean;
   fitViewPadding?: number;
   fitViewMaxZoom?: number;
@@ -84,6 +131,7 @@ const TopicGraphView = ({
   onToggleViewportLock,
   layoutMode = 'tree',
   onChangeLayoutMode,
+  focusNodeId,
   fitView = true,
   fitViewPadding = 0.2,
   fitViewMaxZoom,
@@ -166,6 +214,7 @@ const TopicGraphView = ({
         <ForceLayoutController baseNodes={nodes} edges={edges} onHandleReady={handleForceReady} />
       )}
       {layoutMode === 'tree' && <TreeLayoutFit padding={fitViewPadding} maxZoom={fitViewMaxZoom} />}
+      <NodeFocusKeeper focusNodeId={focusNodeId} />
       {showViewportToolbar && (
         <ViewportToolbar
           fitViewPadding={fitViewPadding}

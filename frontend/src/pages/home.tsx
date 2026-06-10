@@ -371,6 +371,7 @@ const HomePage = () => {
                 nodes={nodes}
                 edges={visibleEdges}
                 nodeTypes={nodeTypes}
+                focusNodeId={selectedTopicId}
                 onNodeClick={onNodeClick}
                 onNodeDragStop={(_event, node) => {
                   if (layoutMode === 'force') return;
