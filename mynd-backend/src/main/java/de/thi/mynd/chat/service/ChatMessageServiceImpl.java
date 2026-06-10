@@ -12,6 +12,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
+import java.util.List;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -38,6 +39,13 @@ public final class ChatMessageServiceImpl implements ChatMessageService {
 
     @Override
     public PaginationDto<ChatMessageDto> getMessages(UUID topicId, int page, int pageSize) {
-        return null;
+        PaginationDto<ChatMessage> messages = chatMessageRepository.getChatMessagesPaginated(topicId, page, pageSize);
+
+        List<ChatMessageDto> mapped = mappingRegistry.mapList(messages.results, ChatMessageDto.class);
+
+        return PaginationDto.<ChatMessageDto>builder()
+                .results(mapped)
+                .totalPages(messages.totalPages)
+                .build();
     }
 }
