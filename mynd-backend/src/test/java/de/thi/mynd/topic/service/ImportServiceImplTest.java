@@ -552,6 +552,7 @@ class ImportServiceImplTest {
     dto.setTeaser(teaser);
     dto.setCategories(categories);
     dto.setContentElements(contentElements);
+    dto.setIndexCards(new ArrayList<>());
     return dto;
   }
 
