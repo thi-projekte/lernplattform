@@ -193,12 +193,25 @@
       "associatedTopicsTitle": "Benachbarte Themen",
       "associatedTopicsDescription": "Benachbarte Themen auswählen",
       "contentElementsTitle": "Inhalte",
-      "contentElementsDescription": "Erstellen Sie ihre Lerninhalte"
+      "contentElementsDescription": "Erstellen Sie ihre Lerninhalte",
+      "quizTitle": "Quiz",
+      "quizDescription": "Quizfragen hinzufügen"
     },
     "other": {
       "selectUpToThreeCategories": "Wähle bis zu drei Kategorien aus",
       "searchByTitleOrTeaser": "Suche nach Titel oder Kurzbeschreibung",
       "successfullySavedTopic": "Thema erfolgreich gespeichert"
+    },
+    "quiz": {
+      "addCard": "Frage hinzufügen",
+      "question": "Frage",
+      "answer": "Antwort",
+      "questionPlaceholder": "Wie lautet die Frage?",
+      "answerPlaceholder": "Wie lautet die Antwort?",
+      "emptyHint": "Noch keine Quizfragen. Füge welche hinzu, um deine Lernenden zu testen.",
+      "limitReached": "Maximal 20 Quizfragen pro Thema.",
+      "countLabel": "{{count}} / {{max}} Quizfragen",
+      "deleteCard": "Frage löschen"
     },
     "contentElementType": {
       "label": "Typ",

@@ -8,6 +8,7 @@ import { useNavigate, useParams } from 'react-router';
 import CoreDataStep from '../../components/topic/core-data-step.tsx';
 import AssociatedTopicsStep from '../../components/topic/associated-topics-step.tsx';
 import ContentElementsDnd from '../../components/topic/content-elements-dnd.tsx';
+import QuizStep from '../../components/topic/quiz-step.tsx';
 import { notifications } from '@mantine/notifications';
 import LayoutLoader from '../../components/layout-loader.tsx';
 import { useUserService } from '../../provider/user-provider.tsx';
@@ -75,6 +76,7 @@ const EditTopicPage = () => {
             <Tabs.Tab value="coreData">{t('topic.steps.coreDataTitle')}</Tabs.Tab>
             <Tabs.Tab value="associatedTopics">{t('topic.steps.associatedTopicsTitle')}</Tabs.Tab>
             <Tabs.Tab value="contentElements">{t('topic.steps.contentElementsTitle')}</Tabs.Tab>
+            <Tabs.Tab value="quiz">{t('topic.steps.quizTitle')}</Tabs.Tab>
           </Tabs.List>
           <Tabs.Panel value="coreData">
             <CoreDataStep topic={topic} setTopic={setTopic} />
@@ -84,6 +86,9 @@ const EditTopicPage = () => {
           </Tabs.Panel>
           <Tabs.Panel value="contentElements">
             <ContentElementsDnd topic={topic} setTopic={setTopic} />
+          </Tabs.Panel>
+          <Tabs.Panel value="quiz">
+            <QuizStep topic={topic} setTopic={setTopic} />
           </Tabs.Panel>
         </Tabs>
         <Group justify="flex-end" mt="xl">

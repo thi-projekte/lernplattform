@@ -46,6 +46,17 @@ export const TopicContentElementsSchema = z.object({
   contentElements: z.array(AnyContentElementDtoSchema).min(0),
 });
 
+export const IndexCardDtoSchema = z.object({
+  id: z.uuid().optional(),
+  question: z.string().min(1),
+  answer: z.string().min(1),
+});
+export type IndexCardDto = z.infer<typeof IndexCardDtoSchema>;
+
+export const TopicIndexCardsSchema = z.object({
+  indexCards: z.array(IndexCardDtoSchema).max(20),
+});
+
 export const TopicSchema = z
   .object({
     id: z.uuid().optional(),
@@ -55,7 +66,8 @@ export const TopicSchema = z
   })
   .extend(TopicCoreDataSchema.shape)
   .extend(TopicAssociatedTopicsSchema.shape)
-  .extend(TopicContentElementsSchema.shape);
+  .extend(TopicContentElementsSchema.shape)
+  .extend(TopicIndexCardsSchema.shape);
 
 export type Topic = z.infer<typeof TopicSchema>;
 
