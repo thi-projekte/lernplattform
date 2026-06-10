@@ -11,6 +11,7 @@ import io.quarkus.websockets.next.WebSocket;
 import io.quarkus.websockets.next.WebSocketConnection;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
+import jakarta.validation.Valid;
 import org.eclipse.microprofile.openapi.annotations.Operation;
 import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement;
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
@@ -18,9 +19,6 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import java.util.UUID;
 
 @WebSocket(path = "/topics/{topicId}/websocket-chat")
-//@RolesAllowed("authorizedUser")
-@Tag(name = "Categories")
-@SecurityRequirement(name = "keycloak")
 public final class ChatSocketResource {
 
     @Inject
@@ -30,7 +28,7 @@ public final class ChatSocketResource {
     ChatMessageService chatMessageService;
 
     @OnTextMessage(broadcast = true)
-    public ChatMessageDto onMessage(ChatMessageRequest request) {
+    public ChatMessageDto onMessage(@Valid ChatMessageRequest request) {
 
         UUID topicId = UUID.fromString(connection.pathParam("topicId"));
         return chatMessageService.sendMessageToTopic(topicId, request);
