@@ -26,7 +26,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=fT69SLK2m9I"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "aiMlAndDl",
@@ -55,7 +56,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=Ip1a2JHdt3E"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "supervisedLearning",
@@ -82,7 +84,8 @@
         "type": "SPOTIFY_LINK",
         "uri": "https://open.spotify.com/episode/1VGDN47ZK6Mw018blILihn?si=qsMaqLeNTcKo75_DhiBL_w"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "decTrees",
@@ -109,7 +112,8 @@
         "type": "URI",
         "uri": "https://miro.com/de/diagramm/was-ist-ein-entscheidungsbaum/"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "neuralNetworks",
@@ -136,7 +140,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=1fQrOek4buQ"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "genAi",
@@ -163,7 +168,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=oLphBadhqWk"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "prompting",
@@ -190,7 +196,8 @@
         "type": "URI",
         "uri": "https://www.deutschlandfunk.de/crashkurs-prompting-wie-nutze-ich-ki-chatbots-effizient-dlf-55833e09-100.html"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "risksAndChances",
@@ -217,7 +224,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://youtu.be/0TAQwTWcW_Q?si=9P8zCTtXJG5C67fK"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "pmIntro",
@@ -244,7 +252,8 @@
         "type": "SPOTIFY_LINK",
         "uri": "https://open.spotify.com/episode/2GcE1DlKA2iRWtE0PBcDR7?si=5a9ba53501444c5b"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "pmScope",
@@ -271,7 +280,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=_c-qzFV5yM4"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "pmStakeholder",
@@ -303,7 +313,8 @@
         "type": "RTF",
         "rtfText": "<p>Welche drei Stakeholder hätten bei unserer Lernplattform den größten Einfluss auf den MVP?</p>"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "pmWbs",
@@ -330,7 +341,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=_K4VLopVX-U"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "pmTime",
@@ -357,7 +369,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=blbJF2C7P_o"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "pmKanban",
@@ -384,7 +397,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=yW28P8MwCr4"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "pmRisk",
@@ -411,7 +425,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=IDvII9iz3e0"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "pmRetro",
@@ -443,7 +458,8 @@
         "type": "RTF",
         "rtfText": "<p>Was lief gut? Was war unklar? Was blockierte uns? Was ändern wir beim nächsten Schritt?</p>"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "lifeManualIntro",
@@ -471,7 +487,8 @@
         "type": "RTF",
         "rtfText": "<p>Welche drei Fragen über dein Leben oder deine Zukunft würdest du gern besser beantworten können?</p>"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "connectingDots",
@@ -499,7 +516,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=5BSbOc5VYY8"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "joyInLife",
@@ -527,7 +545,8 @@
         "type": "RTF",
         "rtfText": "<p>Welche drei Situationen haben dir in den letzten Wochen sichtbar Energie gegeben?</p>"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "talentSearch",
@@ -555,7 +574,8 @@
         "type": "RTF",
         "rtfText": "<p>Notiere drei Tätigkeiten, die dir leichtfallen, und drei Tätigkeiten, bei denen du besonders schnell in einen Flow kommst.</p>"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "strengthFormula",
@@ -582,7 +602,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=psknhSue-kI"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "comfortZone",
@@ -610,7 +631,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=cE3VWK2ZK-Y"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "beliefsSelfSabotage",
@@ -638,7 +660,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=z6Jk0vfV79w"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "valuesBasics",
@@ -666,7 +689,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=4GD9uTuTDm0"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "gutDecisions",
@@ -694,7 +718,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=6j8t-0xnvS0"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "livingInNow",
@@ -722,7 +747,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=pCSfAw3UsSs"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "successRedefined",
@@ -750,7 +776,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=yN00Zfupcn8"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "energyAndFlow",
@@ -778,7 +805,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=ek4lXriA4fw"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "penthouseTheory",
@@ -806,7 +834,8 @@
         "type": "RTF",
         "rtfText": "<p>Bewerte jeden der sechs Bereiche spontan von 1 bis 10. Wähle danach nur einen Bereich aus, in dem ein kleiner nächster Schritt sinnvoll wäre.</p>"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "sixLifeAreas",
@@ -834,7 +863,8 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=o0zF4fw8Arw"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "healthWellbeingPlan",
@@ -866,7 +896,8 @@
         "type": "RTF",
         "rtfText": "<p>Welche drei Dinge geben dir im Alltag wirklich Energie und welche drei Dinge ziehen dir regelmäßig Energie?</p>"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "socialEnvironmentSupport",
@@ -898,7 +929,8 @@
         "type": "RTF",
         "rtfText": "<p>Notiere drei Personen, die dir Energie geben, und eine konkrete Handlung, wie du den Kontakt zu ihnen bewusster pflegen kannst.</p>"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "educationGrowthPath",
@@ -930,7 +962,8 @@
         "type": "RTF",
         "rtfText": "<p>Welche Fähigkeit würde dir in den nächsten zwölf Monaten am meisten helfen und warum genau diese?</p>"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "vocationActivityMeaning",
@@ -962,7 +995,8 @@
         "type": "RTF",
         "rtfText": "<p>Bewerte deinen aktuellen Beruf oder dein Studium in drei Punkten: Energie, Sinn und Entwicklung. Wo ist der stärkste Bereich, wo der schwächste?</p>"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "personalBalanceRecharge",
@@ -994,7 +1028,8 @@
         "type": "RTF",
         "rtfText": "<p>Welche Aktivität lädt dich zuverlässig auf, obwohl du sie im Alltag oft zu spät einplanst?</p>"
       }
-    ]
+    ],
+    "indexCards": []
   },
   {
     "identifier": "dreamsRealizationSteps",
@@ -1026,7 +1061,8 @@
         "type": "RTF",
         "rtfText": "<p>Wähle einen Wunsch aus und formuliere daraus den nächsten kleinsten Schritt, den du innerhalb von sieben Tagen erledigen kannst.</p>"
       }
-    ]
+    ],
+    "indexCards": []
   },
     {
       "identifier": "nutritionBasics",
@@ -1053,7 +1089,8 @@
           "type": "RTF",
           "rtfText": "<p>Welche Lebensmittelgruppe kommt in deinem Alltag wahrscheinlich zu kurz: Wasser, Gemüse, Obst, Vollkorn, Eiweißquellen oder pflanzliche Fette?</p>"
         }
-      ]
+      ],
+      "indexCards": []
     },
     {
       "identifier": "nutritionHydration",
@@ -1080,7 +1117,8 @@
           "type": "RTF",
           "rtfText": "<p>Stelle dir für einen Tag sichtbar eine Wasserflasche hin und prüfe abends, ob du dadurch automatisch mehr getrunken hast.</p>"
         }
-      ]
+      ],
+      "indexCards": []
     },
     {
       "identifier": "nutritionVegetablesFruit",
@@ -1107,7 +1145,8 @@
           "type": "RTF",
           "rtfText": "<p>Plane für die nächste Mahlzeit mindestens zwei Farben Gemüse oder Obst ein, zum Beispiel Paprika und Spinat oder Beeren und Banane.</p>"
         }
-      ]
+      ],
+      "indexCards": []
     },
     {
       "identifier": "nutritionWholegrainFiber",
@@ -1134,7 +1173,8 @@
           "type": "RTF",
           "rtfText": "<p>Wo könntest du ohne großen Aufwand eine Weißmehl-Variante durch Vollkorn ersetzen: Brot, Nudeln, Reis, Müsli oder Wraps?</p>"
         }
-      ]
+      ],
+      "indexCards": []
     },
     {
       "identifier": "nutritionProteinSources",
@@ -1161,7 +1201,8 @@
           "type": "RTF",
           "rtfText": "<p>Wähle für eine Mahlzeit bewusst eine Eiweißquelle aus und notiere, ob sie pflanzlich oder tierisch ist.</p>"
         }
-      ]
+      ],
+      "indexCards": []
     },
     {
       "identifier": "nutritionMealPlanning",
@@ -1188,6 +1229,7 @@
           "type": "RTF",
           "rtfText": "<p>Plane eine einfache Mahlzeit mit vier Bausteinen: Gemüse oder Obst, Vollkorn oder Kartoffeln, Eiweißquelle und Getränk.</p>"
         }
-      ]
+      ],
+      "indexCards": []
     }
 ]

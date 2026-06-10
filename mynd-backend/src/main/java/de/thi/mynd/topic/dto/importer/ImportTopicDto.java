@@ -1,6 +1,7 @@
 package de.thi.mynd.topic.dto.importer;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import java.util.List;
@@ -24,4 +25,7 @@ public final class ImportTopicDto {
 
   @Size(min = 1, max = 12)
   public List<Map<String, Object>> contentElements;
+
+  @Size(max = 20)
+  public List<@Valid ImportIndexCardDto> indexCards;
 }
