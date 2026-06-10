@@ -294,9 +294,7 @@ const ProductCard = ({
                 fullWidth
                 radius="md"
                 size="sm"
-                loading={
-                  (isSubscribing && subscribingPriceId === selectedPrice.id) || isPolling
-                }
+                loading={(isSubscribing && subscribingPriceId === selectedPrice.id) || isPolling}
                 onClick={() => onSubscribe(selectedPrice.id)}
                 style={{
                   background: accentColor,
