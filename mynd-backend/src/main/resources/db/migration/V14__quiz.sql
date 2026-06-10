@@ -1,5 +1,5 @@
 CREATE TABLE index_card (
-    id uuid not null,
+    id uuid not null PRIMARY KEY,
     createdAt timestamp(6) not null,
     creatorId varchar(255) not null,
     updatedAt timestamp(6) not null,
