@@ -97,6 +97,38 @@ const TopicDetailsPage = () => {
           flexDirection: 'column',
         }}
       >
+        {topic && (
+          <Stack gap={6} mb="md">
+            <Title order={3}>{topic.title}</Title>
+            {topic.categories && topic.categories.length > 0 && (
+              <Group gap={6}>
+                {topic.categories.map((cat: Category) => (
+                  <CategoryBadge key={cat.id} title={cat.title} color={cat.color ?? '8b5cf6'} />
+                ))}
+              </Group>
+            )}
+            {learnProgress && (
+              <Group
+                gap={8}
+                mt={4}
+                align="center"
+                wrap="nowrap"
+                style={{ maxWidth: isMobile ? '100%' : '25vw' }}
+              >
+                <Progress
+                  value={topicProgressPercent}
+                  color={isTopicCompleted ? 'green' : 'blue'}
+                  size="sm"
+                  style={{ flex: 1 }}
+                />
+                <Text size="xs" fw={600} style={{ flexShrink: 0 }}>
+                  {topicProgressPercent}%
+                </Text>
+              </Group>
+            )}
+          </Stack>
+        )}
+
         <Tabs.List mb="md">
           <Tabs.Tab value="visual">{t('topic.tabs.visual')}</Tabs.Tab>
           <Tabs.Tab value="notes">{t('topic.tabs.notes')}</Tabs.Tab>
@@ -245,32 +277,7 @@ const TopicDetailsPage = () => {
               <Stack gap="md">
                 {selectedElement && topic && (
                   <>
-                    <Group justify="space-between" align="flex-start" wrap="nowrap">
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <Title order={3}>{topic.title}</Title>
-                        <Group gap={6} mt={6}>
-                          {topic.categories?.map((cat: Category) => (
-                            <CategoryBadge
-                              key={cat.id}
-                              title={cat.title}
-                              color={cat.color ?? '8b5cf6'}
-                            />
-                          ))}
-                        </Group>
-                        {learnProgress && (
-                          <Group gap={8} mt={8} align="center" wrap="nowrap">
-                            <Progress
-                              value={topicProgressPercent}
-                              color={isTopicCompleted ? 'green' : 'blue'}
-                              size="sm"
-                              style={{ flex: 1 }}
-                            />
-                            <Text size="xs" fw={600} style={{ flexShrink: 0 }}>
-                              {topicProgressPercent}%
-                            </Text>
-                          </Group>
-                        )}
-                      </div>
+                    <Group justify="flex-end">
                       <Tooltip label={t('topic.actions.overview')} withArrow>
                         <ActionIcon
                           variant="subtle"
