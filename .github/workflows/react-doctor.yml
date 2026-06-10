@@ -11,6 +11,7 @@ on:
 permissions:
   contents: read
   pull-requests: write
+  statuses: write
 
 jobs:
   react-doctor:
@@ -21,6 +22,4 @@ jobs:
           fetch-depth: 0
       - uses: millionco/react-doctor@main
         with:
-          diff: dev
           directory: './frontend'
-          github-token: ${{ secrets.GITHUB_TOKEN }}
