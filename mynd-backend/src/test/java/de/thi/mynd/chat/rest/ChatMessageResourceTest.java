@@ -35,7 +35,7 @@ class ChatMessageResourceTest {
         .queryParam("page", 0)
         .queryParam("pageSize", 10)
         .when()
-        .get("/topics/{topicId}/chat")
+        .get("/chats/{topicId}")
         .then()
         .statusCode(401); // Expect Unauthorized because of @RolesAllowed
 
@@ -53,7 +53,7 @@ class ChatMessageResourceTest {
         .queryParam("page", 0)
         .queryParam("pageSize", 10)
         .when()
-        .get("/topics/{topicId}/chat")
+        .get("/chats/{topicId}")
         .then()
         .statusCode(403); // Expect Forbidden
 
@@ -88,7 +88,7 @@ class ChatMessageResourceTest {
         .queryParam("pageSize", pageSize)
         .contentType(ContentType.JSON)
         .when()
-        .get("/topics/{topicId}/chat")
+        .get("/chats/{topicId}")
         .then()
         .statusCode(200)
         .body("totalPages", equalTo(2))

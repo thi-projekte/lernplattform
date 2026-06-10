@@ -13,6 +13,7 @@ import org.eclipse.microprofile.openapi.annotations.security.SecurityRequirement
 import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 import org.jboss.resteasy.reactive.RestQuery;
 
+@Path("/chats")
 @RolesAllowed("authorizedUser")
 @Tag(name = "Topic Chat")
 @SecurityRequirement(name = "keycloak")
@@ -21,7 +22,7 @@ public final class ChatMessageResource {
   @Inject ChatMessageService chatMessageService;
 
   @GET
-  @Path("/topics/{topicId}/chat")
+  @Path("/{topicId}")
   @Operation(
       summary = "Gets chat messages for a specific topic paginated",
       description = "Gets chat messages for a specific topic paginated")
