@@ -75,6 +75,10 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: 'log
     };
   })();
 
+  const { client } = kcContext;
+  // @ts-expect-error This should work anyway
+  const appUrl = client?.baseUrl || client?.redirectUri;
+
   return (
     <Box className="mynd-login-page">
       {enabledLanguages.length > 1 && (
@@ -347,7 +351,7 @@ export default function Login(props: PageProps<Extract<KcContext, { pageId: 'log
             </Text>
 
             <Anchor
-              href="/legal"
+              href={appUrl + '/legal.html'}
               size="xs"
               underline="hover"
               style={{ color: '#1F2A44', opacity: 0.72 }}
