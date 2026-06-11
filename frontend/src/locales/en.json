@@ -142,7 +142,8 @@
     "tabs": {
       "visual": "Visual",
       "notes": "Notes",
-      "notesPlaceholder": "No notes yet."
+      "notesPlaceholder": "No notes yet.",
+      "quiz": "Quiz"
     },
     "actions": {
       "create": "Create topic",
@@ -193,12 +194,31 @@
       "associatedTopicsTitle": "Associated Topics",
       "associatedTopicsDescription": "Select associated topics",
       "contentElementsTitle": "Content elements",
-      "contentElementsDescription": "Create content elements"
+      "contentElementsDescription": "Create content elements",
+      "quizTitle": "Quiz",
+      "quizDescription": "Add quiz questions"
     },
     "other": {
       "selectUpToThreeCategories": "Select up to three categories",
       "searchByTitleOrTeaser": "Search by title or teaser",
       "successfullySavedTopic": "Successfully saved topic"
+    },
+    "quiz": {
+      "addCard": "Add question",
+      "question": "Question",
+      "answer": "Answer",
+      "questionPlaceholder": "What is the question?",
+      "answerPlaceholder": "What is the answer?",
+      "emptyHint": "No quiz questions yet. Add some to test your learners.",
+      "limitReached": "Maximum of 20 quiz questions per topic.",
+      "countLabel": "{{count}} / {{max}} quiz questions",
+      "deleteCard": "Delete question",
+      "viewTitle": "Test your knowledge",
+      "viewEmptyHint": "This topic has no quiz questions yet.",
+      "previous": "Previous",
+      "next": "Next",
+      "showAnswerHint": "Click to reveal the answer",
+      "showQuestionHint": "Click to show the question"
     },
     "contentElementType": {
       "label": "Type",

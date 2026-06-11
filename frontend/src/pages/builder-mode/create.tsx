@@ -5,13 +5,13 @@ import { useState } from 'react';
 import {
   type Topic,
   TopicAssociatedTopicsSchema,
-  TopicContentElementsSchema,
   TopicCoreDataSchema,
 } from '../../schemas/topic.ts';
 import StepperProgress, { type StepperStep } from '../../components/stepper-progress.tsx';
 import CoreDataStep from '../../components/topic/core-data-step.tsx';
 import AssociatedTopicsStep from '../../components/topic/associated-topics-step.tsx';
 import ContentElementsDnd from '../../components/topic/content-elements-dnd.tsx';
+import QuizStep from '../../components/topic/quiz-step.tsx';
 import { useCreateTopicMutation } from '../../api/topic.ts';
 import { useNavigate } from 'react-router';
 import { track } from '@plausible-analytics/tracker';
@@ -21,31 +21,52 @@ const CreateTopicPage = () => {
   const { isPending, mutateAsync } = useCreateTopicMutation();
   const navigate = useNavigate();
 
-  const [topic, setTopic] = useState<Partial<Topic>>({ contentElements: [] });
+  const [topic, setTopic] = useState<Partial<Topic>>({ contentElements: [], indexCards: [] });
+
+  const submit = async (viewAfter: boolean) => {
+    const created = await mutateAsync(topic);
+    track('topicCreation', { props: { topicTitle: topic.title ?? '' } });
+    if (viewAfter && created?.id) {
+      navigate(`/topics/${created.id}/details`);
+    } else {
+      navigate('/builder-mode');
+    }
+  };
+
+  const onComplete = () => submit(false);
 
   const steps: StepperStep[] = [
     {
       label: t('topic.steps.coreDataTitle'),
-      canProceed: TopicCoreDataSchema.safeParse(topic).success ?? false,
+      canProceed: TopicCoreDataSchema.safeParse(topic).success,
       step: <CoreDataStep topic={topic} setTopic={setTopic} />,
     },
     {
       label: t('topic.steps.associatedTopicsTitle'),
-      canProceed: TopicAssociatedTopicsSchema.safeParse(topic).success ?? false,
+      canProceed: TopicAssociatedTopicsSchema.safeParse(topic).success,
       step: <AssociatedTopicsStep topic={topic} setTopic={setTopic} />,
     },
     {
       label: t('topic.steps.contentElementsTitle'),
-      canProceed: TopicContentElementsSchema.safeParse(topic).success ?? false,
+      // At least one content element is required before moving to Quiz.
+      canProceed: (topic.contentElements ?? []).length >= 1,
       step: <ContentElementsDnd topic={topic} setTopic={setTopic} />,
     },
+    {
+      label: t('topic.steps.quizTitle'),
+      canProceed: Array.isArray(topic.indexCards) && (topic.indexCards ?? []).length <= 20,
+      step: (
+        <QuizStep
+          topic={topic}
+          setTopic={setTopic}
+          onSave={() => submit(false)}
+          onSaveAndView={() => submit(true)}
+          isSubmitting={isPending}
+        />
+      ),
+      hideFooter: true,
+    },
   ];
-
-  const onComplete = async () => {
-    await mutateAsync(topic);
-    track('topicCreation', { props: { topicTitle: topic.title ?? '' } });
-    navigate('/builder-mode');
-  };
 
   return (
     <Layout>

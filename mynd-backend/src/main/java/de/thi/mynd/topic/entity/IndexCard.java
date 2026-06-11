@@ -10,7 +10,7 @@ import org.hibernate.annotations.OnDeleteAction;
 public class IndexCard extends BaseEntityWithId {
 
   @ManyToOne
-  @JoinColumn(name = "topicId", referencedColumnName = "id", nullable = false)
+  @JoinColumn(name = "topicId", referencedColumnName = "id", nullable = true)
   @OnDelete(action = OnDeleteAction.CASCADE)
   public Topic topic;
 

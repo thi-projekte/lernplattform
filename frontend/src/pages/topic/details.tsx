@@ -26,6 +26,7 @@ import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import { useTranslation } from 'react-i18next';
 import ContentSidebarContent from '../../components/graph-view/sidebar/content-sidebar-content.tsx';
 import TopicSidebarContent from '../../components/graph-view/sidebar/topic-sidebar-content.tsx';
+import QuizView from '../../components/topic/quiz-view.tsx';
 import LayoutLoader from '../../components/layout-loader.tsx';
 import { CONTENT_ICONS, DEFAULT_ICON_BY_TYPE } from '../../components/icon-picker/icons.ts';
 import { IconCheck } from '@tabler/icons-react';
@@ -66,8 +67,6 @@ const TopicDetailsPage = () => {
 
     return rankA - rankB;
   });
-
-  console.log(contentElements);
 
   const learnProgress = topic?.learnProgress;
 
@@ -132,6 +131,7 @@ const TopicDetailsPage = () => {
         <Tabs.List mb="md">
           <Tabs.Tab value="visual">{t('topic.tabs.visual')}</Tabs.Tab>
           <Tabs.Tab value="notes">{t('topic.tabs.notes')}</Tabs.Tab>
+          <Tabs.Tab value="quiz">{t('topic.tabs.quiz')}</Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel
@@ -309,6 +309,10 @@ const TopicDetailsPage = () => {
 
         <Tabs.Panel value="notes" p="md">
           <Text c="dimmed">{t('topic.tabs.notesPlaceholder')}</Text>
+        </Tabs.Panel>
+
+        <Tabs.Panel value="quiz" style={{ flex: 1, minHeight: 0, overflowY: 'auto' }} p="md">
+          <QuizView indexCards={topic?.indexCards ?? []} />
         </Tabs.Panel>
       </Tabs>
     </Layout>
