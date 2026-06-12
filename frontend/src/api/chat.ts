@@ -23,4 +23,9 @@ export const useQueryChatHistory = (topicId: string, pageSize = 50) =>
     queryKey: ['chatMessages', topicId, pageSize],
     enabled: topicId.length > 0,
     queryFn: () => fetchChatMessages(topicId, 0, pageSize),
+    // Load history once; live updates come over the WebSocket. Refetching on
+    // window focus would re-run seedHistory and visibly reorder the list.
+    staleTime: Infinity,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
   });

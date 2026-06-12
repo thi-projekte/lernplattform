@@ -31,7 +31,7 @@ const TopicChat = ({ topicId }: TopicChatProps) => {
   const { data: history, isLoading } = useQueryChatHistory(topicId);
   const { messages, status, sendMessage, seedHistory } = useTopicChat(topicId);
   const [draft, setDraft] = useState('');
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
 
   // History comes newest-first from the backend — reverse to oldest-first.
   useEffect(() => {
@@ -40,8 +40,11 @@ const TopicChat = ({ topicId }: TopicChatProps) => {
     }
   }, [history, seedHistory]);
 
+  // Keep the newest message in view by scrolling the message container itself
+  // (scrollIntoView would also scroll the surrounding page).
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
+    const viewport = viewportRef.current;
+    if (viewport) viewport.scrollTop = viewport.scrollHeight;
   }, [messages]);
 
   const handleSend = () => {
@@ -69,7 +72,7 @@ const TopicChat = ({ topicId }: TopicChatProps) => {
         </Badge>
       </Group>
 
-      <Box style={{ flex: 1, minHeight: 0, overflowY: 'auto', paddingRight: 8 }}>
+      <Box ref={viewportRef} style={{ flex: 1, minHeight: 0, overflowY: 'auto', paddingRight: 8 }}>
         {isLoading ? (
           <Group justify="center" py="xl">
             <Loader size="sm" />
@@ -146,7 +149,6 @@ const TopicChat = ({ topicId }: TopicChatProps) => {
                 </Group>
               );
             })}
-            <div ref={bottomRef} />
           </Stack>
         )}
       </Box>

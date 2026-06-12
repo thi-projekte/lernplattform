@@ -49,19 +49,14 @@ export const useTopicChat = (topicId: string | undefined) => {
         // promise unresolved and hang the connection. Mirror the apiClient's
         // guarded refresh.
         if (keycloak.isTokenExpired()) {
-          console.warn('[chat] token expired, refreshing…');
           await keycloak.updateToken(30);
         }
-        console.warn('[chat] token ready, len=', keycloak.token?.length);
-      } catch (e) {
-        console.warn('[chat] token refresh failed', e);
+      } catch {
         // Proceed with the current token; the handshake fails if it is invalid.
       }
       if (cancelled) return;
       setStatus('connecting');
 
-      const url = buildWsUrl(topicId);
-      console.warn('[chat] opening', url);
       // Quarkus WebSockets Next bearer-token contract: the second subprotocol is
       // not the raw token but an encoded "quarkus-http-upgrade#<header>#<value>"
       // directive that the server (with propagate-subprotocol-headers=true) maps
@@ -70,11 +65,10 @@ export const useTopicChat = (topicId: string | undefined) => {
       const authProtocol = encodeURIComponent(
         `quarkus-http-upgrade#Authorization#Bearer ${keycloak.token ?? ''}`
       );
-      const ws = new WebSocket(url, ['bearer-token-carrier', authProtocol]);
+      const ws = new WebSocket(buildWsUrl(topicId), ['bearer-token-carrier', authProtocol]);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.warn('[chat] OPEN, protocol=', ws.protocol);
         reconnectsRef.current = 0;
         setStatus('open');
       };
@@ -86,19 +80,8 @@ export const useTopicChat = (topicId: string | undefined) => {
           // Ignore non-JSON frames (e.g. the plain "Access denied" error text).
         }
       };
-      ws.onerror = (event) => {
-        console.warn('[chat] ERROR', event);
-        setStatus('error');
-      };
+      ws.onerror = () => setStatus('error');
       ws.onclose = (event) => {
-        console.warn(
-          '[chat] CLOSE code=',
-          event.code,
-          'reason=',
-          event.reason,
-          'clean=',
-          event.wasClean
-        );
         if (cancelled) return;
         setStatus('closed');
         // 1008 = policy violation (auth failure) — retrying will not help.
