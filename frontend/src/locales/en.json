@@ -145,6 +145,14 @@
       "notesPlaceholder": "No notes yet.",
       "quiz": "Quiz"
     },
+    "notes": {
+      "title": "Notes",
+      "placeholder": "Write your personal notes for this topic…",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "unsaved": "Unsaved changes",
+      "error": "Could not save"
+    },
     "actions": {
       "create": "Create topic",
       "createContentElement": "Create content element",
