@@ -17,11 +17,81 @@ import { IconFlame, IconSend } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import { useUserService } from '../../provider/user-provider.tsx';
 import { useQueryChatHistory } from '../../api/chat.ts';
+import { useQueryProfilePicture } from '../../api/profile-picture.ts';
 import { useTopicChat } from '../../hooks/use-topic-chat.ts';
+import type { ChatMessageDto } from '../../schemas/chat.ts';
 
 interface TopicChatProps {
   topicId: string;
 }
+
+interface ChatMessageRowProps {
+  message: ChatMessageDto;
+  isOwn: boolean;
+}
+
+const ChatMessageRow = ({ message, isOwn }: ChatMessageRowProps) => {
+  const { t } = useTranslation();
+  // Fetch the avatar only for other people's messages (own messages show none).
+  const { data: picture } = useQueryProfilePicture(isOwn ? undefined : message.sender.creatorId);
+  const streak = message.sender.streakToDisplay;
+
+  return (
+    <Group justify={isOwn ? 'flex-end' : 'flex-start'} align="flex-start" gap="xs" wrap="nowrap">
+      {!isOwn && (
+        <Avatar
+          size="sm"
+          radius="xl"
+          color="initials"
+          src={picture?.url ?? null}
+          name={message.sender.creatorFullName ?? undefined}
+        />
+      )}
+      <Box style={{ maxWidth: '78%' }}>
+        {!isOwn && (
+          <Group gap={6} mb={4} align="center">
+            <Text size="xs" c="dimmed" fw={600}>
+              {message.sender.creatorFullName}
+            </Text>
+            {streak && streak.streakCount > 0 && (
+              <Tooltip
+                label={t('topic.chat.streakTooltip', { count: streak.streakCount })}
+                withArrow
+              >
+                <Badge
+                  size="xs"
+                  color="orange"
+                  variant="light"
+                  leftSection={<IconFlame size={10} />}
+                >
+                  {streak.streakCount}
+                </Badge>
+              </Tooltip>
+            )}
+          </Group>
+        )}
+        <Paper
+          px="md"
+          py={8}
+          radius="lg"
+          style={
+            isOwn
+              ? { background: 'var(--mantine-primary-color-filled)' }
+              : { background: 'var(--card-bg)', border: '1px solid var(--card-border)' }
+          }
+        >
+          <Text
+            size="sm"
+            c={isOwn ? 'white' : undefined}
+            style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
+          >
+            {message.message}
+          </Text>
+        </Paper>
+      </Box>
+    </Group>
+  );
+};
 
 const TopicChat = ({ topicId }: TopicChatProps) => {
   const { t } = useTranslation();
@@ -83,104 +153,51 @@ const TopicChat = ({ topicId }: TopicChatProps) => {
           </Text>
         ) : (
           <Stack gap="sm">
-            {messages.map((m) => {
-              const isOwn =
-                !!currentUsername && m.sender.creatorId?.toLowerCase() === currentUsername;
-              const streak = m.sender.streakToDisplay;
-
-              return (
-                <Group
-                  key={m.id}
-                  justify={isOwn ? 'flex-end' : 'flex-start'}
-                  align="flex-start"
-                  gap="xs"
-                  wrap="nowrap"
-                >
-                  {!isOwn && (
-                    <Avatar
-                      size="sm"
-                      radius="xl"
-                      color="initials"
-                      name={m.sender.creatorFullName ?? undefined}
-                    />
-                  )}
-                  <Box style={{ maxWidth: '78%' }}>
-                    {!isOwn && (
-                      <Group gap={6} mb={4} align="center">
-                        <Text size="xs" c="dimmed" fw={600}>
-                          {m.sender.creatorFullName}
-                        </Text>
-                        {streak && streak.streakCount > 0 && (
-                          <Tooltip
-                            label={t('topic.chat.streakTooltip', { count: streak.streakCount })}
-                            withArrow
-                          >
-                            <Badge
-                              size="xs"
-                              color="orange"
-                              variant="light"
-                              leftSection={<IconFlame size={10} />}
-                            >
-                              {streak.streakCount}
-                            </Badge>
-                          </Tooltip>
-                        )}
-                      </Group>
-                    )}
-                    <Paper
-                      px="md"
-                      py={8}
-                      radius="lg"
-                      style={
-                        isOwn
-                          ? { background: 'var(--mantine-primary-color-filled)' }
-                          : { background: 'var(--card-bg)', border: '1px solid var(--card-border)' }
-                      }
-                    >
-                      <Text
-                        size="sm"
-                        c={isOwn ? 'white' : undefined}
-                        style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
-                      >
-                        {m.message}
-                      </Text>
-                    </Paper>
-                  </Box>
-                </Group>
-              );
-            })}
+            {messages.map((m) => (
+              <ChatMessageRow
+                key={m.id}
+                message={m}
+                isOwn={!!currentUsername && m.sender.creatorId?.toLowerCase() === currentUsername}
+              />
+            ))}
           </Stack>
         )}
       </Box>
 
-      <Group gap="xs" wrap="nowrap" align="flex-end">
-        <Textarea
-          flex={1}
-          autosize
-          minRows={1}
-          maxRows={4}
-          radius="md"
-          placeholder={t('topic.chat.inputPlaceholder')}
-          value={draft}
-          onChange={(event) => setDraft(event.currentTarget.value)}
-          onKeyDown={(event) => {
-            if (event.key === 'Enter' && !event.shiftKey) {
-              event.preventDefault();
-              handleSend();
-            }
-          }}
-          disabled={status !== 'open'}
-        />
-        <ActionIcon
-          size={42}
-          radius="md"
-          onClick={handleSend}
-          disabled={!canSend}
-          aria-label={t('topic.chat.send')}
-        >
-          <IconSend size={18} />
-        </ActionIcon>
-      </Group>
+      {/* Input and send button share one rounded container so they always line up. */}
+      <Paper withBorder radius="lg" p={6} style={{ background: 'var(--card-bg)' }}>
+        <Group gap="xs" wrap="nowrap" align="flex-end">
+          <Textarea
+            variant="unstyled"
+            flex={1}
+            autosize
+            minRows={1}
+            maxRows={5}
+            placeholder={t('topic.chat.inputPlaceholder')}
+            value={draft}
+            onChange={(event) => setDraft(event.currentTarget.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Enter' && !event.shiftKey) {
+                event.preventDefault();
+                handleSend();
+              }
+            }}
+            disabled={status !== 'open'}
+            styles={{ input: { paddingInline: 8, paddingBlock: 6, minHeight: 34 } }}
+          />
+          <ActionIcon
+            size={36}
+            w={56}
+            radius="md"
+            variant="filled"
+            onClick={handleSend}
+            disabled={!canSend}
+            aria-label={t('topic.chat.send')}
+          >
+            <IconSend size={16} />
+          </ActionIcon>
+        </Group>
+      </Paper>
     </Stack>
   );
 };
