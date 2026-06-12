@@ -275,8 +275,8 @@
   "auth": {
     "accessDenied": "Access Denied",
     "noAccessPageText": "It looks like you don't have the necessary permissions to view this page. If you think this is a mistake, please contact your administrator.",
-    "role_builder": "Builder",
-    "role_learner": "Learner"
+    "role_builder": "Builder – I want to create content and learn",
+    "role_learner": "Learner - I only want to learn"
   },
   "layout": {
     "openAccount": "Open user account"
