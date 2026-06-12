@@ -3,6 +3,8 @@ import { createContext, useContext, type ReactNode } from 'react';
 import { useFetchSubscription } from '../api/subscription.ts';
 import type { SubscriptionStatus } from '../schemas/payment.ts';
 import { LoadingOverlay } from '@mantine/core';
+import { isGranted, Role } from '../auth.ts';
+
 
 interface SubscriptionContextValue {
   subscriptionStatus: SubscriptionStatus;
@@ -21,7 +23,9 @@ const SubscriptionContext = createContext<SubscriptionContextValue>({
 });
 
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
-  const { data, isLoading } = useFetchSubscription();
+  const isAuthorizedUser = isGranted([Role.AuthorizedUser]);
+  const { data, isLoading: isFetching } = useFetchSubscription(isAuthorizedUser);
+  const isLoading = isAuthorizedUser && isFetching;
 
   return (
     <SubscriptionContext
