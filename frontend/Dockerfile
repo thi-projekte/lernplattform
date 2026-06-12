@@ -20,7 +20,7 @@ ENV VITE_ANALYTICS_INSTANCE=$VITE_ANALYTICS_INSTANCE
 ENV VITE_SENTRY_DSN=$VITE_SENTRY_DSN
 
 COPY package*.json ./
-RUN npm install --platform=linux --arch=x64
+RUN npm install --platform=linux --arch=x64 --legacy-peer-deps
 
 COPY . .
 RUN npm run build
