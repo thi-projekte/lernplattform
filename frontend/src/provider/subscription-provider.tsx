@@ -5,7 +5,6 @@ import type { SubscriptionStatus } from '../schemas/payment.ts';
 import { LoadingOverlay } from '@mantine/core';
 import { isGranted, Role } from '../auth.ts';
 
-
 interface SubscriptionContextValue {
   subscriptionStatus: SubscriptionStatus;
   canAccessBillingPortal: boolean;
