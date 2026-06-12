@@ -46,7 +46,10 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     setPollActive(true);
   }, []);
 
-  const { data, isLoading } = useFetchSubscription(pollActive ? POLL_INTERVAL_MS : false, isAuthorizedUser);
+  const { data, isLoading } = useFetchSubscription(
+    pollActive ? POLL_INTERVAL_MS : false,
+    isAuthorizedUser
+  );
 
   const currentStatus = data?.subscriptionStatus ?? 'FREE';
 

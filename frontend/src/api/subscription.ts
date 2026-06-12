@@ -3,7 +3,10 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import type { ProductDto, StripeSessionDto, SubscriptionDto } from '../schemas/payment.ts';
 import type { AxiosResponse } from 'axios';
 
-export const useFetchSubscription = (refetchInterval: number | false = false, enabled: boolean = true) =>
+export const useFetchSubscription = (
+  refetchInterval: number | false = false,
+  enabled: boolean = true
+) =>
   useQuery({
     queryKey: ['subscription'],
     queryFn: async (): Promise<SubscriptionDto> => {
