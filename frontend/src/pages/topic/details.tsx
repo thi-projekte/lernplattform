@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import ContentSidebarContent from '../../components/graph-view/sidebar/content-sidebar-content.tsx';
 import TopicSidebarContent from '../../components/graph-view/sidebar/topic-sidebar-content.tsx';
 import QuizView from '../../components/topic/quiz-view.tsx';
+import TopicChat from '../../components/topic/topic-chat.tsx';
 import LayoutLoader from '../../components/layout-loader.tsx';
 import { CONTENT_ICONS, DEFAULT_ICON_BY_TYPE } from '../../components/icon-picker/icons.ts';
 import { IconCheck } from '@tabler/icons-react';
@@ -54,6 +55,7 @@ const TopicDetailsPage = () => {
   }, [topic]);
 
   const [selectedElement, setSelectedElement] = useState<AnyContentElementDto | null>(null);
+  const [activeTab, setActiveTab] = useState<string | null>('visual');
 
   if (isLoading) {
     return <LayoutLoader />;
@@ -89,7 +91,8 @@ const TopicDetailsPage = () => {
   return (
     <Layout>
       <Tabs
-        defaultValue="visual"
+        value={activeTab}
+        onChange={setActiveTab}
         style={{
           height: isMobile ? 'auto' : 'calc(100vh - 176px)',
           display: 'flex',
@@ -132,6 +135,7 @@ const TopicDetailsPage = () => {
           <Tabs.Tab value="visual">{t('topic.tabs.visual')}</Tabs.Tab>
           <Tabs.Tab value="notes">{t('topic.tabs.notes')}</Tabs.Tab>
           <Tabs.Tab value="quiz">{t('topic.tabs.quiz')}</Tabs.Tab>
+          <Tabs.Tab value="chat">{t('topic.tabs.chat')}</Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel
@@ -313,6 +317,11 @@ const TopicDetailsPage = () => {
 
         <Tabs.Panel value="quiz" style={{ flex: 1, minHeight: 0, overflowY: 'auto' }} p="md">
           <QuizView indexCards={topic?.indexCards ?? []} />
+        </Tabs.Panel>
+
+        {/* Connect the chat socket only while the tab is open. */}
+        <Tabs.Panel value="chat" style={{ flex: 1, minHeight: 0 }} p="md">
+          {activeTab === 'chat' && topicId && <TopicChat topicId={topicId} />}
         </Tabs.Panel>
       </Tabs>
     </Layout>
