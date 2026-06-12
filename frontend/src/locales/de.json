@@ -21,8 +21,8 @@
     "reward": "Belohnung: +{{count}} Einladungs-Credits",
     "completed": "Abgeschlossen!",
     "claimed": "Belohnung erhalten",
-    "claimButton": "+2 Einladungs-Credits einlösen",
-    "rewardClaimed": "Belohnung eingelöst! Du hast 2 Einladungs-Credits erhalten.",
+    "claimButton": "+1 Einladungs-Credits einlösen",
+    "rewardClaimed": "Belohnung eingelöst! Du hast 1 Einladungs-Credits erhalten.",
     "history": "Vergangene Challenges",
     "noHistory": "Noch keine vergangenen Challenges."
   },
@@ -142,13 +142,14 @@
     "tabs": {
       "visual": "Visuell",
       "notes": "Notizen",
-      "notesPlaceholder": "Noch keine Notizen vorhanden."
+      "notesPlaceholder": "Noch keine Notizen vorhanden.",
+      "quiz": "Quiz"
     },
     "actions": {
       "create": "Thema erstellen",
       "createContentElement": "Inhalt anlegen",
       "start": "Thema starten",
-      "complete": "Thema abschließen",
+      "complete": "Thema manuell abschließen",
       "completeBlockedHint": "Markiere zuerst alle Inhalte als abgeschlossen.",
       "completed": "Abgeschlossen",
       "markContentElementCompleted": "Als abgeschlossen markieren",
@@ -193,12 +194,31 @@
       "associatedTopicsTitle": "Benachbarte Themen",
       "associatedTopicsDescription": "Benachbarte Themen auswählen",
       "contentElementsTitle": "Inhalte",
-      "contentElementsDescription": "Erstellen Sie ihre Lerninhalte"
+      "contentElementsDescription": "Erstellen Sie ihre Lerninhalte",
+      "quizTitle": "Quiz",
+      "quizDescription": "Quizfragen hinzufügen"
     },
     "other": {
       "selectUpToThreeCategories": "Wähle bis zu drei Kategorien aus",
       "searchByTitleOrTeaser": "Suche nach Titel oder Kurzbeschreibung",
       "successfullySavedTopic": "Thema erfolgreich gespeichert"
+    },
+    "quiz": {
+      "addCard": "Frage hinzufügen",
+      "question": "Frage",
+      "answer": "Antwort",
+      "questionPlaceholder": "Wie lautet die Frage?",
+      "answerPlaceholder": "Wie lautet die Antwort?",
+      "emptyHint": "Noch keine Quizfragen. Füge welche hinzu, um deine Lernenden zu testen.",
+      "limitReached": "Maximal 20 Quizfragen pro Thema.",
+      "countLabel": "{{count}} / {{max}} Quizfragen",
+      "deleteCard": "Frage löschen",
+      "viewTitle": "Teste dein Wissen",
+      "viewEmptyHint": "Dieses Thema hat noch keine Quizfragen.",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "showAnswerHint": "Klicke, um die Antwort anzuzeigen",
+      "showQuestionHint": "Klicke, um die Frage anzuzeigen"
     },
     "contentElementType": {
       "label": "Typ",

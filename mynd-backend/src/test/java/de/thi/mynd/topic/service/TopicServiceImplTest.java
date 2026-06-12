@@ -47,6 +47,8 @@ public class TopicServiceImplTest {
 
   @InjectMock LearnProgressService learnProgressService;
 
+  @InjectMock IndexCardService indexCardService;
+
   private static final String USERNAME = "test-user";
 
   @Test
@@ -162,7 +164,7 @@ public class TopicServiceImplTest {
         });
 
     verify(topicRepository, times(1)).findByIdOptional(topicId);
-    verify(contentElementService, times(1)).deleteContentElement(contentElementId);
+    verify(contentElementService, times(1)).deleteContentElementFiles(contentElement);
     verify(topicRepository, times(1)).delete(topic);
   }
 
@@ -226,6 +228,7 @@ public class TopicServiceImplTest {
         .thenReturn(new ArrayList<>());
     when(mappingRegistry.map(any(), eq(TopicDto.class))).thenReturn(TopicDto.builder().build());
     when(topicRepository.findByIdOptional(any())).thenReturn(Optional.of(topic));
+    doNothing().when(indexCardService).updateTopicAssociation(any(), anyList());
 
     UUID topicId = UUID.randomUUID();
 

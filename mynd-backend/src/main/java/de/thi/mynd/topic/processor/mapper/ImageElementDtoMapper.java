@@ -19,6 +19,7 @@ public final class ImageElementDtoMapper
         .id(entity.id)
         .title(entity.title)
         .icon(entity.icon)
+        .rank(entity.rank)
         .createdAt(entity.createdAt)
         .updatedAt(entity.updatedAt)
         .originalFileName(entity.originalFileName)

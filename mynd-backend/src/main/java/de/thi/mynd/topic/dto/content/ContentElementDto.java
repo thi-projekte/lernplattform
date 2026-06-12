@@ -33,4 +33,6 @@ public abstract class ContentElementDto {
   public String title;
 
   public String icon;
+
+  public Integer rank;
 }

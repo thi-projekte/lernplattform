@@ -8,10 +8,7 @@ import de.thi.mynd.topic.dto.importer.ImportTopicDto;
 import de.thi.mynd.topic.entity.*;
 import de.thi.mynd.topic.exception.ImportException;
 import de.thi.mynd.topic.importer.ImportContext;
-import de.thi.mynd.topic.repository.CategoryRepository;
-import de.thi.mynd.topic.repository.ContentElementRepository;
-import de.thi.mynd.topic.repository.TopicAssociationRepository;
-import de.thi.mynd.topic.repository.TopicRepository;
+import de.thi.mynd.topic.repository.*;
 import de.thi.mynd.topic.security.TopicVoter;
 import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
@@ -27,6 +24,7 @@ public final class ImportServiceImpl implements ImportService {
   @Inject CategoryRepository categoryRepository;
   @Inject TopicAssociationRepository topicAssociationRepository;
   @Inject ContentElementRepository contentElementRepository;
+  @Inject IndexCardRepository indexCardRepository;
   @Inject SecurityIdentity identity;
   @Inject SecurityService securityService;
   @Inject ObjectMapper mapper;
@@ -108,6 +106,16 @@ public final class ImportServiceImpl implements ImportService {
 
       topicRepository.persist(topic);
       mapping.put(dto.getIdentifier(), topic);
+
+      dto.getIndexCards()
+          .forEach(
+              ic -> {
+                IndexCard indexCard = new IndexCard();
+                indexCard.question = ic.question;
+                indexCard.answer = ic.answer;
+                indexCard.topic = topic;
+                indexCardRepository.persist(indexCard);
+              });
 
       dto.getContentElements().stream()
           .map(this::mapToContentElement)
