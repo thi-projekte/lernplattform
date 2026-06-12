@@ -3,6 +3,7 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 import { useFetchSubscription } from '../api/subscription.ts';
 import type { SubscriptionStatus } from '../schemas/payment.ts';
 import { LoadingOverlay } from '@mantine/core';
+import { isGranted, Role } from '../auth.ts';
 
 interface SubscriptionContextValue {
   subscriptionStatus: SubscriptionStatus;
@@ -31,6 +32,7 @@ const POLL_INTERVAL_MS = 1500;
 const POLL_TIMEOUT_MS = 60_000;
 
 export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
+  const isAuthorizedUser = isGranted([Role.AuthorizedUser]);
   // Polling kicks off in two situations:
   //   1. We come back from a Stripe checkout (URL has ?success=true)
   //   2. The user just clicked "Testphase starten" — that API call returns
@@ -44,7 +46,10 @@ export const SubscriptionProvider = ({ children }: { children: ReactNode }) => {
     setPollActive(true);
   }, []);
 
-  const { data, isLoading } = useFetchSubscription(pollActive ? POLL_INTERVAL_MS : false);
+  const { data, isLoading } = useFetchSubscription(
+    pollActive ? POLL_INTERVAL_MS : false,
+    isAuthorizedUser
+  );
 
   const currentStatus = data?.subscriptionStatus ?? 'FREE';
 

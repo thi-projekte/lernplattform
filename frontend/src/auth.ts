@@ -5,6 +5,7 @@ import type { KeycloakResourceAccess } from 'keycloak-js';
 export enum Role {
   Builder = 'builder',
   Admin = 'admin',
+  AuthorizedUser = 'authorizedUser',
 }
 
 export const isGranted = (roles: Role[]) => {
