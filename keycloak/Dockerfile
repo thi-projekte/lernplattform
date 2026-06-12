@@ -16,7 +16,7 @@ RUN java -version && mvn -version
 WORKDIR /app
 
 COPY frontend/package.json ./
-RUN npm install --platform=linux --arch=x64 --legacy-peer-deps
+RUN npm install --platform=linux --arch=x64
 
 COPY ./frontend .
 
