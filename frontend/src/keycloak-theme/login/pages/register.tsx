@@ -93,6 +93,18 @@ export default function Register(props: RegisterProps) {
     };
   })();
 
+  const footerTexts = (() => {
+    if (languageTag.startsWith('de')) {
+      return {
+        legal: 'Impressum & Datenschutz',
+      };
+    }
+
+    return {
+      legal: 'Legal notice & privacy policy',
+    };
+  })();
+
   const languageOrder = ['en', 'fr', 'es'];
 
   const sortedEnabledLanguages = [...enabledLanguages].sort((a, b) => {
@@ -291,6 +303,26 @@ export default function Register(props: RegisterProps) {
             </form>
           </Stack>
         </Paper>
+        <Box component="footer" mt="md">
+          <Group justify="center" gap="xs" wrap="wrap">
+            <Text size="xs" style={{ color: '#1F2A44', opacity: 0.72 }}>
+              © {new Date().getFullYear()} MYnd
+            </Text>
+
+            <Text size="xs" style={{ color: '#1F2A44', opacity: 0.72 }}>
+              ·
+            </Text>
+
+            <Anchor
+              href="/legal"
+              size="xs"
+              underline="hover"
+              style={{ color: '#1F2A44', opacity: 0.72 }}
+            >
+              {footerTexts.legal}
+            </Anchor>
+          </Group>
+        </Box>
       </Container>
     </Box>
   );

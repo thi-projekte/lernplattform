@@ -1,6 +1,7 @@
 package de.thi.mynd.topic.dto.importer;
 
 import io.quarkus.runtime.annotations.RegisterForReflection;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public final class ImportCategoryDto {
-  public String identifier;
-  public String title;
-  public String color;
+  @NotBlank public String identifier;
+  @NotBlank public String title;
+  @NotBlank public String color;
 }

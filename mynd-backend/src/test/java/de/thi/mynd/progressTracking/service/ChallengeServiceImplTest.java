@@ -183,7 +183,7 @@ class ChallengeServiceImplTest {
       ChallengeDto result = challengeService.claimReward(challengeId);
 
       assertTrue(challenge.rewardClaimed);
-      assertEquals(4, userProfile.invitationsLeft); // 2 original + 3 rewardInvitations
+      assertEquals(3, userProfile.invitationsLeft); // 1 original + 3 rewardInvitations
       verify(challengeRepository).persistAndFlush(challenge);
       verify(userProfileService).updateUserProfile(userProfile);
       assertEquals(expectedDto, result);
@@ -206,7 +206,7 @@ class ChallengeServiceImplTest {
 
       challengeService.claimReward(challengeId);
 
-      assertEquals(2, newProfile.invitationsLeft);
+      assertEquals(1, newProfile.invitationsLeft);
       verify(userProfileService).createPersonalUserProfile();
       verify(userProfileService).updateUserProfile(newProfile);
     }

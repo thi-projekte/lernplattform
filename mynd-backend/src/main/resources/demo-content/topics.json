@@ -26,6 +26,20 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=fT69SLK2m9I"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was bedeutet Künstliche Intelligenz grundsätzlich?",
+        "answer": "KI beschreibt Systeme, die Aufgaben übernehmen, für die normalerweise menschliche Intelligenz nötig wäre, zum Beispiel Sprache verstehen, Bilder erkennen oder Entscheidungen unterstützen."
+      },
+      {
+        "question": "Ist KI ein einzelnes Programm?",
+        "answer": "Nein. KI ist ein Sammelbegriff für verschiedene Verfahren, Modelle und Anwendungen."
+      },
+      {
+        "question": "Nenne zwei typische Anwendungsbereiche von KI.",
+        "answer": "Typische Anwendungen sind Sprachverarbeitung, Bilderkennung, Texterzeugung und Entscheidungsunterstützung."
+      }
     ]
   },
   {
@@ -55,6 +69,20 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=Ip1a2JHdt3E"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Wie hängen KI, Machine Learning und Deep Learning zusammen?",
+        "answer": "KI ist der Oberbegriff. Machine Learning ist ein Teilbereich davon. Deep Learning ist wiederum ein Teilbereich von Machine Learning."
+      },
+      {
+        "question": "Was ist Machine Learning?",
+        "answer": "Machine Learning bedeutet, dass Systeme aus Daten Muster lernen und diese für Vorhersagen oder Entscheidungen nutzen."
+      },
+      {
+        "question": "Was ist Deep Learning?",
+        "answer": "Deep Learning nutzt künstliche neuronale Netze mit vielen Schichten, um komplexe Muster in Daten zu lernen."
+      }
     ]
   },
   {
@@ -81,6 +109,20 @@
         "title": "Podcast zu dem Thema",
         "type": "SPOTIFY_LINK",
         "uri": "https://open.spotify.com/episode/1VGDN47ZK6Mw018blILihn?si=qsMaqLeNTcKo75_DhiBL_w"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Was ist Supervised Learning?",
+        "answer": "Beim Supervised Learning lernt ein Modell mit Beispieldaten, bei denen die richtige Antwort oder Zielvariable bereits bekannt ist."
+      },
+      {
+        "question": "Was braucht man für überwachtes Lernen?",
+        "answer": "Man braucht Eingabedaten, bekannte Zielwerte, Trainingsdaten und ein Modell, das daraus Muster lernt."
+      },
+      {
+        "question": "Nenne ein Beispiel für Supervised Learning.",
+        "answer": "Ein Modell bekommt Kundendaten und die Information, ob Kunden gekündigt haben, und lernt daraus, Kündigungen vorherzusagen."
       }
     ]
   },
@@ -109,6 +151,20 @@
         "type": "URI",
         "uri": "https://miro.com/de/diagramm/was-ist-ein-entscheidungsbaum/"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was ist ein Entscheidungsbaum?",
+        "answer": "Ein Entscheidungsbaum ist ein Modell, das Daten Schritt für Schritt mit Wenn-Dann-Regeln aufteilt und am Ende eine Entscheidung oder Vorhersage trifft."
+      },
+      {
+        "question": "Warum eignen sich Entscheidungsbäume gut für Demos?",
+        "answer": "Weil ihre Logik gut sichtbar ist: Jede Verzweigung entspricht einer verständlichen Regel."
+      },
+      {
+        "question": "Was steht am Ende eines Entscheidungsbaums?",
+        "answer": "Am Ende steht eine Klasse, Entscheidung oder Vorhersage, zum Beispiel ob ein Kunde kauft oder nicht."
+      }
     ]
   },
   {
@@ -135,6 +191,20 @@
         "title": "Neuronale Netze animiert",
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=1fQrOek4buQ"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Woraus bestehen künstliche neuronale Netze?",
+        "answer": "Sie bestehen aus künstlichen Neuronen, die in Schichten miteinander verbunden sind."
+      },
+      {
+        "question": "Was passiert beim Training eines neuronalen Netzes?",
+        "answer": "Die Gewichte der Verbindungen werden angepasst, damit das Netz bessere Vorhersagen oder Ausgaben erzeugt."
+      },
+      {
+        "question": "Warum sind neuronale Netze wichtig für Deep Learning?",
+        "answer": "Deep Learning basiert auf neuronalen Netzen mit vielen Schichten, die komplexe Muster verarbeiten können."
       }
     ]
   },
@@ -163,6 +233,20 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=oLphBadhqWk"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was ist generative KI?",
+        "answer": "Generative KI erzeugt neue Inhalte, zum Beispiel Texte, Bilder, Musik oder Code."
+      },
+      {
+        "question": "Was unterscheidet generative KI von klassischer Mustererkennung?",
+        "answer": "Sie erkennt nicht nur Muster, sondern nutzt gelernte Muster, um neue Inhalte zu erzeugen."
+      },
+      {
+        "question": "Nenne zwei Beispiele für generative KI.",
+        "answer": "Beispiele sind Chatbots, Bildgeneratoren oder Systeme, die Programmcode schreiben."
+      }
     ]
   },
   {
@@ -189,6 +273,20 @@
         "title": "Kurzer Audio Input",
         "type": "URI",
         "uri": "https://www.deutschlandfunk.de/crashkurs-prompting-wie-nutze-ich-ki-chatbots-effizient-dlf-55833e09-100.html"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Was ist ein Prompt?",
+        "answer": "Ein Prompt ist die Eingabe oder Aufgabenbeschreibung, die ein Nutzer einem KI-System gibt."
+      },
+      {
+        "question": "Was enthält ein guter Prompt?",
+        "answer": "Ein guter Prompt enthält Ziel, Kontext, gewünschtes Format und klare Einschränkungen."
+      },
+      {
+        "question": "Warum ist Prompting praktisch wichtig?",
+        "answer": "Weil bessere Prompts meist zu passendere, strukturierteren und nützlicheren KI-Antworten führen."
       }
     ]
   },
@@ -217,6 +315,20 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://youtu.be/0TAQwTWcW_Q?si=9P8zCTtXJG5C67fK"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Nenne zwei Chancen von KI.",
+        "answer": "KI kann Arbeit erleichtern, Wissen zugänglicher machen, Prozesse automatisieren und Entscheidungen unterstützen."
+      },
+      {
+        "question": "Nenne zwei Risiken von KI.",
+        "answer": "Risiken sind falsche Ergebnisse, Bias, Datenschutzprobleme, Abhängigkeit von Systemen und fehlende Nachvollziehbarkeit."
+      },
+      {
+        "question": "Warum braucht KI eine kritische Einordnung?",
+        "answer": "Weil KI nützlich sein kann, aber Ergebnisse nicht automatisch richtig, fair oder nachvollziehbar sind."
+      }
     ]
   },
   {
@@ -244,6 +356,20 @@
         "type": "SPOTIFY_LINK",
         "uri": "https://open.spotify.com/episode/2GcE1DlKA2iRWtE0PBcDR7?si=5a9ba53501444c5b"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was ist ein Projekt?",
+        "answer": "Ein Projekt ist ein einmaliges Vorhaben mit klarem Ziel, Anfang, Ende, begrenzten Ressourcen und mehreren Beteiligten."
+      },
+      {
+        "question": "Warum braucht man Projektmanagement?",
+        "answer": "Damit Ziele, Aufgaben, Verantwortlichkeiten, Termine und Ergebnisse klar gesteuert werden können."
+      },
+      {
+        "question": "Was passiert ohne gutes Projektmanagement häufig?",
+        "answer": "Aufgaben bleiben unklar, Termine werden verpasst und am Ende passt das Ergebnis nicht sauber zum Ziel."
+      }
     ]
   },
   {
@@ -270,6 +396,20 @@
         "title": "Scope Creep erklärt",
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=_c-qzFV5yM4"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Was bedeutet Scope im Projektmanagement?",
+        "answer": "Der Scope legt fest, was Teil des Projekts ist und was ausdrücklich nicht dazugehört."
+      },
+      {
+        "question": "Was ist Scope Creep?",
+        "answer": "Scope Creep bedeutet, dass immer neue Anforderungen ins Projekt wandern und der ursprünglich kleine Umfang unkontrolliert wächst."
+      },
+      {
+        "question": "Welche Frage hilft bei der Scope-Abgrenzung?",
+        "answer": "Was muss geliefert werden, was ist nur nett und was lassen wir bewusst weg?"
       }
     ]
   },
@@ -303,6 +443,20 @@
         "type": "RTF",
         "rtfText": "<p>Welche drei Stakeholder hätten bei unserer Lernplattform den größten Einfluss auf den MVP?</p>"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was sind Stakeholder?",
+        "answer": "Stakeholder sind Personen oder Gruppen, die ein Interesse am Projekt haben oder vom Ergebnis betroffen sind."
+      },
+      {
+        "question": "Warum ist Stakeholder-Management wichtig?",
+        "answer": "Weil ein technisch funktionierendes Ergebnis trotzdem scheitern kann, wenn wichtige Erwartungen nicht erkannt wurden."
+      },
+      {
+        "question": "Was heißt Stakeholder-Management nicht?",
+        "answer": "Es bedeutet nicht, es allen recht zu machen, sondern Erwartungen sichtbar zu machen und bewusst damit umzugehen."
+      }
     ]
   },
   {
@@ -329,6 +483,20 @@
         "title": "WBS erklärt",
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=_K4VLopVX-U"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Was ist eine Work Breakdown Structure?",
+        "answer": "Eine WBS zerlegt ein großes Projektziel in kleinere, verständliche und bearbeitbare Arbeitspakete."
+      },
+      {
+        "question": "Warum sind Arbeitspakete wichtig?",
+        "answer": "Sie machen aus einer großen Idee einen konkreten Plan mit Aufgaben, Verantwortlichkeiten und Abhängigkeiten."
+      },
+      {
+        "question": "Was ist ein schlechtes Arbeitspaket?",
+        "answer": "Ein schlechtes Arbeitspaket ist zu groß, zu vage oder vermischt mehrere Themen gleichzeitig."
       }
     ]
   },
@@ -357,6 +525,20 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=blbJF2C7P_o"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was ist ein Meilenstein?",
+        "answer": "Ein Meilenstein ist ein überprüfbarer Zwischenstand im Projekt, zum Beispiel ein fertiges Datenmodell oder eine klickbare Maske."
+      },
+      {
+        "question": "Warum braucht Zeitplanung Puffer?",
+        "answer": "Weil Projekte selten exakt nach Plan laufen und Abhängigkeiten, Prüfungen oder technische Probleme Zeit kosten können."
+      },
+      {
+        "question": "Warum sind Abhängigkeiten wichtig?",
+        "answer": "Weil manche Aufgaben erst sinnvoll sind, wenn andere Voraussetzungen erfüllt sind, zum Beispiel Demo Content nach einer Node-Detailansicht."
+      }
     ]
   },
   {
@@ -384,6 +566,20 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=yW28P8MwCr4"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was ist Kanban?",
+        "answer": "Kanban ist eine Methode, um Arbeit mit Karten und Spalten wie To Do, In Arbeit und Done sichtbar zu machen."
+      },
+      {
+        "question": "Was bedeutet WIP-Limit?",
+        "answer": "Ein Work-in-Progress-Limit begrenzt die Anzahl paralleler Aufgaben, damit nicht zu viel angefangen und zu wenig fertig wird."
+      },
+      {
+        "question": "Warum hilft Kanban Teams?",
+        "answer": "Es macht sichtbar, woran gearbeitet wird, was blockiert ist und was bereits erledigt wurde."
+      }
     ]
   },
   {
@@ -410,6 +606,20 @@
         "title": "Risiken im Projektmanagement",
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=IDvII9iz3e0"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Was ist ein Projektrisiko?",
+        "answer": "Ein Risiko ist ein mögliches Ereignis, das den Projekterfolg gefährden kann, aber noch nicht eingetreten ist."
+      },
+      {
+        "question": "Wie bewertet man Risiken einfach?",
+        "answer": "Man betrachtet Wahrscheinlichkeit, möglichen Schaden und passende Gegenmaßnahmen."
+      },
+      {
+        "question": "Nenne ein typisches Risiko in Softwareprojekten.",
+        "answer": "Typische Risiken sind unklarer Scope, fehlende Schnittstellen, späte Datenmodelländerungen oder fehlender Demo Content."
       }
     ]
   },
@@ -443,6 +653,20 @@
         "type": "RTF",
         "rtfText": "<p>Was lief gut? Was war unklar? Was blockierte uns? Was ändern wir beim nächsten Schritt?</p>"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was ist der Unterschied zwischen Review und Retrospektive?",
+        "answer": "Ein Review prüft das Ergebnis. Eine Retrospektive betrachtet die Zusammenarbeit und mögliche Verbesserungen."
+      },
+      {
+        "question": "Warum ist ein Review wichtig?",
+        "answer": "Es zeigt, ob der Prototyp funktioniert und die wichtigsten Use Cases abgedeckt sind."
+      },
+      {
+        "question": "Warum ist eine Retrospektive wichtig?",
+        "answer": "Sie verhindert, dass das Team dieselben Kommunikations- oder Arbeitsprobleme wiederholt."
+      }
     ]
   },
   {
@@ -470,6 +694,20 @@
         "title": "Reflexionsfrage",
         "type": "RTF",
         "rtfText": "<p>Welche drei Fragen über dein Leben oder deine Zukunft würdest du gern besser beantworten können?</p>"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Warum nutzt das Buch die Metapher einer Reise?",
+        "answer": "Weil das Leben wie eine Reise Orientierung, Standortbestimmung, Zwischenziele und bewusste nächste Schritte braucht."
+      },
+      {
+        "question": "Was ist der Grundgedanke des Reisehandbuchs?",
+        "answer": "Es soll helfen, wichtige Fragen zu ordnen und die eigene Entwicklung bewusster zu planen."
+      },
+      {
+        "question": "Warum passt das Thema gut zur Lernplattform?",
+        "answer": "Weil daraus ein klarer Lernpfad mit Etappen, Reflexion und Beziehungen zwischen Themen entstehen kann."
       }
     ]
   },
@@ -499,6 +737,20 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=5BSbOc5VYY8"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was bedeutet Zusammenhänge im Rückblick erkennen?",
+        "answer": "Viele Erfahrungen wirken erst später sinnvoll, wenn man erkennt, wie sie zur eigenen Entwicklung beigetragen haben."
+      },
+      {
+        "question": "Warum ist Rückblick für persönliche Entwicklung wichtig?",
+        "answer": "Er hilft, Erfahrungen, Hürden und Erfolge bewusster zu verstehen und daraus Orientierung abzuleiten."
+      },
+      {
+        "question": "Was kann man aus überwundenen Hürden lernen?",
+        "answer": "Man erkennt Fähigkeiten, Stärken und Entwicklungsschritte, die in der Situation selbst oft nicht sichtbar waren."
+      }
     ]
   },
   {
@@ -526,6 +778,20 @@
         "title": "Reflexion: Energiequellen",
         "type": "RTF",
         "rtfText": "<p>Welche drei Situationen haben dir in den letzten Wochen sichtbar Energie gegeben?</p>"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Warum ist Spaß am Leben mehr als Ablenkung?",
+        "answer": "Spaß und Lebensfreude können Energie geben, Motivation stärken und helfen, schwierige Phasen besser durchzuhalten."
+      },
+      {
+        "question": "Was ist mit Lebensfreude im Lernpfad gemeint?",
+        "answer": "Ein positiver Zugang zu Menschen, Tätigkeiten und Momenten, die wirklich zu einem passen."
+      },
+      {
+        "question": "Welche Frage hilft, eigene Energiequellen zu finden?",
+        "answer": "Welche Situationen, Menschen oder Tätigkeiten geben mir sichtbar Energie?"
       }
     ]
   },
@@ -555,6 +821,20 @@
         "type": "RTF",
         "rtfText": "<p>Notiere drei Tätigkeiten, die dir leichtfallen, und drei Tätigkeiten, bei denen du besonders schnell in einen Flow kommst.</p>"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was kann Talent laut Lernpfad bedeuten?",
+        "answer": "Talent kann eine natürliche Begabung sein oder ein außergewöhnliches Interesse, das zu intensiver Beschäftigung führt."
+      },
+      {
+        "question": "Warum reicht Talent allein nicht?",
+        "answer": "Talent entfaltet erst durch Training, Wiederholung und Begeisterung seine Wirkung."
+      },
+      {
+        "question": "Wie erkennt man mögliche Talente?",
+        "answer": "An Tätigkeiten, die leichtfallen, Energie geben, Anerkennung bringen oder einen in den Flow bringen."
+      }
     ]
   },
   {
@@ -581,6 +861,20 @@
         "title": "Video-Suche: Stärken entwickeln",
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=psknhSue-kI"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Wie entsteht aus Talent eine Stärke?",
+        "answer": "Talent wird durch Übung, Training und Wissensaufbau zu einer verlässlichen Stärke."
+      },
+      {
+        "question": "Was ist eine Stärke?",
+        "answer": "Eine Stärke ist die Fähigkeit, in einem Bereich wiederholt gute oder sehr gute Leistung zu bringen."
+      },
+      {
+        "question": "Welche zwei Denkfehler vermeidet das Modell?",
+        "answer": "Es vermeidet „Ohne Talent bringt Übung nichts“ und „Mit Talent muss ich nicht üben“."
       }
     ]
   },
@@ -610,6 +904,20 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=cE3VWK2ZK-Y"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Ist die Komfortzone automatisch schlecht?",
+        "answer": "Nein. Sie ist auch der Bereich, in dem man Energie sammelt, sicher handelt und oft gute Leistung bringt."
+      },
+      {
+        "question": "Wann sollte man die Komfortzone erweitern?",
+        "answer": "Wenn die Herausforderung zu eigenen Zielen, Werten oder langfristigen Plänen passt."
+      },
+      {
+        "question": "Was ist gefährlich an dauerhafter Überforderung?",
+        "answer": "Sie führt eher zu Stress, Erschöpfung und Blockaden als zu echter Entwicklung."
+      }
     ]
   },
   {
@@ -637,6 +945,20 @@
         "title": "Video-Suche: Glaubenssätze erkennen",
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=z6Jk0vfV79w"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Was sind Glaubenssätze?",
+        "answer": "Glaubenssätze sind innere Überzeugungen, die durch Erziehung, Erfahrung oder Wiederholung entstehen."
+      },
+      {
+        "question": "Wie können Glaubenssätze sabotieren?",
+        "answer": "Sie können Chancen blockieren, Ziele verkleinern oder Vorhaben stoppen, bevor man sie ernsthaft getestet hat."
+      },
+      {
+        "question": "Wie beginnt man, hinderliche Glaubenssätze zu verändern?",
+        "answer": "Zuerst erkennt man den Satz, dann sucht man Gegenbeispiele und formuliert einen realistischeren hilfreichen Satz."
       }
     ]
   },
@@ -666,6 +988,20 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=4GD9uTuTDm0"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was sind Werte?",
+        "answer": "Werte sind persönliche Grundpfeiler, die beeinflussen, was jemand wichtig findet, ablehnt oder als stimmig erlebt."
+      },
+      {
+        "question": "Warum reicht eine reine Werte-Liste nicht?",
+        "answer": "Weil jeder Wert persönlich definiert werden muss, sonst bleibt er nur ein schönes Schlagwort."
+      },
+      {
+        "question": "Warum können gleiche Werte trotzdem Konflikte erzeugen?",
+        "answer": "Weil zwei Menschen denselben Begriff verwenden können, aber Unterschiedliches darunter verstehen."
+      }
     ]
   },
   {
@@ -693,6 +1029,20 @@
         "title": "Video-Suche: Intuition und Entscheidungen",
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=6j8t-0xnvS0"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Wie hängen Bauchentscheidungen und Werte zusammen?",
+        "answer": "Viele Bauchentscheidungen entstehen aus Erfahrungen, Prägungen und persönlichen Werten."
+      },
+      {
+        "question": "Ist jedes Bauchgefühl automatisch richtig?",
+        "answer": "Nein. Bauchgefühl ist ein wichtiges Signal, sollte aber bewusst geprüft werden."
+      },
+      {
+        "question": "Wie funktioniert ein einfacher Bauchcheck?",
+        "answer": "Impuls wahrnehmen, betroffenen Wert benennen, Folgen prüfen und bewusst entscheiden."
       }
     ]
   },
@@ -722,6 +1072,20 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=pCSfAw3UsSs"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was bedeutet im Jetzt leben?",
+        "answer": "Den aktuellen Tag bewusst wahrnehmen, statt ihn nur als Wartezimmer für die Zukunft zu behandeln."
+      },
+      {
+        "question": "Heißt Gegenwartsbewusstsein, keine Ziele mehr zu haben?",
+        "answer": "Nein. Man kann Ziele haben und trotzdem den aktuellen Moment wertschätzen."
+      },
+      {
+        "question": "Welche kleine Übung passt zu diesem Thema?",
+        "answer": "Drei konkrete Dinge notieren, die heute gut waren oder für die man dankbar ist."
+      }
     ]
   },
   {
@@ -749,6 +1113,20 @@
         "title": "Video-Suche: Erfolg neu definieren",
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=yN00Zfupcn8"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Warum ist eine enge Erfolgsdefinition problematisch?",
+        "answer": "Wenn Erfolg nur Job, Geld und Status bedeutet, wird das Leben auf einen kleinen Bereich reduziert."
+      },
+      {
+        "question": "Was fragt eine persönliche Erfolgsdefinition?",
+        "answer": "Was macht mein Leben für mich gelungen, worauf möchte ich stolz sein und welche Opfer bin ich nicht bereit zu bringen?"
+      },
+      {
+        "question": "Warum sollte Erfolg nicht nur von Außenwirkung abhängen?",
+        "answer": "Weil Anerkennung von außen schwankt und nicht automatisch zu Zufriedenheit oder einem stimmigen Leben führt."
       }
     ]
   },
@@ -778,6 +1156,20 @@
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=ek4lXriA4fw"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was bedeutet Flow?",
+        "answer": "Flow ist ein Zustand, in dem eine Tätigkeit fordert, aber nicht dauerhaft überfordert."
+      },
+      {
+        "question": "Welche Faktoren fördern ein energetisches Umfeld?",
+        "answer": "Sinn, Zugehörigkeit, offene Kommunikation, Konfliktfähigkeit und passende Herausforderungen."
+      },
+      {
+        "question": "Warum ist Flow für Lernen wichtig?",
+        "answer": "Weil passende Herausforderung motiviert, während Unterforderung träge und Überforderung kaputt machen kann."
+      }
     ]
   },
   {
@@ -806,6 +1198,20 @@
         "type": "RTF",
         "rtfText": "<p>Bewerte jeden der sechs Bereiche spontan von 1 bis 10. Wähle danach nur einen Bereich aus, in dem ein kleiner nächster Schritt sinnvoll wäre.</p>"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was ist die Penthouse Theorie?",
+        "answer": "Ein Planungsmodell, das das Leben in mehrere Bereiche aufteilt und Vergangenheit, Gegenwart und Zukunft betrachtet."
+      },
+      {
+        "question": "Welche sechs Lebensbereiche nennt die Penthouse Theorie?",
+        "answer": "Gesundheit, Familie/Freunde/Umfeld, Bildung, Berufung/Tätigkeit, persönlicher Ausgleich sowie Träume/Realisierung."
+      },
+      {
+        "question": "Warum ist das Modell für eine Journey Map geeignet?",
+        "answer": "Weil es klare Cluster und Beziehungen erzeugt, aus denen ein strukturierter Lernpfad entstehen kann."
+      }
     ]
   },
   {
@@ -833,6 +1239,20 @@
         "title": "Video-Suche: Lebensbereiche planen",
         "type": "YOUTUBE_LINK",
         "uri": "https://www.youtube.com/watch?v=o0zF4fw8Arw"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Wozu dienen die sechs Lebensbereiche?",
+        "answer": "Sie helfen, das eigene Leben nicht als einen einzigen Zielblock, sondern als mehrere konkrete Reflexionsfelder zu betrachten."
+      },
+      {
+        "question": "Was fragt man in jedem Lebensbereich?",
+        "answer": "Wo stehe ich gerade, was ist mir wichtig und was wäre ein sinnvoller nächster Schritt?"
+      },
+      {
+        "question": "Warum ist dieser Node praxisnah?",
+        "answer": "Weil er aus einem abstrakten Modell konkrete Sätze, Bewertungen und nächste Schritte macht."
       }
     ]
   },
@@ -866,6 +1286,20 @@
         "type": "RTF",
         "rtfText": "<p>Welche drei Dinge geben dir im Alltag wirklich Energie und welche drei Dinge ziehen dir regelmäßig Energie?</p>"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Warum ist Gesundheit die Basis der Lebensplanung?",
+        "answer": "Ohne Energie, Erholung und Wohlbefinden lassen sich Ziele meist nur kurzfristig durchdrücken, aber nicht stabil verfolgen."
+      },
+      {
+        "question": "Was gehört neben Sport auch zu Wohlbefinden?",
+        "answer": "Schlaf, mentale Ruhe, Pausen, soziale Unterstützung, Konzentrationsfähigkeit und rechtzeitige Regeneration."
+      },
+      {
+        "question": "Welche Frage hilft bei diesem Node?",
+        "answer": "Habe ich genug Kraft, um meinen Weg langfristig gehen zu können?"
+      }
     ]
   },
   {
@@ -897,6 +1331,20 @@
         "title": "Mini-Übung",
         "type": "RTF",
         "rtfText": "<p>Notiere drei Personen, die dir Energie geben, und eine konkrete Handlung, wie du den Kontakt zu ihnen bewusster pflegen kannst.</p>"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Was meint privates Umfeld in diesem Lernpfad?",
+        "answer": "Alle Menschen, mit denen man freiwillig Zeit verbringt, denen man vertraut und die im Alltag Rückhalt geben können."
+      },
+      {
+        "question": "Warum sollte man das soziale Umfeld bewusst betrachten?",
+        "answer": "Weil manche Kontakte Energie geben, während andere dauerhaft Energie kosten können."
+      },
+      {
+        "question": "Was ist eine sinnvolle Mini-Übung dazu?",
+        "answer": "Drei Personen notieren, die Energie geben, und eine konkrete Handlung zur bewussteren Kontaktpflege festlegen."
       }
     ]
   },
@@ -930,6 +1378,20 @@
         "type": "RTF",
         "rtfText": "<p>Welche Fähigkeit würde dir in den nächsten zwölf Monaten am meisten helfen und warum genau diese?</p>"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Wann ist Weiterbildung wirklich wertvoll?",
+        "answer": "Wenn sie zu einem persönlichen Ziel passt, neue Möglichkeiten öffnet oder eine wirklich benötigte Fähigkeit aufbaut."
+      },
+      {
+        "question": "Wann wird Lernen zu Aktionismus?",
+        "answer": "Wenn man nur lernt, weil andere es erwarten oder weil es sich kurzfristig produktiv anfühlt, aber kein echtes Ziel unterstützt."
+      },
+      {
+        "question": "Welche Leitfrage passt zu diesem Thema?",
+        "answer": "Welche Fähigkeit brauche ich wirklich für meinen nächsten sinnvollen Schritt?"
+      }
     ]
   },
   {
@@ -961,6 +1423,20 @@
         "title": "Mini-Übung",
         "type": "RTF",
         "rtfText": "<p>Bewerte deinen aktuellen Beruf oder dein Studium in drei Punkten: Energie, Sinn und Entwicklung. Wo ist der stärkste Bereich, wo der schwächste?</p>"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Warum ist Arbeit mehr als Einkommen?",
+        "answer": "Weil Arbeit viel Lebenszeit einnimmt und daher auch mit Sinn, Stärken, Werten und Alltag zusammenpassen sollte."
+      },
+      {
+        "question": "Muss berufliche Veränderung immer radikal sein?",
+        "answer": "Nein. Man kann testen, schnuppern, Nebenprojekte starten und kleine Schritte gehen."
+      },
+      {
+        "question": "Welche drei Punkte kann man für Arbeit oder Studium bewerten?",
+        "answer": "Energie, Sinn und Entwicklung."
       }
     ]
   },
@@ -994,6 +1470,20 @@
         "type": "RTF",
         "rtfText": "<p>Welche Aktivität lädt dich zuverlässig auf, obwohl du sie im Alltag oft zu spät einplanst?</p>"
       }
+    ],
+    "indexCards": [
+      {
+        "question": "Was bedeutet persönlicher Ausgleich?",
+        "answer": "Aktivitäten, die die eigenen Akkus wieder aufladen, zum Beispiel Sport, Musik, Lesen, Ruhe oder Zeit mit bestimmten Menschen."
+      },
+      {
+        "question": "Warum ist Ausgleich kein Luxus?",
+        "answer": "Weil dauerhafte Leistung ohne Regeneration langfristig zu Überlastung führt."
+      },
+      {
+        "question": "Welche Frage hilft, Ausgleich zu finden?",
+        "answer": "Welche Aktivität lädt mich zuverlässig auf, obwohl ich sie im Alltag oft zu spät einplane?"
+      }
     ]
   },
   {
@@ -1025,6 +1515,266 @@
         "title": "Mini-Übung",
         "type": "RTF",
         "rtfText": "<p>Wähle einen Wunsch aus und formuliere daraus den nächsten kleinsten Schritt, den du innerhalb von sieben Tagen erledigen kannst.</p>"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Warum reichen Träume allein nicht?",
+        "answer": "Solange Träume nur vage Bilder bleiben, werden sie im Alltag leicht von dringenden Aufgaben verdrängt."
+      },
+      {
+        "question": "Was bedeutet Realisierung?",
+        "answer": "Einen großen Wunsch in kleinere, machbare Etappen und konkrete nächste Schritte zu übersetzen."
+      },
+      {
+        "question": "Welche Mini-Übung passt dazu?",
+        "answer": "Einen Wunsch auswählen und den kleinsten nächsten Schritt formulieren, der innerhalb von sieben Tagen machbar ist."
+      }
+    ]
+  },
+  {
+    "identifier": "nutritionBasics",
+    "title": "Grundlagen ausgewogener Ernährung",
+    "teaser": "Ein Einstieg in die wichtigsten Bausteine einer alltagstauglichen und ausgewogenen Ernährung.",
+    "creatorId": "admin",
+    "categories": [
+      "nutrition"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "1. Warum Ernährung Struktur braucht",
+        "type": "RTF",
+        "rtfText": "<p>Ausgewogene Ernährung bedeutet nicht, jedes Gramm exakt zu zählen oder sich dauerhaft einzuschränken. Es geht zuerst darum, dem Körper regelmäßig das zu geben, was er für Energie, Konzentration, Leistungsfähigkeit und Wohlbefinden braucht. Dazu gehören Getränke, Gemüse, Obst, Getreideprodukte, Eiweißquellen, Fette und Lebensmittel, die eher Genuss als Grundlage sind.</p><p>Eine gute Orientierung bietet die Ernährungspyramide. Sie hilft dabei, Lebensmittelgruppen nicht isoliert zu betrachten, sondern in ein Verhältnis zu setzen. Wasser, Gemüse und Obst bilden eine wichtige Basis. Vollkornprodukte, Hülsenfrüchte, Milchprodukte, Nüsse, pflanzliche Öle und weitere Eiweißquellen ergänzen diese Basis. Süßes, stark Fettiges oder sehr Salziges ist nicht verboten, sollte aber nicht den Hauptteil der Ernährung ausmachen.</p><p>Für die Demo ist dieser Node der Einstiegspunkt. Er erklärt das Grundproblem: Ernährung wird oft entweder zu kompliziert oder zu beliebig behandelt. Der Lernpfad zeigt stattdessen eine einfache Struktur, die im Alltag nutzbar ist.</p>"
+      },
+      {
+        "title": "2. Externe Quelle: Ernährungspyramide",
+        "type": "URI",
+        "uri": "https://www.bzfe.de/essen-und-gesundheit/ernaehrungspyramide"
+      },
+      {
+        "title": "3. Reflexionsfrage",
+        "type": "RTF",
+        "rtfText": "<p>Welche Lebensmittelgruppe kommt in deinem Alltag wahrscheinlich zu kurz: Wasser, Gemüse, Obst, Vollkorn, Eiweißquellen oder pflanzliche Fette?</p>"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Was bedeutet ausgewogene Ernährung?",
+        "answer": "Dem Körper regelmäßig die Lebensmittelgruppen zu geben, die Energie, Konzentration, Leistungsfähigkeit und Wohlbefinden unterstützen."
+      },
+      {
+        "question": "Warum hilft die Ernährungspyramide?",
+        "answer": "Sie setzt Lebensmittelgruppen in ein sinnvolles Verhältnis und macht Ernährung alltagstauglich statt kompliziert."
+      },
+      {
+        "question": "Sind Süßes oder Fettiges komplett verboten?",
+        "answer": "Nein. Sie sollten nur nicht den Hauptteil der Ernährung ausmachen."
+      }
+    ]
+  },
+  {
+    "identifier": "nutritionHydration",
+    "title": "Trinken und Flüssigkeit im Alltag",
+    "teaser": "Warum Wasser die einfachste Grundlage für Konzentration, Energie und Wohlbefinden ist.",
+    "creatorId": "admin",
+    "categories": [
+      "nutrition"
+    ],
+    "duration": 20,
+    "contentElements": [
+      {
+        "title": "1. Warum Trinken oft unterschätzt wird",
+        "type": "RTF",
+        "rtfText": "<p>Trinken ist einer der einfachsten Hebel für eine bessere Ernährung, wird aber häufig übersehen. Wer zu wenig trinkt, merkt das nicht immer sofort als Durst. Oft zeigen sich eher Konzentrationsprobleme, Müdigkeit, Kopfschmerzen oder ein allgemeines Gefühl von Schlappheit. Gerade beim Lernen, Arbeiten oder Sport kann Flüssigkeitsmangel deshalb schnell die Leistungsfähigkeit drücken.</p><p>Wasser ist dabei die beste Standardlösung. Es liefert Flüssigkeit ohne Zucker, ohne unnötige Kalorien und ohne ständige Geschmackskonditionierung. Ungesüßter Tee kann ebenfalls sinnvoll sein. Softdrinks, Energydrinks oder stark gesüßte Getränke sollten eher als Ausnahme gesehen werden, weil sie viel Zucker enthalten und Durst nicht besser lösen als Wasser.</p><p>In der Klickdemo ist dieser Node bewusst einfach gehalten. Er zeigt, dass ein Lernpfad nicht nur komplexe Themen braucht, sondern auch kleine Alltagsthemen, die sofort umsetzbar sind.</p>"
+      },
+      {
+        "title": "2. Externe Quelle: Warum Trinken wichtig ist",
+        "type": "URI",
+        "uri": "https://www.bzfe.de/einfache-sprache/gut-essen/warum-ist-trinken-so-wichtig"
+      },
+      {
+        "title": "3. Mini-Übung",
+        "type": "RTF",
+        "rtfText": "<p>Stelle dir für einen Tag sichtbar eine Wasserflasche hin und prüfe abends, ob du dadurch automatisch mehr getrunken hast.</p>"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Warum wird Trinken oft unterschätzt?",
+        "answer": "Zu wenig Flüssigkeit zeigt sich nicht immer sofort als Durst, sondern oft als Müdigkeit, Kopfschmerzen oder Konzentrationsprobleme."
+      },
+      {
+        "question": "Warum ist Wasser die beste Standardlösung?",
+        "answer": "Wasser liefert Flüssigkeit ohne Zucker, unnötige Kalorien oder ständige Geschmackskonditionierung."
+      },
+      {
+        "question": "Welche Getränke sollten eher Ausnahme bleiben?",
+        "answer": "Softdrinks, Energydrinks und stark gesüßte Getränke."
+      }
+    ]
+  },
+  {
+    "identifier": "nutritionVegetablesFruit",
+    "title": "Gemüse und Obst: viel und bunt",
+    "teaser": "Wie Gemüse und Obst Vitamine, Mineralstoffe, Ballaststoffe und Vielfalt in den Alltag bringen.",
+    "creatorId": "admin",
+    "categories": [
+      "nutrition"
+    ],
+    "duration": 25,
+    "contentElements": [
+      {
+        "title": "1. Warum bunt essen sinnvoll ist",
+        "type": "RTF",
+        "rtfText": "<p>Gemüse und Obst sind wichtige Bestandteile einer ausgewogenen Ernährung, weil sie viele Vitamine, Mineralstoffe, Ballaststoffe und sekundäre Pflanzenstoffe liefern. Praktisch bedeutet das: Je bunter und abwechslungsreicher die Auswahl ist, desto breiter wird auch die Versorgung mit unterschiedlichen Inhaltsstoffen.</p><p>Gemüse sollte im Alltag nicht nur als kleine Dekoration auf dem Teller auftauchen. Es kann ein echter Hauptbestandteil einer Mahlzeit sein: als Salat, Ofengemüse, Suppe, Pfannengericht, Rohkost oder Beilage. Obst eignet sich gut als Snack, sollte aber nicht komplett Gemüse ersetzen. Beide Gruppen haben ihren Platz.</p><p>Für den Lernpfad ist dieser Node wichtig, weil er den Einstieg aus der Theorie in konkrete Lebensmittel schafft. Der Nutzer sieht: Ausgewogene Ernährung besteht nicht aus abstrakten Regeln, sondern aus Entscheidungen beim Einkauf, Kochen und Essen.</p>"
+      },
+      {
+        "title": "2. Externe Quelle: DGE-Empfehlungen",
+        "type": "URI",
+        "uri": "https://www.dge.de/gesunde-ernaehrung/gut-essen-und-trinken/dge-empfehlungen/"
+      },
+      {
+        "title": "3. Mini-Übung",
+        "type": "RTF",
+        "rtfText": "<p>Plane für die nächste Mahlzeit mindestens zwei Farben Gemüse oder Obst ein, zum Beispiel Paprika und Spinat oder Beeren und Banane.</p>"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Warum sind Gemüse und Obst wichtig?",
+        "answer": "Sie liefern Vitamine, Mineralstoffe, Ballaststoffe und sekundäre Pflanzenstoffe."
+      },
+      {
+        "question": "Was bedeutet bunt essen?",
+        "answer": "Abwechslungsreich verschiedene Gemüse- und Obstsorten zu essen, um unterschiedliche Inhaltsstoffe aufzunehmen."
+      },
+      {
+        "question": "Soll Obst Gemüse vollständig ersetzen?",
+        "answer": "Nein. Obst ist ein guter Snack, aber Gemüse sollte ebenfalls regelmäßig und ausreichend vorkommen."
+      }
+    ]
+  },
+  {
+    "identifier": "nutritionWholegrainFiber",
+    "title": "Vollkorn und Ballaststoffe",
+    "teaser": "Warum Vollkornprodukte länger sättigen und Ballaststoffe für eine gesunde Ernährung wichtig sind.",
+    "creatorId": "admin",
+    "categories": [
+      "nutrition"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "1. Warum Vollkorn mehr kann als Weißmehl",
+        "type": "RTF",
+        "rtfText": "<p>Vollkornprodukte enthalten mehr Bestandteile des Getreidekorns als stark ausgemahlene Weißmehlprodukte. Dadurch liefern sie mehr Ballaststoffe, Vitamine und Mineralstoffe. Ein praktischer Vorteil ist, dass Vollkorn oft länger sättigt. Das kann helfen, Mahlzeiten stabiler zu gestalten und Heißhunger zu reduzieren.</p><p>Ballaststoffe sind unverdauliche oder schwer verdauliche Bestandteile pflanzlicher Lebensmittel. Sie unterstützen die Verdauung, tragen zur Sättigung bei und sind ein wichtiger Grund, warum Vollkorn, Gemüse, Obst, Hülsenfrüchte und Nüsse in Ernährungsempfehlungen eine große Rolle spielen.</p><p>Für die Demo ist dieser Node ein gutes Beispiel für ein Thema mit klarem Lernziel: Der Nutzer soll nicht nur wissen, dass Vollkorn „gesünder“ klingt, sondern verstehen, warum Vollkornprodukte im Alltag sinnvoll sein können.</p>"
+      },
+      {
+        "title": "2. Externe Quelle: Vollkorn ist die beste Wahl",
+        "type": "URI",
+        "uri": "https://www.dge.de/gesunde-ernaehrung/gut-essen-und-trinken/vollkorn/"
+      },
+      {
+        "title": "3. Reflexionsfrage",
+        "type": "RTF",
+        "rtfText": "<p>Wo könntest du ohne großen Aufwand eine Weißmehl-Variante durch Vollkorn ersetzen: Brot, Nudeln, Reis, Müsli oder Wraps?</p>"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Was ist der Vorteil von Vollkornprodukten?",
+        "answer": "Sie enthalten mehr Ballaststoffe, Vitamine und Mineralstoffe und sättigen oft länger als Weißmehlprodukte."
+      },
+      {
+        "question": "Was sind Ballaststoffe?",
+        "answer": "Schwer oder nicht verdauliche Bestandteile pflanzlicher Lebensmittel, die Verdauung und Sättigung unterstützen."
+      },
+      {
+        "question": "Nenne eine einfache Vollkorn-Umstellung.",
+        "answer": "Zum Beispiel Vollkornbrot statt Weißbrot, Vollkornnudeln statt normale Nudeln oder Haferflocken statt süßes Müsli."
+      }
+    ]
+  },
+  {
+    "identifier": "nutritionProteinSources",
+    "title": "Eiweißquellen sinnvoll auswählen",
+    "teaser": "Wie pflanzliche und tierische Eiweißquellen zur Ernährung beitragen und warum High-Protein nicht automatisch besser ist.",
+    "creatorId": "admin",
+    "categories": [
+      "nutrition"
+    ],
+    "duration": 30,
+    "contentElements": [
+      {
+        "title": "1. Eiweiß ohne Marketing-Hype verstehen",
+        "type": "RTF",
+        "rtfText": "<p>Eiweiß, also Protein, ist wichtig für den Körper. Es wird unter anderem für Muskeln, Zellen, Enzyme und viele Körperfunktionen gebraucht. Gute Eiweißquellen können sowohl tierisch als auch pflanzlich sein. Dazu zählen zum Beispiel Milchprodukte, Eier, Fisch, Fleisch, Hülsenfrüchte, Sojaprodukte, Nüsse und Getreideprodukte.</p><p>Wichtig ist aber: Mehr Protein ist nicht automatisch besser. Viele High-Protein-Produkte wirken gesünder, sind aber oft nur teurer oder stärker verarbeitet. Für viele Menschen reicht eine ausgewogene Ernährung bereits aus, wenn regelmäßig passende Eiweißquellen enthalten sind. Besonders Hülsenfrüchte wie Linsen, Bohnen oder Kichererbsen sind interessant, weil sie neben Eiweiß auch Ballaststoffe liefern.</p><p>In der Klickdemo zeigt dieser Node, dass Ernährung nicht nur aus einfachen Regeln besteht. Nutzer lernen, Marketingbegriffe kritisch einzuordnen und Lebensmittel nach echtem Nutzen statt nach Verpackungsversprechen zu bewerten.</p>"
+      },
+      {
+        "title": "2. Externe Quelle: Protein",
+        "type": "URI",
+        "uri": "https://www.dge.de/wissenschaft/referenzwerte/protein/"
+      },
+      {
+        "title": "3. Mini-Übung",
+        "type": "RTF",
+        "rtfText": "<p>Wähle für eine Mahlzeit bewusst eine Eiweißquelle aus und notiere, ob sie pflanzlich oder tierisch ist.</p>"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Wofür braucht der Körper Protein?",
+        "answer": "Protein wird unter anderem für Muskeln, Zellen, Enzyme und viele Körperfunktionen gebraucht."
+      },
+      {
+        "question": "Nenne pflanzliche Eiweißquellen.",
+        "answer": "Hülsenfrüchte, Sojaprodukte, Nüsse und einige Getreideprodukte."
+      },
+      {
+        "question": "Warum ist High-Protein nicht automatisch besser?",
+        "answer": "Viele High-Protein-Produkte sind teurer oder stärker verarbeitet, obwohl eine ausgewogene Ernährung oft bereits reicht."
+      }
+    ]
+  },
+  {
+    "identifier": "nutritionMealPlanning",
+    "title": "Mahlzeiten einfach planen",
+    "teaser": "Wie man aus Ernährungsempfehlungen konkrete Mahlzeiten macht, ohne kompliziert zu zählen.",
+    "creatorId": "admin",
+    "categories": [
+      "nutrition"
+    ],
+    "duration": 35,
+    "contentElements": [
+      {
+        "title": "1. Vom Wissen zur Mahlzeit",
+        "type": "RTF",
+        "rtfText": "<p>Viele Menschen wissen grob, was gesunde Ernährung bedeutet, scheitern aber an der Umsetzung. Genau hier hilft einfache Mahlzeitenplanung. Statt jeden Tag spontan zu entscheiden, kann man mit wenigen Grundbausteinen arbeiten: eine Gemüse- oder Obstkomponente, eine sättigende Kohlenhydratquelle, eine Eiweißquelle, etwas Fett und ein Getränk.</p><p>Ein Beispiel: Vollkornnudeln mit Gemüse, Linsen oder Hähnchen, etwas Olivenöl und Wasser dazu. Oder Brot mit Frischkäse, Ei oder Hummus, dazu Rohkost und ein Glas Wasser. Es geht nicht darum, jede Mahlzeit perfekt zu machen. Es geht darum, regelmäßig brauchbare Entscheidungen einfacher zu machen.</p><p>Als Abschlussnode eignet sich dieses Thema besonders gut, weil es alle vorherigen Inhalte verbindet. Wasser, Gemüse, Vollkorn, Ballaststoffe und Eiweiß werden nicht isoliert gelernt, sondern in eine konkrete Alltagshandlung übersetzt.</p>"
+      },
+      {
+        "title": "2. Externe Quelle: Mahlzeiten planen und genießen",
+        "type": "URI",
+        "uri": "https://www.bzfe.de/essen-und-gesundheit/ernaehrungspyramide/mahlzeiten-planen-und-geniessen"
+      },
+      {
+        "title": "3. Mini-Übung",
+        "type": "RTF",
+        "rtfText": "<p>Plane eine einfache Mahlzeit mit vier Bausteinen: Gemüse oder Obst, Vollkorn oder Kartoffeln, Eiweißquelle und Getränk.</p>"
+      }
+    ],
+    "indexCards": [
+      {
+        "question": "Warum hilft einfache Mahlzeitenplanung?",
+        "answer": "Sie übersetzt Ernährungswissen in konkrete Entscheidungen und macht gesunde Mahlzeiten leichter umsetzbar."
+      },
+      {
+        "question": "Welche vier Bausteine kann eine einfache Mahlzeit enthalten?",
+        "answer": "Gemüse oder Obst, eine sättigende Kohlenhydratquelle, eine Eiweißquelle und ein Getränk."
+      },
+      {
+        "question": "Was ist das Ziel dieses Abschlussnodes?",
+        "answer": "Wasser, Gemüse, Vollkorn, Ballaststoffe und Eiweiß in konkrete Alltagshandlungen zu verbinden."
       }
     ]
   }

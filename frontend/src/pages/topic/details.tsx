@@ -26,6 +26,7 @@ import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import { useTranslation } from 'react-i18next';
 import ContentSidebarContent from '../../components/graph-view/sidebar/content-sidebar-content.tsx';
 import TopicSidebarContent from '../../components/graph-view/sidebar/topic-sidebar-content.tsx';
+import QuizView from '../../components/topic/quiz-view.tsx';
 import LayoutLoader from '../../components/layout-loader.tsx';
 import { CONTENT_ICONS, DEFAULT_ICON_BY_TYPE } from '../../components/icon-picker/icons.ts';
 import { IconCheck } from '@tabler/icons-react';
@@ -58,7 +59,15 @@ const TopicDetailsPage = () => {
     return <LayoutLoader />;
   }
 
-  const contentElements: AnyContentElementDto[] = topic?.contentElements ?? [];
+  const unsortedContentElements: AnyContentElementDto[] = topic?.contentElements ?? [];
+
+  const contentElements = unsortedContentElements.toSorted((a, b) => {
+    const rankA = a.rank ?? Infinity;
+    const rankB = b.rank ?? Infinity;
+
+    return rankA - rankB;
+  });
+
   const learnProgress = topic?.learnProgress;
 
   const contentElementIds = new Set(
@@ -87,9 +96,42 @@ const TopicDetailsPage = () => {
           flexDirection: 'column',
         }}
       >
+        {topic && (
+          <Stack gap={6} mb="md">
+            <Title order={3}>{topic.title}</Title>
+            {topic.categories && topic.categories.length > 0 && (
+              <Group gap={6}>
+                {topic.categories.map((cat: Category) => (
+                  <CategoryBadge key={cat.id} title={cat.title} color={cat.color ?? '8b5cf6'} />
+                ))}
+              </Group>
+            )}
+            {learnProgress && (
+              <Group
+                gap={8}
+                mt={4}
+                align="center"
+                wrap="nowrap"
+                style={{ maxWidth: isMobile ? '100%' : '25vw' }}
+              >
+                <Progress
+                  value={topicProgressPercent}
+                  color={isTopicCompleted ? 'green' : 'blue'}
+                  size="sm"
+                  style={{ flex: 1 }}
+                />
+                <Text size="xs" fw={600} style={{ flexShrink: 0 }}>
+                  {topicProgressPercent}%
+                </Text>
+              </Group>
+            )}
+          </Stack>
+        )}
+
         <Tabs.List mb="md">
           <Tabs.Tab value="visual">{t('topic.tabs.visual')}</Tabs.Tab>
           <Tabs.Tab value="notes">{t('topic.tabs.notes')}</Tabs.Tab>
+          <Tabs.Tab value="quiz">{t('topic.tabs.quiz')}</Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel
@@ -235,32 +277,7 @@ const TopicDetailsPage = () => {
               <Stack gap="md">
                 {selectedElement && topic && (
                   <>
-                    <Group justify="space-between" align="flex-start" wrap="nowrap">
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <Title order={3}>{topic.title}</Title>
-                        <Group gap={6} mt={6}>
-                          {topic.categories?.map((cat: Category) => (
-                            <CategoryBadge
-                              key={cat.id}
-                              title={cat.title}
-                              color={cat.color ?? '8b5cf6'}
-                            />
-                          ))}
-                        </Group>
-                        {learnProgress && (
-                          <Group gap={8} mt={8} align="center" wrap="nowrap">
-                            <Progress
-                              value={topicProgressPercent}
-                              color={isTopicCompleted ? 'green' : 'blue'}
-                              size="sm"
-                              style={{ flex: 1 }}
-                            />
-                            <Text size="xs" fw={600} style={{ flexShrink: 0 }}>
-                              {topicProgressPercent}%
-                            </Text>
-                          </Group>
-                        )}
-                      </div>
+                    <Group justify="flex-end">
                       <Tooltip label={t('topic.actions.overview')} withArrow>
                         <ActionIcon
                           variant="subtle"
@@ -292,6 +309,10 @@ const TopicDetailsPage = () => {
 
         <Tabs.Panel value="notes" p="md">
           <Text c="dimmed">{t('topic.tabs.notesPlaceholder')}</Text>
+        </Tabs.Panel>
+
+        <Tabs.Panel value="quiz" style={{ flex: 1, minHeight: 0, overflowY: 'auto' }} p="md">
+          <QuizView indexCards={topic?.indexCards ?? []} />
         </Tabs.Panel>
       </Tabs>
     </Layout>

@@ -20,5 +20,6 @@ public class TopicDto {
   public List<Category> categories;
   public int estimatedLearningDuration;
   public List<ContentElementDto> contentElements;
+  public List<IndexCardDto> indexCards;
   public TopicLearnProgressDto learnProgress;
 }

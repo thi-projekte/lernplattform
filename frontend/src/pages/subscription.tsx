@@ -110,6 +110,8 @@ interface ProductCardProps {
   onBillingPortal: () => void;
   isSubscribing: boolean;
   subscribingPriceId?: string;
+  isCreatingTrial: boolean;
+  isPolling: boolean;
   isBillingPortalLoading: boolean;
 }
 
@@ -123,6 +125,8 @@ const ProductCard = ({
   onBillingPortal,
   isSubscribing,
   subscribingPriceId,
+  isCreatingTrial,
+  isPolling,
   isBillingPortalLoading,
 }: ProductCardProps) => {
   const { t } = useTranslation();
@@ -246,7 +250,7 @@ const ProductCard = ({
               radius="md"
               size="sm"
               variant="outline"
-              loading={isSubscribing && subscribingPriceId === selectedPrice.id}
+              loading={isCreatingTrial || isPolling}
               onClick={() => onCreateTrial(selectedPrice.id)}
               style={{ borderColor: accentColor, color: accentColor }}
             >
@@ -290,7 +294,7 @@ const ProductCard = ({
                 fullWidth
                 radius="md"
                 size="sm"
-                loading={isSubscribing && subscribingPriceId === selectedPrice.id}
+                loading={(isSubscribing && subscribingPriceId === selectedPrice.id) || isPolling}
                 onClick={() => onSubscribe(selectedPrice.id)}
                 style={{
                   background: accentColor,
@@ -383,7 +387,8 @@ const FreeCard = ({ currentPlan }: { currentPlan: SubscriptionStatus }) => {
 
 const SubscriptionPage = () => {
   const { t } = useTranslation();
-  const { subscriptionStatus, canAccessBillingPortal } = useSubscription();
+  const { subscriptionStatus, canAccessBillingPortal, triggerSubscriptionPoll, isPolling } =
+    useSubscription();
   const [selectedInterval, setSelectedInterval] = useState<Interval>('month');
   const isMobile = useMediaQuery('(max-width: 768px)');
 
@@ -414,6 +419,10 @@ const SubscriptionPage = () => {
   const handleCreateTrial = (priceId: string) => {
     createTrial(priceId, {
       onSuccess: () => {
+        // API returns 200 immediately but the actual subscription change
+        // happens asynchronously via webhook — start polling so we pick it up
+        // automatically instead of waiting for a manual refresh.
+        triggerSubscriptionPoll();
         queryClient.invalidateQueries({ queryKey: ['subscription'] });
       },
       onError: () => notifications.show({ color: 'red', message: t('common.serverError') }),
@@ -444,8 +453,10 @@ const SubscriptionPage = () => {
     canAccessBillingPortal,
     onSubscribe: handleSubscribe,
     onBillingPortal: handleBillingPortal,
-    isSubscribing: isSubscribing || isCreatingTrial,
+    isSubscribing,
     subscribingPriceId: subscribingPriceId as string | undefined,
+    isCreatingTrial,
+    isPolling,
     isBillingPortalLoading,
     selectedInterval,
     onCreateTrial: handleCreateTrial,

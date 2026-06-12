@@ -5,6 +5,7 @@ import de.thi.mynd.progressTracking.dto.TopicLearnProgressDto;
 import de.thi.mynd.topic.dto.TopicWithOwnedRelatedTopicsDto;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.service.ContentElementService;
+import de.thi.mynd.topic.service.IndexCardService;
 import de.thi.mynd.topic.service.TopicService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -18,6 +19,7 @@ public final class TopicWithOwnedRelatedTopicsDtoMapper
   @Inject ContentElementService contentElementService;
 
   @Inject TopicService topicService;
+  @Inject IndexCardService indexCardService;
 
   @Override
   public TopicWithOwnedRelatedTopicsDto mapAndEnrich(Topic entity) {
@@ -32,6 +34,7 @@ public final class TopicWithOwnedRelatedTopicsDtoMapper
         .contentElements(contentElementService.getContentElementsForTopic(entity.id))
         .updatedAt(entity.updatedAt)
         .relatedTopics(topicService.getOwnedRelatedTopicsForTopic(entity.id))
+        .indexCards(indexCardService.getIndexCardsForTopic(entity.id))
         .build();
   }
 
