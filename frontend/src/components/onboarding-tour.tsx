@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import Joyride, { type CallBackProps, type Step, STATUS } from 'react-joyride';
+import { useMemo } from 'react';
+import { Joyride, type Step } from 'react-joyride';
 import { useTranslation } from 'react-i18next';
 import { useUserService } from '../provider/user-provider.tsx';
 import { TOUR_STORAGE_KEY } from './onboarding-tour.constants.ts';
@@ -7,7 +7,7 @@ import { TOUR_STORAGE_KEY } from './onboarding-tour.constants.ts';
 export const OnboardingTour = () => {
   const { t } = useTranslation();
   const userService = useUserService();
-  const [run, setRun] = useState(() => localStorage.getItem(TOUR_STORAGE_KEY) === 'true');
+  const run = useMemo(() => localStorage.getItem(TOUR_STORAGE_KEY) !== 'true', []);
 
   const isBuilder = userService.roles.includes('builder');
 
@@ -60,14 +60,6 @@ export const OnboardingTour = () => {
     },
   ];
 
-  const handleCallback = (data: CallBackProps) => {
-    const { status } = data;
-    if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
-      localStorage.removeItem(TOUR_STORAGE_KEY);
-      setRun(false);
-    }
-  };
-
   if (!run) return null;
 
   return (
@@ -75,22 +67,12 @@ export const OnboardingTour = () => {
       steps={isBuilder ? builderSteps : learnerSteps}
       run={run}
       continuous
-      showSkipButton
-      showProgress
-      disableScrolling
-      callback={handleCallback}
       locale={{
         back: t('onboardingTour.controls.back'),
         close: t('onboardingTour.controls.close'),
         last: t('onboardingTour.controls.last'),
         next: t('onboardingTour.controls.next'),
         skip: t('onboardingTour.controls.skip'),
-      }}
-      styles={{
-        options: {
-          zIndex: 10000,
-          primaryColor: '#3aa3d8',
-        },
       }}
     />
   );
