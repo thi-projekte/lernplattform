@@ -145,6 +145,14 @@
       "notesPlaceholder": "Noch keine Notizen vorhanden.",
       "quiz": "Quiz"
     },
+    "notes": {
+      "title": "Notizen",
+      "placeholder": "Schreibe deine persönlichen Notizen zu diesem Thema…",
+      "saving": "Speichern…",
+      "saved": "Gespeichert",
+      "unsaved": "Nicht gespeichert",
+      "error": "Konnte nicht gespeichert werden"
+    },
     "actions": {
       "create": "Thema erstellen",
       "createContentElement": "Inhalt anlegen",
