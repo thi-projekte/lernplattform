@@ -23,9 +23,11 @@ export const useQueryChatHistory = (topicId: string, pageSize = 50) =>
     queryKey: ['chatMessages', topicId, pageSize],
     enabled: topicId.length > 0,
     queryFn: () => fetchChatMessages(topicId, 0, pageSize),
-    // Load history once; live updates come over the WebSocket. Refetching on
-    // window focus would re-run seedHistory and visibly reorder the list.
+    // Refetch every time the Chat tab is (re)opened, so messages sent while it
+    // was closed show up immediately. Window-focus refetch stays off — it would
+    // re-run seedHistory in place and visibly reorder the list.
     staleTime: Infinity,
+    refetchOnMount: 'always',
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
   });

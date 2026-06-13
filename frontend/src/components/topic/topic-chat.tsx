@@ -98,10 +98,11 @@ const TopicChat = ({ topicId }: TopicChatProps) => {
   const userService = useUserService();
   const currentUsername = userService.account.username?.toLowerCase();
 
-  const { data: history, isLoading } = useQueryChatHistory(topicId);
+  const { data: history, isLoading, refetch } = useQueryChatHistory(topicId);
   const { messages, status, sendMessage, seedHistory } = useTopicChat(topicId);
   const [draft, setDraft] = useState('');
   const viewportRef = useRef<HTMLDivElement>(null);
+  const hasOpenedRef = useRef(false);
 
   // History comes newest-first from the backend — reverse to oldest-first.
   useEffect(() => {
@@ -110,11 +111,28 @@ const TopicChat = ({ topicId }: TopicChatProps) => {
     }
   }, [history, seedHistory]);
 
+  // The socket drops while idle (no server-side keep-alive). On every RE-connect
+  // refetch the history to pull in messages missed while disconnected. The first
+  // open is skipped — the initial load already fetched.
+  useEffect(() => {
+    if (status !== 'open') return;
+    if (hasOpenedRef.current) {
+      void refetch();
+    } else {
+      hasOpenedRef.current = true;
+    }
+  }, [status, refetch]);
+
   // Keep the newest message in view by scrolling the message container itself
-  // (scrollIntoView would also scroll the surrounding page).
+  // (scrollIntoView would also scroll the surrounding page). requestAnimationFrame
+  // waits for layout so long histories scroll all the way to the bottom.
   useEffect(() => {
     const viewport = viewportRef.current;
-    if (viewport) viewport.scrollTop = viewport.scrollHeight;
+    if (!viewport) return;
+    const id = requestAnimationFrame(() => {
+      viewport.scrollTop = viewport.scrollHeight;
+    });
+    return () => cancelAnimationFrame(id);
   }, [messages]);
 
   const handleSend = () => {

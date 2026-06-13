@@ -28,13 +28,15 @@ export const useTopicChat = (topicId: string | undefined) => {
     setMessages((prev) => (prev.some((m) => m.id === msg.id) ? prev : [...prev, msg]));
   }, []);
 
-  // Prepends older history messages that are not already present (live messages
-  // arrive after the connection opens and stay at the end).
+  // Use the fetched history (already ordered oldest -> newest) as the base, then
+  // re-append any live messages not yet persisted. This keeps the order correct
+  // even on a refetch — newly fetched messages land in their real position
+  // instead of being prepended to the top.
   const seedHistory = useCallback((history: ChatMessageDto[]) => {
     setMessages((prev) => {
-      const seen = new Set(prev.map((m) => m.id));
-      const older = history.filter((m) => !seen.has(m.id));
-      return older.length ? [...older, ...prev] : prev;
+      const historyIds = new Set(history.map((m) => m.id));
+      const liveNotInHistory = prev.filter((m) => !historyIds.has(m.id));
+      return [...history, ...liveNotInHistory];
     });
   }, []);
 
@@ -69,10 +71,12 @@ export const useTopicChat = (topicId: string | undefined) => {
       wsRef.current = ws;
 
       ws.onopen = () => {
+        console.warn('[chat] OPEN');
         reconnectsRef.current = 0;
         setStatus('open');
       };
       ws.onmessage = (event) => {
+        console.warn('[chat] RECEIVED', event.data);
         try {
           const parsed = ChatMessageDtoSchema.safeParse(JSON.parse(event.data as string));
           if (parsed.success) appendMessage(parsed.data);
@@ -82,6 +86,7 @@ export const useTopicChat = (topicId: string | undefined) => {
       };
       ws.onerror = () => setStatus('error');
       ws.onclose = (event) => {
+        console.warn('[chat] CLOSE code=', event.code, 'clean=', event.wasClean);
         if (cancelled) return;
         setStatus('closed');
         // 1008 = policy violation (auth failure) — retrying will not help.
