@@ -1,94 +1,94 @@
-import { useEffect, useState } from 'react';
-import { Group, Loader, Stack, Text, Textarea, Title } from '@mantine/core';
+import { useEffect, useState, type ReactNode } from 'react';
+import { Box, Group, Loader, Stack, Text, Title } from '@mantine/core';
 import { IconAlertTriangle, IconCheck, IconPencil } from '@tabler/icons-react';
 import { useDebouncedValue } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { useQueryTopicNote, useUpdateTopicNoteMutation } from '../../api/note.ts';
-
-interface TopicNotesProps {
-  topicId: string;
-}
+import RtfEditor from '../rtf-editor.tsx';
 
 const AUTOSAVE_DELAY = 800;
 
-const TopicNotes = ({ topicId }: TopicNotesProps) => {
+// TipTap serialises an empty document as "<p></p>"; the backend rejects blank
+// content, so treat notes with no text as empty and skip saving them.
+const stripHtml = (html: string) =>
+  html
+    .replace(/<[^>]*>/g, '')
+    .replace(/&nbsp;/g, ' ')
+    .trim();
+
+interface StatusInfo {
+  icon: ReactNode;
+  label: string;
+  color: 'dimmed' | 'teal' | 'red';
+}
+
+interface NotesEditorProps {
+  topicId: string;
+  initialContent: string;
+}
+
+const NotesEditor = ({ topicId, initialContent }: NotesEditorProps) => {
   const { t } = useTranslation();
-  const { data, isLoading } = useQueryTopicNote(topicId);
   const { mutate, isPending, isError } = useUpdateTopicNoteMutation(topicId);
 
-  // null until the note has loaded, so we don't autosave the placeholder.
-  const [content, setContent] = useState<string | null>(null);
-  // Last value known to be persisted on the server.
-  const [savedContent, setSavedContent] = useState('');
-  const [debounced] = useDebouncedValue(content ?? '', AUTOSAVE_DELAY);
+  const [content, setContent] = useState(initialContent);
+  const [savedContent, setSavedContent] = useState(initialContent);
+  const [debounced] = useDebouncedValue(content, AUTOSAVE_DELAY);
 
-  // Initialize the editor from the loaded note once.
+  // Autosave once typing settles and the content actually changed.
   useEffect(() => {
-    if (data && content === null) {
-      const initial = data.content ?? '';
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setContent(initial);
-      setSavedContent(initial);
-    }
-  }, [data, content]);
+    if (debounced === savedContent || stripHtml(debounced).length === 0) return;
+    mutate(debounced, { onSuccess: () => setSavedContent(debounced) });
+  }, [debounced, savedContent, mutate]);
 
-  // Autosave whenever the debounced value differs from what's on the server.
-  // The backend rejects blank content, so skip empty notes.
-  useEffect(() => {
-    if (content === null || debounced === savedContent || debounced.trim().length === 0) {
-      return;
-    }
-    mutate(debounced, {
-      onSuccess: () => setSavedContent(debounced),
-    });
-  }, [debounced, content, savedContent, mutate]);
+  const isDirty = content !== savedContent;
 
-  const isDirty = content !== null && content !== savedContent;
-
-  const status = isPending
-    ? { icon: <Loader size={12} />, label: t('topic.notes.saving'), color: 'dimmed' as const }
+  const status: StatusInfo = isPending
+    ? { icon: <Loader size={12} />, label: t('topic.notes.saving'), color: 'dimmed' }
     : isError
-      ? {
-          icon: <IconAlertTriangle size={13} />,
-          label: t('topic.notes.error'),
-          color: 'red' as const,
-        }
+      ? { icon: <IconAlertTriangle size={13} />, label: t('topic.notes.error'), color: 'red' }
       : isDirty
-        ? {
-            icon: <IconPencil size={13} />,
-            label: t('topic.notes.unsaved'),
-            color: 'dimmed' as const,
-          }
-        : { icon: <IconCheck size={13} />, label: t('topic.notes.saved'), color: 'teal' as const };
+        ? { icon: <IconPencil size={13} />, label: t('topic.notes.unsaved'), color: 'dimmed' }
+        : { icon: <IconCheck size={13} />, label: t('topic.notes.saved'), color: 'teal' };
 
   return (
     <Stack gap="sm" style={{ height: '100%', minHeight: 360 }}>
       <Group justify="space-between" align="center">
         <Title order={4}>{t('topic.notes.title')}</Title>
-        {content !== null && (
-          <Group gap={6} c={status.color} align="center">
-            {status.icon}
-            <Text size="xs" c={status.color}>
-              {status.label}
-            </Text>
-          </Group>
-        )}
+        <Group gap={6} align="center" c={status.color}>
+          {status.icon}
+          <Text size="xs" c={status.color}>
+            {status.label}
+          </Text>
+        </Group>
       </Group>
 
-      <Textarea
-        flex={1}
-        placeholder={t('topic.notes.placeholder')}
-        value={content ?? ''}
-        onChange={(event) => setContent(event.currentTarget.value)}
-        disabled={isLoading}
-        styles={{
-          root: { flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 },
-          wrapper: { flex: 1, minHeight: 0 },
-          input: { height: '100%', minHeight: 240, resize: 'none' },
-        }}
-      />
+      {/* Cap the height so long notes scroll internally instead of growing the
+          page forever. The editor toolbar is sticky and stays visible. */}
+      <Box style={{ maxHeight: 'calc(100vh - 280px)', overflowY: 'auto' }}>
+        <RtfEditor value={initialContent} onChange={setContent} />
+      </Box>
     </Stack>
   );
+};
+
+interface TopicNotesProps {
+  topicId: string;
+}
+
+const TopicNotes = ({ topicId }: TopicNotesProps) => {
+  const { data, isLoading } = useQueryTopicNote(topicId);
+
+  // Mount the editor only once the note has loaded so its initial content is set.
+  if (isLoading || !data) {
+    return (
+      <Group justify="center" py="xl">
+        <Loader size="sm" />
+      </Group>
+    );
+  }
+
+  return <NotesEditor topicId={topicId} initialContent={data.content ?? ''} />;
 };
 
 export default TopicNotes;
