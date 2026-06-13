@@ -28,6 +28,7 @@ import ContentSidebarContent from '../../components/graph-view/sidebar/content-s
 import TopicSidebarContent from '../../components/graph-view/sidebar/topic-sidebar-content.tsx';
 import QuizView from '../../components/topic/quiz-view.tsx';
 import TopicChat from '../../components/topic/topic-chat.tsx';
+import TopicNotes from '../../components/topic/topic-notes.tsx';
 import LayoutLoader from '../../components/layout-loader.tsx';
 import { CONTENT_ICONS, DEFAULT_ICON_BY_TYPE } from '../../components/icon-picker/icons.ts';
 import { IconCheck } from '@tabler/icons-react';
@@ -311,8 +312,8 @@ const TopicDetailsPage = () => {
           </div>
         </Tabs.Panel>
 
-        <Tabs.Panel value="notes" p="md">
-          <Text c="dimmed">{t('topic.tabs.notesPlaceholder')}</Text>
+        <Tabs.Panel value="notes" style={{ flex: 1, minHeight: 0 }} p="md">
+          {topicId && <TopicNotes topicId={topicId} />}
         </Tabs.Panel>
 
         <Tabs.Panel value="quiz" style={{ flex: 1, minHeight: 0, overflowY: 'auto' }} p="md">
