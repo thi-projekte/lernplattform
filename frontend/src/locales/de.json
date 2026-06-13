@@ -143,7 +143,17 @@
       "visual": "Visuell",
       "notes": "Notizen",
       "notesPlaceholder": "Noch keine Notizen vorhanden.",
-      "quiz": "Quiz"
+      "quiz": "Quiz",
+      "chat": "Chat"
+    },
+    "chat": {
+      "inputPlaceholder": "Nachricht schreiben…",
+      "send": "Senden",
+      "empty": "Noch keine Nachrichten. Starte die Unterhaltung!",
+      "online": "Online",
+      "connecting": "Verbinden…",
+      "offline": "Getrennt",
+      "streakTooltip": "{{count}} Streak"
     },
     "notes": {
       "title": "Notizen",
