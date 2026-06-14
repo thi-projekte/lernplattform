@@ -8,7 +8,6 @@ import {
   Center,
   Group,
   Image,
-  Kbd,
   NavLink,
   Text,
   ThemeIcon,
@@ -77,7 +76,7 @@ const ChallengeBadge = () => {
             size="md"
             radius="xl"
             color={challenge?.completed ? 'yellow' : 'gray'}
-            variant="light"
+            variant="transparent"
           >
             <IconTrophy size={16} />
           </ThemeIcon>
@@ -88,26 +87,17 @@ const ChallengeBadge = () => {
 };
 
 const SearchBadge = () => {
-  const { t } = useTranslation();
-
   return (
     <Center data-tour="nav-search">
-      <div onClick={() => spotlight.open()}>
-        <Group gap={6} align="center" justify="center">
-          <Group gap={4} align="center">
-            <Kbd>⌘</Kbd>
-            <Kbd>K</Kbd>
-          </Group>
-
-          <Text size="sm" c="dimmed">
-            {t('common.or')}
-          </Text>
-
-          <ActionIcon variant="default" radius="md" size="md">
-            <IconSearch />
-          </ActionIcon>
-        </Group>
-      </div>
+      <ActionIcon
+        variant="subtle"
+        color="gray"
+        size="lg"
+        onClick={() => spotlight.open()}
+        aria-label="Suche öffnen"
+      >
+        <IconSearch size={20} stroke={1.5} />
+      </ActionIcon>
     </Center>
   );
 };

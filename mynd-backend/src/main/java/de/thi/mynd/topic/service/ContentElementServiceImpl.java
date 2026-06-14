@@ -78,17 +78,24 @@ public final class ContentElementServiceImpl implements ContentElementService {
     if (element == null) {
       throw new EntityInstanceNotFoundException("Content element does not exist");
     }
-
     securityService.denyUnlessGranted(element, ContentElementVoter.Delete);
+
+    deleteContentElementFiles(element);
+
+    contentElementRepository.delete(element);
+    Log.infof("Successfully deleted content element with ID %s", element.id);
+    contentElementRepository.flush();
+  }
+
+  @Override
+  public void deleteContentElementFiles(ContentElement element) {
 
     if (element instanceof FileAssociatedEntity fileAssociatedEntity) {
       for (String objectKey : fileAssociatedEntity.getFileKeys()) {
         objectStorageService.tryDeleteObject(objectKey);
+        Log.infof("Successfully deleted content element file with ID %s", element.id);
       }
     }
-
-    contentElementRepository.delete(element);
-    Log.infof("Successfully deleted content element with ID %s", element.id);
   }
 
   @Override

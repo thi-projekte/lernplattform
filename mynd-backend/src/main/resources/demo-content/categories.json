@@ -100,5 +100,11 @@
     "creatorId": "admin",
     "title": "Reflexion & Mindset",
     "color": "475569"
+  },
+  {
+    "identifier": "nutrition",
+    "creatorId": "admin",
+    "title": "Ernährung",
+    "color": "7CB342"
   }
 ]

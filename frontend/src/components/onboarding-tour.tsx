@@ -1,11 +1,5 @@
 import { useMemo, useState } from 'react';
-import Joyride, {
-    ACTIONS,
-    EVENTS,
-    type CallBackProps,
-    type Step,
-    STATUS,
-} from 'react-joyride';
+import Joyride, { ACTIONS, EVENTS, type CallBackProps, type Step, STATUS } from 'react-joyride';
 import { useTranslation } from 'react-i18next';
 import { useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import { useUserService } from '../provider/user-provider.tsx';
@@ -28,27 +22,33 @@ export const OnboardingTour = () => {
         () => [
             {
                 target: '[data-tour="nav-dashboard"]',
-                content: t('onboardingTour.common.dashboard'),
+                content: t('onboardingTour.common.dashboard') as string,
+                disableBeacon: true,
             },
             {
                 target: '[data-tour="nav-search"]',
-                content: t('onboardingTour.common.search'),
+                content: t('onboardingTour.common.search') as string,
+                disableBeacon: true,
             },
             {
                 target: '[data-tour="nav-challenges"]',
-                content: t('onboardingTour.common.challenges'),
+                content: t('onboardingTour.common.challenges') as string,
+                disableBeacon: true,
             },
             {
                 target: '[data-tour="nav-streaks"]',
-                content: t('onboardingTour.common.streaks'),
+                content: t('onboardingTour.common.streaks') as string,
+                disableBeacon: true,
             },
             {
                 target: '[data-tour="nav-invitations"]',
-                content: t('onboardingTour.common.invitations'),
+                content: t('onboardingTour.common.invitations') as string,
+                disableBeacon: true,
             },
             {
                 target: '[data-tour="nav-subscription"]',
-                content: t('onboardingTour.common.subscription'),
+                content: t('onboardingTour.common.subscription') as string,
+                disableBeacon: true,
             },
         ],
         [t]
@@ -59,7 +59,7 @@ export const OnboardingTour = () => {
             {
                 target: 'body',
                 placement: 'center',
-                content: t('onboardingTour.learner.welcome'),
+                content: t('onboardingTour.learner.welcome') as string,
                 disableBeacon: true,
             },
             ...commonSteps,
@@ -72,13 +72,14 @@ export const OnboardingTour = () => {
             {
                 target: 'body',
                 placement: 'center',
-                content: t('onboardingTour.builder.welcome'),
+                content: t('onboardingTour.builder.welcome') as string,
                 disableBeacon: true,
             },
             ...commonSteps,
             {
                 target: '[data-tour="nav-builder-mode"]',
-                content: t('onboardingTour.builder.builderMode'),
+                content: t('onboardingTour.builder.builderMode') as string,
+                disableBeacon: true,
             },
         ],
         [t, commonSteps]
@@ -99,6 +100,15 @@ export const OnboardingTour = () => {
 
         if (type === EVENTS.STEP_AFTER || type === EVENTS.TARGET_NOT_FOUND) {
             const nextIndex = index + (action === ACTIONS.PREV ? -1 : 1);
+
+            if (nextIndex >= steps.length) {
+                localStorage.removeItem(TOUR_STORAGE_KEY);
+                localStorage.removeItem(TOUR_STEP_STORAGE_KEY);
+                setRun(false);
+                setStepIndex(0);
+                return;
+            }
+
             setStepIndex(nextIndex);
             localStorage.setItem(TOUR_STEP_STORAGE_KEY, String(nextIndex));
         }
@@ -118,6 +128,7 @@ export const OnboardingTour = () => {
             showSkipButton
             showProgress
             disableScrolling
+            spotlightClicks
             callback={handleCallback}
             locale={{
                 back: t('onboardingTour.controls.back'),

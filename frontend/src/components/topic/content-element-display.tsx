@@ -101,19 +101,41 @@ const ContentElementDisplay = ({ contentElement }: ContentElementDisplayProps) =
 
   if (contentElement.type === 'VIDEO_FILE') {
     const video = contentElement as VideoFileElementDto;
+
     return (
-      <AspectRatio ratio={16 / 9}>
-        <video controls style={{ borderRadius: '8px', width: '100%' }}>
-          <source src={video.presignedUrl} />
-          Your browser does not support the video tag.
-        </video>
-      </AspectRatio>
+      <Box maw={480} w="100%" mx="auto" mt="sm">
+        <AspectRatio ratio={16 / 9}>
+          <video
+            controls
+            style={{
+              borderRadius: '8px',
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+            }}
+          >
+            <source src={video.presignedUrl} />
+            Your browser does not support the video tag.
+          </video>
+        </AspectRatio>
+      </Box>
     );
   }
 
   if (contentElement.type === 'IMAGE') {
     const img = contentElement as ImageElementDto;
-    return <Image src={img.presignedUrl} alt={img.title || 'Content Image'} radius="md" />;
+
+    return (
+      <Box maw={480} w="100%" mx="auto" mt="sm">
+        <Image
+          src={img.presignedUrl}
+          alt={img.title || 'Content Image'}
+          radius="md"
+          w="100%"
+          fit="contain"
+        />
+      </Box>
+    );
   }
 };
 

@@ -107,5 +107,23 @@
   ],
   "personalBalanceRecharge": [
     "dreamsRealizationSteps"
+  ],
+  "nutritionBasics": [
+    "nutritionHydration",
+    "nutritionVegetablesFruit",
+    "nutritionWholegrainFiber",
+    "pmStakeholder"
+  ],
+  "nutritionHydration": [
+    "nutritionMealPlanning"
+  ],
+  "nutritionVegetablesFruit": [
+    "nutritionMealPlanning"
+  ],
+  "nutritionWholegrainFiber": [
+    "nutritionProteinSources"
+  ],
+  "nutritionProteinSources": [
+    "nutritionMealPlanning"
   ]
 }

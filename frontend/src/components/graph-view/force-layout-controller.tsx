@@ -53,7 +53,10 @@ const ForceLayoutController = ({ baseNodes, edges, onHandleReady }: ForceLayoutC
     }
 
     const isFirstSim = !hasInitializedRef.current;
-    const initialAlpha = isFirstSim ? 1 : 0.3;
+    // Very gentle alpha on subsequent simulations (after expand): the lower
+    // the value, the less energy the forces have, so new nodes glide into
+    // place instead of getting kicked out by collide/charge.
+    const initialAlpha = isFirstSim ? 1 : 0.03;
     // Warm up the simulation synchronously on the first creation so nodes
     // appear at their settled positions immediately, without the user having
     // to wait for the live tick loop. Later recreations skip the warmup so
