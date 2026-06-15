@@ -6,6 +6,7 @@ import type { AxiosResponse } from 'axios';
 import { track } from '@plausible-analytics/tracker';
 import { useUserService } from '../../provider/user-provider.tsx';
 import { Layout } from '../../components/layout.tsx';
+import { markOnboardingTourPending } from '../../components/onboarding-tour.constants.ts';
 
 const Onboarding = ({ withoutLayout }: { withoutLayout?: boolean }) => {
   const { t } = useTranslation();
@@ -34,6 +35,7 @@ const Onboarding = ({ withoutLayout }: { withoutLayout?: boolean }) => {
 
     if (result?.status === 201) {
       track('successfulRoleOnboarding', { props: { role } });
+      markOnboardingTourPending();
       window.location.href = '/';
     }
   };

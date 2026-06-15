@@ -33,6 +33,7 @@ import { isGranted } from '../auth.ts';
 import AccessDenied from './access-denied.tsx';
 import { useUserService } from '../provider/user-provider.tsx';
 import { Footer } from './footer.tsx';
+import { OnboardingTour } from './onboarding-tour.tsx';
 
 const StreakBadge = () => {
   const { t } = useTranslation();
@@ -87,7 +88,7 @@ const ChallengeBadge = () => {
 
 const SearchBadge = () => {
   return (
-    <Center>
+    <Center data-tour="nav-search">
       <ActionIcon
         variant="subtle"
         color="gray"
@@ -171,6 +172,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       padding={0}
     >
       <TopicSpotlight />
+      <OnboardingTour />
       <AppShell.Header
         style={{
           background: theme.other.layoutHeaderBg,
@@ -244,6 +246,15 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           .map((route) => {
             const routeLabel = route.translation ? t(`routes.${route.translation}`) : undefined;
 
+            const tourTagByPath: Record<string, string> = {
+              '/': 'nav-dashboard',
+              '/builder-mode': 'nav-builder-mode',
+              '/challenges': 'nav-challenges',
+              '/streaks': 'nav-streaks',
+              '/invitations': 'nav-invitations',
+              '/subscription': 'nav-subscription',
+            };
+
             return (
               <NavLink
                 label={showLabels ? routeLabel : undefined}
@@ -253,6 +264,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                 key={route.path}
                 title={routeLabel}
                 aria-label={routeLabel}
+                data-tour={route.path ? tourTagByPath[route.path] : undefined}
                 styles={{
                   root: {
                     borderRadius: 12,

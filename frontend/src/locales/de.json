@@ -310,6 +310,30 @@
       "parentPlaceholder": "Keine (Hauptkategorie)"
     }
   },
+  "onboardingTour": {
+    "controls": {
+      "back": "Zurück",
+      "close": "Schließen",
+      "last": "Fertig",
+      "next": "Weiter",
+      "skip": "Überspringen"
+    },
+    "common": {
+      "dashboard": "Auf dem Dashboard findest du alle Themen, die du lernen kannst.",
+      "search": "Mit der Suche findest du schnell Themen und Inhalte.",
+      "challenges": "Hier findest du deine aktuellen Challenges und kannst Belohnungen einsammeln.",
+      "streaks": "Hier siehst du deine Lern-Streaks und kannst deine Fortschritts-Serie im Blick behalten.",
+      "invitations": "Hier kannst du Freunde einladen und Einladungen verwalten.",
+      "subscription": "Hier siehst du dein Abonnement und kannst es bei Bedarf anpassen."
+    },
+    "learner": {
+      "welcome": "Willkommen bei MYnd! Wir zeigen dir kurz, wie du mit dem Lernen startest."
+    },
+    "builder": {
+      "welcome": "Willkommen bei MYnd! Als Builder kannst du sowohl lernen als auch eigene Inhalte erstellen.",
+      "builderMode": "Im Builder-Modus erstellst und bearbeitest du eigene Lerninhalte."
+    }
+  },
   "auth": {
     "accessDenied": "Zugriff verweigert",
     "noAccessPageText": "Anscheinend verfügen Sie nicht über die erforderlichen Berechtigungen, um diese Seite anzuzeigen. Wenn Sie glauben, dass es sich um einen Fehler handelt, wenden Sie sich bitte an Ihren Administrator.",

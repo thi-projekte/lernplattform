@@ -330,7 +330,32 @@
     "title": "Onboarding",
     "role_selection_label": "Select role",
     "role_selection_placeholder": "Select your role",
-    "submit": "Submit"
+    "submit": "Submit",
+    "upgradeToBuilderText": "Click the button below to upgrade your account to Builder and start creating your own learning content."
+  },
+  "onboardingTour": {
+    "controls": {
+      "back": "Back",
+      "close": "Close",
+      "last": "Done",
+      "next": "Next",
+      "skip": "Skip"
+    },
+    "common": {
+      "dashboard": "On the dashboard you'll find all the topics you can learn.",
+      "search": "Use search to quickly find topics and content.",
+      "challenges": "Here you'll find your current challenges and can collect rewards.",
+      "streaks": "Here you can see your learning streaks and keep track of your progress.",
+      "invitations": "Here you can invite friends and manage invitations.",
+      "subscription": "Here you can see your subscription and adjust it if needed."
+    },
+    "learner": {
+      "welcome": "Welcome to MYnd! Let's quickly show you how to get started with learning."
+    },
+    "builder": {
+      "welcome": "Welcome to MYnd! As a Builder you can both learn and create your own content.",
+      "builderMode": "In Builder Mode you create and edit your own learning content."
+    }
   },
   "subscription": {
     "title": "Choose your plan",
