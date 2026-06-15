@@ -10,7 +10,7 @@ export const OnboardingTour = () => {
   const userService = useUserService();
   const theme = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
-  const [run, setRun] = useState(() => localStorage.getItem(TOUR_STORAGE_KEY) === 'true');
+  const [run, setRun] = useState(() => localStorage.getItem(TOUR_STORAGE_KEY) !== 'true');
   const [stepIndex, setStepIndex] = useState(() =>
     Number(localStorage.getItem(TOUR_STEP_STORAGE_KEY) ?? 0)
   );
@@ -91,7 +91,7 @@ export const OnboardingTour = () => {
     const { status, type, index, action } = data;
 
     if (status === STATUS.FINISHED || status === STATUS.SKIPPED) {
-      localStorage.removeItem(TOUR_STORAGE_KEY);
+      localStorage.setItem(TOUR_STORAGE_KEY, 'true');
       localStorage.removeItem(TOUR_STEP_STORAGE_KEY);
       setRun(false);
       setStepIndex(0);
@@ -102,7 +102,7 @@ export const OnboardingTour = () => {
       const nextIndex = index + (action === ACTIONS.PREV ? -1 : 1);
 
       if (nextIndex >= steps.length) {
-        localStorage.removeItem(TOUR_STORAGE_KEY);
+        localStorage.setItem(TOUR_STORAGE_KEY, 'true');
         localStorage.removeItem(TOUR_STEP_STORAGE_KEY);
         setRun(false);
         setStepIndex(0);
