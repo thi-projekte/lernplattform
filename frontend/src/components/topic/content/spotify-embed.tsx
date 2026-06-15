@@ -8,17 +8,20 @@ const SpotifyEmbed = ({ link }: SpotifyEmbedProps) => {
   };
 
   return (
-    <iframe
-      title="Spotify Embed"
-      src={getEmbedUrl(link)}
-      width="100%"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-      loading="lazy"
-      style={{
-        border: 0,
-        display: 'block',
-      }}
-    />
+    <div style={{ borderRadius: '12px', overflow: 'hidden', display: 'block' }}>
+      <iframe
+        title="Spotify Embed"
+        src={getEmbedUrl(link)}
+        width="100%"
+        height="80"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"
+        style={{
+          border: 0,
+          display: 'block',
+        }}
+      />
+    </div>
   );
 };
 

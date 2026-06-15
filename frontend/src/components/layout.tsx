@@ -8,7 +8,6 @@ import {
   Center,
   Group,
   Image,
-  Kbd,
   NavLink,
   Text,
   ThemeIcon,
@@ -34,6 +33,7 @@ import { isGranted } from '../auth.ts';
 import AccessDenied from './access-denied.tsx';
 import { useUserService } from '../provider/user-provider.tsx';
 import { Footer } from './footer.tsx';
+import { OnboardingTour } from './onboarding-tour.tsx';
 
 const StreakBadge = () => {
   const { t } = useTranslation();
@@ -76,7 +76,7 @@ const ChallengeBadge = () => {
             size="md"
             radius="xl"
             color={challenge?.completed ? 'yellow' : 'gray'}
-            variant="light"
+            variant="transparent"
           >
             <IconTrophy size={16} />
           </ThemeIcon>
@@ -87,26 +87,17 @@ const ChallengeBadge = () => {
 };
 
 const SearchBadge = () => {
-  const { t } = useTranslation();
-
   return (
-    <Center>
-      <div onClick={() => spotlight.open()}>
-        <Group gap={6} align="center" justify="center">
-          <Group gap={4} align="center">
-            <Kbd>⌘</Kbd>
-            <Kbd>K</Kbd>
-          </Group>
-
-          <Text size="sm" c="dimmed">
-            {t('common.or')}
-          </Text>
-
-          <ActionIcon variant="default" radius="md" size="md">
-            <IconSearch />
-          </ActionIcon>
-        </Group>
-      </div>
+    <Center data-tour="nav-search">
+      <ActionIcon
+        variant="subtle"
+        color="gray"
+        size="lg"
+        onClick={() => spotlight.open()}
+        aria-label="Suche öffnen"
+      >
+        <IconSearch size={20} stroke={1.5} />
+      </ActionIcon>
     </Center>
   );
 };
@@ -181,6 +172,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
       padding={0}
     >
       <TopicSpotlight />
+      <OnboardingTour />
       <AppShell.Header
         style={{
           background: theme.other.layoutHeaderBg,
@@ -254,6 +246,15 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           .map((route) => {
             const routeLabel = route.translation ? t(`routes.${route.translation}`) : undefined;
 
+            const tourTagByPath: Record<string, string> = {
+              '/': 'nav-dashboard',
+              '/builder-mode': 'nav-builder-mode',
+              '/challenges': 'nav-challenges',
+              '/streaks': 'nav-streaks',
+              '/invitations': 'nav-invitations',
+              '/subscription': 'nav-subscription',
+            };
+
             return (
               <NavLink
                 label={showLabels ? routeLabel : undefined}
@@ -263,6 +264,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
                 key={route.path}
                 title={routeLabel}
                 aria-label={routeLabel}
+                data-tour={route.path ? tourTagByPath[route.path] : undefined}
                 styles={{
                   root: {
                     borderRadius: 12,

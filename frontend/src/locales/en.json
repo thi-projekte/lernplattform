@@ -21,8 +21,8 @@
     "reward": "Reward: +{{count}} invite credits",
     "completed": "Completed!",
     "claimed": "Reward claimed",
-    "claimButton": "Claim +2 Invite Credits",
-    "rewardClaimed": "Reward successfully claimed! You received 2 invite credits.",
+    "claimButton": "Claim +1 Invite Credits",
+    "rewardClaimed": "Reward successfully claimed! You received 1 invite credits.",
     "history": "Past Challenges",
     "noHistory": "No past challenges yet."
   },
@@ -142,13 +142,32 @@
     "tabs": {
       "visual": "Visual",
       "notes": "Notes",
-      "notesPlaceholder": "No notes yet."
+      "notesPlaceholder": "No notes yet.",
+      "quiz": "Quiz",
+      "chat": "Chat"
+    },
+    "chat": {
+      "inputPlaceholder": "Write a message…",
+      "send": "Send",
+      "empty": "No messages yet. Start the conversation!",
+      "online": "Online",
+      "connecting": "Connecting…",
+      "offline": "Disconnected",
+      "streakTooltip": "{{count}} streak"
+    },
+    "notes": {
+      "title": "Notes",
+      "placeholder": "Write your personal notes for this topic…",
+      "saving": "Saving…",
+      "saved": "Saved",
+      "unsaved": "Unsaved changes",
+      "error": "Could not save"
     },
     "actions": {
       "create": "Create topic",
       "createContentElement": "Create content element",
       "start": "Start Topic",
-      "complete": "Complete topic",
+      "complete": "Complete topic manually",
       "completeBlockedHint": "Mark all content elements as completed first.",
       "completed": "Completed",
       "markContentElementCompleted": "Mark as completed",
@@ -193,12 +212,31 @@
       "associatedTopicsTitle": "Associated Topics",
       "associatedTopicsDescription": "Select associated topics",
       "contentElementsTitle": "Content elements",
-      "contentElementsDescription": "Create content elements"
+      "contentElementsDescription": "Create content elements",
+      "quizTitle": "Quiz",
+      "quizDescription": "Add quiz questions"
     },
     "other": {
       "selectUpToThreeCategories": "Select up to three categories",
       "searchByTitleOrTeaser": "Search by title or teaser",
       "successfullySavedTopic": "Successfully saved topic"
+    },
+    "quiz": {
+      "addCard": "Add question",
+      "question": "Question",
+      "answer": "Answer",
+      "questionPlaceholder": "What is the question?",
+      "answerPlaceholder": "What is the answer?",
+      "emptyHint": "No quiz questions yet. Add some to test your learners.",
+      "limitReached": "Maximum of 20 quiz questions per topic.",
+      "countLabel": "{{count}} / {{max}} quiz questions",
+      "deleteCard": "Delete question",
+      "viewTitle": "Test your knowledge",
+      "viewEmptyHint": "This topic has no quiz questions yet.",
+      "previous": "Previous",
+      "next": "Next",
+      "showAnswerHint": "Click to reveal the answer",
+      "showQuestionHint": "Click to show the question"
     },
     "contentElementType": {
       "label": "Type",
@@ -275,8 +313,8 @@
   "auth": {
     "accessDenied": "Access Denied",
     "noAccessPageText": "It looks like you don't have the necessary permissions to view this page. If you think this is a mistake, please contact your administrator.",
-    "role_builder": "Builder",
-    "role_learner": "Learner"
+    "role_builder": "Builder – I want to create content and learn",
+    "role_learner": "Learner - I only want to learn"
   },
   "layout": {
     "openAccount": "Open user account"
@@ -292,7 +330,32 @@
     "title": "Onboarding",
     "role_selection_label": "Select role",
     "role_selection_placeholder": "Select your role",
-    "submit": "Submit"
+    "submit": "Submit",
+    "upgradeToBuilderText": "Click the button below to upgrade your account to Builder and start creating your own learning content."
+  },
+  "onboardingTour": {
+    "controls": {
+      "back": "Back",
+      "close": "Close",
+      "last": "Done",
+      "next": "Next",
+      "skip": "Skip"
+    },
+    "common": {
+      "dashboard": "On the dashboard you'll find all the topics you can learn.",
+      "search": "Use search to quickly find topics and content.",
+      "challenges": "Here you'll find your current challenges and can collect rewards.",
+      "streaks": "Here you can see your learning streaks and keep track of your progress.",
+      "invitations": "Here you can invite friends and manage invitations.",
+      "subscription": "Here you can see your subscription and adjust it if needed."
+    },
+    "learner": {
+      "welcome": "Welcome to MYnd! Let's quickly show you how to get started with learning."
+    },
+    "builder": {
+      "welcome": "Welcome to MYnd! As a Builder you can both learn and create your own content.",
+      "builderMode": "In Builder Mode you create and edit your own learning content."
+    }
   },
   "subscription": {
     "title": "Choose your plan",
@@ -333,7 +396,7 @@
       "noInvitationsLeft": "You have no invitations left.",
       "historyTitle": "Sent invitations",
       "noHistory": "No invitations sent yet.",
-      "acceptedTrue": "Accepeted",
+      "acceptedTrue": "Accepted",
       "acceptedFalse": "Pending",
       "columns": {
         "date": "Date",

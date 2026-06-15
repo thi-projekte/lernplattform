@@ -2,6 +2,7 @@ import { apiClient, safeValidateApiResponseContent } from './common.ts';
 import {
   type Category,
   CategorySchema,
+  IndexCardDtoSchema,
   type ListTopicDto,
   ListTopicDtoSchema,
   type PaginatedListTopicDto,
@@ -104,12 +105,39 @@ export const useDeleteContentElementMutation = () =>
     mutationFn: deleteContentElement,
   });
 
+const createIndexCard = async (request: { question: string; answer: string }) => {
+  const result = await apiClient.post('/index-cards', request, {
+    validateStatus: (status) => status <= 201,
+  });
+  return safeValidateApiResponseContent(IndexCardDtoSchema, result.data);
+};
+
+export const useCreateIndexCardMutation = () =>
+  useMutation({
+    mutationKey: ['createIndexCard'],
+    mutationFn: createIndexCard,
+  });
+
+const deleteIndexCard = async (cardId: string) =>
+  await apiClient.delete(`/index-cards/${cardId}`, {
+    validateStatus: (status) => status === 200 || status === 204,
+  });
+
+export const useDeleteIndexCardMutation = () =>
+  useMutation({
+    mutationKey: ['deleteIndexCard'],
+    mutationFn: deleteIndexCard,
+  });
+
 const createTopic = async (createTopic: Partial<Topic>) => {
   const result = await apiClient.post('/topics', createTopic, {
     validateStatus: (status) => status <= 204,
   });
 
-  return safeValidateApiResponseContent(TopicCoreDataSchema, result.data);
+  return safeValidateApiResponseContent(
+    TopicCoreDataSchema.extend({ id: z.uuid().optional() }),
+    result.data
+  );
 };
 
 export const useCreateTopicMutation = () => {

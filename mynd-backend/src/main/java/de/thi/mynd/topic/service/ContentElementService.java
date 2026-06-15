@@ -23,5 +23,7 @@ public interface ContentElementService {
 
   void deleteContentElement(UUID elementId);
 
+  void deleteContentElementFiles(ContentElement element);
+
   void updateTopicAssociation(Topic topic, List<AssociatedContentElementRequest> elements);
 }

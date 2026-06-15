@@ -21,8 +21,8 @@
     "reward": "Belohnung: +{{count}} Einladungs-Credits",
     "completed": "Abgeschlossen!",
     "claimed": "Belohnung erhalten",
-    "claimButton": "+2 Einladungs-Credits einlösen",
-    "rewardClaimed": "Belohnung eingelöst! Du hast 2 Einladungs-Credits erhalten.",
+    "claimButton": "+1 Einladungs-Credits einlösen",
+    "rewardClaimed": "Belohnung eingelöst! Du hast 1 Einladungs-Credits erhalten.",
     "history": "Vergangene Challenges",
     "noHistory": "Noch keine vergangenen Challenges."
   },
@@ -142,13 +142,32 @@
     "tabs": {
       "visual": "Visuell",
       "notes": "Notizen",
-      "notesPlaceholder": "Noch keine Notizen vorhanden."
+      "notesPlaceholder": "Noch keine Notizen vorhanden.",
+      "quiz": "Quiz",
+      "chat": "Chat"
+    },
+    "chat": {
+      "inputPlaceholder": "Nachricht schreiben…",
+      "send": "Senden",
+      "empty": "Noch keine Nachrichten. Starte die Unterhaltung!",
+      "online": "Online",
+      "connecting": "Verbinden…",
+      "offline": "Getrennt",
+      "streakTooltip": "{{count}} Streak"
+    },
+    "notes": {
+      "title": "Notizen",
+      "placeholder": "Schreibe deine persönlichen Notizen zu diesem Thema…",
+      "saving": "Speichern…",
+      "saved": "Gespeichert",
+      "unsaved": "Nicht gespeichert",
+      "error": "Konnte nicht gespeichert werden"
     },
     "actions": {
       "create": "Thema erstellen",
       "createContentElement": "Inhalt anlegen",
       "start": "Thema starten",
-      "complete": "Thema abschließen",
+      "complete": "Thema manuell abschließen",
       "completeBlockedHint": "Markiere zuerst alle Inhalte als abgeschlossen.",
       "completed": "Abgeschlossen",
       "markContentElementCompleted": "Als abgeschlossen markieren",
@@ -193,12 +212,31 @@
       "associatedTopicsTitle": "Benachbarte Themen",
       "associatedTopicsDescription": "Benachbarte Themen auswählen",
       "contentElementsTitle": "Inhalte",
-      "contentElementsDescription": "Erstellen Sie ihre Lerninhalte"
+      "contentElementsDescription": "Erstellen Sie ihre Lerninhalte",
+      "quizTitle": "Quiz",
+      "quizDescription": "Quizfragen hinzufügen"
     },
     "other": {
       "selectUpToThreeCategories": "Wähle bis zu drei Kategorien aus",
       "searchByTitleOrTeaser": "Suche nach Titel oder Kurzbeschreibung",
       "successfullySavedTopic": "Thema erfolgreich gespeichert"
+    },
+    "quiz": {
+      "addCard": "Frage hinzufügen",
+      "question": "Frage",
+      "answer": "Antwort",
+      "questionPlaceholder": "Wie lautet die Frage?",
+      "answerPlaceholder": "Wie lautet die Antwort?",
+      "emptyHint": "Noch keine Quizfragen. Füge welche hinzu, um deine Lernenden zu testen.",
+      "limitReached": "Maximal 20 Quizfragen pro Thema.",
+      "countLabel": "{{count}} / {{max}} Quizfragen",
+      "deleteCard": "Frage löschen",
+      "viewTitle": "Teste dein Wissen",
+      "viewEmptyHint": "Dieses Thema hat noch keine Quizfragen.",
+      "previous": "Zurück",
+      "next": "Weiter",
+      "showAnswerHint": "Klicke, um die Antwort anzuzeigen",
+      "showQuestionHint": "Klicke, um die Frage anzuzeigen"
     },
     "contentElementType": {
       "label": "Typ",
@@ -272,11 +310,35 @@
       "parentPlaceholder": "Keine (Hauptkategorie)"
     }
   },
+  "onboardingTour": {
+    "controls": {
+      "back": "Zurück",
+      "close": "Schließen",
+      "last": "Fertig",
+      "next": "Weiter",
+      "skip": "Überspringen"
+    },
+    "common": {
+      "dashboard": "Auf dem Dashboard findest du alle Themen, die du lernen kannst.",
+      "search": "Mit der Suche findest du schnell Themen und Inhalte.",
+      "challenges": "Hier findest du deine aktuellen Challenges und kannst Belohnungen einsammeln.",
+      "streaks": "Hier siehst du deine Lern-Streaks und kannst deine Fortschritts-Serie im Blick behalten.",
+      "invitations": "Hier kannst du Freunde einladen und Einladungen verwalten.",
+      "subscription": "Hier siehst du dein Abonnement und kannst es bei Bedarf anpassen."
+    },
+    "learner": {
+      "welcome": "Willkommen bei MYnd! Wir zeigen dir kurz, wie du mit dem Lernen startest."
+    },
+    "builder": {
+      "welcome": "Willkommen bei MYnd! Als Builder kannst du sowohl lernen als auch eigene Inhalte erstellen.",
+      "builderMode": "Im Builder-Modus erstellst und bearbeitest du eigene Lerninhalte."
+    }
+  },
   "auth": {
     "accessDenied": "Zugriff verweigert",
     "noAccessPageText": "Anscheinend verfügen Sie nicht über die erforderlichen Berechtigungen, um diese Seite anzuzeigen. Wenn Sie glauben, dass es sich um einen Fehler handelt, wenden Sie sich bitte an Ihren Administrator.",
-    "role_builder": "Builder",
-    "role_learner": "Learner"
+    "role_builder": "Builder – Ich möchte Inhalte erstellen und lernen",
+    "role_learner": "Learner – Ich möchte nur lernen"
   },
   "layout": {
     "openAccount": "Benutzerkonto öffnen"

@@ -22,4 +22,7 @@ public final class TopicRequest {
 
   @Size(min = 1, max = 12)
   public List<@Valid AssociatedContentElementRequest> contentElements;
+
+  @Size(max = 20)
+  public List<@Valid AssociatedEntityRequest> indexCards;
 }
