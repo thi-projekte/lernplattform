@@ -51,7 +51,6 @@ public final class AuthServiceImpl implements AuthService {
     userProfileService.updateUserProfile(userProfile);
 
     Log.infof("Successfully made user %s a builder", username);
-    Log.tracef("Successfully made user %s a builder", username);
   }
 
   @Override
@@ -65,7 +64,6 @@ public final class AuthServiceImpl implements AuthService {
     userProfileService.updateUserProfile(userProfile);
 
     Log.infof("Successfully made user %s a learner", username);
-    Log.tracef("Successfully made user %s a builder", username);
   }
 
   private UserProfile getUserProfileOfCurrentUser() {

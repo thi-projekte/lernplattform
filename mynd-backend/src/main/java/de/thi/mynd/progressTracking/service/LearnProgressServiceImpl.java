@@ -57,6 +57,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
         learnProgressTopicRepository.findByTopicIdsAndCreatorIdContentElementsFetched(
             topicIds, creatorId);
 
+    Log.tracef("Mapping learn progress mappings for topic IDs");
+
     return topics.stream()
         .collect(
             Collectors.toMap(
@@ -74,6 +76,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     if (progressTopicOptional.isEmpty()) {
       throw new TopicLearnProgressNotStartedException("This topic has not been started yet");
     }
+
+    Log.tracef("Loaded learn topic progress for topic %s", topicId);
 
     return mappingRegistry.map(progressTopicOptional.get(), TopicLearnProgressDto.class);
   }

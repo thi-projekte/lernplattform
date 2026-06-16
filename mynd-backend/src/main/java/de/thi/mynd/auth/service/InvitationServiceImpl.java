@@ -102,8 +102,6 @@ public final class InvitationServiceImpl implements InvitationService {
 
     Log.infof(
         "Successfully created invitation for email %s as user %s", email, userProfile.creatorId);
-    Log.tracef(
-            "Successfully created invitation for email %s as user %s", email, userProfile.creatorId);
 
     sendInvitationEmail(invitation);
   }
@@ -133,7 +131,6 @@ public final class InvitationServiceImpl implements InvitationService {
     identityService.addRolesToUser(creatorId, List.of("authorizedUser"));
 
     Log.infof("Redeemed invitation for user %s", creatorId);
-    Log.tracef("Redeemed invitation for user %s", creatorId);
   }
 
   private void sendInvitationEmail(Invitation invitation) {

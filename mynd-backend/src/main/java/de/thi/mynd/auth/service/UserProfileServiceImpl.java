@@ -63,7 +63,6 @@ public final class UserProfileServiceImpl implements UserProfileService {
     userProfileRepository.persistAndFlush(profile);
 
     Log.infof("User %s successfully uploaded new profile picture", username);
-    Log.tracef("User %s successfully uploaded new profile picture", username);
 
     return new ProfilePictureDto(objectStorageService.getPresignedUrlForFile(objectKey).toString());
   }
@@ -83,7 +82,6 @@ public final class UserProfileServiceImpl implements UserProfileService {
     userProfileRepository.persistAndFlush(profile);
 
     Log.infof("User % deleted his profile picture", username);
-    Log.tracef("User % deleted his profile picture", username);
   }
 
   @Override
@@ -127,7 +125,6 @@ public final class UserProfileServiceImpl implements UserProfileService {
 
     userProfileRepository.persistAndFlush(newProfile);
 
-    Log.tracef("Created personal user profile for user %s", userId);
     Log.infof("Created personal user profile for user %s", userId);
 
     return newProfile;

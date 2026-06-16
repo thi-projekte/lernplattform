@@ -15,6 +15,7 @@ import de.thi.mynd.progressTracking.entity.TopicNote;
 import de.thi.mynd.progressTracking.entity.TopicNoteId;
 import de.thi.mynd.progressTracking.repository.TopicNoteRepository;
 import de.thi.mynd.progressTracking.request.TopicNoteRequest;
+import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -40,6 +41,8 @@ public final class TopicNoteServiceImpl implements TopicNoteService {
             .findByIdOptional(id)
             .orElseGet(() -> createDefaultForCurrentUser(topicId));
 
+    Log.tracef("Get personal topic notes for topic %s", topicId);
+
     return mappingRegistry.map(note, TopicNoteDto.class);
   }
 
@@ -57,6 +60,8 @@ public final class TopicNoteServiceImpl implements TopicNoteService {
     note.content = request.content;
     topicNoteRepository.persistAndFlush(note);
 
+    Log.infof("Update topic notes for user %s and topic %s", securityIdentity.getPrincipal().getName(), topicId);
+
     return mappingRegistry.map(note, TopicNoteDto.class);
   }
 
@@ -72,6 +77,8 @@ public final class TopicNoteServiceImpl implements TopicNoteService {
     topicNote.content = "";
 
     topicNoteRepository.persistAndFlush(topicNote);
+
+    Log.infof("Created default topic notes for topic %s and user %s", topicId, id.creatorId);
 
     return topicNote;
   }

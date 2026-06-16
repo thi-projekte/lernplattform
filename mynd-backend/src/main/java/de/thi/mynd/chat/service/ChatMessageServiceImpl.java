@@ -39,7 +39,6 @@ public final class ChatMessageServiceImpl implements ChatMessageService {
     chatMessageRepository.persistAndFlush(message);
 
     Log.infof("Created new chat message in topic %s", topicId);
-    Log.tracef("Created new chat message in topic %s", topicId);
 
     return mappingRegistry.map(message, ChatMessageDto.class);
   }
