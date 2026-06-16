@@ -5,7 +5,6 @@ import { Layout } from '../../components/layout.tsx';
 import {
   ActionIcon,
   Badge,
-  Divider,
   Drawer,
   Group,
   Paper,
@@ -19,7 +18,7 @@ import {
   Tooltip,
   UnstyledButton,
 } from '@mantine/core';
-import { IconInfoCircle, IconLayoutList, IconNotes } from '@tabler/icons-react';
+import { IconLayoutList, IconNotes } from '@tabler/icons-react';
 import CategoryBadge from '../../components/category-badge.tsx';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import type { Category } from '../../schemas/topic.ts';
@@ -297,23 +296,6 @@ const TopicDetailsPage = () => {
               }}
             >
               <Stack gap="md">
-                {selectedElement && topic && (
-                  <>
-                    <Group justify="flex-end">
-                      <Tooltip label={t('topic.actions.overview')} withArrow>
-                        <ActionIcon
-                          variant="subtle"
-                          color="gray"
-                          size="lg"
-                          onClick={() => setSelectedElement(null)}
-                        >
-                          <IconInfoCircle size={20} />
-                        </ActionIcon>
-                      </Tooltip>
-                    </Group>
-                    <Divider />
-                  </>
-                )}
                 {selectedElement ? (
                   <ContentSidebarContent
                     selectedElement={selectedElement}
