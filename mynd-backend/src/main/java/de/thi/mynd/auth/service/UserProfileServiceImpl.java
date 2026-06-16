@@ -63,6 +63,7 @@ public final class UserProfileServiceImpl implements UserProfileService {
     userProfileRepository.persistAndFlush(profile);
 
     Log.infof("User %s successfully uploaded new profile picture", username);
+    Log.tracef("User %s successfully uploaded new profile picture", username);
 
     return new ProfilePictureDto(objectStorageService.getPresignedUrlForFile(objectKey).toString());
   }
@@ -82,6 +83,7 @@ public final class UserProfileServiceImpl implements UserProfileService {
     userProfileRepository.persistAndFlush(profile);
 
     Log.infof("User % deleted his profile picture", username);
+    Log.tracef("User % deleted his profile picture", username);
   }
 
   @Override
@@ -89,6 +91,8 @@ public final class UserProfileServiceImpl implements UserProfileService {
   public void updateUserProfile(UserProfile userProfile) {
     userProfileRepository.getEntityManager().merge(userProfile);
     userProfileRepository.flush();
+
+    Log.tracef("Updated user profile for %s", userProfile.creatorId);
   }
 
   @Override
@@ -99,6 +103,8 @@ public final class UserProfileServiceImpl implements UserProfileService {
             .filter(p -> p.profilePictureKey != null)
             .orElseThrow(
                 () -> new ProfilePictureNotFoundException("No profile picture found for user"));
+
+    Log.tracef("Fetching user profile picture for %", username);
 
     return new ProfilePictureDto(
         objectStorageService.getPresignedUrlForFile(profile.profilePictureKey).toString());
@@ -121,12 +127,16 @@ public final class UserProfileServiceImpl implements UserProfileService {
 
     userProfileRepository.persistAndFlush(newProfile);
 
+    Log.tracef("Created personal user profile for user %s", userId);
+    Log.infof("Created personal user profile for user %s", userId);
+
     return newProfile;
   }
 
   @Override
   public Optional<UserProfile> getPersonalUserProfile() {
     String userId = securityIdentity.getPrincipal().getName();
+    Log.tracef("Getting personal user profile for user %s", userId);
     return userProfileRepository.findByUsernameOptional(userId);
   }
 

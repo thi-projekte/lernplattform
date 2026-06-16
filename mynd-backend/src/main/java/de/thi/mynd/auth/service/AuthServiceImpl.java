@@ -34,6 +34,9 @@ public final class AuthServiceImpl implements AuthService {
 
   @Override
   public boolean checkUserIsBuilder(String username) {
+
+    Log.tracef("Checking if user %s is a builder", username);
+
     return identityService.getMyndRoles(username).stream()
         .anyMatch(r -> r.getName().equals("builder"));
   }
@@ -48,6 +51,7 @@ public final class AuthServiceImpl implements AuthService {
     userProfileService.updateUserProfile(userProfile);
 
     Log.infof("Successfully made user %s a builder", username);
+    Log.tracef("Successfully made user %s a builder", username);
   }
 
   @Override
@@ -61,9 +65,12 @@ public final class AuthServiceImpl implements AuthService {
     userProfileService.updateUserProfile(userProfile);
 
     Log.infof("Successfully made user %s a learner", username);
+    Log.tracef("Successfully made user %s a builder", username);
   }
 
   private UserProfile getUserProfileOfCurrentUser() {
+
+    Log.tracef("Fetching user profile of current user");
     return userProfileService
         .getPersonalUserProfile()
         .orElseGet(() -> userProfileService.createPersonalUserProfile());

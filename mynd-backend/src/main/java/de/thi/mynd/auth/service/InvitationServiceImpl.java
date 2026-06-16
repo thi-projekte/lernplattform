@@ -50,6 +50,7 @@ public final class InvitationServiceImpl implements InvitationService {
 
   @Override
   public InvitationDto getInvitation(UUID invitationId) {
+    Log.tracef("Loading invitation with ID %s", invitationId);
     Invitation invitation = getInvitationDefaultThrow(invitationId);
     return mappingRegistry.map(invitation, InvitationDto.class);
   }
@@ -57,6 +58,7 @@ public final class InvitationServiceImpl implements InvitationService {
   @Override
   public PaginationDto<InvitationDto> getSentInvitations(int page, int pageSize) {
     String creatorId = securityIdentity.getPrincipal().getName();
+    Log.tracef("Loading all sent invitations for user %s", creatorId);
     PaginationDto<Invitation> invitationPagination =
         invitationRepository.getInvitationsForCreatorPaginated(creatorId, page, pageSize);
 
@@ -71,6 +73,8 @@ public final class InvitationServiceImpl implements InvitationService {
     String creatorId = securityIdentity.getPrincipal().getName();
     long alreadySent = invitationRepository.getAmountInvitationsSubmittedPerUser(creatorId);
     UserProfile userProfile = getCurrentUsersProfile();
+
+    Log.tracef("Fetching personal invitation status for user %s", creatorId);
 
     return PersonalInvitationStatusDto.builder()
         .invitationsLeft(userProfile.invitationsLeft)
@@ -98,6 +102,8 @@ public final class InvitationServiceImpl implements InvitationService {
 
     Log.infof(
         "Successfully created invitation for email %s as user %s", email, userProfile.creatorId);
+    Log.tracef(
+            "Successfully created invitation for email %s as user %s", email, userProfile.creatorId);
 
     sendInvitationEmail(invitation);
   }
@@ -127,6 +133,7 @@ public final class InvitationServiceImpl implements InvitationService {
     identityService.addRolesToUser(creatorId, List.of("authorizedUser"));
 
     Log.infof("Redeemed invitation for user %s", creatorId);
+    Log.tracef("Redeemed invitation for user %s", creatorId);
   }
 
   private void sendInvitationEmail(Invitation invitation) {
@@ -140,6 +147,8 @@ public final class InvitationServiceImpl implements InvitationService {
                 frontendUri, invitation.id, invitation.redemptionSecret));
     genericEmailService.sendEmail(
         "invitation", "MYnd Invitation", List.of(invitation.mailSentTo), parameters);
+
+    Log.tracef("Sent invitation message to %s", invitation.mailSentTo);
   }
 
   private Invitation getInvitationDefaultThrow(UUID id) {
