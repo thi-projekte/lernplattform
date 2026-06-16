@@ -157,6 +157,7 @@
     },
     "notes": {
       "title": "Notizen",
+      "openSidebar": "Notizen",
       "placeholder": "Schreibe deine persönlichen Notizen zu diesem Thema…",
       "saving": "Speichern…",
       "saved": "Gespeichert",

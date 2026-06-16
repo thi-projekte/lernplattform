@@ -3,7 +3,9 @@ import { useEffect, useState, createElement } from 'react';
 import { useQueryTopic } from '../../api/topic.ts';
 import { Layout } from '../../components/layout.tsx';
 import {
+  ActionIcon,
   Badge,
+  Drawer,
   Group,
   Paper,
   Progress,
@@ -13,11 +15,12 @@ import {
   Text,
   ThemeIcon,
   Title,
+  Tooltip,
   UnstyledButton,
 } from '@mantine/core';
-import { IconLayoutList } from '@tabler/icons-react';
+import { IconLayoutList, IconNotes } from '@tabler/icons-react';
 import CategoryBadge from '../../components/category-badge.tsx';
-import { useMediaQuery } from '@mantine/hooks';
+import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import type { Category } from '../../schemas/topic.ts';
 import type { AnyContentElementDto } from '../../schemas/content-element.ts';
 import { useTranslation } from 'react-i18next';
@@ -54,6 +57,7 @@ const TopicDetailsPage = () => {
 
   const [selectedElement, setSelectedElement] = useState<AnyContentElementDto | null>(null);
   const [activeTab, setActiveTab] = useState<string | null>('visual');
+  const [notesOpened, { open: openNotes, close: closeNotes }] = useDisclosure(false);
 
   if (isLoading) {
     return <LayoutLoader />;
@@ -99,7 +103,22 @@ const TopicDetailsPage = () => {
       >
         {topic && (
           <Stack gap={6} mb="md">
-            <Title order={3}>{topic.title}</Title>
+            <Group justify="space-between" align="flex-start" wrap="nowrap" gap="sm">
+              <Title order={3}>{topic.title}</Title>
+              <Tooltip label={t('topic.notes.openSidebar')} withArrow>
+                <ActionIcon
+                  variant="filled"
+                  color="blue"
+                  size="lg"
+                  radius="md"
+                  onClick={openNotes}
+                  aria-label={t('topic.notes.openSidebar')}
+                  style={{ flexShrink: 0 }}
+                >
+                  <IconNotes size={18} />
+                </ActionIcon>
+              </Tooltip>
+            </Group>
             {topic.categories && topic.categories.length > 0 && (
               <Group gap={6}>
                 {topic.categories.map((cat: Category) => (
@@ -305,6 +324,18 @@ const TopicDetailsPage = () => {
           {activeTab === 'chat' && topicId && <TopicChat topicId={topicId} />}
         </Tabs.Panel>
       </Tabs>
+
+      {/* Notes available as a right-hand drawer, e.g. for taking notes while
+          watching a video on the Visual tab. */}
+      <Drawer
+        opened={notesOpened}
+        onClose={closeNotes}
+        position="right"
+        size={400}
+        overlayProps={{ backgroundOpacity: 0.3 }}
+      >
+        {topicId && <TopicNotes topicId={topicId} />}
+      </Drawer>
     </Layout>
   );
 };
