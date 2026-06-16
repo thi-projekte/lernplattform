@@ -280,7 +280,7 @@ class ChallengeServiceImplTest {
       List<ChallengeDto> expectedDtos =
           List.of(ChallengeDto.builder().build(), ChallengeDto.builder().build());
 
-      when(challengeRepository.findHistoryForUser(eq(USER_ID), any(LocalDate.class)))
+      when(challengeRepository.findHistoryForUser(eq(USER_ID), any(LocalDate.class), eq(100)))
           .thenReturn(mockChallenges);
       when(mappingRegistry.mapList(mockChallenges, ChallengeDto.class)).thenReturn(expectedDtos);
 
