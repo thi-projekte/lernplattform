@@ -8,11 +8,11 @@
  */
 package de.thi.mynd.chat.request;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
+import io.quarkus.runtime.annotations.RegisterForReflection;
+import lombok.Getter;
+import lombok.Setter;
 
-public enum SocketMessageType {
-  @JsonProperty("ping")
-  Ping,
-  @JsonProperty("chatMessage")
-  ChatMessage,
-}
+@RegisterForReflection
+@Getter
+@Setter
+public final class PingMessageRequest extends SocketMessage {}
