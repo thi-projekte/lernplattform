@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.progressTracking.service;
 
 import de.thi.mynd.common.processor.MappingRegistry;
@@ -48,6 +56,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
         learnProgressTopicRepository.findByTopicIdsAndCreatorIdContentElementsFetched(
             topicIds, creatorId);
 
+    Log.tracef("Mapping learn progress mappings for topic IDs");
+
     return topics.stream()
         .collect(
             Collectors.toMap(
@@ -65,6 +75,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
     if (progressTopicOptional.isEmpty()) {
       throw new TopicLearnProgressNotStartedException("This topic has not been started yet");
     }
+
+    Log.tracef("Loaded learn topic progress for topic %s", topicId);
 
     return mappingRegistry.map(progressTopicOptional.get(), TopicLearnProgressDto.class);
   }

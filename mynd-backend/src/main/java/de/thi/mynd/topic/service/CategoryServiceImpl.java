@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.processor.MappingRegistry;
@@ -25,6 +33,7 @@ public final class CategoryServiceImpl implements CategoryService {
 
   @Override
   public List<CategoryDto> searchMax5(String query) {
+    Log.tracef("Searching categories for query %s", query);
     if (query == null) {
       return mappingRegistry.mapList(categoryRepository.findAllWithLimit(5), CategoryDto.class);
     }
@@ -34,12 +43,14 @@ public final class CategoryServiceImpl implements CategoryService {
 
   @Override
   public List<Category> findByAssociatedEntities(List<AssociatedEntityRequest> entities) {
+    Log.tracef("Finding associated entities");
     List<UUID> ids = entities.stream().map((e) -> e.id).toList();
     return categoryRepository.findByIdsTypeSafe(ids);
   }
 
   @Override
   public List<CategoryTreeDto> getFullTree() {
+    Log.tracef("Loading full category tree");
     List<Category> sortedCategories = categoryRepository.fetchAllFlat();
     return mapToTree(sortedCategories);
   }
@@ -130,6 +141,8 @@ public final class CategoryServiceImpl implements CategoryService {
     category.topics.clear();
     categoryRepository.delete(category);
     categoryRepository.flush();
+
+    Log.infof("Deleted category %s", categoryId);
   }
 
   private List<CategoryTreeDto> mapToTree(List<Category> flat) {

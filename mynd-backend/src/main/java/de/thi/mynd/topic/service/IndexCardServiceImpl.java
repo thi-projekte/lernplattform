@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
@@ -29,6 +37,7 @@ public final class IndexCardServiceImpl implements IndexCardService {
 
   @Override
   public List<IndexCardDto> getIndexCardsForTopic(UUID topicId) {
+    Log.tracef("Loading index cards for topic %s", topicId);
     List<IndexCard> cards = indexCardRepository.findByTopicId(topicId);
     return mappingRegistry.mapList(cards, IndexCardDto.class);
   }
@@ -41,6 +50,8 @@ public final class IndexCardServiceImpl implements IndexCardService {
     card.answer = request.answer;
 
     indexCardRepository.persistAndFlush(card);
+
+    Log.infof("Created new index card");
 
     return mappingRegistry.map(card, IndexCardDto.class);
   }

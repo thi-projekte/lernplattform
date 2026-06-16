@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.progressTracking.repository;
 
 import de.thi.mynd.common.repository.MyndBaseRepository;
@@ -21,7 +29,12 @@ public final class ChallengeRepository extends MyndBaseRepository<Challenge> {
         .firstResultOptional();
   }
 
-  public List<Challenge> findHistoryForUser(String creatorId, LocalDate today) {
-    return find("creatorId = ?1 AND endDate < ?2 ORDER BY endDate DESC", creatorId, today).list();
+  public List<Challenge> findHistoryForUser(String creatorId, LocalDate today, int limit) {
+    return find(
+            "creatorId = ?1 AND endDate < ?2 ORDER BY endDate DESC LIMIT 100",
+            creatorId,
+            today,
+            limit)
+        .list();
   }
 }

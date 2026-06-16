@@ -1,9 +1,18 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.subscription.service;
 
 import de.thi.mynd.subscription.entity.Feature;
 import de.thi.mynd.subscription.entity.FeatureQuota;
 import de.thi.mynd.subscription.entity.FeatureQuotaId;
 import de.thi.mynd.subscription.repository.FeatureQuotaRepository;
+import io.quarkus.logging.Log;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
@@ -44,6 +53,8 @@ public abstract class AbstractFeatureQuotaServiceImpl {
 
       featureQuotaRepository.persistAndFlush(featureQuota);
 
+      Log.infof("Updated feature quota %s for user %s", feature.name(), userId);
+
       return featureQuota;
     }
 
@@ -54,6 +65,8 @@ public abstract class AbstractFeatureQuotaServiceImpl {
     featureQuota.id = id;
     featureQuota.dayAccountedFor = date;
     featureQuotaRepository.persistAndFlush(featureQuota);
+
+    Log.infof("Created feature quota %s for user %s", feature.name(), userId);
 
     return featureQuota;
   }

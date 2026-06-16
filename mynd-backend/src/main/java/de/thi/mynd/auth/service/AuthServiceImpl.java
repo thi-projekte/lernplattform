@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.auth.service;
 
 import de.thi.mynd.auth.entity.UserProfile;
@@ -25,6 +33,9 @@ public final class AuthServiceImpl implements AuthService {
 
   @Override
   public boolean checkUserIsBuilder(String username) {
+
+    Log.tracef("Checking if user %s is a builder", username);
+
     return identityService.getMyndRoles(username).stream()
         .anyMatch(r -> r.getName().equals("builder"));
   }
@@ -55,6 +66,8 @@ public final class AuthServiceImpl implements AuthService {
   }
 
   private UserProfile getUserProfileOfCurrentUser() {
+
+    Log.tracef("Fetching user profile of current user");
     return userProfileService
         .getPersonalUserProfile()
         .orElseGet(() -> userProfileService.createPersonalUserProfile());

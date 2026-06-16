@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.progressTracking.service;
 
 import de.thi.mynd.auth.entity.UserProfile;
@@ -7,6 +15,7 @@ import de.thi.mynd.progressTracking.dto.ChallengeDto;
 import de.thi.mynd.progressTracking.entity.Challenge;
 import de.thi.mynd.progressTracking.entity.ChallengeType;
 import de.thi.mynd.progressTracking.repository.ChallengeRepository;
+import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -44,6 +53,8 @@ public final class ChallengeServiceImpl implements ChallengeService {
         challengeRepository
             .findCurrentForUser(creatorId, ChallengeType.WEEKLY, today)
             .orElseGet(() -> createWeeklyChallenge(creatorId, today));
+
+    Log.tracef("Loading current challenge for user %s", creatorId);
     return mappingRegistry.map(challenge, ChallengeDto.class);
   }
 
@@ -57,10 +68,15 @@ public final class ChallengeServiceImpl implements ChallengeService {
             .findCurrentForUser(creatorId, ChallengeType.WEEKLY, today)
             .orElseGet(() -> createWeeklyChallenge(creatorId, today));
 
+    Log.infof("Increased current challenge count by 1 for challenge %s", challenge.id);
+    Log.tracef("Increased current challenge count by 1 for challenge %s", challenge.id);
+
     if (!challenge.completed) {
       challenge.currentCount++;
       if (challenge.currentCount >= challenge.targetCount) {
         challenge.completed = true;
+        Log.infof("Completed challenge %s", challenge.id);
+        Log.tracef("Completed challenge %s", challenge.id);
       }
       challengeRepository.persistAndFlush(challenge);
     }
@@ -81,13 +97,18 @@ public final class ChallengeServiceImpl implements ChallengeService {
     profile.invitationsLeft += rewardInvitations;
     userProfileService.updateUserProfile(profile);
 
+    Log.infof("Claimed reward for challenge %s", challengeId);
+    Log.tracef("Claimed reward for challenge %s", challengeId);
+
     return mappingRegistry.map(challenge, ChallengeDto.class);
   }
 
   @Override
   public List<ChallengeDto> getChallengeHistory() {
     String creatorId = identity.getPrincipal().getName();
-    List<Challenge> challenges = challengeRepository.findHistoryForUser(creatorId, LocalDate.now());
+    List<Challenge> challenges =
+        challengeRepository.findHistoryForUser(creatorId, LocalDate.now(), 100);
+    Log.tracef("Loading challenge history for user %s", creatorId);
     return mappingRegistry.mapList(challenges, ChallengeDto.class);
   }
 
@@ -114,6 +135,9 @@ public final class ChallengeServiceImpl implements ChallengeService {
     challenge.endDate = start.plusDays(6);
     challenge.targetCount = weeklyTarget;
     challengeRepository.persistAndFlush(challenge);
+
+    Log.tracef("Creating weekly challenge for user %s", creatorId);
+
     return challenge;
   }
 }

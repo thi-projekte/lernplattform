@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.progressTracking.service;
 
 import de.thi.mynd.common.entity.CreatorIdKey;
@@ -38,6 +46,7 @@ public final class StreakServiceImpl implements StreakService {
   @Override
   public List<StreakDto> getLatestStreaksForCurrentUser() {
     String creatorId = identity.getPrincipal().getName();
+    Log.tracef("Getting latest streaks for user %s", creatorId);
     List<Streak> latestStreaks = streakRepository.findNotEndedByCreatorId(creatorId);
 
     endStreaksIfNotActiveAnymore(latestStreaks);
@@ -57,6 +66,7 @@ public final class StreakServiceImpl implements StreakService {
     }
 
     Streak streak = streakOptional.get();
+    Log.tracef("Getting latest streak for user %s", creatorId);
     return mappingRegistry.map(streak, StreakDto.class);
   }
 
@@ -137,6 +147,7 @@ public final class StreakServiceImpl implements StreakService {
 
   @Override
   public boolean isStreakActive(Streak streak) {
+    Log.tracef("Checking if streak %s is active", streak.id);
     if (streak.endedAt != null) {
       return false;
     }
@@ -164,6 +175,7 @@ public final class StreakServiceImpl implements StreakService {
 
   @Override
   public boolean isStreakSatisfied(Streak streak) {
+    Log.tracef("Checking if streak %s is satisfied", streak.id);
     if (streak.endedAt != null) {
       return false;
     }
