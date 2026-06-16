@@ -99,7 +99,7 @@ const TopicChat = ({ topicId }: TopicChatProps) => {
   const currentUsername = userService.account.username?.toLowerCase();
 
   const { data: history, isLoading, refetch } = useQueryChatHistory(topicId);
-  const { messages, status, sendMessage, seedHistory } = useTopicChat(topicId);
+  const { messages, status, sendMessage, seedHistory, sendPing } = useTopicChat(topicId);
   const [draft, setDraft] = useState('');
   const viewportRef = useRef<HTMLDivElement>(null);
   const hasOpenedRef = useRef(false);
@@ -110,6 +110,12 @@ const TopicChat = ({ topicId }: TopicChatProps) => {
       seedHistory([...history.results].reverse());
     }
   }, [history, seedHistory]);
+
+  useEffect(() => {
+    const interval = setInterval(() => sendPing(), 15000);
+
+    return () => clearInterval(interval);
+  }, [sendPing]);
 
   // The socket drops while idle (no server-side keep-alive). On every RE-connect
   // refetch the history to pull in messages missed while disconnected. The first
