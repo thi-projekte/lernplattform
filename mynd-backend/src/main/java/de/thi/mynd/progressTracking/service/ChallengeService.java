@@ -20,6 +20,5 @@ public interface ChallengeService {
 
   ChallengeDto claimReward(UUID challengeId);
 
-  // TODO: For the future maybe paginate this
   List<ChallengeDto> getChallengeHistory();
 }
