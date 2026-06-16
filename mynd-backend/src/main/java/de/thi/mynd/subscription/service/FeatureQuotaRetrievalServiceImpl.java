@@ -13,6 +13,7 @@ import de.thi.mynd.subscription.StripeFeatureFlagConstants;
 import de.thi.mynd.subscription.entity.Feature;
 import de.thi.mynd.subscription.entity.FeatureQuota;
 import de.thi.mynd.subscription.entity.Subscription;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import java.time.LocalDate;
 
@@ -22,6 +23,9 @@ public final class FeatureQuotaRetrievalServiceImpl extends AbstractFeatureQuota
 
   @Override
   public boolean canLearn(String userId) {
+
+    Log.tracef("Checking if user can learn more for user %s", userId);
+
     FeatureQuota featureQuota =
         findOrUpdateOrCreateDefaultQuota(
             userId, Feature.LearnContentElementOrTopic, LocalDate.now());
@@ -33,6 +37,7 @@ public final class FeatureQuotaRetrievalServiceImpl extends AbstractFeatureQuota
 
   @Override
   public boolean canStartNewTopic(String userId) {
+    Log.tracef("Checking if user can start more topics for user %s", userId);
     FeatureQuota featureQuota = findOrUpdateOrCreateDefaultQuota(userId, Feature.StartTopic, null);
     Subscription subscription = subscriptionService.getSubscriptionForUser(userId);
 

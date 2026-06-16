@@ -17,6 +17,7 @@ import de.thi.mynd.subscription.dto.StripeSessionDto;
 import de.thi.mynd.subscription.entity.Subscription;
 import de.thi.mynd.subscription.entity.SubscriptionStatus;
 import de.thi.mynd.subscription.exception.CannotUpgradeSubscriptionException;
+import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -42,6 +43,8 @@ public final class PaymentServiceImpl implements PaymentService {
         stripeService.createCheckoutSessionForSubscriptionPrice(
             priceId, subscription.stripeCustomerId);
 
+    Log.infof("Created initial subscription session for customer %s with price %s", subscription.stripeCustomerId, priceId);
+
     return mappingRegistry.map(session, StripeSessionDto.class);
   }
 
@@ -49,6 +52,8 @@ public final class PaymentServiceImpl implements PaymentService {
   public List<ProductDto> getAllProducts() {
     Subscription subscription = subscriptionService.getSubscriptionForCurrentUser();
     List<Product> products = stripeService.getAllProductsWithPricesAndMetaData();
+
+    Log.tracef("Loading all products from stripe");
 
     return mappingRegistry.mapList(products, ProductDto.class, subscription.usedTrial);
   }
@@ -64,6 +69,8 @@ public final class PaymentServiceImpl implements PaymentService {
     subscriptionService.setTrialUsed(subscription.id);
 
     stripeService.createTrialForPriceId(priceId, subscription.stripeCustomerId);
+
+    Log.infof("Created trial subscription for price %s for user %s", priceId, subscription.stripeCustomerId);
   }
 
   private Subscription obtainSubscription() {
@@ -79,6 +86,7 @@ public final class PaymentServiceImpl implements PaymentService {
       String customerId = stripeService.getOrCreateCustomer(creatorId).getId();
       subscription = subscriptionService.updateCustomerId(subscription, customerId);
     }
+    Log.tracef("Obtaining current subscription for user %s", creatorId);
     return subscription;
   }
 }

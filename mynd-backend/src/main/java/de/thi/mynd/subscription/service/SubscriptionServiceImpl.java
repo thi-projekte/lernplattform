@@ -38,6 +38,7 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
 
   @Override
   public Subscription getSubscriptionForCurrentUser() {
+    Log.tracef("Get subscription for current user");
     return getSubscriptionForUser(identity.getPrincipal().getName());
   }
 
@@ -45,6 +46,8 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
   public Subscription getSubscriptionForUser(String userId) {
     CreatorIdKey id = new CreatorIdKey();
     id.creatorId = userId;
+
+    Log.tracef("Get subscription for user %s", userId);
 
     return subscriptionRepository
         .findByIdOptional(id)
@@ -84,6 +87,8 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     merged.stripeCustomerId = customerId;
     subscriptionRepository.persistAndFlush(merged);
 
+    Log.infof("Update customer id to %s for subscription %s", customerId, subscription.id);
+
     return merged;
   }
 
@@ -94,6 +99,8 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
       throw new CannotUpgradeSubscriptionException(
           "There is no customer registered for this subscription");
     }
+
+    Log.infof("Create billing portal session");
 
     return mappingRegistry.map(
         stripeService.createBillingPortalSession(subscription.stripeCustomerId),
@@ -115,6 +122,8 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     subscription.subscriptionStatus = status;
 
     subscriptionRepository.persistAndFlush(subscription);
+
+    Log.infof("Updated subscription status for subscription %s to %s", stripeSubscriptionId, status.name());
   }
 
   @Override
@@ -133,6 +142,8 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     subscription.subscriptionStatus = status;
 
     subscriptionRepository.persistAndFlush(subscription);
+
+    Log.infof("Set subscription ID %s and customer id %s", subscriptionId, customerId);
   }
 
   @Override
@@ -147,5 +158,7 @@ public final class SubscriptionServiceImpl implements SubscriptionService {
     subscription.usedTrial = true;
 
     subscriptionRepository.persistAndFlush(subscription);
+
+    Log.infof("Setting trial used for subscription of user %s", id.creatorId);
   }
 }

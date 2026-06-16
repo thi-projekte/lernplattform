@@ -35,7 +35,7 @@ public final class StripeServiceImpl implements StripeService {
 
   @Override
   public List<Product> getAllProductsWithPricesAndMetaData() {
-
+    Log.tracef("Loading all products from stripe with metadata");
     ProductListParams params =
         ProductListParams.builder().setActive(true).addExpand("data.marketing_features").build();
 
@@ -50,6 +50,7 @@ public final class StripeServiceImpl implements StripeService {
   @Override
   public Product getFullProductById(String productId) {
     try {
+      Log.tracef("Loading product %s from stripe", productId);
       return stripeClient.v1().products().retrieve(productId);
     } catch (StripeException e) {
       Log.error(e.getMessage());
@@ -59,6 +60,7 @@ public final class StripeServiceImpl implements StripeService {
 
   @Override
   public List<Price> getAllPricesForProduct(String productId) {
+    Log.tracef("Loading all stripe prices for product %s", productId);
     PriceListParams params =
         PriceListParams.builder().setProduct(productId).setActive(true).build();
 
@@ -73,6 +75,7 @@ public final class StripeServiceImpl implements StripeService {
 
   @Override
   public Session createCheckoutSessionForSubscriptionPrice(String priceId, String userId) {
+    Log.tracef("Create stripe checkout session for price %s for user %s", priceId, userId);
     SessionCreateParams.Builder paramsBuilder =
         SessionCreateParams.builder()
             .setSuccessUrl(getSuccessUrl())
@@ -93,6 +96,7 @@ public final class StripeServiceImpl implements StripeService {
 
   @Override
   public com.stripe.model.billingportal.Session createBillingPortalSession(String customerId) {
+    Log.tracef("Creating billing portal session for customer %s", customerId);
     com.stripe.param.billingportal.SessionCreateParams params =
         com.stripe.param.billingportal.SessionCreateParams.builder()
             .setCustomer(customerId)
@@ -109,6 +113,7 @@ public final class StripeServiceImpl implements StripeService {
 
   @Override
   public Customer getOrCreateCustomer(String username) {
+    Log.infof("Get or create customer for user %s", username);
     String query = String.format("name:\"%s\"", username);
     CustomerSearchParams searchParams = CustomerSearchParams.builder().setQuery(query).build();
 
@@ -131,6 +136,7 @@ public final class StripeServiceImpl implements StripeService {
 
   @Override
   public Subscription createTrialForPriceId(String priceId, String customerId) {
+    Log.tracef("Creating stripe trial for price %s and customer %s", priceId, customerId);
     SubscriptionCreateParams params =
         SubscriptionCreateParams.builder()
             .setCustomer(customerId)
@@ -149,6 +155,7 @@ public final class StripeServiceImpl implements StripeService {
 
   @Override
   public List<ProductFeature> getProductFeatures(String productId) {
+    Log.tracef("Loading product features for product %s", productId);
     try {
       return stripeClient.v1().products().features().list(productId).getData();
     } catch (StripeException e) {
