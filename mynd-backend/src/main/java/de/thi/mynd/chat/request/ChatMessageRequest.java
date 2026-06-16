@@ -8,7 +8,7 @@ import lombok.Setter;
 @RegisterForReflection
 @Getter
 @Setter
-public final class ChatMessageRequest {
+public final class ChatMessageRequest extends SocketMessage {
 
   @NotBlank String message;
 }

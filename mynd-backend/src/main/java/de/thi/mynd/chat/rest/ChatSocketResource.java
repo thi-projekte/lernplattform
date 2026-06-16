@@ -2,6 +2,8 @@ package de.thi.mynd.chat.rest;
 
 import de.thi.mynd.chat.dto.ChatMessageDto;
 import de.thi.mynd.chat.request.ChatMessageRequest;
+import de.thi.mynd.chat.request.SocketMessage;
+import de.thi.mynd.chat.request.SocketMessageType;
 import de.thi.mynd.chat.service.ChatMessageService;
 import io.quarkus.oidc.BearerTokenAuthentication;
 import io.quarkus.security.ForbiddenException;
@@ -23,11 +25,18 @@ public final class ChatSocketResource {
   @Inject ChatMessageService chatMessageService;
 
   @RolesAllowed("authorizedUser")
-  @OnTextMessage(broadcast = true)
-  public ChatMessageDto onMessage(@Valid ChatMessageRequest request) {
+  @OnTextMessage
+  public void onMessage(@Valid SocketMessage msg) {
 
-    UUID topicId = UUID.fromString(connection.pathParam("topicId"));
-    return chatMessageService.sendMessageToTopic(topicId, request);
+    if (msg.getType() == SocketMessageType.Ping) {
+      return;
+    }
+
+    if (msg.getType() == SocketMessageType.ChatMessage && msg instanceof ChatMessageRequest request) {
+      UUID topicId = UUID.fromString(connection.pathParam("topicId"));
+      ChatMessageDto dto =  chatMessageService.sendMessageToTopic(topicId, request);
+      connection.broadcast().sendText(dto);
+    }
   }
 
   @OnError
