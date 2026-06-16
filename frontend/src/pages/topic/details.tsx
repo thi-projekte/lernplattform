@@ -3,9 +3,7 @@ import { useEffect, useState, createElement } from 'react';
 import { useQueryTopic } from '../../api/topic.ts';
 import { Layout } from '../../components/layout.tsx';
 import {
-  ActionIcon,
   Badge,
-  Divider,
   Group,
   Paper,
   Progress,
@@ -15,10 +13,9 @@ import {
   Text,
   ThemeIcon,
   Title,
-  Tooltip,
   UnstyledButton,
 } from '@mantine/core';
-import { IconInfoCircle, IconLayoutList } from '@tabler/icons-react';
+import { IconLayoutList } from '@tabler/icons-react';
 import CategoryBadge from '../../components/category-badge.tsx';
 import { useMediaQuery } from '@mantine/hooks';
 import type { Category } from '../../schemas/topic.ts';
@@ -280,23 +277,6 @@ const TopicDetailsPage = () => {
               }}
             >
               <Stack gap="md">
-                {selectedElement && topic && (
-                  <>
-                    <Group justify="flex-end">
-                      <Tooltip label={t('topic.actions.overview')} withArrow>
-                        <ActionIcon
-                          variant="subtle"
-                          color="gray"
-                          size="lg"
-                          onClick={() => setSelectedElement(null)}
-                        >
-                          <IconInfoCircle size={20} />
-                        </ActionIcon>
-                      </Tooltip>
-                    </Group>
-                    <Divider />
-                  </>
-                )}
                 {selectedElement ? (
                   <ContentSidebarContent
                     selectedElement={selectedElement}
