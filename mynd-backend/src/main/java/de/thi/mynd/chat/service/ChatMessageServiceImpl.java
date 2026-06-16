@@ -15,6 +15,7 @@ import de.thi.mynd.chat.repository.ChatMessageRepository;
 import de.thi.mynd.chat.request.ChatMessageRequest;
 import de.thi.mynd.common.dto.PaginationDto;
 import de.thi.mynd.common.processor.MappingRegistry;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
@@ -37,6 +38,9 @@ public final class ChatMessageServiceImpl implements ChatMessageService {
 
     chatMessageRepository.persistAndFlush(message);
 
+    Log.infof("Created new chat message in topic %s", topicId);
+    Log.tracef("Created new chat message in topic %s", topicId);
+
     return mappingRegistry.map(message, ChatMessageDto.class);
   }
 
@@ -46,6 +50,8 @@ public final class ChatMessageServiceImpl implements ChatMessageService {
         chatMessageRepository.getChatMessagesPaginated(topicId, page, pageSize);
 
     List<ChatMessageDto> mapped = mappingRegistry.mapList(messages.results, ChatMessageDto.class);
+
+    Log.tracef("Loading chat messages for topic %s page %d size %d", topicId, page, pageSize);
 
     return PaginationDto.<ChatMessageDto>builder()
         .results(mapped)
