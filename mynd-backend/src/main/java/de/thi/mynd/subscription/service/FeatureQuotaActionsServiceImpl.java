@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.subscription.service;
 
 import de.thi.mynd.subscription.StripeFeatureFlagConstants;
@@ -5,6 +13,7 @@ import de.thi.mynd.subscription.entity.Feature;
 import de.thi.mynd.subscription.entity.FeatureQuota;
 import de.thi.mynd.subscription.entity.Subscription;
 import de.thi.mynd.subscription.exception.FeatureQuotaHitException;
+import io.quarkus.logging.Log;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
@@ -28,6 +37,8 @@ public final class FeatureQuotaActionsServiceImpl extends AbstractFeatureQuotaSe
       throw new FeatureQuotaHitException("You cannot learn more content elements today");
     }
     featureQuotaRepository.persistAndFlush(featureQuota);
+
+    Log.infof("Registered content element learn action for feature quota for user %s", userId);
   }
 
   @Override
@@ -38,6 +49,8 @@ public final class FeatureQuotaActionsServiceImpl extends AbstractFeatureQuotaSe
       featureQuota.count--;
       featureQuotaRepository.persistAndFlush(featureQuota);
     }
+
+    Log.infof("Added feature quota usage for topic completion for user %s", userId);
   }
 
   @Override
@@ -53,5 +66,7 @@ public final class FeatureQuotaActionsServiceImpl extends AbstractFeatureQuotaSe
       throw new FeatureQuotaHitException("You cannot have that many topics running in parallel");
     }
     featureQuotaRepository.persistAndFlush(featureQuota);
+
+    Log.infof("Added feature quota usage for topic learning start for user %s", userId);
   }
 }

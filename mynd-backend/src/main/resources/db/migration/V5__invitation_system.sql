@@ -1,3 +1,12 @@
+/*
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * Copyright (c) 2026 THI Projekte
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 ALTER TABLE user_profile ADD COLUMN invitationsLeft INTEGER NOT NULL DEFAULT 0;
 
 CREATE TABLE invitation (

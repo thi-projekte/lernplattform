@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.topic.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -32,6 +40,7 @@ public final class ImportServiceImpl implements ImportService {
   @Override
   @Transactional
   public void importFull(FullImportDto dto, boolean backendMode) {
+    Log.infof("Performing full import");
     ImportContext ctx = new ImportContext(backendMode);
     ctx = doImportTopics(dto.getTopics(), ctx);
     doImportAssociations(dto.getAssociations(), ctx);
@@ -65,8 +74,6 @@ public final class ImportServiceImpl implements ImportService {
       category.creatorId = creatorId;
       category.title = model.getTitle();
       category.color = model.getColor();
-
-      // TODO: Add checks here later.
 
       categoryRepository.persist(category);
 
