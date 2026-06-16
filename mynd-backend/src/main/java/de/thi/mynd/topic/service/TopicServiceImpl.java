@@ -6,7 +6,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.dto.PaginationDto;
@@ -46,7 +45,9 @@ public final class TopicServiceImpl implements TopicService {
 
   @Override
   public PaginationDto<ListTopicDto> findPersonalTopicsPaginated(int page, int pageSize) {
-    Log.tracef("Finding personal topics for user %s at oage %d with size %d", identity.getPrincipal().getName(), page, pageSize);
+    Log.tracef(
+        "Finding personal topics for user %s at oage %d with size %d",
+        identity.getPrincipal().getName(), page, pageSize);
     PaginationDto<Topic> paginatedTopics =
         topicRepository.findForCreatorPaginated(identity.getPrincipal().getName(), page, pageSize);
 

@@ -6,7 +6,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 package de.thi.mynd.progressTracking.mapper;
 
 import de.thi.mynd.common.processor.AbstractMappingProcessor;

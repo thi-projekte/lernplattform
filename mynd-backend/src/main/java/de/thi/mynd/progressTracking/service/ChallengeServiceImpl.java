@@ -6,7 +6,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 package de.thi.mynd.progressTracking.service;
 
 import de.thi.mynd.auth.entity.UserProfile;
@@ -107,7 +106,8 @@ public final class ChallengeServiceImpl implements ChallengeService {
   @Override
   public List<ChallengeDto> getChallengeHistory() {
     String creatorId = identity.getPrincipal().getName();
-    List<Challenge> challenges = challengeRepository.findHistoryForUser(creatorId, LocalDate.now(), 100);
+    List<Challenge> challenges =
+        challengeRepository.findHistoryForUser(creatorId, LocalDate.now(), 100);
     Log.tracef("Loading challenge history for user %s", creatorId);
     return mappingRegistry.mapList(challenges, ChallengeDto.class);
   }

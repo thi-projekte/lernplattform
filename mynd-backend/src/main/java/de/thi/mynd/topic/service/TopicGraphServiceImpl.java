@@ -6,7 +6,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
@@ -85,7 +84,9 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
   @Override
   public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
       int n, String creatorId) {
-    Log.tracef("Loading %d most popular topics in graph and their direct neighbors for user %s", n, creatorId);
+    Log.tracef(
+        "Loading %d most popular topics in graph and their direct neighbors for user %s",
+        n, creatorId);
     List<Topic> topics = topicGraphRepository.findNMostPopular(n, creatorId);
 
     return getGraphTopicDtosWithOwnedNeighbors(topics);
@@ -94,7 +95,9 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
   @Override
   public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
       int n, List<UUID> categoryFilter, String creatorId) {
-    Log.tracef("Loading %d most popular topics in graph and their direct neighbors for user %s", n, creatorId);
+    Log.tracef(
+        "Loading %d most popular topics in graph and their direct neighbors for user %s",
+        n, creatorId);
     List<Topic> topics =
         topicGraphRepository.findNMostPopularFilterByCategoryIds(n, categoryFilter, creatorId);
 

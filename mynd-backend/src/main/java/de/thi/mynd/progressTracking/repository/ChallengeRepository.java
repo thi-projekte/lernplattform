@@ -6,7 +6,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 package de.thi.mynd.progressTracking.repository;
 
 import de.thi.mynd.common.repository.MyndBaseRepository;
@@ -31,6 +30,11 @@ public final class ChallengeRepository extends MyndBaseRepository<Challenge> {
   }
 
   public List<Challenge> findHistoryForUser(String creatorId, LocalDate today, int limit) {
-    return find("creatorId = ?1 AND endDate < ?2 ORDER BY endDate DESC LIMIT 100", creatorId, today, limit).list();
+    return find(
+            "creatorId = ?1 AND endDate < ?2 ORDER BY endDate DESC LIMIT 100",
+            creatorId,
+            today,
+            limit)
+        .list();
   }
 }

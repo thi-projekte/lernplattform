@@ -6,7 +6,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 package de.thi.mynd.subscription.service;
 
 import com.stripe.model.Product;
@@ -43,7 +42,9 @@ public final class PaymentServiceImpl implements PaymentService {
         stripeService.createCheckoutSessionForSubscriptionPrice(
             priceId, subscription.stripeCustomerId);
 
-    Log.infof("Created initial subscription session for customer %s with price %s", subscription.stripeCustomerId, priceId);
+    Log.infof(
+        "Created initial subscription session for customer %s with price %s",
+        subscription.stripeCustomerId, priceId);
 
     return mappingRegistry.map(session, StripeSessionDto.class);
   }
@@ -70,7 +71,9 @@ public final class PaymentServiceImpl implements PaymentService {
 
     stripeService.createTrialForPriceId(priceId, subscription.stripeCustomerId);
 
-    Log.infof("Created trial subscription for price %s for user %s", priceId, subscription.stripeCustomerId);
+    Log.infof(
+        "Created trial subscription for price %s for user %s",
+        priceId, subscription.stripeCustomerId);
   }
 
   private Subscription obtainSubscription() {
