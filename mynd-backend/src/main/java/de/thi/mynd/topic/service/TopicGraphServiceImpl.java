@@ -16,6 +16,7 @@ import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.repository.TopicGraphRepository;
 import de.thi.mynd.topic.repository.TopicRepository;
+import io.quarkus.logging.Log;
 import io.quarkus.security.identity.SecurityIdentity;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -38,6 +39,7 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
   @Override
   public List<GraphTopicDto> getLearnGraph() {
     String creatorId = identity.getPrincipal().getName();
+    Log.tracef("Fetching learn graph for user %s", creatorId);
 
     List<UUID> lastLearnedTopicIds =
         learnProgressService.getLastNUncompletedTopicsForUser(10, creatorId);
@@ -62,6 +64,7 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
   @Override
   public List<GraphTopicDto> getNeighborsOfTopic(UUID topicId)
       throws EntityInstanceNotFoundException {
+    Log.tracef("Loading neighbors for topic", topicId);
     Optional<Topic> topicOptional = topicRepository.findByIdOptional(topicId);
 
     if (topicOptional.isEmpty()) {
@@ -82,6 +85,7 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
   @Override
   public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
       int n, String creatorId) {
+    Log.tracef("Loading %d most popular topics in graph and their direct neighbors for user %s", n, creatorId);
     List<Topic> topics = topicGraphRepository.findNMostPopular(n, creatorId);
 
     return getGraphTopicDtosWithOwnedNeighbors(topics);
@@ -90,6 +94,7 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
   @Override
   public List<GraphTopicDto> getNMostPopularTopicsInGraphAndTheirDirectNeighbors(
       int n, List<UUID> categoryFilter, String creatorId) {
+    Log.tracef("Loading %d most popular topics in graph and their direct neighbors for user %s", n, creatorId);
     List<Topic> topics =
         topicGraphRepository.findNMostPopularFilterByCategoryIds(n, categoryFilter, creatorId);
 
@@ -99,6 +104,7 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
   @Override
   public List<GraphTopicDto> getOwnedNeighborsOfTopic(UUID topicId)
       throws EntityInstanceNotFoundException {
+    Log.tracef("Loading topic dtos for neighbors of topic %s", topicId);
     Optional<Topic> topicOptional = topicRepository.findByIdOptional(topicId);
 
     if (topicOptional.isEmpty()) {
@@ -114,6 +120,7 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
 
   @Override
   public List<GraphTopicDto> searchTopicNodes(String search, int limit) {
+    Log.tracef("Searching topic nodes for %s with limit %s", search, limit);
     List<Topic> topics = topicRepository.findBySearch(search, limit);
 
     return mappingRegistry.mapListWithAdditionalData(topics, GraphTopicDto.class);

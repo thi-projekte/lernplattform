@@ -40,6 +40,7 @@ public final class TopicAssociationServiceImpl implements TopicAssociationServic
   @Override
   public List<TopicAssociation> findOrCreateOwningTopicAssociationsOwnedByUserNoFlush(
       Topic topic, List<AssociatedEntityRequest> associatedTopics, String username) {
+    Log.tracef("Finding and creating topic associations for topicId %s and user %s based in provided topics", topic.id, username);
 
     List<UUID> desiredTopics = getIdsFromAssociatedEntities(associatedTopics);
 

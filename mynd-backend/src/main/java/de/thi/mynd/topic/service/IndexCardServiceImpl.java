@@ -38,6 +38,7 @@ public final class IndexCardServiceImpl implements IndexCardService {
 
   @Override
   public List<IndexCardDto> getIndexCardsForTopic(UUID topicId) {
+    Log.tracef("Loading index cards for topic %s", topicId);
     List<IndexCard> cards = indexCardRepository.findByTopicId(topicId);
     return mappingRegistry.mapList(cards, IndexCardDto.class);
   }
@@ -50,6 +51,8 @@ public final class IndexCardServiceImpl implements IndexCardService {
     card.answer = request.answer;
 
     indexCardRepository.persistAndFlush(card);
+
+    Log.infof("Created new index card");
 
     return mappingRegistry.map(card, IndexCardDto.class);
   }

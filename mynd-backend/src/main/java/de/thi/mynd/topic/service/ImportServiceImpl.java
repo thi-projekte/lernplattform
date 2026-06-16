@@ -41,6 +41,7 @@ public final class ImportServiceImpl implements ImportService {
   @Override
   @Transactional
   public void importFull(FullImportDto dto, boolean backendMode) {
+    Log.infof("Performing full import");
     ImportContext ctx = new ImportContext(backendMode);
     ctx = doImportTopics(dto.getTopics(), ctx);
     doImportAssociations(dto.getAssociations(), ctx);
