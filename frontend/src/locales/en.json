@@ -236,7 +236,10 @@
       "previous": "Previous",
       "next": "Next",
       "showAnswerHint": "Click to reveal the answer",
-      "showQuestionHint": "Click to show the question"
+      "showQuestionHint": "Click to show the question",
+      "celebrationTitle": "Congratulations!",
+      "celebrationMessage": "You have mastered all the questions.",
+      "celebrationClose": "Continue"
     },
     "contentElementType": {
       "label": "Type",

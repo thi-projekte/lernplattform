@@ -1,6 +1,12 @@
-import { useState } from 'react';
-import { Badge, Box, Button, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
-import { IconBulb, IconChevronLeft, IconChevronRight, IconQuestionMark } from '@tabler/icons-react';
+import { useEffect, useRef, useState } from 'react';
+import { Badge, Box, Button, Group, Modal, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import {
+  IconBulb,
+  IconChevronLeft,
+  IconChevronRight,
+  IconQuestionMark,
+  IconSparkles,
+} from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { IndexCardDto } from '../../schemas/topic.ts';
 import classes from './quiz-view.module.css';
@@ -15,6 +21,18 @@ const QuizView = ({ indexCards }: QuizViewProps) => {
   const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
+  // Distinct cards the learner has already viewed (kept in a ref since it only drives the trigger).
+  const visitedIds = useRef<Set<string>>(new Set());
+  const [celebrationOpen, setCelebrationOpen] = useState(false);
+  // The celebration is shown only once per quiz session.
+  const celebrationShown = useRef(false);
+
+  // Count the initially shown card as visited so a full pass covers every card.
+  useEffect(() => {
+    if (indexCards.length > 0) {
+      visitedIds.current.add(indexCards[0].id ?? '0');
+    }
+  }, [indexCards]);
 
   if (indexCards.length === 0) {
     return (
@@ -27,11 +45,21 @@ const QuizView = ({ indexCards }: QuizViewProps) => {
   const total = indexCards.length;
   const index = Math.min(current, total - 1);
   const card = indexCards[index];
+  const cardKey = (cardIndex: number) => indexCards[cardIndex]?.id ?? String(cardIndex);
 
   const goTo = (next: number) => {
+    const target = (next + total) % total;
     setShowAnswer(false);
-    setCurrent((next + total) % total);
+    setCurrent(target);
+
+    visitedIds.current.add(cardKey(target));
+    // Once the learner has gone through every card, congratulate them – once.
+    if (!celebrationShown.current && visitedIds.current.size >= total) {
+      celebrationShown.current = true;
+      setCelebrationOpen(true);
+    }
   };
+
   const flip = () => setShowAnswer((value) => !value);
 
   return (
@@ -131,6 +159,28 @@ const QuizView = ({ indexCards }: QuizViewProps) => {
           {t('topic.quiz.next')}
         </Button>
       </Group>
+
+      <Modal
+        opened={celebrationOpen}
+        onClose={() => setCelebrationOpen(false)}
+        centered
+        withCloseButton={false}
+        radius="lg"
+        size="sm"
+        padding="xl"
+        overlayProps={{ backgroundOpacity: 0.6, blur: 4 }}
+      >
+        <Stack align="center" justify="center" gap="md" w="100%" ta="center">
+          <ThemeIcon variant="light" color="yellow" radius="xl" size={64}>
+            <IconSparkles size={36} />
+          </ThemeIcon>
+          <Title order={3}>{t('topic.quiz.celebrationTitle')}</Title>
+          <Text c="dimmed">{t('topic.quiz.celebrationMessage')}</Text>
+          <Button radius="xl" size="md" mt="xs" onClick={() => setCelebrationOpen(false)}>
+            {t('topic.quiz.celebrationClose')}
+          </Button>
+        </Stack>
+      </Modal>
     </Stack>
   );
 };
