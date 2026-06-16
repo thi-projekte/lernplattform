@@ -96,7 +96,7 @@ public final class ChallengeServiceImpl implements ChallengeService {
   @Override
   public List<ChallengeDto> getChallengeHistory() {
     String creatorId = identity.getPrincipal().getName();
-    List<Challenge> challenges = challengeRepository.findHistoryForUser(creatorId, LocalDate.now());
+    List<Challenge> challenges = challengeRepository.findHistoryForUser(creatorId, LocalDate.now(), 100);
     return mappingRegistry.mapList(challenges, ChallengeDto.class);
   }
 

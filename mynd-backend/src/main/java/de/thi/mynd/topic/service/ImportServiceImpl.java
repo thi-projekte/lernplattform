@@ -75,8 +75,6 @@ public final class ImportServiceImpl implements ImportService {
       category.title = model.getTitle();
       category.color = model.getColor();
 
-      // TODO: Add checks here later.
-
       categoryRepository.persist(category);
 
       if (category.id != null) {
