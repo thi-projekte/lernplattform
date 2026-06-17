@@ -87,6 +87,10 @@ const HomePage = () => {
   const [orientation, setOrientation] = useState<SkillTreeOrientation>('vertical');
   const [expandedTopicIds, setExpandedTopicIds] = useState<string[]>(cachedExpandedTopicIds);
   const [selectedTopicId, setSelectedTopicId] = useState<string | null>(cachedSelectedTopicId);
+  // Set only by explicit navigation/search (e.g. the spotlight). Drives a
+  // one-shot camera centre on that node, which is distinct from click
+  // selection: clicking merely keeps a node in view, searching centres it.
+  const [centerOnTopicId, setCenterOnTopicId] = useState<string | null>(null);
   // Topics added to the graph from outside (e.g. via the spotlight search).
   // We keep them in local state so they survive re-renders without depending
   // on the most-popular query data.
@@ -107,6 +111,7 @@ const HomePage = () => {
       current.includes(openTopic.id) ? current : [...current, openTopic.id]
     );
     setSelectedTopicId(openTopic.id);
+    setCenterOnTopicId(openTopic.id);
     /* eslint-enable react-hooks/set-state-in-effect */
     navigate(location.pathname, { replace: true, state: null });
   }, [location.pathname, location.state, navigate]);
@@ -372,6 +377,8 @@ const HomePage = () => {
                 edges={visibleEdges}
                 nodeTypes={nodeTypes}
                 focusNodeId={selectedTopicId}
+                centerNodeId={centerOnTopicId}
+                onCenterDone={() => setCenterOnTopicId(null)}
                 onNodeClick={onNodeClick}
                 onNodeDragStop={(_event, node) => {
                   if (layoutMode === 'force') return;

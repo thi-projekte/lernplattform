@@ -40,10 +40,19 @@ const TreeLayoutFit = ({ padding, maxZoom }: { padding: number; maxZoom?: number
 // the viewport. If it is partially clipped (or fully off-screen), pan the
 // camera so it becomes visible. We don't move when the node is already in
 // view — that would feel jumpy.
-const NodeFocusKeeper = ({ focusNodeId }: { focusNodeId: string | null | undefined }) => {
+const NodeFocusKeeper = ({
+  focusNodeId,
+  centerNodeId,
+}: {
+  focusNodeId: string | null | undefined;
+  centerNodeId: string | null | undefined;
+}) => {
   const { getNode, getViewport, setCenter, flowToScreenPosition } = useReactFlow();
   useEffect(() => {
     if (!focusNodeId) return;
+    // When the same node is being explicitly centred (e.g. via search), let
+    // NodeCenterer own the camera so the two don't animate against each other.
+    if (centerNodeId && focusNodeId === centerNodeId) return;
     // Give React Flow a moment to commit any pending position updates (e.g.
     // when a click expands the card from a small dot to a wider popup).
     const timeout = window.setTimeout(() => {
@@ -77,7 +86,63 @@ const NodeFocusKeeper = ({ focusNodeId }: { focusNodeId: string | null | undefin
       setCenter(centerX, centerY, { duration: 350, zoom });
     }, 60);
     return () => window.clearTimeout(timeout);
-  }, [focusNodeId, getNode, getViewport, setCenter, flowToScreenPosition]);
+  }, [focusNodeId, centerNodeId, getNode, getViewport, setCenter, flowToScreenPosition]);
+  return null;
+};
+
+// When `centerNodeId` changes to a non-null id, centre the camera on that node
+// — always, regardless of whether it is currently visible. Used for explicit
+// navigation such as the spotlight search, where the user expects the target
+// node to land in the middle of the viewport. We wait (frame by frame) until
+// the node exists and has been measured so the centre is accurate, since a
+// freshly injected node is not in the store on the first frame.
+const NodeCenterer = ({
+  centerNodeId,
+  onCenterDone,
+}: {
+  centerNodeId: string | null | undefined;
+  onCenterDone?: () => void;
+}) => {
+  const { getNode, getViewport, setCenter } = useReactFlow();
+  const onCenterDoneRef = useRef(onCenterDone);
+  useEffect(() => {
+    onCenterDoneRef.current = onCenterDone;
+  }, [onCenterDone]);
+  useEffect(() => {
+    if (!centerNodeId) return;
+    let cancelled = false;
+    let rafId = 0;
+    let frames = 0;
+    // ~1.5s at 60fps: long enough for a new node to mount, expand and be
+    // measured, short enough to fall back gracefully if it never appears.
+    const MAX_FRAMES = 90;
+    const attempt = () => {
+      if (cancelled) return;
+      frames += 1;
+      const node = getNode(centerNodeId);
+      const measuredWidth = node?.measured?.width;
+      const ready = !!node && !!measuredWidth;
+      const timedOut = frames >= MAX_FRAMES;
+      if (ready || timedOut) {
+        if (node) {
+          const width = node.measured?.width ?? 150;
+          const height = node.measured?.height ?? 120;
+          const centerX = node.position.x + width / 2;
+          const centerY = node.position.y + height / 2;
+          const { zoom } = getViewport();
+          setCenter(centerX, centerY, { duration: 400, zoom });
+        }
+        onCenterDoneRef.current?.();
+        return;
+      }
+      rafId = requestAnimationFrame(attempt);
+    };
+    rafId = requestAnimationFrame(attempt);
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+    };
+  }, [centerNodeId, getNode, getViewport, setCenter]);
   return null;
 };
 
@@ -104,6 +169,8 @@ interface TopicGraphViewProps {
   layoutMode?: GraphLayoutMode;
   onChangeLayoutMode?: (mode: GraphLayoutMode) => void;
   focusNodeId?: string | null;
+  centerNodeId?: string | null;
+  onCenterDone?: () => void;
   fitView?: boolean;
   fitViewPadding?: number;
   fitViewMaxZoom?: number;
@@ -131,6 +198,8 @@ const TopicGraphView = ({
   layoutMode = 'tree',
   onChangeLayoutMode,
   focusNodeId,
+  centerNodeId,
+  onCenterDone,
   fitView = true,
   fitViewPadding = 0.2,
   fitViewMaxZoom,
@@ -213,7 +282,8 @@ const TopicGraphView = ({
         <ForceLayoutController baseNodes={nodes} edges={edges} onHandleReady={handleForceReady} />
       )}
       {layoutMode === 'tree' && <TreeLayoutFit padding={fitViewPadding} maxZoom={fitViewMaxZoom} />}
-      <NodeFocusKeeper focusNodeId={focusNodeId} />
+      <NodeFocusKeeper focusNodeId={focusNodeId} centerNodeId={centerNodeId} />
+      <NodeCenterer centerNodeId={centerNodeId} onCenterDone={onCenterDone} />
       {showViewportToolbar && (
         <ViewportToolbar
           fitViewPadding={fitViewPadding}
