@@ -13,7 +13,7 @@ import {
   Title,
   Tooltip,
 } from '@mantine/core';
-import { IconCalendarMonth, IconCalendarWeek, IconFlame, IconSend } from '@tabler/icons-react';
+import { IconFlame, IconSend } from '@tabler/icons-react';
 import type { StreakType } from '../../schemas/streak.ts';
 import { useTranslation } from 'react-i18next';
 import { useUserService } from '../../provider/user-provider.tsx';
@@ -32,8 +32,8 @@ interface ChatMessageRowProps {
 }
 const streakConfig: Record<StreakType, { color: string; icon: typeof IconFlame }> = {
   DAILY: { color: 'orange', icon: IconFlame },
-  WEEKLY: { color: 'blue', icon: IconCalendarWeek },
-  MONTHLY: { color: 'grape', icon: IconCalendarMonth },
+  WEEKLY: { color: 'grape', icon: IconFlame },
+  MONTHLY: { color: 'blue', icon: IconFlame },
 };
 const ChatMessageRow = ({ message, isOwn }: ChatMessageRowProps) => {
   const { t } = useTranslation();
