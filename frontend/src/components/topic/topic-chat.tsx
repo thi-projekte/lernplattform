@@ -14,6 +14,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { IconFlame, IconSend } from '@tabler/icons-react';
+import type { StreakType } from '../../schemas/streak.ts';
 import { useTranslation } from 'react-i18next';
 import { useUserService } from '../../provider/user-provider.tsx';
 import { useQueryChatHistory } from '../../api/chat.ts';
@@ -29,7 +30,11 @@ interface ChatMessageRowProps {
   message: ChatMessageDto;
   isOwn: boolean;
 }
-
+const streakConfig: Record<StreakType, { color: string; icon: typeof IconFlame }> = {
+  DAILY: { color: 'orange', icon: IconFlame },
+  WEEKLY: { color: 'grape', icon: IconFlame },
+  MONTHLY: { color: 'blue', icon: IconFlame },
+};
 const ChatMessageRow = ({ message, isOwn }: ChatMessageRowProps) => {
   const { t } = useTranslation();
   // Fetch the avatar only for other people's messages (own messages show none).
@@ -53,21 +58,27 @@ const ChatMessageRow = ({ message, isOwn }: ChatMessageRowProps) => {
             <Text size="xs" c="dimmed" fw={600}>
               {message.sender.creatorFullName}
             </Text>
-            {streak && streak.streakCount > 0 && (
-              <Tooltip
-                label={t('topic.chat.streakTooltip', { count: streak.streakCount })}
-                withArrow
-              >
-                <Badge
-                  size="xs"
-                  color="orange"
-                  variant="light"
-                  leftSection={<IconFlame size={10} />}
-                >
-                  {streak.streakCount}
-                </Badge>
-              </Tooltip>
-            )}
+            {streak &&
+              streak.streakCount > 0 &&
+              (() => {
+                const config = streakConfig[streak.type as StreakType] ?? streakConfig.DAILY;
+                const StreakIcon = config.icon;
+                return (
+                  <Tooltip
+                    label={`${streak.streakCount} ${t(`streak.type.${streak.type}`)} Streak (${t(`streak.typeLabel.${streak.type}`)})`}
+                    withArrow
+                  >
+                    <Badge
+                      size="xs"
+                      color={config.color}
+                      variant="light"
+                      leftSection={<StreakIcon size={10} />}
+                    >
+                      {streak.streakCount}
+                    </Badge>
+                  </Tooltip>
+                );
+              })()}
           </Group>
         )}
         <Paper
