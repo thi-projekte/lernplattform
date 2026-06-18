@@ -222,7 +222,7 @@ public final class ImportServiceImpl implements ImportService {
       case "URI" -> UriElement.class;
       case "YOUTUBE_LINK" -> YouTubeLinkElement.class;
       default ->
-          throw new ImportException("Only Rtf, Spotify Links, Uris and YouTube Links are suppored");
+          throw new ImportException("Only Rtf, Spotify Links, Uris and YouTube Links are supported");
     };
   }
 }
