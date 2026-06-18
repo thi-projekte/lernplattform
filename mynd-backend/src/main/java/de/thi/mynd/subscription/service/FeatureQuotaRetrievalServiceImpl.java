@@ -9,6 +9,7 @@
 package de.thi.mynd.subscription.service;
 
 import de.thi.mynd.subscription.StripeFeatureFlagConstants;
+import de.thi.mynd.subscription.dto.LimitsDto;
 import de.thi.mynd.subscription.entity.Feature;
 import de.thi.mynd.subscription.entity.FeatureQuota;
 import de.thi.mynd.subscription.entity.Subscription;
@@ -19,6 +20,14 @@ import java.time.LocalDate;
 @ApplicationScoped
 public final class FeatureQuotaRetrievalServiceImpl extends AbstractFeatureQuotaServiceImpl
     implements FeatureQuotaRetrievalService {
+
+  @Override
+  public LimitsDto getLimitForFreePlan() {
+    return LimitsDto.builder()
+        .dailyLearningLimit(freeMaxAmountDailyLearning)
+        .parallelTopics(freeMaxAmountParallelTopics)
+        .build();
+  }
 
   @Override
   public boolean canLearn(String userId) {

@@ -29,5 +29,5 @@ public interface LearnProgressService {
 
   void resetContentElementLearningProgress(UUID contentElementId);
 
-  List<UUID> getLastNUncompletedTopicsForUser(int n, String creatorId);
+  List<UUID> getLastNLearnedTopicsForUser(int n, String creatorId);
 }

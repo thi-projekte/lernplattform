@@ -231,8 +231,8 @@ public final class LearnProgressServiceImpl implements LearnProgressService {
   }
 
   @Override
-  public List<UUID> getLastNUncompletedTopicsForUser(int n, String creatorId) {
-    return learnProgressTopicRepository.getLastNUncompletedTopicIdsForUser(n, creatorId);
+  public List<UUID> getLastNLearnedTopicsForUser(int n, String creatorId) {
+    return learnProgressTopicRepository.getLastNLearnedTopicIdsForUser(n, creatorId);
   }
 
   private Optional<LearnProgressTopic> getByTopicIdAndCurrentCreator(UUID topicId) {

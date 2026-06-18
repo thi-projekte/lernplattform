@@ -41,7 +41,7 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
     Log.tracef("Fetching learn graph for user %s", creatorId);
 
     List<UUID> lastLearnedTopicIds =
-        learnProgressService.getLastNUncompletedTopicsForUser(10, creatorId);
+        learnProgressService.getLastNLearnedTopicsForUser(10, creatorId);
     if (lastLearnedTopicIds.isEmpty()) {
       List<Topic> topics = topicGraphRepository.findNMostPopular(10);
 
