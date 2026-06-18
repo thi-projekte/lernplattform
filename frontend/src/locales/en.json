@@ -372,7 +372,9 @@
     "goPremium": "Get Premium",
     "free": {
       "title": "Free",
-      "description": "Get started at no cost."
+      "description": "Get started at no cost.",
+      "limitedLearning": "Only {{count}} learning units per day",
+      "limitedParallelTopics": "Only {{count}} topics can be learned simultaneously"
     },
     "paidTagline": "Unlock everything MYnd has to offer.",
     "monthly": "Monthly",

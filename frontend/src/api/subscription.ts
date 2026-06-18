@@ -1,6 +1,11 @@
 import { apiClient } from './common.ts';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import type { ProductDto, StripeSessionDto, SubscriptionDto } from '../schemas/payment.ts';
+import type {
+  LimitsDto,
+  ProductDto,
+  StripeSessionDto,
+  SubscriptionDto,
+} from '../schemas/payment.ts';
 import type { AxiosResponse } from 'axios';
 
 export const useFetchSubscription = (
@@ -15,6 +20,15 @@ export const useFetchSubscription = (
     },
     enabled,
     refetchInterval,
+  });
+
+export const useFetchSubscriptionLimits = () =>
+  useQuery({
+    queryKey: ['subscriptionLimit'],
+    queryFn: async (): Promise<LimitsDto> => {
+      const res = await apiClient.get<LimitsDto>('/subscriptions/limits/free');
+      return res.data;
+    },
   });
 
 export const useFetchProducts = () =>
