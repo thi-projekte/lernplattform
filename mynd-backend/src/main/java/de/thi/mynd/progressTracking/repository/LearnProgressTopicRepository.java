@@ -9,7 +9,6 @@
 package de.thi.mynd.progressTracking.repository;
 
 import de.thi.mynd.common.repository.MyndBaseCustomIdRepository;
-import de.thi.mynd.progressTracking.entity.LearnProgressStatus;
 import de.thi.mynd.progressTracking.entity.LearnProgressTopic;
 import de.thi.mynd.progressTracking.entity.LearnProgressTopicId;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -40,16 +39,12 @@ public final class LearnProgressTopicRepository
         .list();
   }
 
-  public List<UUID> getLastNUncompletedTopicIdsForUser(int n, String creatorId) {
+  public List<UUID> getLastNLearnedTopicIdsForUser(int n, String creatorId) {
     return getSession()
         .createQuery(
-            "SELECT t.id.topicId FROM LearnProgressTopic t WHERE t.creatorId = :creatorId AND status IN :allowedStates ORDER BY updatedAt LIMIT :limit",
+            "SELECT t.id.topicId FROM LearnProgressTopic t WHERE t.creatorId = :creatorId ORDER BY updatedAt LIMIT :limit",
             UUID.class)
         .setParameter("creatorId", creatorId)
-        .setParameter(
-            "allowedStates",
-            List.of(
-                LearnProgressStatus.STARTED))
         .setParameter("limit", n)
         .getResultList();
   }

@@ -154,7 +154,7 @@ class TopicGraphServiceImplTest {
   @DisplayName("Should fetch popular topics and map their neighbors when user has no progress")
   void testGetLearnGraph_NoProgress_FetchesNeighbors() {
     // Arrange
-    when(learnProgressService.getLastNUncompletedTopicsForUser(10, creatorId))
+    when(learnProgressService.getLastNLearnedTopicsForUser(10, creatorId))
         .thenReturn(Collections.emptyList());
 
     // 1. Setup Mock Topics & Relationships
@@ -200,7 +200,7 @@ class TopicGraphServiceImplTest {
       "Should throw exception or bubble up if a topic's neighbor lookup finds a missing topic ID")
   void testGetLearnGraph_NeighborTopicNotFound_ThrowsException() {
     // Arrange
-    when(learnProgressService.getLastNUncompletedTopicsForUser(10, creatorId))
+    when(learnProgressService.getLastNLearnedTopicsForUser(10, creatorId))
         .thenReturn(Collections.emptyList());
 
     UUID missingTopicId = UUID.randomUUID();
