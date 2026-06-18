@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.auth.service;
 
 import de.thi.mynd.auth.dto.ProfilePictureDto;
@@ -80,6 +88,8 @@ public final class UserProfileServiceImpl implements UserProfileService {
   public void updateUserProfile(UserProfile userProfile) {
     userProfileRepository.getEntityManager().merge(userProfile);
     userProfileRepository.flush();
+
+    Log.tracef("Updated user profile for %s", userProfile.creatorId);
   }
 
   @Override
@@ -90,6 +100,8 @@ public final class UserProfileServiceImpl implements UserProfileService {
             .filter(p -> p.profilePictureKey != null)
             .orElseThrow(
                 () -> new ProfilePictureNotFoundException("No profile picture found for user"));
+
+    Log.tracef("Fetching user profile picture for %", username);
 
     return new ProfilePictureDto(
         objectStorageService.getPresignedUrlForFile(profile.profilePictureKey).toString());
@@ -112,12 +124,15 @@ public final class UserProfileServiceImpl implements UserProfileService {
 
     userProfileRepository.persistAndFlush(newProfile);
 
+    Log.infof("Created personal user profile for user %s", userId);
+
     return newProfile;
   }
 
   @Override
   public Optional<UserProfile> getPersonalUserProfile() {
     String userId = securityIdentity.getPrincipal().getName();
+    Log.tracef("Getting personal user profile for user %s", userId);
     return userProfileRepository.findByUsernameOptional(userId);
   }
 

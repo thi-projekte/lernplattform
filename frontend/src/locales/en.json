@@ -61,7 +61,7 @@
       "horizontal": "Horizontal"
     },
     "tipBadge": "Tip",
-    "tipText": "Click on a node to view details and load connected topics.",
+    "tipText": "Click on a topic to view details and load connected topics.",
     "focusMode": "Focus mode",
     "actions": {
       "focus": "Focus mode",
@@ -97,7 +97,7 @@
     "loadingNeighbors": "Loading connected topics...",
     "openDetails": "Open detail view",
     "expandNeighbors": "Load connections",
-    "hideNode": "Hide node",
+    "hideNode": "Hide topic",
     "showHidden": "Show {{count}} hidden"
   },
   "common": {
@@ -123,7 +123,7 @@
     "serverError": "Server error",
     "success": "Success",
     "edit": "Edit",
-    "clickOnANodeToSeeContent": "Click on a node to see content",
+    "clickOnANodeToSeeContent": "Click on a topic to see content",
     "saveAndView": "Save and view",
     "or": "Or"
   },
@@ -157,6 +157,7 @@
     },
     "notes": {
       "title": "Notes",
+      "openSidebar": "Notes",
       "placeholder": "Write your personal notes for this topic…",
       "saving": "Saving…",
       "saved": "Saved",
@@ -236,7 +237,10 @@
       "previous": "Previous",
       "next": "Next",
       "showAnswerHint": "Click to reveal the answer",
-      "showQuestionHint": "Click to show the question"
+      "showQuestionHint": "Click to show the question",
+      "celebrationTitle": "Congratulations!",
+      "celebrationMessage": "You have mastered all the questions.",
+      "celebrationClose": "Continue"
     },
     "contentElementType": {
       "label": "Type",
@@ -254,14 +258,14 @@
       "modeList": "List",
       "modeGraph": "Graph",
       "workspaceTitle": "Topic graph",
-      "workspaceDescription": "Drag nodes to arrange the graph, click connected lines to remove associations, and click isolated topics to create new associations.",
+      "workspaceDescription": "Drag topics to arrange the graph, click connected lines to remove associations, and click isolated topics to create new associations.",
       "inspectorTitle": "Inspector",
       "inspectorDescription": "Review the selected topic and manage graph actions from here.",
       "graphModeRailTitle": "Selected topics",
       "graphModeRailDescription": "Search for topics to add them to the graph and manage the currently selected associations.",
-      "graphModeSearchHint": "Search results appear as isolated nodes and can be added by clicking them in the graph.",
+      "graphModeSearchHint": "Search results appear as isolated topics and can be added by clicking them in the graph.",
       "foundTopicsTitle": "Found topics",
-      "foundTopicsDescription": "These topics are currently visible in the graph as isolated nodes.",
+      "foundTopicsDescription": "These topics are currently visible in the graph as isolated topics.",
       "legendRoot": "Current topic",
       "legendAssociated": "Associated topic",
       "legendIsolated": "Isolated topic",
@@ -273,14 +277,14 @@
       "relatedTopicsTableDescription": "The table below shows all currently connected topics and lets you remove them directly.",
       "currentTopic": "Current topic",
       "associatedTopic": "Associated topic",
-      "clickTopicNodeToSeeDetails": "Click on a topic node to see its details.",
+      "clickTopicNodeToSeeDetails": "Click on a topic to see its details.",
       "clickAssociationToRemove": "Click on an association line to remove the related topic.",
-      "clickIsolatedTopicToAssociate": "Click on an isolated topic node to create an association.",
+      "clickIsolatedTopicToAssociate": "Click on an isolated topic to create an association.",
       "viewportStatus": "Viewport x: {{x}}, y: {{y}}, zoom: {{zoom}}"
     },
     "personalGraph": {
       "selectedTopic": "Selected topic",
-      "emptySelection": "Click on a node to inspect the topic.",
+      "emptySelection": "Click on a topic to inspect it.",
       "graphDescription": "List or graph view of your topics.",
       "searchHintSelectOwned": "Select one of your own topics first before linking a foreign topic.",
       "keepAtLeastOneAssociation": "At least one associated topic must remain linked.",
@@ -371,7 +375,9 @@
     "goPremium": "Get Premium",
     "free": {
       "title": "Free",
-      "description": "Get started at no cost."
+      "description": "Get started at no cost.",
+      "limitedLearning": "Only {{count}} learning units per day",
+      "limitedParallelTopics": "Only {{count}} topics can be learned simultaneously"
     },
     "paidTagline": "Unlock everything MYnd has to offer.",
     "monthly": "Monthly",

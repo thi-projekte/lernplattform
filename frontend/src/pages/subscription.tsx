@@ -21,10 +21,11 @@ import {
   useCreateInitialCheckoutSessionForSubscription,
   useCreateInitialCheckoutSessionForTrial,
   useFetchProducts,
+  useFetchSubscriptionLimits,
 } from '../api/subscription.ts';
 import { useSubscription } from '../provider/subscription-provider.tsx';
 import { notifications } from '@mantine/notifications';
-import type { PriceDto, ProductDto, SubscriptionStatus } from '../schemas/payment.ts';
+import type { LimitsDto, PriceDto, ProductDto, SubscriptionStatus } from '../schemas/payment.ts';
 import { useQueryClient } from '@tanstack/react-query';
 import LayoutLoader from '../components/layout-loader.tsx';
 
@@ -313,7 +314,13 @@ const ProductCard = ({
   );
 };
 
-const FreeCard = ({ currentPlan }: { currentPlan: SubscriptionStatus }) => {
+const FreeCard = ({
+  currentPlan,
+  limits,
+}: {
+  currentPlan: SubscriptionStatus;
+  limits: LimitsDto;
+}) => {
   const { t } = useTranslation();
   const isCurrent = currentPlan === 'FREE';
   const accentColor = FREE_COLOR;
@@ -376,10 +383,37 @@ const FreeCard = ({ currentPlan }: { currentPlan: SubscriptionStatus }) => {
               {t('subscription.perMonth')}
             </Text>
           </Group>
-          <Text size="sm" c="dimmed" mt={4}>
+          <Text size="xs" c="dimmed" mt={4}>
             {t('subscription.free.description')}
           </Text>
         </Box>
+        <Divider opacity={0.3} mt="xs" />
+        <Stack gap={6}>
+          <Group gap={8} wrap="nowrap" align="center">
+            <ThemeIcon
+              size={18}
+              radius="xl"
+              style={{ background: `color-mix(in srgb, ${accentColor} 18%, transparent)` }}
+            >
+              <IconCheck size={12} style={{ color: accentColor }} />
+            </ThemeIcon>
+            <Text size="sm">
+              {t('subscription.free.limitedLearning', { count: limits.dailyLearningLimit })}
+            </Text>
+          </Group>
+          <Group gap={8} wrap="nowrap" align="center">
+            <ThemeIcon
+              size={18}
+              radius="xl"
+              style={{ background: `color-mix(in srgb, ${accentColor} 18%, transparent)` }}
+            >
+              <IconCheck size={12} style={{ color: accentColor }} />
+            </ThemeIcon>
+            <Text size="sm">
+              {t('subscription.free.limitedParallelTopics', { count: limits.parallelTopics })}
+            </Text>
+          </Group>
+        </Stack>
       </Stack>
     </Paper>
   );
@@ -395,6 +429,7 @@ const SubscriptionPage = () => {
   const queryClient = useQueryClient();
 
   const { data: products = [], isLoading: productsLoading } = useFetchProducts();
+  const { data: freeLimits, isLoading: limitsLoading } = useFetchSubscriptionLimits();
 
   const {
     mutate: subscribe,
@@ -462,7 +497,7 @@ const SubscriptionPage = () => {
     onCreateTrial: handleCreateTrial,
   };
 
-  if (productsLoading) {
+  if (productsLoading || limitsLoading) {
     return <LayoutLoader />;
   }
 
@@ -509,7 +544,7 @@ const SubscriptionPage = () => {
               gap="lg"
               style={{ flexWrap: 'wrap', flexDirection: isMobile ? 'column' : 'row' }}
             >
-              <FreeCard currentPlan={subscriptionStatus} />
+              <FreeCard currentPlan={subscriptionStatus} limits={freeLimits!} />
               {products.map((product) => (
                 <ProductCard key={product.title} product={product} {...cardProps} />
               ))}

@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.dto.PaginationDto;
@@ -37,6 +45,9 @@ public final class TopicServiceImpl implements TopicService {
 
   @Override
   public PaginationDto<ListTopicDto> findPersonalTopicsPaginated(int page, int pageSize) {
+    Log.tracef(
+        "Finding personal topics for user %s at oage %d with size %d",
+        identity.getPrincipal().getName(), page, pageSize);
     PaginationDto<Topic> paginatedTopics =
         topicRepository.findForCreatorPaginated(identity.getPrincipal().getName(), page, pageSize);
 
@@ -51,6 +62,7 @@ public final class TopicServiceImpl implements TopicService {
 
   @Override
   public List<ListTopicDto> findTopicsBySearchMax5(String search) {
+    Log.tracef("Finding top 5 topic nodes for search %s", search);
     if (search == null || search.isBlank()) {
       return List.of();
     }
@@ -62,6 +74,7 @@ public final class TopicServiceImpl implements TopicService {
   @Override
   public TopicDto getTopic(UUID topicId, boolean withOwnedRelatedTopics)
       throws EntityInstanceNotFoundException {
+    Log.tracef("Loading topic %s", topicId);
     Topic topic = getTopicByIdElseException(topicId);
 
     if (withOwnedRelatedTopics) {
@@ -120,6 +133,7 @@ public final class TopicServiceImpl implements TopicService {
 
   @Override
   public List<ListTopicDto> getOwnedRelatedTopicsForTopic(UUID topicId) {
+    Log.tracef("Finding owned related topic nodes for topic %s", topicId);
     List<Topic> topics = topicRepository.findByOwningTopicId(topicId);
 
     return mappingRegistry.mapList(topics, ListTopicDto.class);

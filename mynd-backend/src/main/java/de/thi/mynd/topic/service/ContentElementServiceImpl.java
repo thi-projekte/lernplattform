@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.topic.service;
 
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
@@ -51,6 +59,7 @@ public final class ContentElementServiceImpl implements ContentElementService {
   @Override
   @SuppressWarnings("unchecked")
   public List<ContentElementDto> getContentElementsForTopic(UUID topicId) {
+    Log.tracef("Loading content elements for topic %s", topicId);
     List<ContentElement> elements = contentElementRepository.findForTopic(topicId);
 
     return (List<ContentElementDto>)
@@ -59,6 +68,7 @@ public final class ContentElementServiceImpl implements ContentElementService {
 
   @Override
   public ContentElement getContentElementEntityById(UUID contentElementId) {
+    Log.tracef("Loading content element %s", contentElementId);
     Optional<ContentElement> optional = contentElementRepository.findByIdOptional(contentElementId);
     if (optional.isEmpty()) {
       throw new EntityInstanceNotFoundException("This content element does not exist");
@@ -118,6 +128,8 @@ public final class ContentElementServiceImpl implements ContentElementService {
     }
 
     contentElementRepository.flush();
+
+    Log.infof("Updated topic associations for topic %s", topic.id);
   }
 
   private Class<? extends ContentElementDto> getContentElementDtoClass(

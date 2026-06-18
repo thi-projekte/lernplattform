@@ -1,7 +1,16 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.chat.rest;
 
 import de.thi.mynd.chat.dto.ChatMessageDto;
 import de.thi.mynd.chat.request.ChatMessageRequest;
+import de.thi.mynd.chat.request.SocketMessage;
 import de.thi.mynd.chat.service.ChatMessageService;
 import io.quarkus.oidc.BearerTokenAuthentication;
 import io.quarkus.security.ForbiddenException;
@@ -24,10 +33,14 @@ public final class ChatSocketResource {
 
   @RolesAllowed("authorizedUser")
   @OnTextMessage(broadcast = true)
-  public ChatMessageDto onMessage(@Valid ChatMessageRequest request) {
+  public ChatMessageDto onMessage(@Valid SocketMessage msg) {
 
-    UUID topicId = UUID.fromString(connection.pathParam("topicId"));
-    return chatMessageService.sendMessageToTopic(topicId, request);
+    if (msg instanceof ChatMessageRequest request) {
+      UUID topicId = UUID.fromString(connection.pathParam("topicId"));
+      return chatMessageService.sendMessageToTopic(topicId, request);
+    }
+
+    return null;
   }
 
   @OnError

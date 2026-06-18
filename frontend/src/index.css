@@ -31,6 +31,11 @@
   --button-color: #1c1d21 !important;
 }
 
+[data-mantine-color-scheme='dark'] .react-flow__node .hide-node-btn:hover {
+  --button-hover: rgba(0, 0, 0, 0.08) !important;
+  --button-color: #1c1d21 !important;
+}
+
 :root[data-mantine-color-scheme='dark'] {
   --layout-header-bg: #1e2533;
   --layout-navbar-bg: #1e2533;

@@ -111,9 +111,14 @@ export const useTopicChat = (topicId: string | undefined) => {
   const sendMessage = useCallback((text: string) => {
     const trimmed = text.trim();
     if (!trimmed || wsRef.current?.readyState !== WebSocket.OPEN) return false;
-    wsRef.current.send(JSON.stringify({ message: trimmed }));
+    wsRef.current.send(JSON.stringify({ type: 'chatMessage', message: trimmed }));
     return true;
   }, []);
 
-  return { messages, status, sendMessage, seedHistory };
+  const sendPing = () => {
+    if (wsRef.current?.readyState !== WebSocket.OPEN) return;
+    wsRef.current.send(JSON.stringify({ type: 'ping' }));
+  };
+
+  return { messages, status, sendMessage, seedHistory, sendPing };
 };

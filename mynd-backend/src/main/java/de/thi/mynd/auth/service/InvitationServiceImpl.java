@@ -1,3 +1,11 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.auth.service;
 
 import de.thi.mynd.auth.dto.InvitationDto;
@@ -41,6 +49,7 @@ public final class InvitationServiceImpl implements InvitationService {
 
   @Override
   public InvitationDto getInvitation(UUID invitationId) {
+    Log.tracef("Loading invitation with ID %s", invitationId);
     Invitation invitation = getInvitationDefaultThrow(invitationId);
     return mappingRegistry.map(invitation, InvitationDto.class);
   }
@@ -48,6 +57,7 @@ public final class InvitationServiceImpl implements InvitationService {
   @Override
   public PaginationDto<InvitationDto> getSentInvitations(int page, int pageSize) {
     String creatorId = securityIdentity.getPrincipal().getName();
+    Log.tracef("Loading all sent invitations for user %s", creatorId);
     PaginationDto<Invitation> invitationPagination =
         invitationRepository.getInvitationsForCreatorPaginated(creatorId, page, pageSize);
 
@@ -62,6 +72,8 @@ public final class InvitationServiceImpl implements InvitationService {
     String creatorId = securityIdentity.getPrincipal().getName();
     long alreadySent = invitationRepository.getAmountInvitationsSubmittedPerUser(creatorId);
     UserProfile userProfile = getCurrentUsersProfile();
+
+    Log.tracef("Fetching personal invitation status for user %s", creatorId);
 
     return PersonalInvitationStatusDto.builder()
         .invitationsLeft(userProfile.invitationsLeft)
@@ -131,6 +143,8 @@ public final class InvitationServiceImpl implements InvitationService {
                 frontendUri, invitation.id, invitation.redemptionSecret));
     genericEmailService.sendEmail(
         "invitation", "MYnd Invitation", List.of(invitation.mailSentTo), parameters);
+
+    Log.tracef("Sent invitation message to %s", invitation.mailSentTo);
   }
 
   private Invitation getInvitationDefaultThrow(UUID id) {

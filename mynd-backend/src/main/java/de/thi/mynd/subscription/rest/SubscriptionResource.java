@@ -1,7 +1,17 @@
+/**
+ * This file is part of the MYnd application (de.thi.mynd).
+ *
+ * <p>Copyright (c) 2026 THI Projekte
+ *
+ * <p>For the full copyright and license information, please view the LICENSE file that was
+ * distributed with this source code.
+ */
 package de.thi.mynd.subscription.rest;
 
+import de.thi.mynd.subscription.dto.LimitsDto;
 import de.thi.mynd.subscription.dto.StripeSessionDto;
 import de.thi.mynd.subscription.dto.SubscriptionDto;
+import de.thi.mynd.subscription.service.FeatureQuotaRetrievalService;
 import de.thi.mynd.subscription.service.SubscriptionService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -19,6 +29,16 @@ import org.eclipse.microprofile.openapi.annotations.tags.Tag;
 public final class SubscriptionResource {
 
   @Inject SubscriptionService subscriptionService;
+  @Inject FeatureQuotaRetrievalService featureQuotaRetrievalService;
+
+  @Path("/limits/free")
+  @GET
+  @Operation(
+      summary = "Gets the subscription quota limit for plan",
+      description = "Gets the subscription quota limit for plan")
+  public LimitsDto getLimitsForPlan() {
+    return featureQuotaRetrievalService.getLimitForFreePlan();
+  }
 
   @GET
   @Operation(
