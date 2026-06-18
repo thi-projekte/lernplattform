@@ -61,29 +61,55 @@ const NodeFocusKeeper = ({
       const { zoom } = getViewport();
       const container = document.querySelector<HTMLElement>('.react-flow');
       if (!container) return;
-      const { width: w, height: h } = container.getBoundingClientRect();
+      const rect = container.getBoundingClientRect();
+      const w = rect.width;
+      const h = rect.height;
 
       // Approximate node screen bounds (use a generous box to account for the
       // expanded popup card rendered above the dot).
-      const screenTopLeft = flowToScreenPosition(node.position);
-      const measuredWidth = (node.measured?.width ?? 200) * zoom;
-      const measuredHeight = (node.measured?.height ?? 200) * zoom;
-      // Card pops UP from the dot — extend the box upwards.
-      const popupHeight = 260 * zoom;
-      const top = screenTopLeft.y - popupHeight;
-      const bottom = screenTopLeft.y + measuredHeight;
-      const left = screenTopLeft.x;
-      const right = screenTopLeft.x + measuredWidth;
+      const nodeWidth = node.measured?.width ?? 150;
+      const nodeHeight = node.measured?.height ?? 40;
+      const nodeCenterX = node.position.x + nodeWidth / 2;
 
-      const MARGIN = 32;
-      const isClipped = top < MARGIN || left < MARGIN || right > w - MARGIN || bottom > h - MARGIN;
+      // The selected node renders a card popup ABOVE the dot (see
+      // GenericTopicNode). It is absolutely positioned, so it is NOT part of
+      // node.measured — we must account for it explicitly or the card's top
+      // gets clipped when the dot sits near the viewport edge. Measure the live
+      // card (offsetHeight ignores both the zoom transform and the entrance
+      // scale animation, so it is the true flow-unit height); fall back to a
+      // generous estimate while it mounts.
+      const cardEl = container.querySelector<HTMLElement>(
+        `.react-flow__node[data-id="${CSS.escape(focusNodeId)}"] .mantine-Paper-root`
+      );
+      const CARD_WIDTH = 280;
+      const CARD_GAP = 28; // dot gap + connector between card and dot
+      const cardHeight = cardEl ? cardEl.offsetHeight : 300;
+
+      // Combined bounding box of the popup card + dot, in flow coordinates.
+      const boxLeft = Math.min(node.position.x, nodeCenterX - CARD_WIDTH / 2);
+      const boxRight = Math.max(node.position.x + nodeWidth, nodeCenterX + CARD_WIDTH / 2);
+      const boxTop = node.position.y - CARD_GAP - cardHeight;
+      const boxBottom = node.position.y + nodeHeight;
+
+      // flowToScreenPosition returns window-client coords (it adds the pane's
+      // getBoundingClientRect offset), so subtract the container's top/left to
+      // get coordinates relative to the graph itself before comparing against
+      // its size. Without this the top-clip check never fires, because the
+      // graph sits well below the window top (under the app header).
+      const screenTopLeft = flowToScreenPosition({ x: boxLeft, y: boxTop });
+      const screenBottomRight = flowToScreenPosition({ x: boxRight, y: boxBottom });
+      const relTop = screenTopLeft.y - rect.top;
+      const relLeft = screenTopLeft.x - rect.left;
+      const relRight = screenBottomRight.x - rect.left;
+      const relBottom = screenBottomRight.y - rect.top;
+
+      const MARGIN = 24;
+      const isClipped =
+        relTop < MARGIN || relLeft < MARGIN || relRight > w - MARGIN || relBottom > h - MARGIN;
       if (!isClipped) return;
 
-      // Centre the node (accounting for the popup that pops above it) inside
-      // the viewport with a smooth transition.
-      const centerX = node.position.x + (node.measured?.width ?? 200) / 2;
-      const centerY = node.position.y + (node.measured?.height ?? 200) / 2 - 80;
-      setCenter(centerX, centerY, { duration: 350, zoom });
+      // Centre the whole card+dot box so the entire card lands on screen.
+      setCenter((boxLeft + boxRight) / 2, (boxTop + boxBottom) / 2, { duration: 350, zoom });
     }, 60);
     return () => window.clearTimeout(timeout);
   }, [focusNodeId, centerNodeId, getNode, getViewport, setCenter, flowToScreenPosition]);
