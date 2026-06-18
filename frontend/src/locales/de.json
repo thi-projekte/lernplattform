@@ -118,6 +118,8 @@
     "fileTooLarge": "Datei ist zu groß. Maximal erlaubt: {{size}}",
     "fileRejected": "Datei konnte nicht hochgeladen werden",
     "download": "Herunterladen",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
     "delete": "Löschen",
     "save": "Speichern",
     "serverError": "Server Fehler",
@@ -178,7 +180,9 @@
       "importJson": "JSON importieren",
       "importJsonSubmit": "Importieren",
       "importJsonSuccess": "Themen erfolgreich importiert",
-      "importJsonError": "Ungültiges JSON-Format"
+      "importJsonError": "Ungültiges JSON-Format",
+      "importJsonSchema": "JSON-Schema",
+      "importJsonSchemaHint": "Nutze dieses Schema, um deine Importdatei zu erstellen."
     },
     "progress": {
       "label": "Fortschritt",

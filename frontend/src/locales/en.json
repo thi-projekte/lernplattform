@@ -118,6 +118,8 @@
     "fileTooLarge": "File is too large. Maximum allowed: {{size}}",
     "fileRejected": "File could not be uploaded",
     "download": "Download",
+    "copy": "Copy",
+    "copied": "Copied",
     "delete": "Delete",
     "save": "Save",
     "serverError": "Server error",
@@ -178,7 +180,9 @@
       "importJson": "Import JSON",
       "importJsonSubmit": "Import",
       "importJsonSuccess": "Topics imported successfully",
-      "importJsonError": "Invalid JSON format"
+      "importJsonError": "Invalid JSON format",
+      "importJsonSchema": "JSON schema",
+      "importJsonSchemaHint": "Use this schema to build your import file."
     },
     "progress": {
       "label": "Progress",
