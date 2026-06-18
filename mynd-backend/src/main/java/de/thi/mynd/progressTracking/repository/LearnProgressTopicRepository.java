@@ -49,8 +49,7 @@ public final class LearnProgressTopicRepository
         .setParameter(
             "allowedStates",
             List.of(
-                LearnProgressStatus.COMPLETED_MANUALLY,
-                LearnProgressStatus.ALL_CONTENT_ELEMENTS_COMPLETED))
+                LearnProgressStatus.STARTED))
         .setParameter("limit", n)
         .getResultList();
   }
