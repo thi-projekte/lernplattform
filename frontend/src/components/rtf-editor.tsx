@@ -2,6 +2,29 @@ import { RichTextEditor, Link } from '@mantine/tiptap';
 import { useEditor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 
+const normalizeHref = (href: string): string => {
+  const trimmed = href.trim();
+  if (!trimmed) return trimmed;
+  if (/^(#|\/|\.{1,2}\/)/.test(trimmed)) return trimmed;
+  if (/^[a-z][a-z0-9+.-]*:/i.test(trimmed)) return trimmed;
+  return `https://${trimmed}`;
+};
+
+const SafeLink = Link.extend({
+  addAttributes() {
+    const parent = this.parent?.() ?? {};
+    const hrefAttr = (parent as { href?: object }).href ?? {};
+    return {
+      ...parent,
+      href: {
+        ...hrefAttr,
+        renderHTML: (attrs: { href?: string | null }) =>
+          attrs.href ? { href: normalizeHref(attrs.href) } : {},
+      },
+    };
+  },
+}).configure({ defaultProtocol: 'https' });
+
 interface RtfEditorProps {
   value?: string;
   onChange: (content: string) => void;
@@ -9,7 +32,7 @@ interface RtfEditorProps {
 
 const RtfEditor = ({ value, onChange }: RtfEditorProps) => {
   const editor = useEditor({
-    extensions: [StarterKit, Link],
+    extensions: [StarterKit, SafeLink],
     content: value,
     onUpdate({ editor }) {
       onChange(editor.getHTML());
