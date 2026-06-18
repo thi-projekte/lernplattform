@@ -1,6 +1,12 @@
-import { useState } from 'react';
-import { Badge, Box, Button, Group, Stack, Text, ThemeIcon, Title } from '@mantine/core';
-import { IconBulb, IconChevronLeft, IconChevronRight, IconQuestionMark } from '@tabler/icons-react';
+import { useRef, useState } from 'react';
+import { Badge, Box, Button, Group, Modal, Stack, Text, ThemeIcon, Title } from '@mantine/core';
+import {
+  IconBulb,
+  IconChevronLeft,
+  IconChevronRight,
+  IconQuestionMark,
+  IconSparkles,
+} from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
 import type { IndexCardDto } from '../../schemas/topic.ts';
 import classes from './quiz-view.module.css';
@@ -15,6 +21,9 @@ const QuizView = ({ indexCards }: QuizViewProps) => {
   const { t } = useTranslation();
   const [current, setCurrent] = useState(0);
   const [showAnswer, setShowAnswer] = useState(false);
+  const [celebrationOpen, setCelebrationOpen] = useState(false);
+  // The celebration is shown only once per quiz session.
+  const celebrationShown = useRef(false);
 
   if (indexCards.length === 0) {
     return (
@@ -27,11 +36,23 @@ const QuizView = ({ indexCards }: QuizViewProps) => {
   const total = indexCards.length;
   const index = Math.min(current, total - 1);
   const card = indexCards[index];
+  const isLastCard = index === total - 1;
 
   const goTo = (next: number) => {
     setShowAnswer(false);
     setCurrent((next + total) % total);
   };
+
+  // Clicking "Next" on the last card finishes the quiz and shows the celebration once.
+  const handleNext = () => {
+    if (isLastCard && !celebrationShown.current) {
+      celebrationShown.current = true;
+      setCelebrationOpen(true);
+      return;
+    }
+    goTo(index + 1);
+  };
+
   const flip = () => setShowAnswer((value) => !value);
 
   return (
@@ -125,12 +146,34 @@ const QuizView = ({ indexCards }: QuizViewProps) => {
           radius="xl"
           size="md"
           rightSection={<IconChevronRight size={16} />}
-          onClick={() => goTo(index + 1)}
+          onClick={handleNext}
           disabled={total <= 1}
         >
           {t('topic.quiz.next')}
         </Button>
       </Group>
+
+      <Modal
+        opened={celebrationOpen}
+        onClose={() => setCelebrationOpen(false)}
+        centered
+        withCloseButton={false}
+        radius="lg"
+        size="sm"
+        padding="xl"
+        overlayProps={{ backgroundOpacity: 0.6, blur: 4 }}
+      >
+        <Stack align="center" justify="center" gap="md" w="100%" ta="center">
+          <ThemeIcon variant="light" color="yellow" radius="xl" size={64}>
+            <IconSparkles size={36} />
+          </ThemeIcon>
+          <Title order={3}>{t('topic.quiz.celebrationTitle')}</Title>
+          <Text c="dimmed">{t('topic.quiz.celebrationMessage')}</Text>
+          <Button radius="xl" size="md" mt="xs" onClick={() => setCelebrationOpen(false)}>
+            {t('topic.quiz.celebrationClose')}
+          </Button>
+        </Stack>
+      </Modal>
     </Stack>
   );
 };

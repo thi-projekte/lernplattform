@@ -237,7 +237,10 @@
       "previous": "Zurück",
       "next": "Weiter",
       "showAnswerHint": "Klicke, um die Antwort anzuzeigen",
-      "showQuestionHint": "Klicke, um die Frage anzuzeigen"
+      "showQuestionHint": "Klicke, um die Frage anzuzeigen",
+      "celebrationTitle": "Glückwunsch!",
+      "celebrationMessage": "Du hast alle Fragen gemeistert.",
+      "celebrationClose": "Weiter"
     },
     "contentElementType": {
       "label": "Typ",
