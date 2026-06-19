@@ -111,7 +111,15 @@ export const applyForceLayout = (
   edges: Edge[],
   onTick: (positions: Map<string, { x: number; y: number }>) => void,
   initialAlpha: number = 1,
-  warmupTicks: number = 0
+  warmupTicks: number = 0,
+  // Strength of the centering force. forceCenter hard-translates every node so
+  // the centroid lands on the target on EVERY tick, regardless of alpha — great
+  // for the initial spread, but on a recreation (e.g. expanding a node) it
+  // snaps the whole graph sideways the moment new nodes shift the centroid,
+  // which reads as the graph briefly "jumping"/disappearing. Pass 0 on
+  // recreations so existing nodes stay put (the boundary force still contains
+  // drift) and only the gentle alpha moves things.
+  centerStrength: number = 1
 ): ForceLayoutHandle => {
   // Seed simulation in CENTER coordinates (React Flow stores top-left).
   const simNodes: ForceSimNode[] = nodes.map((node) => ({
@@ -157,7 +165,7 @@ export const applyForceLayout = (
         .iterations(2)
     )
     .force('charge', chargeForce)
-    .force('center', forceCenter(0, 0))
+    .force('center', forceCenter(0, 0).strength(centerStrength))
     .force('collide', forceCollide(120).strength(0.6))
     .force('boundary', boundary)
     .velocityDecay(0.25)

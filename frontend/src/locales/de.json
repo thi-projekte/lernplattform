@@ -61,7 +61,7 @@
       "horizontal": "Horizontal"
     },
     "tipBadge": "Tipp",
-    "tipText": "Klicke auf eine Node, um Details zu sehen und verbundene Themen zu laden.",
+    "tipText": "Klicke auf ein Thema, um Details zu sehen und verbundene Themen zu laden.",
     "focusMode": "Fokusmodus",
     "actions": {
       "focus": "Fokusmodus",
@@ -92,12 +92,12 @@
         "findPodcast": "Podcast als Quelle finden"
       }
     },
-    "selectedTopic": "Ausgewählte Node",
+    "selectedTopic": "Ausgewähltes Thema",
     "unknownCreator": "Unbekannter Ersteller",
     "loadingNeighbors": "Verbundene Themen werden geladen...",
     "openDetails": "Detailansicht öffnen",
     "expandNeighbors": "Verbindungen laden",
-    "hideNode": "Node ausblenden",
+    "hideNode": "Thema ausblenden",
     "showHidden": "{{count}} ausgeblendet anzeigen"
   },
   "common": {
@@ -118,12 +118,14 @@
     "fileTooLarge": "Datei ist zu groß. Maximal erlaubt: {{size}}",
     "fileRejected": "Datei konnte nicht hochgeladen werden",
     "download": "Herunterladen",
+    "copy": "Kopieren",
+    "copied": "Kopiert",
     "delete": "Löschen",
     "save": "Speichern",
     "serverError": "Server Fehler",
     "success": "Erfolg",
     "edit": "Bearbeiten",
-    "clickOnANodeToSeeContent": "Klicke auf einen Knoten um den Inhalt zu sehen",
+    "clickOnANodeToSeeContent": "Klicke auf ein Thema, um den Inhalt zu sehen",
     "saveAndView": "Speichern und ansehen",
     "or": "Oder"
   },
@@ -178,7 +180,9 @@
       "importJson": "JSON importieren",
       "importJsonSubmit": "Importieren",
       "importJsonSuccess": "Themen erfolgreich importiert",
-      "importJsonError": "Ungültiges JSON-Format"
+      "importJsonError": "Ungültiges JSON-Format",
+      "importJsonSchema": "JSON-Schema",
+      "importJsonSchemaHint": "Nutze dieses Schema, um deine Importdatei zu erstellen."
     },
     "progress": {
       "label": "Fortschritt",
@@ -258,14 +262,14 @@
       "modeList": "Liste",
       "modeGraph": "Graph",
       "workspaceTitle": "Themengraph",
-      "workspaceDescription": "Verschiebe die Knoten, um den Graphen anzuordnen, klicke auf verbundene Linien zum Entfernen von Verknüpfungen und auf isolierte Themen zum Erstellen neuer Verknüpfungen.",
+      "workspaceDescription": "Verschiebe die Themen, um den Graphen anzuordnen, klicke auf verbundene Linien zum Entfernen von Verknüpfungen und auf isolierte Themen zum Erstellen neuer Verknüpfungen.",
       "inspectorTitle": "Inspector",
       "inspectorDescription": "Prüfe das ausgewählte Thema und steuere Graph-Aktionen von hier aus.",
       "graphModeRailTitle": "Ausgewählte Themen",
       "graphModeRailDescription": "Suche nach Themen, um sie dem Graphen hinzuzufügen, und verwalte die aktuell ausgewählten Verknüpfungen.",
-      "graphModeSearchHint": "Suchergebnisse erscheinen als isolierte Knoten und können durch Klicken im Graphen hinzugefügt werden.",
+      "graphModeSearchHint": "Suchergebnisse erscheinen als isolierte Themen und können durch Klicken im Graphen hinzugefügt werden.",
       "foundTopicsTitle": "Gefundene Themen",
-      "foundTopicsDescription": "Diese Themen sind aktuell als isolierte Knoten im Graphen sichtbar.",
+      "foundTopicsDescription": "Diese Themen sind aktuell als isolierte Themen im Graphen sichtbar.",
       "legendRoot": "Aktuelles Thema",
       "legendAssociated": "Verknüpftes Thema",
       "legendIsolated": "Isoliertes Thema",
@@ -277,14 +281,14 @@
       "relatedTopicsTableDescription": "Die Tabelle zeigt alle aktuell verbundenen Themen und erlaubt das direkte Entfernen.",
       "currentTopic": "Aktuelles Thema",
       "associatedTopic": "Verknüpftes Thema",
-      "clickTopicNodeToSeeDetails": "Klicke auf einen Themenknoten, um die Details zu sehen.",
+      "clickTopicNodeToSeeDetails": "Klicke auf ein Thema, um die Details zu sehen.",
       "clickAssociationToRemove": "Klicke auf eine Verbindungslinie, um das verknüpfte Thema zu entfernen.",
-      "clickIsolatedTopicToAssociate": "Klicke auf einen isolierten Themenknoten, um eine Verknüpfung zu erstellen.",
+      "clickIsolatedTopicToAssociate": "Klicke auf ein isoliertes Thema, um eine Verknüpfung zu erstellen.",
       "viewportStatus": "Viewport x: {{x}}, y: {{y}}, Zoom: {{zoom}}"
     },
     "personalGraph": {
       "selectedTopic": "Ausgewähltes Thema",
-      "emptySelection": "Klicke auf eine Node, um das Thema zu prüfen.",
+      "emptySelection": "Klicke auf ein Thema, um es zu prüfen.",
       "graphDescription": "Liste oder Graphansicht deiner Themen.",
       "searchHintSelectOwned": "Wähle zuerst eines deiner eigenen Themen aus, um ein fremdes Thema zu verknüpfen.",
       "keepAtLeastOneAssociation": "Mindestens ein verknüpftes Thema muss bestehen bleiben.",
@@ -375,7 +379,9 @@
     "goPremium": "Premium freischalten",
     "free": {
       "title": "Free",
-      "description": "Kostenlos starten."
+      "description": "Kostenlos starten.",
+      "limitedLearning": "Nur {{count}} Lerneinheiten am Tag",
+      "limitedParallelTopics": "Nur {{count}} Themen gleichzeitig lernbar"
     },
     "paidTagline": "Schalte alles frei, was MYnd zu bieten hat.",
     "monthly": "Monatlich",

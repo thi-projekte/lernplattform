@@ -88,7 +88,12 @@ const ForceLayoutController = ({ baseNodes, edges, onHandleReady }: ForceLayoutC
         );
       },
       initialAlpha,
-      warmupTicks
+      warmupTicks,
+      // Only the initial spread should hard-centre the graph. Recreations keep
+      // existing nodes where they are (centerStrength 0) so expanding a node
+      // doesn't snap the whole layout sideways — the gentle alpha defined above
+      // is what should move things, and the boundary force prevents drift.
+      isFirstSim ? 1 : 0
     );
     handleRef.current = handle;
     onHandleReady?.(handle);

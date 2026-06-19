@@ -8,7 +8,11 @@
  */
 package de.thi.mynd.subscription.service;
 
+import de.thi.mynd.subscription.dto.LimitsDto;
+
 public interface FeatureQuotaRetrievalService {
+
+  LimitsDto getLimitForFreePlan();
 
   boolean canLearn(String userId);
 

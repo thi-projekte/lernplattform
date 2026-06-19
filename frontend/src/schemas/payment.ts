@@ -6,6 +6,12 @@ export type SubscriptionStatus = z.infer<typeof SubscriptionStatusSchema>;
 export const StripeSessionDtoSchema = z.object({ url: z.string() });
 export type StripeSessionDto = z.infer<typeof StripeSessionDtoSchema>;
 
+export const LimitsDtoSchema = z.object({
+  dailyLearningLimit: z.number(),
+  parallelTopics: z.number(),
+});
+export type LimitsDto = z.infer<typeof LimitsDtoSchema>;
+
 export const SubscriptionDtoSchema = z.object({
   creatorId: z.string(),
   subscriptionStatus: SubscriptionStatusSchema,
