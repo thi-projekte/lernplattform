@@ -114,15 +114,17 @@ public final class ImportServiceImpl implements ImportService {
       topicRepository.persist(topic);
       mapping.put(dto.getIdentifier(), topic);
 
-      dto.getIndexCards()
-          .forEach(
-              ic -> {
-                IndexCard indexCard = new IndexCard();
-                indexCard.question = ic.question;
-                indexCard.answer = ic.answer;
-                indexCard.topic = topic;
-                indexCardRepository.persist(indexCard);
-              });
+      if (dto.getIndexCards() != null) {
+        dto.getIndexCards()
+            .forEach(
+                ic -> {
+                  IndexCard indexCard = new IndexCard();
+                  indexCard.question = ic.question;
+                  indexCard.answer = ic.answer;
+                  indexCard.topic = topic;
+                  indexCardRepository.persist(indexCard);
+                });
+      }
 
       dto.getContentElements().stream()
           .map(this::mapToContentElement)
@@ -186,11 +188,31 @@ public final class ImportServiceImpl implements ImportService {
           .findByIdOptional(id)
           .orElseThrow(() -> new ImportException("Category not found by ID: " + key));
     } catch (IllegalArgumentException e) {
-      // If it's not a UUID, treat the key as a title instead
+      // Not a UUID: treat the key as a title. Reuse an existing category with
+      // that title, otherwise create one so a bulk topic import doesn't fail on
+      // categories that don't exist yet.
       return categoryRepository
           .findByTitleOptional(key)
-          .orElseThrow(() -> new ImportException("Category not found by ID or title: " + key));
+          .orElseGet(() -> createImportedCategory(key, ctx));
     }
+  }
+
+  private Category createImportedCategory(String title, ImportContext ctx) {
+    Category category = new Category();
+    category.creatorId = resolveCreatorId(ctx);
+    category.title = title;
+    categoryRepository.persist(category);
+
+    if (category.id != null) {
+      category.path = category.id.toString();
+      categoryRepository.persist(category);
+    }
+
+    // Flush so a later reference to the same title within this import finds the
+    // freshly created category instead of creating a duplicate.
+    categoryRepository.flush();
+    Log.infof("Created missing category '%s' during import", title);
+    return category;
   }
 
   private Topic resolveTopic(String key, ImportContext ctx) {

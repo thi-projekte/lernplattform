@@ -23,6 +23,20 @@ interface ImportTopicsModalProps {
   onClose: () => void;
 }
 
+// The backend returns a helpful plain-text reason on a failed import (e.g.
+// "Category not found by ID or title: ..."). Surface it instead of the generic
+// message so the user can see what's actually wrong (see issue #331).
+const extractBackendError = (error: unknown): string | null => {
+  if (typeof error !== 'object' || error === null || !('response' in error)) return null;
+  const data = (error as { response?: { data?: unknown } }).response?.data;
+  if (typeof data === 'string' && data.trim()) return data.trim();
+  if (data && typeof data === 'object' && 'message' in data) {
+    const message = (data as { message?: unknown }).message;
+    if (typeof message === 'string' && message.trim()) return message.trim();
+  }
+  return null;
+};
+
 const ImportTopicsModal = ({ opened, onClose }: ImportTopicsModalProps) => {
   const { t } = useTranslation();
   const [importFile, setImportFile] = useState<File | null>(null);
@@ -52,8 +66,8 @@ const ImportTopicsModal = ({ opened, onClose }: ImportTopicsModalProps) => {
             notifications.show({ color: 'green', message: t('topic.actions.importJsonSuccess') });
             handleClose();
           },
-          onError: () => {
-            setImportError(t('topic.actions.importJsonError'));
+          onError: (error) => {
+            setImportError(extractBackendError(error) ?? t('topic.actions.importJsonError'));
           },
         });
       } catch {
