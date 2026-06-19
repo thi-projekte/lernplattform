@@ -48,11 +48,19 @@ const NodeFocusKeeper = ({
   centerNodeId: string | null | undefined;
 }) => {
   const { getNode, getViewport, setCenter, flowToScreenPosition } = useReactFlow();
+  const isFirstRunRef = useRef(true);
   useEffect(() => {
+    // Skip the very first run after mount: focusNodeId may be a selection
+    // restored when returning to the page (e.g. switching tabs and back), and
+    // we don't want the camera to jump to it. Only react to focus changes the
+    // user makes afterwards.
+    const wasFirstRun = isFirstRunRef.current;
+    isFirstRunRef.current = false;
     if (!focusNodeId) return;
     // When the same node is being explicitly centred (e.g. via search), let
     // NodeCenterer own the camera so the two don't animate against each other.
     if (centerNodeId && focusNodeId === centerNodeId) return;
+    if (wasFirstRun) return;
     // Give React Flow a moment to commit any pending position updates (e.g.
     // when a click expands the card from a small dot to a wider popup).
     const timeout = window.setTimeout(() => {
@@ -197,6 +205,12 @@ interface TopicGraphViewProps {
   focusNodeId?: string | null;
   centerNodeId?: string | null;
   onCenterDone?: () => void;
+  // Force-layout positions saved from a previous mount, to restore the graph
+  // instead of re-spreading it when returning to the page.
+  savedForcePositions?: Record<string, { x: number; y: number }>;
+  // Called on unmount with the current node positions so the parent can persist
+  // them (used to restore the force layout on the next mount).
+  onPersistPositions?: (positions: { id: string; position: { x: number; y: number } }[]) => void;
   fitView?: boolean;
   fitViewPadding?: number;
   fitViewMaxZoom?: number;
@@ -226,6 +240,8 @@ const TopicGraphView = ({
   focusNodeId,
   centerNodeId,
   onCenterDone,
+  savedForcePositions,
+  onPersistPositions,
   fitView = true,
   fitViewPadding = 0.2,
   fitViewMaxZoom,
@@ -256,6 +272,26 @@ const TopicGraphView = ({
   useEffect(() => {
     setInternalEdges(edges);
   }, [edges, setInternalEdges]);
+
+  // Persist the current node positions on unmount so the parent can restore the
+  // force layout next time the graph mounts, instead of re-spreading it (which
+  // makes the layout fan out when navigating away from the page and back).
+  const latestNodesRef = useRef(internalNodes);
+  useEffect(() => {
+    latestNodesRef.current = internalNodes;
+  }, [internalNodes]);
+  const onPersistRef = useRef(onPersistPositions);
+  useEffect(() => {
+    onPersistRef.current = onPersistPositions;
+  }, [onPersistPositions]);
+  useEffect(
+    () => () => {
+      onPersistRef.current?.(
+        latestNodesRef.current.map((n) => ({ id: n.id, position: n.position }))
+      );
+    },
+    []
+  );
 
   const handleForceReady = useCallback((handle: ForceLayoutHandle | null) => {
     forceHandleRef.current = handle;
@@ -305,7 +341,12 @@ const TopicGraphView = ({
       zoomActivationKeyCode={null}
     >
       {layoutMode === 'force' && (
-        <ForceLayoutController baseNodes={nodes} edges={edges} onHandleReady={handleForceReady} />
+        <ForceLayoutController
+          baseNodes={nodes}
+          edges={edges}
+          onHandleReady={handleForceReady}
+          savedPositions={savedForcePositions}
+        />
       )}
       {layoutMode === 'tree' && <TreeLayoutFit padding={fitViewPadding} maxZoom={fitViewMaxZoom} />}
       <NodeFocusKeeper focusNodeId={focusNodeId} centerNodeId={centerNodeId} />
