@@ -22,9 +22,9 @@ const ForceLayoutController = ({
     savedPositionsRef.current = savedPositions;
   }, [savedPositions]);
   const handleRef = useRef<ForceLayoutHandle | null>(null);
-  
+
   const hasInitializedRef = useRef(false);
- 
+
   const hasFitOnceRef = useRef(false);
 
   const baseNodesRef = useRef(baseNodes);
@@ -57,7 +57,7 @@ const ForceLayoutController = ({
 
     const saved = savedPositionsRef.current;
     const isFirstSim = !hasInitializedRef.current;
-  
+
     const hasSaved = isFirstSim && !!saved && baseNodesRef.current.some((n) => saved[n.id]);
     const fullSpread = isFirstSim && !hasSaved;
     // Lower alpha = less energy, so nodes glide instead of being kicked around.
@@ -65,7 +65,6 @@ const ForceLayoutController = ({
     const warmupTicks = fullSpread ? 200 : 0;
     hasInitializedRef.current = true;
 
-  
     const liveNodes = getNodes();
     const livePosById = new Map(liveNodes.map((n) => [n.id, n.position]));
     const seedSaved = hasSaved ? saved : undefined;
@@ -100,7 +99,6 @@ const ForceLayoutController = ({
       onHandleReady?.(null);
     };
   }, [topologyKey, setNodes, getNodes, onHandleReady]);
-
 
   useEffect(() => {
     const timeout = window.setTimeout(() => {
