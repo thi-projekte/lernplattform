@@ -25,9 +25,10 @@ import {
 } from '@mantine/core';
 import { useDisclosure, useMediaQuery } from '@mantine/hooks';
 import ImportTopicsModal from '../../components/topic/import-topics-modal.tsx';
+import AiAgentModal from '../../components/topic/ai-agent-modal.tsx';
 import { useTranslation } from 'react-i18next';
 import type { OnConnect } from '@xyflow/react';
-import { IconFileImport, IconLink, IconPlusFilled, IconTrash } from '@tabler/icons-react';
+import { IconFileImport, IconLink, IconPlusFilled, IconRobot, IconTrash } from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
 import LayoutLoader from '../../components/layout-loader.tsx';
@@ -62,6 +63,7 @@ const BuilderModeListPage = () => {
   const navigate = useNavigate();
   const { mutate } = useDeleteTopicMutation();
   const [importOpen, { open: openImport, close: closeImport }] = useDisclosure(false);
+  const [aiAgentOpen, { open: openAiAgent, close: closeAiAgent }] = useDisclosure(false);
   const { mutateAsync: createAssociation, isPending: isCreatingAssociation } =
     useCreateAssociation();
   const columns = useTopicColumns({
@@ -272,6 +274,14 @@ const BuilderModeListPage = () => {
           {t('topic.actions.importJson')}
         </Button>
         <Button
+          variant="default"
+          leftSection={<IconRobot size={16} />}
+          onClick={openAiAgent}
+          fullWidth={isMobile}
+        >
+          {t('topic.aiAgent.title')}
+        </Button>
+        <Button
           variant="filled"
           onClick={() => navigate('/builder-mode/topics/create')}
           fullWidth={isMobile}
@@ -282,6 +292,7 @@ const BuilderModeListPage = () => {
       </Flex>
 
       <ImportTopicsModal opened={importOpen} onClose={closeImport} />
+      <AiAgentModal opened={aiAgentOpen} onClose={closeAiAgent} />
       <Stack gap="md" mt={12}>
         <Stack gap="xs" align="center">
           <Group justify="center" w="100%">

@@ -184,6 +184,21 @@
       "importJsonSchema": "JSON-Schema",
       "importJsonSchemaHint": "Nutze dieses Schema, um deine Importdatei zu erstellen."
     },
+    "aiAgent": {
+      "title": "KI-Agent – Themen generieren",
+      "stepPrompt": "Prompt kopieren",
+      "stepImport": "JSON importieren",
+      "promptHint": "Kopiere den folgenden Prompt und füge ihn in Google Gemini ein, um Lernthemen generieren zu lassen.",
+      "copyPrompt": "Prompt kopieren",
+      "openGemini": "Google Gemini öffnen",
+      "nextStep": "Weiter – JSON einfügen",
+      "pasteHint": "Füge das von der KI generierte JSON hier ein. Es wird validiert und anschließend importiert.",
+      "invalidJson": "Ungültiges JSON – bitte überprüfe das Format.",
+      "subjectLabel": "Thema / Fachgebiet",
+      "subjectPlaceholder": "z.B. Photosynthese, Fußballtaktik, Machine Learning",
+      "subjectRequired": "Gib zuerst ein Thema ein, um den Prompt zu aktivieren.",
+      "noCategory": "Keine Kategorie verfügbar. Lege zuerst eine Kategorie an."
+    },
     "progress": {
       "label": "Fortschritt",
       "elementsCompleted": "Inhalte abgeschlossen"

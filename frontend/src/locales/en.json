@@ -184,6 +184,21 @@
       "importJsonSchema": "JSON schema",
       "importJsonSchemaHint": "Use this schema to build your import file."
     },
+    "aiAgent": {
+      "title": "AI Agent – Generate topics",
+      "stepPrompt": "Copy prompt",
+      "stepImport": "Import JSON",
+      "promptHint": "Copy the prompt below and paste it into Google Gemini to generate learning topics.",
+      "copyPrompt": "Copy prompt",
+      "openGemini": "Open Google Gemini",
+      "nextStep": "Next – Paste JSON",
+      "pasteHint": "Paste the AI-generated JSON here. It will be validated and then imported.",
+      "invalidJson": "Invalid JSON – please check the format.",
+      "subjectLabel": "Topic / Subject",
+      "subjectPlaceholder": "e.g. Photosynthesis, Football tactics, Machine learning",
+      "subjectRequired": "Enter a topic first to activate the prompt.",
+      "noCategory": "No category available. Please create a category first."
+    },
     "progress": {
       "label": "Progress",
       "elementsCompleted": "elements completed"
