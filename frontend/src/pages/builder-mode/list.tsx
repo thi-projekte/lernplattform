@@ -28,7 +28,13 @@ import ImportTopicsModal from '../../components/topic/import-topics-modal.tsx';
 import AiAgentModal from '../../components/topic/ai-agent-modal.tsx';
 import { useTranslation } from 'react-i18next';
 import type { OnConnect } from '@xyflow/react';
-import { IconFileImport, IconLink, IconPlusFilled, IconRobot, IconTrash } from '@tabler/icons-react';
+import {
+  IconFileImport,
+  IconLink,
+  IconPlusFilled,
+  IconRobot,
+  IconTrash,
+} from '@tabler/icons-react';
 import { useNavigate } from 'react-router';
 import { useTopicColumns } from '../../tableDefinitions/topic.tsx';
 import LayoutLoader from '../../components/layout-loader.tsx';

@@ -144,7 +144,13 @@ const AiAgentModal = ({ opened, onClose }: AiAgentModalProps) => {
   };
 
   return (
-    <Modal opened={opened} onClose={handleClose} title={t('topic.aiAgent.title')} centered size="lg">
+    <Modal
+      opened={opened}
+      onClose={handleClose}
+      title={t('topic.aiAgent.title')}
+      centered
+      size="lg"
+    >
       <Stepper active={step} onStepClick={setStep} size="sm">
         <Stepper.Step label={t('topic.aiAgent.stepPrompt')} icon={<IconSparkles size={18} />}>
           <Stack gap="md" mt="md">
