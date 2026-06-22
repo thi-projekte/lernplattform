@@ -35,6 +35,15 @@ public final class CategoryResource {
 
   @Inject CategoryService categoryService;
 
+  @GET
+  @RolesAllowed("builder")
+  @Operation(
+      summary = "Gets all categories",
+      description = "Loads the whole category list from the database")
+  public List<CategoryDto> getAll() {
+    return categoryService.getAll();
+  }
+
   @Path("/search")
   @GET
   @Operation(
@@ -52,6 +61,7 @@ public final class CategoryResource {
 
   @GET
   @Path("/tree")
+  @RolesAllowed("admin")
   @Operation(
       summary = "Gets the whole tree",
       description = "Loads the whole category tree from the database")
