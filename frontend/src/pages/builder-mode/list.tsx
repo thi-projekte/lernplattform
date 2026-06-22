@@ -285,7 +285,7 @@ const BuilderModeListPage = () => {
           onClick={openAiAgent}
           fullWidth={isMobile}
         >
-          {t('topic.aiAgent.title')}
+          {t('topic.aiAgent.button')}
         </Button>
         <Button
           variant="filled"

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Alert,
   Button,
@@ -22,11 +22,9 @@ import {
 } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
-import { FullImportSchema } from '../../schemas/topic.ts';
-import { fullImportSchemaText } from '../../constants/full-import-schema.ts';
-import { useImportTopicsMutation } from '../../api/topic.ts';
-import { useQueryCategoryTree } from '../../api/category.ts';
-import type { CategoryTreeDto } from '../../schemas/category.ts';
+import { buildFullImportSchema } from '../../schemas/topic.ts';
+import { buildFullImportSchemaText } from '../../constants/full-import-schema.ts';
+import { useImportTopicsMutation, useQueryAllCategories } from '../../api/topic.ts';
 
 interface AiAgentModalProps {
   opened: boolean;
@@ -34,9 +32,6 @@ interface AiAgentModalProps {
 }
 
 const GEMINI_URL = 'https://gemini.google.com/app';
-
-const flattenCategoryTitles = (categories: CategoryTreeDto[]): string[] =>
-  categories.flatMap((category) => [category.title, ...flattenCategoryTitles(category.children)]);
 
 const sanitizeAiJson = (raw: string): string => {
   let text = raw.trim();
@@ -100,10 +95,13 @@ const AiAgentModal = ({ opened, onClose }: AiAgentModalProps) => {
   const [jsonInput, setJsonInput] = useState('');
   const [importError, setImportError] = useState<string | null>(null);
   const { mutate: importTopics, isPending: isImporting } = useImportTopicsMutation();
-  const { data: categoryTree } = useQueryCategoryTree();
+  const { data: categories } = useQueryAllCategories();
 
-  const categoryTitles = flattenCategoryTitles(categoryTree ?? []);
-  const prompt = buildPrompt(fullImportSchemaText, categoryTitles, subject);
+  const categoryTitles = useMemo(() => (categories ?? []).map((c) => c.title), [categories]);
+  const prompt = useMemo(
+    () => buildPrompt(buildFullImportSchemaText(categoryTitles), categoryTitles, subject),
+    [categoryTitles, subject]
+  );
   const hasSubject = subject.trim().length > 0;
 
   const handleClose = () => {
@@ -124,7 +122,7 @@ const AiAgentModal = ({ opened, onClose }: AiAgentModalProps) => {
     try {
       const parsed = JSON.parse(sanitizeAiJson(jsonInput));
       const normalized = normalizeCategories(parsed, categoryTitles, fallbackCategory);
-      const result = FullImportSchema.safeParse(normalized);
+      const result = buildFullImportSchema(categoryTitles).safeParse(normalized);
       if (!result.success) {
         setImportError(result.error.issues[0]?.message ?? t('topic.actions.importJsonError'));
         return;
