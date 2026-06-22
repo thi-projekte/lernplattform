@@ -201,3 +201,13 @@ export const fullImportSchema = {
 };
 
 export const fullImportSchemaText = JSON.stringify(fullImportSchema, null, 2);
+
+export const buildFullImportSchemaText = (allowedCategories: string[]): string => {
+  const schema = JSON.parse(fullImportSchemaText) as typeof fullImportSchema;
+  const topicProps = schema.$defs.ImportTopicDto.properties as {
+    categories: { items: unknown };
+  };
+  topicProps.categories.items =
+    allowedCategories.length > 0 ? { type: 'string', enum: allowedCategories } : { type: 'string' };
+  return JSON.stringify(schema, null, 2);
+};

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Button,
   Code,
@@ -14,9 +14,9 @@ import {
 import { IconCheck, IconChevronDown, IconChevronRight, IconCopy } from '@tabler/icons-react';
 import { notifications } from '@mantine/notifications';
 import { useTranslation } from 'react-i18next';
-import { FullImportSchema } from '../../schemas/topic.ts';
-import { fullImportSchemaText } from '../../constants/full-import-schema.ts';
-import { useImportTopicsMutation } from '../../api/topic.ts';
+import { buildFullImportSchema } from '../../schemas/topic.ts';
+import { buildFullImportSchemaText } from '../../constants/full-import-schema.ts';
+import { useImportTopicsMutation, useQueryAllCategories } from '../../api/topic.ts';
 
 interface ImportTopicsModalProps {
   opened: boolean;
@@ -43,6 +43,12 @@ const ImportTopicsModal = ({ opened, onClose }: ImportTopicsModalProps) => {
   const [importError, setImportError] = useState<string | null>(null);
   const [schemaOpen, setSchemaOpen] = useState(false);
   const { mutate: importTopics, isPending: isImporting } = useImportTopicsMutation();
+  const { data: categories } = useQueryAllCategories();
+  const allowedCategories = useMemo(() => (categories ?? []).map((c) => c.title), [categories]);
+  const schemaText = useMemo(
+    () => buildFullImportSchemaText(allowedCategories),
+    [allowedCategories]
+  );
 
   const handleClose = () => {
     setImportFile(null);
@@ -56,7 +62,7 @@ const ImportTopicsModal = ({ opened, onClose }: ImportTopicsModalProps) => {
     reader.onload = (e) => {
       try {
         const raw = JSON.parse(e.target?.result as string);
-        const result = FullImportSchema.safeParse(raw);
+        const result = buildFullImportSchema(allowedCategories).safeParse(raw);
         if (!result.success) {
           setImportError(result.error.issues[0]?.message ?? t('topic.actions.importJsonError'));
           return;
@@ -118,7 +124,7 @@ const ImportTopicsModal = ({ opened, onClose }: ImportTopicsModalProps) => {
             >
               {t('topic.actions.importJsonSchema')}
             </Button>
-            <CopyButton value={fullImportSchemaText} timeout={2000}>
+            <CopyButton value={schemaText} timeout={2000}>
               {({ copied, copy }) => (
                 <Button
                   variant="light"
@@ -134,7 +140,7 @@ const ImportTopicsModal = ({ opened, onClose }: ImportTopicsModalProps) => {
           </Group>
           {schemaOpen && (
             <ScrollArea h={320} type="auto">
-              <Code block>{fullImportSchemaText}</Code>
+              <Code block>{schemaText}</Code>
             </ScrollArea>
           )}
         </Stack>

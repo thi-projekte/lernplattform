@@ -127,3 +127,29 @@ export const FullImportSchema = z.object({
       .max(3, 'Associations map value list caps out at a depth of 3 items')
   ),
 });
+
+export const buildFullImportSchema = (allowedCategories: string[]) => {
+  const allowed = new Set(allowedCategories);
+  const categoryField =
+    allowedCategories.length > 0
+      ? z
+          .string()
+          .trim()
+          .min(1)
+          .refine((value) => allowed.has(value), {
+            message: `Unknown category. Allowed: ${allowedCategories.join(', ')}`,
+          })
+      : z.string().trim().min(1);
+
+  const importTopic = ImportTopicSchema.extend({
+    categories: z
+      .array(categoryField)
+      .min(1, 'Must contain at least 1 category reference')
+      .max(2, 'Cannot exceed 2 category entries'),
+  });
+
+  return z.object({
+    topics: z.array(importTopic).min(1, 'Topics array cannot be empty'),
+    associations: FullImportSchema.shape.associations,
+  });
+};
