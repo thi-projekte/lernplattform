@@ -187,6 +187,11 @@
     "aiAgent": {
       "title": "KI-Agent – Themen generieren",
       "button": "KI-Agent",
+      "how": "So funktioniert's",
+      "how1": "Kopiere den Prompt und öffne Google Gemini.",
+      "how2": "Füge ihn in Gemini ein und lass das JSON generieren.",
+      "how3": "Kopiere Geminis Antwort und mach mit „Weiter“ weiter.",
+      "showPrompt": "Prompt anzeigen",
       "stepPrompt": "Prompt kopieren",
       "stepImport": "JSON importieren",
       "promptHint": "Kopiere den folgenden Prompt und füge ihn in Google Gemini ein, um Lernthemen generieren zu lassen.",

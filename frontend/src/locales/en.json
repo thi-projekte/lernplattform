@@ -187,6 +187,11 @@
     "aiAgent": {
       "title": "AI Agent – Generate topics",
       "button": "AI Agent",
+      "how": "How it works",
+      "how1": "Copy the prompt and open Google Gemini.",
+      "how2": "Paste it into Gemini and let it generate the JSON.",
+      "how3": "Copy Gemini's answer, then continue with \"Next\".",
+      "showPrompt": "Show prompt",
       "stepPrompt": "Copy prompt",
       "stepImport": "Import JSON",
       "promptHint": "Copy the prompt below and paste it into Google Gemini to generate learning topics.",

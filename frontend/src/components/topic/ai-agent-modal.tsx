@@ -5,6 +5,8 @@ import {
   Code,
   CopyButton,
   Divider,
+  Group,
+  List,
   Modal,
   ScrollArea,
   Stack,
@@ -15,6 +17,8 @@ import {
 } from '@mantine/core';
 import {
   IconCheck,
+  IconChevronDown,
+  IconChevronRight,
   IconCopy,
   IconExternalLink,
   IconRobot,
@@ -94,6 +98,7 @@ const AiAgentModal = ({ opened, onClose }: AiAgentModalProps) => {
   const [subject, setSubject] = useState('');
   const [jsonInput, setJsonInput] = useState('');
   const [importError, setImportError] = useState<string | null>(null);
+  const [showPrompt, setShowPrompt] = useState(false);
   const { mutate: importTopics, isPending: isImporting } = useImportTopicsMutation();
   const { data: categories } = useQueryAllCategories();
 
@@ -109,6 +114,7 @@ const AiAgentModal = ({ opened, onClose }: AiAgentModalProps) => {
     setSubject('');
     setJsonInput('');
     setImportError(null);
+    setShowPrompt(false);
     onClose();
   };
 
@@ -152,7 +158,6 @@ const AiAgentModal = ({ opened, onClose }: AiAgentModalProps) => {
       <Stepper active={step} onStepClick={setStep} size="sm">
         <Stepper.Step label={t('topic.aiAgent.stepPrompt')} icon={<IconSparkles size={18} />}>
           <Stack gap="md" mt="md">
-            <Text size="sm">{t('topic.aiAgent.promptHint')}</Text>
             <TextInput
               label={t('topic.aiAgent.subjectLabel')}
               description={t('topic.aiAgent.subjectRequired')}
@@ -162,36 +167,65 @@ const AiAgentModal = ({ opened, onClose }: AiAgentModalProps) => {
               withAsterisk
               data-autofocus
             />
-            <ScrollArea h={200} type="auto">
-              <Code block>{prompt}</Code>
-            </ScrollArea>
-            <CopyButton value={prompt} timeout={2000}>
-              {({ copied, copy }) => (
-                <Button
-                  variant="light"
-                  color={copied ? 'teal' : 'blue'}
-                  leftSection={copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
-                  onClick={copy}
-                  disabled={!hasSubject}
-                  fullWidth
-                >
-                  {copied ? t('common.copied') : t('topic.aiAgent.copyPrompt')}
-                </Button>
-              )}
-            </CopyButton>
+
+            <div>
+              <Text size="sm" fw={600} mb={4}>
+                {t('topic.aiAgent.how')}
+              </Text>
+              <List type="ordered" size="sm" spacing={2} c="dimmed">
+                <List.Item>{t('topic.aiAgent.how1')}</List.Item>
+                <List.Item>{t('topic.aiAgent.how2')}</List.Item>
+                <List.Item>{t('topic.aiAgent.how3')}</List.Item>
+              </List>
+            </div>
+
+            <Group grow>
+              <CopyButton value={prompt} timeout={2000}>
+                {({ copied, copy }) => (
+                  <Button
+                    variant="light"
+                    color={copied ? 'teal' : 'blue'}
+                    leftSection={copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
+                    onClick={copy}
+                    disabled={!hasSubject}
+                  >
+                    {copied ? t('common.copied') : t('topic.aiAgent.copyPrompt')}
+                  </Button>
+                )}
+              </CopyButton>
+              <Button
+                component="a"
+                href={GEMINI_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                variant="filled"
+                leftSection={<IconExternalLink size={16} />}
+                disabled={!hasSubject}
+              >
+                {t('topic.aiAgent.openGemini')}
+              </Button>
+            </Group>
+
             <Button
-              component="a"
-              href={GEMINI_URL}
-              target="_blank"
-              rel="noopener noreferrer"
-              variant="filled"
-              leftSection={<IconExternalLink size={16} />}
-              fullWidth
+              variant="subtle"
+              size="compact-xs"
+              leftSection={
+                showPrompt ? <IconChevronDown size={14} /> : <IconChevronRight size={14} />
+              }
+              onClick={() => setShowPrompt((open) => !open)}
+              disabled={!hasSubject}
+              style={{ alignSelf: 'flex-start' }}
             >
-              {t('topic.aiAgent.openGemini')}
+              {t('topic.aiAgent.showPrompt')}
             </Button>
+            {showPrompt && hasSubject && (
+              <ScrollArea h={180} type="auto">
+                <Code block>{prompt}</Code>
+              </ScrollArea>
+            )}
+
             <Divider />
-            <Button variant="default" onClick={() => setStep(1)} disabled={!hasSubject} fullWidth>
+            <Button onClick={() => setStep(1)} disabled={!hasSubject} fullWidth>
               {t('topic.aiAgent.nextStep')}
             </Button>
           </Stack>
