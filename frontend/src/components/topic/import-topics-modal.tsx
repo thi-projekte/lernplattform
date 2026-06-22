@@ -64,6 +64,7 @@ const ImportTopicsModal = ({ opened, onClose }: ImportTopicsModalProps) => {
         const raw = JSON.parse(e.target?.result as string);
         const result = buildFullImportSchema(allowedCategories).safeParse(raw);
         if (!result.success) {
+          console.log(result.error.issues);
           setImportError(result.error.issues[0]?.message ?? t('topic.actions.importJsonError'));
           return;
         }
@@ -76,7 +77,8 @@ const ImportTopicsModal = ({ opened, onClose }: ImportTopicsModalProps) => {
             setImportError(extractBackendError(error) ?? t('topic.actions.importJsonError'));
           },
         });
-      } catch {
+      } catch (e) {
+        console.error(e);
         setImportError(t('topic.actions.importJsonError'));
       }
     };
