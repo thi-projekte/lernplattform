@@ -88,6 +88,11 @@ export const TopicSaveableSchema = TopicCoreDataSchema.extend({
   indexCards: z.array(z.unknown()).max(20).nullish(),
 });
 
+const ImportIndexCardSchema = z.object({
+  question: z.string().trim().min(1, 'Question cannot be blank'),
+  answer: z.string().trim().min(1, 'Answer cannot be blank'),
+});
+
 const ImportTopicSchema = z.object({
   identifier: z.string().trim().min(1, 'Identifier cannot be blank'),
   title: z.string().trim().min(1, 'Title cannot be blank'),
@@ -104,6 +109,11 @@ const ImportTopicSchema = z.object({
     .array(ImportableContentElements)
     .min(1, 'Must have at least 1 content element')
     .max(12, 'Cannot exceed 12 nested content elements'),
+
+  // Optional — kept in the parsed output so they reach the backend (Zod strips
+  // unknown keys, so omitting this field silently dropped index cards and sent
+  // null, which made the importer throw — see issue #331).
+  indexCards: z.array(ImportIndexCardSchema).max(20, 'Cannot exceed 20 index cards').optional(),
 });
 
 export const FullImportSchema = z.object({
@@ -117,3 +127,29 @@ export const FullImportSchema = z.object({
       .max(3, 'Associations map value list caps out at a depth of 3 items')
   ),
 });
+
+export const buildFullImportSchema = (allowedCategories: string[]) => {
+  const allowed = new Set(allowedCategories);
+  const categoryField =
+    allowedCategories.length > 0
+      ? z
+          .string()
+          .trim()
+          .min(1)
+          .refine((value) => allowed.has(value), {
+            message: `Unknown category. Allowed: ${allowedCategories.join(', ')}`,
+          })
+      : z.string().trim().min(1);
+
+  const importTopic = ImportTopicSchema.extend({
+    categories: z
+      .array(categoryField)
+      .min(1, 'Must contain at least 1 category reference')
+      .max(2, 'Cannot exceed 2 category entries'),
+  });
+
+  return z.object({
+    topics: z.array(importTopic).min(1, 'Topics array cannot be empty'),
+    associations: FullImportSchema.shape.associations,
+  });
+};
