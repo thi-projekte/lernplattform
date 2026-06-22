@@ -6,24 +6,27 @@ interface ForceLayoutControllerProps {
   baseNodes: { id: string; position: { x: number; y: number } }[];
   edges: Edge[];
   onHandleReady?: (handle: ForceLayoutHandle | null) => void;
+
+  savedPositions?: Record<string, { x: number; y: number }>;
 }
 
-const ForceLayoutController = ({ baseNodes, edges, onHandleReady }: ForceLayoutControllerProps) => {
+const ForceLayoutController = ({
+  baseNodes,
+  edges,
+  onHandleReady,
+  savedPositions,
+}: ForceLayoutControllerProps) => {
   const { setNodes, getNodes, fitView } = useReactFlow();
+  const savedPositionsRef = useRef(savedPositions);
+  useEffect(() => {
+    savedPositionsRef.current = savedPositions;
+  }, [savedPositions]);
   const handleRef = useRef<ForceLayoutHandle | null>(null);
-  // First sim creation seeds from dagre — needs full alpha to spread out.
-  // Subsequent recreations (topology change, e.g. expanding a node) use a
-  // softer alpha so existing nodes don't get yanked around.
+
   const hasInitializedRef = useRef(false);
-  // The initial fitView must run once after the graph settles. If the
-  // simulation is recreated mid-settle (e.g. cached neighbours load right
-  // after the page mounts), the previous timeout gets cancelled — so we keep
-  // re-scheduling fitView until it has actually fired once.
+
   const hasFitOnceRef = useRef(false);
 
-  // Keep the latest baseNodes/edges in refs so the simulation reads up-to-date
-  // seeds, but does NOT recreate every time the parent re-renders new array
-  // references (e.g. on selection changes).
   const baseNodesRef = useRef(baseNodes);
   const edgesRef = useRef(edges);
   useEffect(() => {
@@ -52,27 +55,22 @@ const ForceLayoutController = ({ baseNodes, edges, onHandleReady }: ForceLayoutC
       return;
     }
 
+    const saved = savedPositionsRef.current;
     const isFirstSim = !hasInitializedRef.current;
-    // Very gentle alpha on subsequent simulations (after expand): the lower
-    // the value, the less energy the forces have, so new nodes glide into
-    // place instead of getting kicked out by collide/charge.
-    const initialAlpha = isFirstSim ? 1 : 0.03;
-    // Warm up the simulation synchronously on the first creation so nodes
-    // appear at their settled positions immediately, without the user having
-    // to wait for the live tick loop. Later recreations skip the warmup so
-    // existing nodes don't visibly jump.
-    const warmupTicks = isFirstSim ? 200 : 0;
+
+    const hasSaved = isFirstSim && !!saved && baseNodesRef.current.some((n) => saved[n.id]);
+    const fullSpread = isFirstSim && !hasSaved;
+    // Lower alpha = less energy, so nodes glide instead of being kicked around.
+    const initialAlpha = fullSpread ? 1 : 0.03;
+    const warmupTicks = fullSpread ? 200 : 0;
     hasInitializedRef.current = true;
 
-    // Seed from the live React Flow store so existing nodes start at their
-    // current force-positions rather than the (stale) tree positions from
-    // the parent's nodes prop. New nodes (just added by expansion) fall back
-    // to the prop position which home.tsx places near the parent.
     const liveNodes = getNodes();
     const livePosById = new Map(liveNodes.map((n) => [n.id, n.position]));
+    const seedSaved = hasSaved ? saved : undefined;
     const seedNodes = baseNodesRef.current.map((n) => ({
       id: n.id,
-      position: livePosById.get(n.id) ?? n.position,
+      position: seedSaved?.[n.id] ?? livePosById.get(n.id) ?? n.position,
     }));
 
     const handle = applyForceLayout(
@@ -89,11 +87,8 @@ const ForceLayoutController = ({ baseNodes, edges, onHandleReady }: ForceLayoutC
       },
       initialAlpha,
       warmupTicks,
-      // Only the initial spread should hard-centre the graph. Recreations keep
-      // existing nodes where they are (centerStrength 0) so expanding a node
-      // doesn't snap the whole layout sideways — the gentle alpha defined above
-      // is what should move things, and the boundary force prevents drift.
-      isFirstSim ? 1 : 0
+
+      fullSpread ? 1 : 0
     );
     handleRef.current = handle;
     onHandleReady?.(handle);
@@ -105,9 +100,6 @@ const ForceLayoutController = ({ baseNodes, edges, onHandleReady }: ForceLayoutC
     };
   }, [topologyKey, setNodes, getNodes, onHandleReady]);
 
-  // Initial camera fit — runs once per mount, independent of sim recreations
-  // so it survives cached-neighbour reloads that would otherwise cancel a
-  // timeout tied to the sim useEffect.
   useEffect(() => {
     const timeout = window.setTimeout(() => {
       if (hasFitOnceRef.current) return;

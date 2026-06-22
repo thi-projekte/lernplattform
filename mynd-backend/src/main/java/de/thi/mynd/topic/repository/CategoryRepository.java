@@ -22,7 +22,7 @@ public final class CategoryRepository extends MyndBaseRepository<Category> {
   @Inject EntityManager em;
 
   public Optional<Category> findByTitleOptional(String title) {
-    return find("title = ?1", title).singleResultOptional();
+    return find("lower(title) = ?1", title.toLowerCase()).singleResultOptional();
   }
 
   public List<Category> findByTitleWithLimit(String title, int limit) {

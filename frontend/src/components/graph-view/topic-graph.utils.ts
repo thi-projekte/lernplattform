@@ -122,11 +122,28 @@ export const applyForceLayout = (
   centerStrength: number = 1
 ): ForceLayoutHandle => {
   // Seed simulation in CENTER coordinates (React Flow stores top-left).
-  const simNodes: ForceSimNode[] = nodes.map((node) => ({
-    id: node.id,
-    x: node.position.x + NODE_HALF_WIDTH,
-    y: node.position.y + NODE_HALF_HEIGHT,
-  }));
+  // Guard against non-finite seeds and exact coincidences: several nodes seeded
+  // at the very same point make forceManyBody/collide blow up to Infinity/NaN,
+  // which then propagates through the links until every node has a NaN position
+  // and the whole graph vanishes from the canvas (and never comes back, because
+  // NaN is sticky). Replace invalid seeds and nudge duplicates apart.
+  const usedPositions = new Set<string>();
+  const simNodes: ForceSimNode[] = nodes.map((node, index) => {
+    let x = node.position.x + NODE_HALF_WIDTH;
+    let y = node.position.y + NODE_HALF_HEIGHT;
+    if (!Number.isFinite(x) || !Number.isFinite(y)) {
+      x = index * 2;
+      y = index * 2;
+    }
+    let key = `${Math.round(x)},${Math.round(y)}`;
+    while (usedPositions.has(key)) {
+      x += 1;
+      y += 1;
+      key = `${Math.round(x)},${Math.round(y)}`;
+    }
+    usedPositions.add(key);
+    return { id: node.id, x, y };
+  });
 
   const nodeIds = new Set(simNodes.map((n) => n.id));
   const simLinks: SimulationLinkDatum<ForceSimNode>[] = edges
@@ -141,6 +158,7 @@ export const applyForceLayout = (
   const boundary = (alpha: number) => {
     simNodes.forEach((node) => {
       if (typeof node.x !== 'number' || typeof node.y !== 'number') return;
+      if (!Number.isFinite(node.x) || !Number.isFinite(node.y)) return;
       const dist = Math.sqrt(node.x * node.x + node.y * node.y);
       if (dist <= BOUND_RADIUS) return;
       const pull = (1 - BOUND_RADIUS / dist) * alpha * 0.4;
@@ -174,7 +192,15 @@ export const applyForceLayout = (
   const emitPositions = () => {
     const positions = new Map<string, { x: number; y: number }>();
     simNodes.forEach((node) => {
-      if (typeof node.x === 'number' && typeof node.y === 'number') {
+      // Skip non-finite positions: emitting a NaN would set the node's React
+      // Flow position to NaN and make it (and, via propagation, the whole graph)
+      // disappear. Keeping the last good position instead is far less jarring.
+      if (
+        typeof node.x === 'number' &&
+        typeof node.y === 'number' &&
+        Number.isFinite(node.x) &&
+        Number.isFinite(node.y)
+      ) {
         positions.set(node.id, {
           x: node.x - NODE_HALF_WIDTH,
           y: node.y - NODE_HALF_HEIGHT,

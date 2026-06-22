@@ -114,15 +114,17 @@ public final class ImportServiceImpl implements ImportService {
       topicRepository.persist(topic);
       mapping.put(dto.getIdentifier(), topic);
 
-      dto.getIndexCards()
-          .forEach(
-              ic -> {
-                IndexCard indexCard = new IndexCard();
-                indexCard.question = ic.question;
-                indexCard.answer = ic.answer;
-                indexCard.topic = topic;
-                indexCardRepository.persist(indexCard);
-              });
+      if (dto.getIndexCards() != null) {
+        dto.getIndexCards()
+            .forEach(
+                ic -> {
+                  IndexCard indexCard = new IndexCard();
+                  indexCard.question = ic.question;
+                  indexCard.answer = ic.answer;
+                  indexCard.topic = topic;
+                  indexCardRepository.persist(indexCard);
+                });
+      }
 
       dto.getContentElements().stream()
           .map(this::mapToContentElement)
@@ -186,7 +188,6 @@ public final class ImportServiceImpl implements ImportService {
           .findByIdOptional(id)
           .orElseThrow(() -> new ImportException("Category not found by ID: " + key));
     } catch (IllegalArgumentException e) {
-      // If it's not a UUID, treat the key as a title instead
       return categoryRepository
           .findByTitleOptional(key)
           .orElseThrow(() -> new ImportException("Category not found by ID or title: " + key));
