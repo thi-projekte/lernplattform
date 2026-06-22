@@ -188,31 +188,10 @@ public final class ImportServiceImpl implements ImportService {
           .findByIdOptional(id)
           .orElseThrow(() -> new ImportException("Category not found by ID: " + key));
     } catch (IllegalArgumentException e) {
-      // Not a UUID: treat the key as a title. Reuse an existing category with
-      // that title, otherwise create one so a bulk topic import doesn't fail on
-      // categories that don't exist yet.
       return categoryRepository
           .findByTitleOptional(key)
-          .orElseGet(() -> createImportedCategory(key, ctx));
+          .orElseThrow(() -> new ImportException("Category not found by ID or title: " + key));
     }
-  }
-
-  private Category createImportedCategory(String title, ImportContext ctx) {
-    Category category = new Category();
-    category.creatorId = resolveCreatorId(ctx);
-    category.title = title;
-    categoryRepository.persist(category);
-
-    if (category.id != null) {
-      category.path = category.id.toString();
-      categoryRepository.persist(category);
-    }
-
-    // Flush so a later reference to the same title within this import finds the
-    // freshly created category instead of creating a duplicate.
-    categoryRepository.flush();
-    Log.infof("Created missing category '%s' during import", title);
-    return category;
   }
 
   private Topic resolveTopic(String key, ImportContext ctx) {

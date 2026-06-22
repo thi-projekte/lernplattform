@@ -52,7 +52,6 @@ public final class CategoryResource {
 
   @GET
   @Path("/tree")
-  @RolesAllowed("admin")
   @Operation(
       summary = "Gets the whole tree",
       description = "Loads the whole category tree from the database")
