@@ -47,9 +47,7 @@ const StepperProgress = ({
       <Stepper
         active={active}
         onStepClick={setActive}
-        // Enforce sequential navigation — user must use the Weiter button to
-        // move forward. Clicking on a future step does nothing; clicking on
-        // an already-completed previous step is still allowed.
+      
         allowNextStepsSelect={false}
         orientation={isMobile ? 'vertical' : 'horizontal'}
       >

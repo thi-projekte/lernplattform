@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef } from 'react';
-import { useReactFlow, type Edge, type OnNodeDrag } from '@xyflow/react';
+import { type Dispatch, type SetStateAction, useEffect, useMemo, useRef } from 'react';
+import { useReactFlow, type Edge, type Node, type OnNodeDrag } from '@xyflow/react';
 import { applyForceLayout, type ForceLayoutHandle } from './topic-graph.utils.ts';
 
 interface ForceLayoutControllerProps {
@@ -8,6 +8,12 @@ interface ForceLayoutControllerProps {
   onHandleReady?: (handle: ForceLayoutHandle | null) => void;
 
   savedPositions?: Record<string, { x: number; y: number }>;
+  // The graph is controlled (nodes come from useNodesState in the parent), so
+  // the simulation must write through that SAME setter. Using useReactFlow()'s
+  // setNodes here instead mixes controlled + store updates, which in production
+  // builds leaves React Flow with a stale/blank canvas until the next
+  // interaction forces a re-render.
+  setNodes: Dispatch<SetStateAction<Node[]>>;
 }
 
 const ForceLayoutController = ({
@@ -15,8 +21,9 @@ const ForceLayoutController = ({
   edges,
   onHandleReady,
   savedPositions,
+  setNodes,
 }: ForceLayoutControllerProps) => {
-  const { setNodes, getNodes, fitView } = useReactFlow();
+  const { getNodes, fitView } = useReactFlow();
   const savedPositionsRef = useRef(savedPositions);
   useEffect(() => {
     savedPositionsRef.current = savedPositions;
