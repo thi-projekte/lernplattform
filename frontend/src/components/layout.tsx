@@ -204,7 +204,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
             </UnstyledButton>
           </Box>
 
-          <Group hiddenFrom="sm" gap="sm" h="100%" px="md">
+          <Group hiddenFrom="sm" gap="sm" h="100%" px="md" wrap="nowrap" align="center">
             <Burger opened={opened} onClick={toggle} size="sm" />
             <UnstyledButton
               onClick={handleLogoClick}
@@ -212,16 +212,15 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
               title={t('routes.dashboard')}
               style={{ display: 'flex', alignItems: 'center' }}
             >
-              <Image src="/mynd-logo.png" alt="MYnd Logo" h={58} w="auto" fit="contain" />
-            </UnstyledButton>
-            <UnstyledButton onClick={() => spotlight.open()} aria-label="Suche öffnen">
-              <IconSearch size={24} stroke={1.5} />
+              <Image src="/mynd-logo.png" alt="MYnd Logo" h={56} w="auto" fit="contain" />
             </UnstyledButton>
           </Group>
-          <Group px="md" gap="xs">
+          <Group px="md" gap="xs" wrap="nowrap">
             <SearchBadge />
-            <StreakBadge />
-            <ChallengeBadge />
+            <Group gap="xs" wrap="nowrap" visibleFrom="sm">
+              <StreakBadge />
+              <ChallengeBadge />
+            </Group>
             <ColorSchemeToggle />
             <LanguagePicker />
           </Group>
