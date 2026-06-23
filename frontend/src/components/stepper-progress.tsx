@@ -47,7 +47,6 @@ const StepperProgress = ({
       <Stepper
         active={active}
         onStepClick={setActive}
-      
         allowNextStepsSelect={false}
         orientation={isMobile ? 'vertical' : 'horizontal'}
       >
