@@ -24,6 +24,8 @@ public interface CategoryService {
 
   List<CategoryTreeDto> getFullTree();
 
+  List<CategoryDto> getAll();
+
   void createCategory(CategoryRequest request);
 
   void updateCategory(UUID categoryId, CategoryRequest request);

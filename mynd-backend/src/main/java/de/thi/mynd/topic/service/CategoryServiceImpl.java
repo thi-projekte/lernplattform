@@ -56,6 +56,12 @@ public final class CategoryServiceImpl implements CategoryService {
   }
 
   @Override
+  public List<CategoryDto> getAll() {
+    List<Category> categories = categoryRepository.listAll();
+    return mappingRegistry.mapList(categories, CategoryDto.class);
+  }
+
+  @Override
   @Transactional
   public void createCategory(CategoryRequest request) {
     if (categoryRepository.existsByTitle(request.title)) {

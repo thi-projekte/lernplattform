@@ -50,6 +50,13 @@ const cachedDagrePositions: Record<SkillTreeOrientation, TopicGraphNodePositions
   vertical: {},
   horizontal: {},
 };
+// Force-settled node positions, persisted across remounts within the session so
+// returning to the JourneyMap restores the layout instead of re-spreading it.
+// Resets on a full page reload (fresh spread is wanted then).
+const cachedForcePositions: Record<SkillTreeOrientation, TopicGraphNodePositions> = {
+  vertical: {},
+  horizontal: {},
+};
 let cachedExpandedTopicIds: string[] = [];
 let cachedSelectedTopicId: string | null = null;
 let cachedHiddenTopicIds: string[] = [];
@@ -329,6 +336,20 @@ const HomePage = () => {
     [orientation]
   );
 
+  // Save the live force positions when the graph unmounts (e.g. navigating to
+  // another tab) so the next mount restores them instead of re-spreading.
+  const handlePersistForcePositions = useCallback(
+    (positions: { id: string; position: { x: number; y: number } }[]) => {
+      if (layoutMode !== 'force') return;
+      const next: TopicGraphNodePositions = { ...cachedForcePositions[orientation] };
+      positions.forEach((p) => {
+        next[p.id] = p.position;
+      });
+      cachedForcePositions[orientation] = next;
+    },
+    [layoutMode, orientation]
+  );
+
   if (isLoading) {
     return <LayoutLoader />;
   }
@@ -379,6 +400,10 @@ const HomePage = () => {
                 focusNodeId={selectedTopicId}
                 centerNodeId={centerOnTopicId}
                 onCenterDone={() => setCenterOnTopicId(null)}
+                savedForcePositions={
+                  layoutMode === 'force' ? cachedForcePositions[orientation] : undefined
+                }
+                onPersistPositions={handlePersistForcePositions}
                 onNodeClick={onNodeClick}
                 onNodeDragStop={(_event, node) => {
                   if (layoutMode === 'force') return;

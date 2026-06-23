@@ -31,7 +31,7 @@ public final class ChallengeRepository extends MyndBaseRepository<Challenge> {
 
   public List<Challenge> findHistoryForUser(String creatorId, LocalDate today, int limit) {
     return find(
-            "creatorId = ?1 AND endDate < ?2 ORDER BY endDate DESC LIMIT 100",
+            "creatorId = ?1 AND endDate < ?2 ORDER BY endDate DESC LIMIT ?3",
             creatorId,
             today,
             limit)

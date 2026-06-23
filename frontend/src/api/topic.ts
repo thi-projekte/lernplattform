@@ -35,6 +35,22 @@ export const useQueryCategories = (search: string) => {
   });
 };
 
+const fetchAllCategories = async (): Promise<Category[]> => {
+  const result = await apiClient.get('/categories', {
+    validateStatus: (status) => status <= 204,
+  });
+  return safeValidateApiResponseContent(z.array(CategorySchema), result.data);
+};
+
+// All selectable categories. Used by the JSON import to list the allowed
+// category names in the schema and validate against them (the importer does not
+// create categories, so a topic may only reference ones that already exist).
+export const useQueryAllCategories = () =>
+  useQuery({
+    queryKey: ['categories', 'all'],
+    queryFn: fetchAllCategories,
+  });
+
 const fetchPersonalTopicsPaginated = async (
   page: number,
   pageSize: number
