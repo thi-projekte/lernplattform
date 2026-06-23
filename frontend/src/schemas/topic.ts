@@ -110,10 +110,14 @@ const ImportTopicSchema = z.object({
     .min(1, 'Must have at least 1 content element')
     .max(12, 'Cannot exceed 12 nested content elements'),
 
-  // Optional — kept in the parsed output so they reach the backend (Zod strips
-  // unknown keys, so omitting this field silently dropped index cards and sent
-  // null, which made the importer throw — see issue #331).
-  indexCards: z.array(ImportIndexCardSchema).max(20, 'Cannot exceed 20 index cards').optional(),
+  // Optional, defaults to [] so an omitted field reaches the backend as an
+  // empty array instead of null — the importer iterates it directly, and Zod
+  // would otherwise strip the key entirely (see issue #331).
+  indexCards: z
+    .array(ImportIndexCardSchema)
+    .max(20, 'Cannot exceed 20 index cards')
+    .optional()
+    .default([]),
 });
 
 export const FullImportSchema = z.object({
