@@ -401,8 +401,8 @@
     "free": {
       "title": "Free",
       "description": "Kostenlos starten.",
-      "limitedLearning": "Nur {{count}} Lerneinheiten am Tag",
-      "limitedParallelTopics": "Nur {{count}} Themen gleichzeitig lernbar"
+      "limitedLearning": "{{count}} Lerneinheiten am Tag",
+      "limitedParallelTopics": "{{count}} Themen gleichzeitig lernbar"
     },
     "paidTagline": "Schalte alles frei, was MYnd zu bieten hat.",
     "monthly": "Monatlich",
