@@ -49,6 +49,7 @@ const StepperProgress = ({
         onStepClick={setActive}
         allowNextStepsSelect={false}
         orientation={isMobile ? 'vertical' : 'horizontal'}
+        styles={{ step: { alignItems: 'center' } }}
       >
         {steps.map((step, i) => (
           <Stepper.Step label={step.label} description={step.description} key={step.label + i}>
