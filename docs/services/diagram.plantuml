@@ -1,0 +1,151 @@
+@startuml diagram
+
+hide circle
+skinparam linetype ortho
+skinparam packageStyle rectangle
+
+package "auth.service" {
+  interface AuthService
+  class AuthServiceImpl
+  interface InvitationService
+  class InvitationServiceImpl
+  interface UserProfileService
+  class UserProfileServiceImpl
+}
+
+package "chat.service" {
+  interface ChatMessageService
+  class ChatMessageServiceImpl
+}
+
+package "common.service" {
+  interface FileAssociatedEntity
+  interface IdentityService
+  class KeycloakIdentityServiceImpl
+  interface ObjectStorageService
+  class S3ObjectStorageImpl
+}
+
+package "notification.service" {
+  interface GenericEmailService
+  class GenericEmailServiceImpl
+}
+
+package "progressTracking.service" {
+  interface ChallengeService
+  class ChallengeServiceImpl
+  interface LearnProgressService
+  class LearnProgressServiceImpl
+  interface StreakService
+  class StreakServiceImpl
+  interface TopicNoteService
+  class TopicNoteServiceImpl
+}
+
+package "subscription.service" {
+  abstract class AbstractFeatureQuotaServiceImpl
+  interface FeatureQuotaActionsService
+  class FeatureQuotaActionsServiceImpl
+  interface FeatureQuotaRetrievalService
+  class FeatureQuotaRetrievalServiceImpl
+  interface PaymentService
+  class PaymentServiceImpl
+  interface StripeService
+  class StripeServiceImpl
+  interface StripeWebhookService
+  class StripeWebhookServiceImpl
+  interface SubscriptionService
+  class SubscriptionServiceImpl
+}
+
+package "topic.service" {
+  interface CategoryService
+  class CategoryServiceImpl
+  interface ContentElementService
+  class ContentElementServiceImpl
+  interface ImportService
+  class ImportServiceImpl
+  interface IndexCardService
+  class IndexCardServiceImpl
+  interface TopicAssociationService
+  class TopicAssociationServiceImpl
+  interface TopicGraphService
+  class TopicGraphServiceImpl
+  interface TopicService
+  class TopicServiceImpl
+}
+
+' ===================== implements / extends =====================
+
+AuthServiceImpl ..|> AuthService
+InvitationServiceImpl ..|> InvitationService
+UserProfileServiceImpl ..|> UserProfileService
+
+ChatMessageServiceImpl ..|> ChatMessageService
+
+KeycloakIdentityServiceImpl ..|> IdentityService
+S3ObjectStorageImpl ..|> ObjectStorageService
+
+GenericEmailServiceImpl ..|> GenericEmailService
+
+ChallengeServiceImpl ..|> ChallengeService
+LearnProgressServiceImpl ..|> LearnProgressService
+StreakServiceImpl ..|> StreakService
+TopicNoteServiceImpl ..|> TopicNoteService
+
+FeatureQuotaActionsServiceImpl ..|> FeatureQuotaActionsService
+FeatureQuotaActionsServiceImpl --|> AbstractFeatureQuotaServiceImpl
+FeatureQuotaRetrievalServiceImpl ..|> FeatureQuotaRetrievalService
+FeatureQuotaRetrievalServiceImpl --|> AbstractFeatureQuotaServiceImpl
+PaymentServiceImpl ..|> PaymentService
+StripeServiceImpl ..|> StripeService
+StripeWebhookServiceImpl ..|> StripeWebhookService
+SubscriptionServiceImpl ..|> SubscriptionService
+
+CategoryServiceImpl ..|> CategoryService
+ContentElementServiceImpl ..|> ContentElementService
+ImportServiceImpl ..|> ImportService
+IndexCardServiceImpl ..|> IndexCardService
+TopicAssociationServiceImpl ..|> TopicAssociationService
+TopicGraphServiceImpl ..|> TopicGraphService
+TopicServiceImpl ..|> TopicService
+
+' ===================== injected service dependencies =====================
+
+AuthServiceImpl --> IdentityService : identityService
+AuthServiceImpl --> UserProfileService : userProfileService
+
+InvitationServiceImpl --> UserProfileService : userProfileService
+InvitationServiceImpl --> IdentityService : identityService
+InvitationServiceImpl --> GenericEmailService : genericEmailService
+
+UserProfileServiceImpl --> ObjectStorageService : objectStorageService
+
+ChallengeServiceImpl --> UserProfileService : userProfileService
+
+LearnProgressServiceImpl --> ContentElementService : contentElementService
+LearnProgressServiceImpl --> StreakService : streakService
+LearnProgressServiceImpl --> ChallengeService : challengeService
+LearnProgressServiceImpl --> FeatureQuotaActionsService : featureQuotaActionsService
+
+AbstractFeatureQuotaServiceImpl --> SubscriptionService : subscriptionService
+
+PaymentServiceImpl --> SubscriptionService : subscriptionService
+PaymentServiceImpl --> StripeService : stripeService
+
+StripeWebhookServiceImpl --> SubscriptionService : subscriptionService
+StripeWebhookServiceImpl --> StripeService : stripeService
+
+SubscriptionServiceImpl --> StripeService : stripeService
+
+ContentElementServiceImpl --> ObjectStorageService : objectStorageService
+
+TopicGraphServiceImpl --> LearnProgressService : learnProgressService
+
+TopicServiceImpl --> CategoryService : categoryService
+TopicServiceImpl --> ContentElementService : contentElementService
+TopicServiceImpl --> TopicAssociationService : topicAssociationService
+TopicServiceImpl --> LearnProgressService : learnProgressService
+TopicServiceImpl --> IndexCardService : indexCardService
+
+@enduml
