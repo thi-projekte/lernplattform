@@ -1,0 +1,254 @@
+@startuml diagram
+
+hide circle
+skinparam linetype ortho
+
+' ===================== Common / base classes =====================
+
+abstract class BaseEntity {
+  creatorId: String
+  createdAt: LocalDateTime
+  updatedAt: LocalDateTime
+}
+
+abstract class BaseEntityWithId extends BaseEntity {
+  id: UUID
+}
+
+abstract class BaseEntityWithCreatorIdPk extends BaseEntity {
+  id: CreatorIdKey
+}
+
+class CreatorIdKey <<Embeddable>> {
+  creatorId: String
+}
+
+BaseEntityWithCreatorIdPk *-- CreatorIdKey
+
+' ===================== Auth =====================
+
+class Invitation extends BaseEntityWithId {
+  acceptedBy: String
+  mailSentTo: String
+  redemptionSecret: String
+}
+
+class UserProfile extends BaseEntityWithCreatorIdPk {
+  profilePictureKey: String
+  invitationsLeft: int
+}
+
+' ===================== Chat =====================
+
+class ChatMessage extends BaseEntityWithId {
+  topicId: UUID
+  message: String
+}
+
+' ===================== Subscription =====================
+
+enum Feature {
+  StartTopic
+  LearnContentElementOrTopic
+}
+
+enum SubscriptionStatus {
+  FREE
+  PREMIUM
+}
+
+class FeatureQuotaId <<Embeddable>> {
+  creatorId: String
+  feature: Feature
+}
+
+class FeatureQuota extends BaseEntity {
+  id: FeatureQuotaId
+  dayAccountedFor: LocalDate
+  count: int
+}
+
+class Subscription extends BaseEntityWithCreatorIdPk {
+  stripeCustomerId: String
+  subscriptionStatus: SubscriptionStatus
+  usedTrial: boolean
+  stripeSubscriptionId: String
+  features: List<String>
+}
+
+FeatureQuota *-- FeatureQuotaId
+FeatureQuotaId ..> Feature
+Subscription ..> SubscriptionStatus
+
+' ===================== Progress tracking =====================
+
+enum ChallengeType {
+  WEEKLY
+}
+
+class Challenge extends BaseEntityWithId {
+  type: ChallengeType
+  startDate: LocalDate
+  endDate: LocalDate
+  targetCount: int
+  currentCount: int
+  completed: boolean
+  rewardClaimed: boolean
+}
+
+enum StreakType {
+  DAILY
+  WEEKLY
+  MONTHLY
+}
+
+class Streak extends BaseEntityWithId {
+  type: StreakType
+  startedAt: LocalDateTime
+  endedAt: LocalDateTime
+  lastContinuedAt: LocalDateTime
+  streakCount: long
+}
+
+class StreakContinuation extends BaseEntityWithId {
+}
+
+class StreakPreference extends BaseEntityWithCreatorIdPk {
+  type: StreakType
+  isPublic: boolean
+}
+
+enum LearnProgressStatus {
+  STARTED
+  ALL_CONTENT_ELEMENTS_COMPLETED
+  COMPLETED_MANUALLY
+}
+
+class LearnProgressTopicId <<Embeddable>> {
+  creatorId: String
+  topicId: UUID
+}
+
+class LearnProgressTopic extends BaseEntity {
+  id: LearnProgressTopicId
+  status: LearnProgressStatus
+  contentElementsToComplete: long
+}
+
+class LearnProgressContentElementId <<Embeddable>> {
+  creatorId: String
+  topicId: UUID
+  contentElementId: UUID
+}
+
+class LearnProgressContentElement extends BaseEntity {
+  id: LearnProgressContentElementId
+  completed: boolean
+}
+
+class TopicNoteId <<Embeddable>> {
+  topicId: UUID
+  creatorId: String
+}
+
+class TopicNote extends BaseEntity {
+  id: TopicNoteId
+  content: String
+}
+
+Challenge ..> ChallengeType
+Streak ..> StreakType
+StreakPreference ..> StreakType
+Streak "many" -- "many" StreakContinuation : continuations >
+LearnProgressTopic *-- LearnProgressTopicId
+LearnProgressTopic ..> LearnProgressStatus
+LearnProgressContentElement *-- LearnProgressContentElementId
+LearnProgressTopic "1" -- "many" LearnProgressContentElement : contentElements >
+TopicNote *-- TopicNoteId
+
+' ===================== Topic / content =====================
+
+class Category extends BaseEntityWithId {
+  title: String
+  color: String
+  path: String <<ltree>>
+}
+
+class Topic extends BaseEntityWithId {
+  title: String
+  teaser: String
+  estimatedLearningDuration: int
+  popularityScore: Integer
+}
+
+class IndexCard extends BaseEntityWithId {
+  question: String
+  answer: String
+}
+
+class TopicAssociation extends BaseEntityWithId {
+}
+
+enum ContentType {
+  PDF
+  VIDEO_FILE
+  AUDIO_FILE
+  YOUTUBE_LINK
+  SPOTIFY_LINK
+  RTF
+  URI
+  IMAGE
+}
+
+abstract class ContentElement extends BaseEntityWithId {
+  title: String
+  type: ContentType
+  icon: String
+  rank: Integer
+}
+
+class AudioFileElement extends ContentElement {
+  s3Key: String
+  originalFileName: String
+}
+
+class VideoFileElement extends ContentElement {
+  s3Key: String
+  originalFileName: String
+}
+
+class PdfElement extends ContentElement {
+  s3Key: String
+  originalFileName: String
+}
+
+class ImageElement extends ContentElement {
+  s3Key: String
+  originalFileName: String
+}
+
+class RtfElement extends ContentElement {
+  rtfText: String
+}
+
+class YouTubeLinkElement extends ContentElement {
+  uri: String
+}
+
+class SpotifyLinkElement extends ContentElement {
+  uri: String
+}
+
+class UriElement extends ContentElement {
+  uri: String
+}
+
+ContentElement ..> ContentType
+
+Topic "many" -- "many" Category : categories >
+Topic "1" -- "many" ContentElement : contentElements >
+Topic "1" -- "many" IndexCard : indexCards >
+Topic "1" -- "many" TopicAssociation : ownedAssociations >
+Topic "1" -- "many" TopicAssociation : foreignAssociations >
+
+@enduml
