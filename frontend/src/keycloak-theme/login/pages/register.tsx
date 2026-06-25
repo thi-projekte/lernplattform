@@ -105,6 +105,22 @@ export default function Register(props: RegisterProps) {
     };
   })();
 
+  const privacyTexts = (() => {
+    if (languageTag.startsWith('de')) {
+      return { prefix: 'Ich akzeptiere die ', link: 'Datenschutzerklärung', suffix: '.' };
+    }
+
+    if (languageTag.startsWith('fr')) {
+      return { prefix: "J'accepte la ", link: 'politique de confidentialité', suffix: '.' };
+    }
+
+    if (languageTag.startsWith('es')) {
+      return { prefix: 'Acepto la ', link: 'política de privacidad', suffix: '.' };
+    }
+
+    return { prefix: 'I accept the ', link: 'privacy policy', suffix: '.' };
+  })();
+
   const languageOrder = ['en', 'fr', 'es'];
 
   const sortedEnabledLanguages = [...enabledLanguages].sort((a, b) => {
@@ -130,6 +146,7 @@ export default function Register(props: RegisterProps) {
   });
 
   const [areTermsAccepted, setAreTermsAccepted] = useState(false);
+  const [isPrivacyAccepted, setIsPrivacyAccepted] = useState(false);
 
   const shouldDisplayMessage =
     message !== undefined && (message.type !== 'warning' || !isAppInitiatedAction);
@@ -276,11 +293,32 @@ export default function Register(props: RegisterProps) {
                   />
                 )}
 
+                <Checkbox
+                  id="privacyAccepted"
+                  checked={isPrivacyAccepted}
+                  onChange={(event) => setIsPrivacyAccepted(event.currentTarget.checked)}
+                  label={
+                    <Text size="sm" style={{ color: '#1F2A44', fontWeight: 500 }}>
+                      {privacyTexts.prefix}
+                      <Anchor href="/legal" target="_blank" rel="noopener noreferrer" size="sm">
+                        {privacyTexts.link}
+                      </Anchor>
+                      {privacyTexts.suffix}
+                    </Text>
+                  }
+                  styles={{
+                    input: {
+                      backgroundColor: '#FFFFFF',
+                      borderColor: '#7CC6E8',
+                    },
+                  }}
+                />
+
                 <Button
                   type="submit"
                   fullWidth
                   radius="md"
-                  disabled={termsAcceptanceRequired && !areTermsAccepted}
+                  disabled={(termsAcceptanceRequired && !areTermsAccepted) || !isPrivacyAccepted}
                   style={{
                     backgroundColor: '#7CC6E8',
                     color: '#FFFFFF',
