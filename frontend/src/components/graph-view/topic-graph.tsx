@@ -346,6 +346,7 @@ const TopicGraphView = ({
           edges={edges}
           onHandleReady={handleForceReady}
           savedPositions={savedForcePositions}
+          setNodes={setInternalNodes}
         />
       )}
       {layoutMode === 'tree' && <TreeLayoutFit padding={fitViewPadding} maxZoom={fitViewMaxZoom} />}

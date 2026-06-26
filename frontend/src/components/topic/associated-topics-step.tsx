@@ -297,7 +297,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                       <Stack gap={6}>
                         {searchSuggestions.map((suggestion) => (
                           <Paper key={suggestion.id} withBorder radius="md" p="xs">
-                            <Group justify="space-between" align="flex-start" wrap="nowrap">
+                            <Group justify="space-between" align="center" wrap="nowrap">
                               <div style={{ minWidth: 0 }}>
                                 <Text fw={600} size="xs" truncate>
                                   {suggestion.title}
@@ -364,7 +364,7 @@ const AssociatedTopicsStep = ({ topic, setTopic }: AssociatedTopicsStepProps) =>
                         })
                       }
                     >
-                      <Group justify="space-between" align="flex-start" wrap="nowrap">
+                      <Group justify="space-between" align="center" wrap="nowrap">
                         <div style={{ minWidth: 0 }}>
                           <Text fw={600} size="sm" truncate>
                             {relatedTopic.title}
