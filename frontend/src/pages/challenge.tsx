@@ -131,7 +131,7 @@ const ChallengePage = () => {
                 >
                   {c.completed ? <IconCheck size={12} /> : <IconX size={12} />}
                 </ThemeIcon>
-                {!c.rewardClaimed && (
+                {c.completed && !c.rewardClaimed && (
                   <Button
                     leftSection={<IconTrophy size={16} />}
                     color="green"
