@@ -104,4 +104,36 @@ public final class TopicGraphRepository extends MyndBaseRepository<Topic> {
         .setParameter("allowedStatus", allowedStatus)
         .getResultList();
   }
+
+  public List<Topic> findUncompletedNeighborsOf(List<UUID> topicIds, String creatorId) {
+    String[] completedStatuses = {
+      LearnProgressStatus.COMPLETED_MANUALLY.name(),
+      LearnProgressStatus.ALL_CONTENT_ELEMENTS_COMPLETED.name()
+    };
+    return getEntityManager()
+        .createNativeQuery(
+            """
+                WITH neighbors AS (
+                    SELECT ta.foreign_topic_id AS neighbor_id
+                    FROM topic_association ta
+                    WHERE ta.owning_topic_id = ANY(:topicIds)
+                    UNION
+                    SELECT ta.owning_topic_id
+                    FROM topic_association ta
+                    WHERE ta.foreign_topic_id = ANY(:topicIds)
+                )
+                SELECT DISTINCT t.*
+                FROM neighbors n
+                INNER JOIN topic t ON t.id = n.neighbor_id
+                LEFT JOIN learn_progress_topic lpt
+                    ON lpt.topicId = t.id AND lpt.creatorId = :creatorId
+                WHERE t.id != ALL(:topicIds)
+                  AND (lpt.status IS NULL OR lpt.status != ALL(CAST(:completedStatuses AS varchar[])))
+                """,
+            Topic.class)
+        .setParameter("topicIds", topicIds.toArray(UUID[]::new))
+        .setParameter("creatorId", creatorId)
+        .setParameter("completedStatuses", completedStatuses)
+        .getResultList();
+  }
 }

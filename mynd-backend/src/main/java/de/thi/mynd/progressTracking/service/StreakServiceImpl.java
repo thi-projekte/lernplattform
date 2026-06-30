@@ -44,6 +44,7 @@ public final class StreakServiceImpl implements StreakService {
   @Inject MappingRegistry mappingRegistry;
 
   @Override
+  @Transactional
   public List<StreakDto> getLatestStreaksForCurrentUser() {
     String creatorId = identity.getPrincipal().getName();
     Log.tracef("Getting latest streaks for user %s", creatorId);

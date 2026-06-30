@@ -57,6 +57,17 @@ public final class TopicGraphServiceImpl implements TopicGraphService {
         mappingRegistry.mapListWithAdditionalData(topicGraph, GraphTopicDto.class);
 
     dtos.addAll(additionalDtos);
+
+    boolean hasUncompletedNeighbors =
+        dtos.stream().anyMatch(dto -> dto.learnProgress == null || !dto.learnProgress.completed);
+    if (!hasUncompletedNeighbors) {
+      List<UUID> dtoIds = dtos.stream().map(dto -> dto.id).toList();
+      List<Topic> uncompletedNeighbors =
+          topicGraphRepository.findUncompletedNeighborsOf(dtoIds, creatorId);
+      dtos.addAll(
+          mappingRegistry.mapListWithAdditionalData(uncompletedNeighbors, GraphTopicDto.class));
+    }
+
     return dtos.stream().toList();
   }
 
