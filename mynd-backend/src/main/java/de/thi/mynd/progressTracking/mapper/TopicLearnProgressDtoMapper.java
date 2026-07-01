@@ -32,8 +32,12 @@ public final class TopicLearnProgressDtoMapper
         entity.status == LearnProgressStatus.COMPLETED_MANUALLY
             || entity.status == LearnProgressStatus.ALL_CONTENT_ELEMENTS_COMPLETED;
 
+    // A topic with zero content elements has nothing to divide by; treat it as 0% rather than
+    // propagating NaN into the DTO.
     double percentageCompleted =
-        (double) completedIds.size() / (double) entity.contentElementsToComplete;
+        entity.contentElementsToComplete == 0
+            ? 0.0
+            : (double) completedIds.size() / (double) entity.contentElementsToComplete;
 
     return TopicLearnProgressDto.builder()
         .topicId(entity.id.topicId)

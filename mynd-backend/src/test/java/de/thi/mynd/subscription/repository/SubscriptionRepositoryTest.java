@@ -97,14 +97,27 @@ class SubscriptionRepositoryTest {
 
   @Test
   @TestTransaction
-  void findByIdsTypeSafe_inheritedFromCustomIdRepository_isUnusableForCompositeIdEntities() {
-    // MyndBaseCustomIdRepository.findByIdsTypeSafe hardcodes List<UUID> as the parameter type, but
-    // every current subclass (including this one) keys its entity with an @EmbeddedId
-    // (CreatorIdKey), so "id IN ?1" can never bind against a UUID list. This documents that the
-    // inherited method is effectively dead/broken for this repository rather than silently leaving
-    // it untested.
-    assertThrows(
-        Exception.class,
-        () -> subscriptionRepository.findByIdsTypeSafe(List.of(UUID.randomUUID())));
+  void findByIdsTypeSafe_returnsOnlyRequestedIds() {
+    Subscription a = newSubscription(unique("creator-a"));
+    Subscription b = newSubscription(unique("creator-b"));
+    Subscription c = newSubscription(unique("creator-c"));
+    subscriptionRepository.persistAndFlush(a);
+    subscriptionRepository.persistAndFlush(b);
+    subscriptionRepository.persistAndFlush(c);
+
+    List<Subscription> result = subscriptionRepository.findByIdsTypeSafe(List.of(a.id, c.id));
+
+    assertEquals(2, result.size());
+    assertTrue(result.stream().anyMatch(s -> s.id.equals(a.id)));
+    assertTrue(result.stream().anyMatch(s -> s.id.equals(c.id)));
+    assertTrue(result.stream().noneMatch(s -> s.id.equals(b.id)));
+  }
+
+  @Test
+  @TestTransaction
+  void findByIdsTypeSafe_emptyList_returnsEmpty() {
+    List<Subscription> result = subscriptionRepository.findByIdsTypeSafe(List.of());
+
+    assertTrue(result.isEmpty());
   }
 }

@@ -21,9 +21,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Exercises {@link TopicNoteRepository} against a real Postgres instance (Quarkus dev services).
- * This repository declares no custom query methods, and its primary key ({@link TopicNoteId}) is
- * not a {@code UUID}, so the inherited {@code findByIdsTypeSafe} (which is hard-coded to compare
- * against {@code UUID} ids) is not applicable here and is intentionally not exercised.
+ * This repository declares no custom query methods.
  */
 @QuarkusTest
 class TopicNoteRepositoryTest {
@@ -85,5 +83,31 @@ class TopicNoteRepositoryTest {
     List<TopicNote> result = topicNoteRepository.findAllWithLimit(3);
 
     assertEquals(3, result.size());
+  }
+
+  @Test
+  @TestTransaction
+  void findByIdsTypeSafe_returnsOnlyRequestedIds() {
+    TopicNote a = newTopicNote(UUID.randomUUID(), unique("creator-a"), "content a");
+    TopicNote b = newTopicNote(UUID.randomUUID(), unique("creator-b"), "content b");
+    TopicNote c = newTopicNote(UUID.randomUUID(), unique("creator-c"), "content c");
+    topicNoteRepository.persistAndFlush(a);
+    topicNoteRepository.persistAndFlush(b);
+    topicNoteRepository.persistAndFlush(c);
+
+    List<TopicNote> result = topicNoteRepository.findByIdsTypeSafe(List.of(a.id, c.id));
+
+    assertEquals(2, result.size());
+    assertTrue(result.stream().anyMatch(n -> n.content.equals("content a")));
+    assertTrue(result.stream().anyMatch(n -> n.content.equals("content c")));
+    assertTrue(result.stream().noneMatch(n -> n.content.equals("content b")));
+  }
+
+  @Test
+  @TestTransaction
+  void findByIdsTypeSafe_emptyList_returnsEmpty() {
+    List<TopicNote> result = topicNoteRepository.findByIdsTypeSafe(List.of());
+
+    assertTrue(result.isEmpty());
   }
 }

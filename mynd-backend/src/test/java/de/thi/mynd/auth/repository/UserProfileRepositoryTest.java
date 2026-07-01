@@ -81,10 +81,29 @@ class UserProfileRepositoryTest {
     assertEquals(3, result.size());
   }
 
-  // Note: findByIdsTypeSafe (inherited from MyndBaseCustomIdRepository) is hard-coded to accept a
-  // List<UUID> regardless of the repository's actual ID type. It compiles for UserProfileRepository
-  // (whose ID type is CreatorIdKey, not UUID) only because the method signature does not depend on
-  // the generic ID parameter, but the underlying query ("id IN ?1") would compare the CreatorIdKey
-  // primary key against UUID values, which is not a meaningful comparison for this entity. We
-  // therefore intentionally do not exercise findByIdsTypeSafe here.
+  @Test
+  @TestTransaction
+  void findByIdsTypeSafe_returnsOnlyRequestedIds() {
+    UserProfile a = newUserProfile(unique("a"));
+    UserProfile b = newUserProfile(unique("b"));
+    UserProfile c = newUserProfile(unique("c"));
+    userProfileRepository.persistAndFlush(a);
+    userProfileRepository.persistAndFlush(b);
+    userProfileRepository.persistAndFlush(c);
+
+    List<UserProfile> result = userProfileRepository.findByIdsTypeSafe(List.of(a.id, c.id));
+
+    assertEquals(2, result.size());
+    assertTrue(result.stream().anyMatch(p -> p.id.equals(a.id)));
+    assertTrue(result.stream().anyMatch(p -> p.id.equals(c.id)));
+    assertTrue(result.stream().noneMatch(p -> p.id.equals(b.id)));
+  }
+
+  @Test
+  @TestTransaction
+  void findByIdsTypeSafe_emptyList_returnsEmpty() {
+    List<UserProfile> result = userProfileRepository.findByIdsTypeSafe(List.of());
+
+    assertTrue(result.isEmpty());
+  }
 }

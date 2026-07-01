@@ -135,21 +135,13 @@ class TopicLearnProgressDtoMapperTest {
     assertFalse(dto.completed);
   }
 
-  /**
-   * Edge case: when contentElementsToComplete is 0 (e.g. a topic with no content elements at all),
-   * the mapper does not guard against the divide-by-zero and computes 0.0 / 0.0, which is NaN in
-   * Java's double arithmetic. This is the actual observed behavior of {@link
-   * TopicLearnProgressDtoMapper#mapAndEnrich(LearnProgressTopic)} today — it is asserted here as
-   * documentation, not as a statement that this is desirable. Consumers of percentageCompleted
-   * should be aware that NaN can be produced for topics with zero required content elements.
-   */
   @Test
-  void mapAndEnrich_zeroContentElementsToComplete_percentageIsNaN() {
+  void mapAndEnrich_zeroContentElementsToComplete_percentageIsZero() {
     LearnProgressTopic topic = topic(LearnProgressStatus.STARTED, 0, new ArrayList<>());
 
     TopicLearnProgressDto dto = topicLearnProgressDtoMapper.mapAndEnrich(topic);
 
-    assertTrue(Double.isNaN(dto.percentageCompleted));
+    assertEquals(0.0, dto.percentageCompleted);
   }
 
   @Test

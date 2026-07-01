@@ -13,7 +13,6 @@ import de.thi.mynd.common.entity.BaseEntity;
 import io.quarkus.hibernate.orm.panache.PanacheQuery;
 import io.quarkus.hibernate.orm.panache.PanacheRepositoryBase;
 import java.util.List;
-import java.util.UUID;
 
 public abstract class MyndBaseCustomIdRepository<T extends BaseEntity, I>
     implements PanacheRepositoryBase<T, I> {
@@ -28,7 +27,7 @@ public abstract class MyndBaseCustomIdRepository<T extends BaseEntity, I>
     return PaginationDto.<T>builder().results(query.list()).totalPages(query.pageCount()).build();
   }
 
-  public List<T> findByIdsTypeSafe(List<UUID> ids) {
+  public List<T> findByIdsTypeSafe(List<I> ids) {
     return find("id IN ?1", ids).list();
   }
 }
