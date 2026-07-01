@@ -117,6 +117,36 @@ public class CategoryResourceTest {
   }
 
   @Nested
+  @DisplayName("GET /categories")
+  class GetAllTests {
+
+    @Test
+    @TestSecurity(
+        user = "builder",
+        roles = {"authorizedUser", "builder"})
+    @DisplayName("Should return all categories for a builder user")
+    void getAllSuccess() {
+      CategoryDto demo = CategoryDto.builder().title("Technology").build();
+      Mockito.when(categoryService.getAll()).thenReturn(List.of(demo));
+
+      given()
+          .when()
+          .get("/categories")
+          .then()
+          .statusCode(200)
+          .contentType(ContentType.JSON)
+          .body("[0].title", is(demo.title));
+    }
+
+    @Test
+    @TestSecurity(user = "alice", roles = "authorizedUser")
+    @DisplayName("Should forbid non-builder users")
+    void getAllForbiddenForNonBuilder() {
+      given().when().get("/categories").then().statusCode(403);
+    }
+  }
+
+  @Nested
   @DisplayName("GET /categories/tree")
   class GetFullTreeTests {
 

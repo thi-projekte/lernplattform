@@ -23,6 +23,7 @@ import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import io.quarkus.test.security.TestSecurity;
 import jakarta.inject.Inject;
+import jakarta.persistence.EntityManager;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.nio.file.Path;
@@ -273,5 +274,18 @@ class UserProfileServiceImplTest {
     // Assert
     assertTrue(result.isEmpty());
     verify(userProfileRepository, times(1)).findByUsernameOptional("user-abc-123");
+  }
+
+  @Test
+  void updateUserProfile_mergesEntityAndFlushes() {
+    UserProfile profile = new UserProfile();
+    profile.creatorId = "user-abc-123";
+    EntityManager entityManager = mock(EntityManager.class);
+    when(userProfileRepository.getEntityManager()).thenReturn(entityManager);
+
+    userProfileService.updateUserProfile(profile);
+
+    verify(entityManager).merge(profile);
+    verify(userProfileRepository).flush();
   }
 }

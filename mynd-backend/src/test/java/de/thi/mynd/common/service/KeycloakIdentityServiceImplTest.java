@@ -70,6 +70,28 @@ class KeycloakIdentityServiceImplTest {
   }
 
   @Test
+  void testGetFullNameByUsername_UserWithoutFirstOrLastName_ReturnsUsername() {
+    String username = "noname";
+    UserRepresentation user = new UserRepresentation();
+
+    when(usersResource.search(username, true)).thenReturn(List.of(user));
+
+    String fullName = identityService.getFullNameByUsername(username);
+
+    assertEquals(username, fullName);
+  }
+
+  @Test
+  void testGetFullNameByUsername_NoMatchingUser_ReturnsUsername() {
+    String username = "ghost";
+    when(usersResource.search(username, true)).thenReturn(Collections.emptyList());
+
+    String fullName = identityService.getFullNameByUsername(username);
+
+    assertEquals(username, fullName);
+  }
+
+  @Test
   void testGetUser_Success() {
     UserRepresentation userRep = new UserRepresentation();
     userRep.setUsername("testuser");

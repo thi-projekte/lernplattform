@@ -13,6 +13,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import de.thi.mynd.common.entity.BaseEntityWithId;
+import de.thi.mynd.common.exception.NoFileProvidedException;
 import io.quarkus.test.InjectMock;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
@@ -143,6 +144,43 @@ class S3ObjectStorageImplTest {
     assertNotNull(resultKey);
     assertTrue(resultKey.equals(key));
     verify(s3Client).putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class));
+  }
+
+  @Test
+  void testUploadObject_whenS3PutFails_doesNotThrow() throws IOException {
+    UUID entityId = UUID.randomUUID();
+    TestEntity entity = new TestEntity(entityId);
+    File tempFile = File.createTempFile("test-upload", ".txt");
+    tempFile.deleteOnExit();
+
+    CompletableFuture<PutObjectResponse> future =
+        CompletableFuture.failedFuture(new RuntimeException("s3 unavailable"));
+    when(s3Client.putObject(any(PutObjectRequest.class), any(AsyncRequestBody.class)))
+        .thenReturn(future);
+
+    assertDoesNotThrow(() -> s3ObjectStorage.uploadObject(entity, tempFile));
+  }
+
+  @Test
+  void testUploadObject_whenFileCannotBeRead_throwsNoFileProvidedException() {
+    UUID entityId = UUID.randomUUID();
+    TestEntity entity = new TestEntity(entityId);
+    File missingFile = new File("/tmp/does-not-exist-" + UUID.randomUUID() + ".txt");
+
+    assertThrows(
+        NoFileProvidedException.class, () -> s3ObjectStorage.uploadObject(entity, missingFile));
+  }
+
+  @Test
+  void testTryDeleteObject_whenS3DeleteFails_doesNotThrow() {
+    String objectKey = "delete-me.png";
+    s3ObjectStorage.bucketName = "default";
+
+    CompletableFuture<DeleteObjectResponse> future =
+        CompletableFuture.failedFuture(new RuntimeException("s3 unavailable"));
+    when(s3Client.deleteObject(any(DeleteObjectRequest.class))).thenReturn(future);
+
+    assertDoesNotThrow(() -> s3ObjectStorage.tryDeleteObject(objectKey));
   }
 
   @Test

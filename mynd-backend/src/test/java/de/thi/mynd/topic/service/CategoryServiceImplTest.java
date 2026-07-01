@@ -16,6 +16,7 @@ import de.thi.mynd.common.requests.AssociatedEntityRequest;
 import de.thi.mynd.topic.dto.CategoryDto;
 import de.thi.mynd.topic.dto.CategoryTreeDto;
 import de.thi.mynd.topic.entity.Category;
+import de.thi.mynd.topic.entity.Topic;
 import de.thi.mynd.topic.exception.CategoryAlreadyExistsException;
 import de.thi.mynd.topic.exception.CategoryMoveException;
 import de.thi.mynd.topic.exception.CategoryNotFoundException;
@@ -450,5 +451,55 @@ class CategoryServiceImplTest {
             CategoryNotFoundException.class, () -> categoryService.deleteCategory(nonExistentId));
 
     assertTrue(exception.getMessage().contains("Category not found"));
+  }
+
+  @Test
+  void deleteCategory_existingCategory_clearsTopicsAndDeletes() {
+    UUID id = UUID.randomUUID();
+    Category existing = cat(id, "Electronics", "path");
+    existing.topics.add(new Topic());
+
+    when(categoryRepository.findByIdOptional(id)).thenReturn(Optional.of(existing));
+
+    categoryService.deleteCategory(id);
+
+    assertTrue(existing.topics.isEmpty());
+    verify(categoryRepository).delete(existing);
+    verify(categoryRepository).flush();
+  }
+
+  @Test
+  void updateCategory_parentNotFound_throwsCategoryNotFoundException() {
+    UUID categoryId = UUID.randomUUID();
+    UUID missingParentId = UUID.randomUUID();
+    Category existing = cat(categoryId, "Electronics", "oldpath");
+
+    when(categoryRepository.findByIdOptional(categoryId)).thenReturn(Optional.of(existing));
+    when(categoryRepository.findByIdOptional(missingParentId)).thenReturn(Optional.empty());
+
+    CategoryRequest request = new CategoryRequest();
+    request.title = "Electronics";
+    request.color = "#000000";
+    request.parentId = missingParentId;
+
+    CategoryNotFoundException exception =
+        assertThrows(
+            CategoryNotFoundException.class,
+            () -> categoryService.updateCategory(categoryId, request));
+
+    assertTrue(exception.getMessage().contains("Parent category not found"));
+  }
+
+  @Test
+  void getAll_returnsAllCategoriesMapped() {
+    Category a = cat(UUID.randomUUID(), "Electronics", "a");
+    Category b = cat(UUID.randomUUID(), "Books", "b");
+    when(categoryRepository.listAll()).thenReturn(List.of(a, b));
+
+    List<CategoryDto> result = categoryService.getAll();
+
+    assertEquals(2, result.size());
+    assertTrue(result.stream().anyMatch(dto -> dto.title.equals("Electronics")));
+    assertTrue(result.stream().anyMatch(dto -> dto.title.equals("Books")));
   }
 }

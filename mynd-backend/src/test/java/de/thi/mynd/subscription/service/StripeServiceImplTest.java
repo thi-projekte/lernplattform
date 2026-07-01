@@ -420,6 +420,38 @@ class StripeServiceImplTest {
     assertEquals("Cannot create trial", exception.getMessage());
   }
 
+  // --- getProductFeatures ---
+
+  @Test
+  @SuppressWarnings("unchecked")
+  void getProductFeatures_withValidId_returnsFeatures() throws StripeException {
+    ProductFeatureService productFeatureService = mock(ProductFeatureService.class);
+    StripeCollection<ProductFeature> collection = mock(StripeCollection.class);
+    ProductFeature feature = mock(ProductFeature.class);
+    when(productService.features()).thenReturn(productFeatureService);
+    when(productFeatureService.list(PRODUCT_ID)).thenReturn(collection);
+    when(collection.getData()).thenReturn(List.of(feature));
+
+    List<ProductFeature> result = stripeService.getProductFeatures(PRODUCT_ID);
+
+    assertEquals(List.of(feature), result);
+  }
+
+  @Test
+  void getProductFeatures_whenStripeThrows_throwsHandledStripeException() throws StripeException {
+    ProductFeatureService productFeatureService = mock(ProductFeatureService.class);
+    StripeException stripeException = mock(StripeException.class);
+    when(stripeException.getMessage()).thenReturn("Not found");
+    when(productService.features()).thenReturn(productFeatureService);
+    when(productFeatureService.list(PRODUCT_ID)).thenThrow(stripeException);
+
+    HandledStripeException ex =
+        assertThrows(
+            HandledStripeException.class, () -> stripeService.getProductFeatures(PRODUCT_ID));
+
+    assertTrue(ex.getMessage().contains("Cannot fetch stripe product features"));
+  }
+
   // --- Helpers ---
 
   @SuppressWarnings("unchecked")

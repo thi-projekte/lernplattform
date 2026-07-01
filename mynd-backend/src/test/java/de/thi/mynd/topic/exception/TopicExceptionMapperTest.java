@@ -15,8 +15,8 @@ import jakarta.ws.rs.core.Response;
 import org.junit.jupiter.api.Test;
 
 /**
- * {@link TopicExceptionMapper} is a plain {@code @ServerExceptionMapper} holder, not a CDI bean,
- * so it is instantiated directly rather than injected.
+ * {@link TopicExceptionMapper} is a plain {@code @ServerExceptionMapper} holder, not a CDI bean, so
+ * it is instantiated directly rather than injected.
  */
 @QuarkusTest
 class TopicExceptionMapperTest {

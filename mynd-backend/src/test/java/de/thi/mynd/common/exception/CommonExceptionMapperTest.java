@@ -35,8 +35,7 @@ class CommonExceptionMapperTest {
   @Test
   void mapInvalidFileTypeException_returnsUnsupportedMediaType() {
     Response response =
-        commonExceptionMapper.mapInvalidFileTypeException(
-            new InvalidFileTypeException("bad type"));
+        commonExceptionMapper.mapInvalidFileTypeException(new InvalidFileTypeException("bad type"));
 
     assertEquals(Response.Status.UNSUPPORTED_MEDIA_TYPE.getStatusCode(), response.getStatus());
     assertEquals("bad type", response.getEntity());

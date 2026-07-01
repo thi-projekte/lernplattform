@@ -21,6 +21,9 @@ import de.thi.mynd.topic.dto.content.ContentElementDto;
 import de.thi.mynd.topic.dto.content.ImageElementDto;
 import de.thi.mynd.topic.dto.content.PdfElementDto;
 import de.thi.mynd.topic.dto.content.RtfElementDto;
+import de.thi.mynd.topic.dto.content.SpotifyLinkElementDto;
+import de.thi.mynd.topic.dto.content.UriElementDto;
+import de.thi.mynd.topic.dto.content.VideoFileElementDto;
 import de.thi.mynd.topic.dto.content.YouTubeLinkElementDto;
 import de.thi.mynd.topic.entity.AudioFileElement;
 import de.thi.mynd.topic.entity.ContentElement;
@@ -28,7 +31,10 @@ import de.thi.mynd.topic.entity.ContentType;
 import de.thi.mynd.topic.entity.ImageElement;
 import de.thi.mynd.topic.entity.PdfElement;
 import de.thi.mynd.topic.entity.RtfElement;
+import de.thi.mynd.topic.entity.SpotifyLinkElement;
 import de.thi.mynd.topic.entity.Topic;
+import de.thi.mynd.topic.entity.UriElement;
+import de.thi.mynd.topic.entity.VideoFileElement;
 import de.thi.mynd.topic.entity.YouTubeLinkElement;
 import de.thi.mynd.topic.processor.content.ContentElementProcessorManager;
 import de.thi.mynd.topic.repository.ContentElementRepository;
@@ -369,6 +375,63 @@ class ContentElementServiceImplTest {
 
     assertNotNull(result);
     verify(mappingRegistry).map(element, YouTubeLinkElementDto.class);
+  }
+
+  @Test
+  @DisplayName("createContentElement maps SpotifyLinkElement to SpotifyLinkElementDto")
+  void createContentElementMapsSpotifyLinkElement() {
+    PdfElementRequest request = new PdfElementRequest();
+    FileUpload file = mock(FileUpload.class);
+    SpotifyLinkElement element = new SpotifyLinkElement();
+    element.id = UUID.randomUUID();
+    element.type = ContentType.SPOTIFY_LINK;
+    SpotifyLinkElementDto expectedDto = SpotifyLinkElementDto.builder().build();
+
+    when(processorManager.createContentElementFromRequest(request, file)).thenReturn(element);
+    when(mappingRegistry.map(eq(element), eq(SpotifyLinkElementDto.class))).thenReturn(expectedDto);
+
+    ContentElementDto result = contentElementService.createContentElement(request, file);
+
+    assertNotNull(result);
+    verify(mappingRegistry).map(element, SpotifyLinkElementDto.class);
+  }
+
+  @Test
+  @DisplayName("createContentElement maps UriElement to UriElementDto")
+  void createContentElementMapsUriElement() {
+    PdfElementRequest request = new PdfElementRequest();
+    FileUpload file = mock(FileUpload.class);
+    UriElement element = new UriElement();
+    element.id = UUID.randomUUID();
+    element.type = ContentType.URI;
+    UriElementDto expectedDto = UriElementDto.builder().build();
+
+    when(processorManager.createContentElementFromRequest(request, file)).thenReturn(element);
+    when(mappingRegistry.map(eq(element), eq(UriElementDto.class))).thenReturn(expectedDto);
+
+    ContentElementDto result = contentElementService.createContentElement(request, file);
+
+    assertNotNull(result);
+    verify(mappingRegistry).map(element, UriElementDto.class);
+  }
+
+  @Test
+  @DisplayName("createContentElement maps VideoFileElement to VideoFileElementDto")
+  void createContentElementMapsVideoFileElement() {
+    PdfElementRequest request = new PdfElementRequest();
+    FileUpload file = mock(FileUpload.class);
+    VideoFileElement element = new VideoFileElement();
+    element.id = UUID.randomUUID();
+    element.type = ContentType.VIDEO_FILE;
+    VideoFileElementDto expectedDto = VideoFileElementDto.builder().build();
+
+    when(processorManager.createContentElementFromRequest(request, file)).thenReturn(element);
+    when(mappingRegistry.map(eq(element), eq(VideoFileElementDto.class))).thenReturn(expectedDto);
+
+    ContentElementDto result = contentElementService.createContentElement(request, file);
+
+    assertNotNull(result);
+    verify(mappingRegistry).map(element, VideoFileElementDto.class);
   }
 
   private static final class UnknownContentElement extends ContentElement {

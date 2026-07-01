@@ -114,6 +114,29 @@ class FeatureQuotaActionsServiceImplTest {
   }
 
   @Test
+  void learnContentElement_ExistingQuotaFromPreviousDay_ResetsCountAndDay()
+      throws FeatureQuotaHitException {
+    // No quota recorded for today, but one exists from a previous day: findOrUpdateOrCreateDefault
+    // Quota must roll it over (reset count to 0, bump dayAccountedFor) instead of reusing the
+    // stale count.
+    mockQuota.count = 3;
+    mockQuota.dayAccountedFor = LocalDate.now().minusDays(2);
+
+    when(featureQuotaRepository.findByCreatorAndFeatureAndDate(
+            eq(USER_ID), eq(Feature.LearnContentElementOrTopic), any(LocalDate.class)))
+        .thenReturn(Optional.empty());
+    when(featureQuotaRepository.findByCreatorAndFeature(
+            USER_ID, Feature.LearnContentElementOrTopic))
+        .thenReturn(Optional.of(mockQuota));
+
+    assertDoesNotThrow(() -> service.learnContentElement(USER_ID));
+
+    assertEquals(LocalDate.now(), mockQuota.dayAccountedFor);
+    // Count is reset to 0 by the rollover, then incremented by learnContentElement itself.
+    assertEquals(1, mockQuota.count);
+  }
+
+  @Test
   void learnContentElement_ExceedsFreeLimitWithUnlimitedLearningFeature_ShouldSucceed()
       throws FeatureQuotaHitException {
     mockQuota.count = 3; // Increments to 4 (> 3 limit)

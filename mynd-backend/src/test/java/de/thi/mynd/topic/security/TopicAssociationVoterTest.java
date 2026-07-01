@@ -67,7 +67,8 @@ class TopicAssociationVoterTest {
   void vote_deleteOthersAssociation_returnsFalse() {
     TopicAssociation association = newAssociation("owner");
 
-    boolean result = voter.vote(identityFor("someone-else"), TopicAssociationVoter.Delete, association);
+    boolean result =
+        voter.vote(identityFor("someone-else"), TopicAssociationVoter.Delete, association);
 
     assertFalse(result);
   }
