@@ -16,12 +16,20 @@ import static org.mockito.Mockito.*;
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
 import de.thi.mynd.common.service.ObjectStorageService;
+import de.thi.mynd.topic.dto.content.AudioFileElementDto;
 import de.thi.mynd.topic.dto.content.ContentElementDto;
+import de.thi.mynd.topic.dto.content.ImageElementDto;
 import de.thi.mynd.topic.dto.content.PdfElementDto;
+import de.thi.mynd.topic.dto.content.RtfElementDto;
+import de.thi.mynd.topic.dto.content.YouTubeLinkElementDto;
+import de.thi.mynd.topic.entity.AudioFileElement;
 import de.thi.mynd.topic.entity.ContentElement;
 import de.thi.mynd.topic.entity.ContentType;
+import de.thi.mynd.topic.entity.ImageElement;
 import de.thi.mynd.topic.entity.PdfElement;
+import de.thi.mynd.topic.entity.RtfElement;
 import de.thi.mynd.topic.entity.Topic;
+import de.thi.mynd.topic.entity.YouTubeLinkElement;
 import de.thi.mynd.topic.processor.content.ContentElementProcessorManager;
 import de.thi.mynd.topic.repository.ContentElementRepository;
 import de.thi.mynd.topic.request.AssociatedContentElementRequest;
@@ -34,6 +42,7 @@ import jakarta.inject.Inject;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Function;
 import org.jboss.resteasy.reactive.multipart.FileUpload;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -264,5 +273,129 @@ class ContentElementServiceImplTest {
             RuntimeException.class,
             () -> contentElementService.getCountOfElementsForTopicId(topicId));
     assertEquals("DB unavailable", ex.getMessage());
+  }
+
+  @Test
+  @DisplayName("getContentElementsForTopic delegates to repository and maps the results")
+  void getContentElementsForTopicDelegatesAndMaps() {
+    UUID topicId = UUID.randomUUID();
+    PdfElement element = new PdfElement();
+    element.id = UUID.randomUUID();
+    element.type = ContentType.PDF;
+    List<ContentElement> elements = List.of(element);
+    List<ContentElementDto> dtos = List.of(PdfElementDto.builder().build());
+
+    when(contentElementRepository.findForTopic(topicId)).thenReturn(elements);
+    when(mappingRegistry.mapList(eq(elements), any(Function.class))).thenReturn(dtos);
+
+    List<ContentElementDto> result = contentElementService.getContentElementsForTopic(topicId);
+
+    assertEquals(dtos, result);
+    verify(contentElementRepository).findForTopic(topicId);
+    verify(mappingRegistry).mapList(eq(elements), any(Function.class));
+  }
+
+  @Test
+  @DisplayName("createContentElement maps AudioFileElement to AudioFileElementDto")
+  void createContentElementMapsAudioFileElement() {
+    PdfElementRequest request = new PdfElementRequest();
+    FileUpload file = mock(FileUpload.class);
+    AudioFileElement element = new AudioFileElement();
+    element.id = UUID.randomUUID();
+    element.type = ContentType.AUDIO_FILE;
+    AudioFileElementDto expectedDto = AudioFileElementDto.builder().build();
+
+    when(processorManager.createContentElementFromRequest(request, file)).thenReturn(element);
+    when(mappingRegistry.map(eq(element), eq(AudioFileElementDto.class))).thenReturn(expectedDto);
+
+    ContentElementDto result = contentElementService.createContentElement(request, file);
+
+    assertNotNull(result);
+    verify(mappingRegistry).map(element, AudioFileElementDto.class);
+  }
+
+  @Test
+  @DisplayName("createContentElement maps ImageElement to ImageElementDto")
+  void createContentElementMapsImageElement() {
+    PdfElementRequest request = new PdfElementRequest();
+    FileUpload file = mock(FileUpload.class);
+    ImageElement element = new ImageElement();
+    element.id = UUID.randomUUID();
+    element.type = ContentType.IMAGE;
+    ImageElementDto expectedDto = ImageElementDto.builder().build();
+
+    when(processorManager.createContentElementFromRequest(request, file)).thenReturn(element);
+    when(mappingRegistry.map(eq(element), eq(ImageElementDto.class))).thenReturn(expectedDto);
+
+    ContentElementDto result = contentElementService.createContentElement(request, file);
+
+    assertNotNull(result);
+    verify(mappingRegistry).map(element, ImageElementDto.class);
+  }
+
+  @Test
+  @DisplayName("createContentElement maps RtfElement to RtfElementDto")
+  void createContentElementMapsRtfElement() {
+    PdfElementRequest request = new PdfElementRequest();
+    FileUpload file = mock(FileUpload.class);
+    RtfElement element = new RtfElement();
+    element.id = UUID.randomUUID();
+    element.type = ContentType.RTF;
+    RtfElementDto expectedDto = RtfElementDto.builder().build();
+
+    when(processorManager.createContentElementFromRequest(request, file)).thenReturn(element);
+    when(mappingRegistry.map(eq(element), eq(RtfElementDto.class))).thenReturn(expectedDto);
+
+    ContentElementDto result = contentElementService.createContentElement(request, file);
+
+    assertNotNull(result);
+    verify(mappingRegistry).map(element, RtfElementDto.class);
+  }
+
+  @Test
+  @DisplayName("createContentElement maps YouTubeLinkElement to YouTubeLinkElementDto")
+  void createContentElementMapsYouTubeLinkElement() {
+    PdfElementRequest request = new PdfElementRequest();
+    FileUpload file = mock(FileUpload.class);
+    YouTubeLinkElement element = new YouTubeLinkElement();
+    element.id = UUID.randomUUID();
+    element.type = ContentType.YOUTUBE_LINK;
+    YouTubeLinkElementDto expectedDto = YouTubeLinkElementDto.builder().build();
+
+    when(processorManager.createContentElementFromRequest(request, file)).thenReturn(element);
+    when(mappingRegistry.map(eq(element), eq(YouTubeLinkElementDto.class))).thenReturn(expectedDto);
+
+    ContentElementDto result = contentElementService.createContentElement(request, file);
+
+    assertNotNull(result);
+    verify(mappingRegistry).map(element, YouTubeLinkElementDto.class);
+  }
+
+  private static final class UnknownContentElement extends ContentElement {
+    // `type` is normally populated by Hibernate's discriminator column on read and is never set
+    // for an in-memory-only instance; createContentElement logs contentElement.type.label before
+    // routing, so it must be non-null here. The switch that picks the DTO class routes on the
+    // Java type, not on this enum value, so the specific value is arbitrary. The field can only
+    // be set from within a subclass (Hibernate's bytecode enhancement downgrades it to
+    // protected), hence this constructor instead of setting it directly in the test.
+    UnknownContentElement() {
+      this.type = ContentType.PDF;
+    }
+  }
+
+  @Test
+  @DisplayName("createContentElement falls back to ContentElementDto for unknown subtypes")
+  void createContentElementMapsUnknownSubtypeToDefaultDto() {
+    PdfElementRequest request = new PdfElementRequest();
+    FileUpload file = mock(FileUpload.class);
+    UnknownContentElement element = new UnknownContentElement();
+    element.id = UUID.randomUUID();
+
+    when(processorManager.createContentElementFromRequest(request, file)).thenReturn(element);
+    when(mappingRegistry.map(eq(element), eq(ContentElementDto.class))).thenReturn(null);
+
+    contentElementService.createContentElement(request, file);
+
+    verify(mappingRegistry).map(element, ContentElementDto.class);
   }
 }

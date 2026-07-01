@@ -499,6 +499,35 @@ class LearnProgressServiceImplTest {
   }
 
   // ---------------------------------------------------------------------------
+  // getLastNLearnedTopicsForUser
+  // ---------------------------------------------------------------------------
+
+  @Test
+  void getLastNLearnedTopicsForUser_delegatesToRepositoryAndReturnsResult() {
+    UUID topicId1 = UUID.randomUUID();
+    UUID topicId2 = UUID.randomUUID();
+    List<UUID> expected = List.of(topicId1, topicId2);
+
+    when(learnProgressTopicRepository.getLastNLearnedTopicIdsForUser(2, CREATOR_ID))
+        .thenReturn(expected);
+
+    List<UUID> result = learnProgressService.getLastNLearnedTopicsForUser(2, CREATOR_ID);
+
+    assertEquals(expected, result);
+    verify(learnProgressTopicRepository).getLastNLearnedTopicIdsForUser(2, CREATOR_ID);
+  }
+
+  @Test
+  void getLastNLearnedTopicsForUser_returnsEmptyList_whenRepositoryReturnsEmpty() {
+    when(learnProgressTopicRepository.getLastNLearnedTopicIdsForUser(5, CREATOR_ID))
+        .thenReturn(List.of());
+
+    List<UUID> result = learnProgressService.getLastNLearnedTopicsForUser(5, CREATOR_ID);
+
+    assertTrue(result.isEmpty());
+  }
+
+  // ---------------------------------------------------------------------------
   // Helpers
   // ---------------------------------------------------------------------------
 

@@ -13,6 +13,7 @@ import static org.mockito.Mockito.*;
 
 import de.thi.mynd.common.exception.EntityInstanceNotFoundException;
 import de.thi.mynd.common.processor.MappingRegistry;
+import de.thi.mynd.progressTracking.dto.TopicLearnProgressDto;
 import de.thi.mynd.progressTracking.service.LearnProgressService;
 import de.thi.mynd.topic.dto.graph.GraphTopicDto;
 import de.thi.mynd.topic.entity.Topic;
@@ -218,5 +219,109 @@ class TopicGraphServiceImplTest {
         () -> {
           topicGraphService.getLearnGraph();
         });
+  }
+
+  @Test
+  @DisplayName(
+      "Should fall back to findUncompletedNeighborsOf when the user has learn progress but no"
+          + " uncompleted neighbors are found in the associated-topics lookup")
+  void testGetLearnGraph_HasProgress_FallsBackToUncompletedNeighbors() {
+    // Arrange
+    UUID learnedTopicId = UUID.randomUUID();
+    when(learnProgressService.getLastNLearnedTopicsForUser(10, creatorId))
+        .thenReturn(List.of(learnedTopicId));
+
+    Topic initialTopic = new Topic();
+    initialTopic.id = learnedTopicId;
+    initialTopic.ownedAssociations = new ArrayList<>();
+    initialTopic.foreignAssociations = new ArrayList<>();
+    when(topicRepository.findByIdsTypeSafe(List.of(learnedTopicId)))
+        .thenReturn(List.of(initialTopic));
+    when(topicRepository.findByIdOptional(learnedTopicId)).thenReturn(Optional.of(initialTopic));
+
+    TopicLearnProgressDto completedProgress =
+        TopicLearnProgressDto.builder().topicId(learnedTopicId).completed(true).build();
+    GraphTopicDto initialDto =
+        GraphTopicDto.builder().id(UUID.randomUUID()).learnProgress(completedProgress).build();
+    when(mappingRegistry.mapListWithAdditionalData(List.of(initialTopic), GraphTopicDto.class))
+        .thenReturn(List.of(initialDto));
+    // No associations on initialTopic, so getNeighborsOfTopic maps an empty list of neighbors.
+    when(mappingRegistry.mapListWithAdditionalData(List.of(), GraphTopicDto.class))
+        .thenReturn(List.of());
+
+    Topic associatedTopic = new Topic();
+    associatedTopic.id = UUID.randomUUID();
+    when(topicGraphRepository.findForAssociatedTopicsNotStartedAllCompleted(
+            List.of(learnedTopicId), creatorId))
+        .thenReturn(List.of(associatedTopic));
+    GraphTopicDto associatedDto =
+        GraphTopicDto.builder().id(UUID.randomUUID()).learnProgress(completedProgress).build();
+    when(mappingRegistry.mapListWithAdditionalData(List.of(associatedTopic), GraphTopicDto.class))
+        .thenReturn(List.of(associatedDto));
+
+    Topic uncompletedNeighborTopic = new Topic();
+    uncompletedNeighborTopic.id = UUID.randomUUID();
+    when(topicGraphRepository.findUncompletedNeighborsOf(anyList(), eq(creatorId)))
+        .thenReturn(List.of(uncompletedNeighborTopic));
+    GraphTopicDto uncompletedNeighborDto = GraphTopicDto.builder().id(UUID.randomUUID()).build();
+    when(mappingRegistry.mapListWithAdditionalData(
+            List.of(uncompletedNeighborTopic), GraphTopicDto.class))
+        .thenReturn(List.of(uncompletedNeighborDto));
+
+    // Act
+    List<GraphTopicDto> result = topicGraphService.getLearnGraph();
+
+    // Assert: since both the initial and associated dtos report completed progress, the
+    // hasUncompletedNeighbors check is false, triggering the findUncompletedNeighborsOf fallback.
+    assertEquals(3, result.size());
+    assertTrue(result.contains(initialDto));
+    assertTrue(result.contains(associatedDto));
+    assertTrue(result.contains(uncompletedNeighborDto));
+    verify(topicGraphRepository).findUncompletedNeighborsOf(anyList(), eq(creatorId));
+  }
+
+  @Test
+  @DisplayName("getNeighborsOfTopic should map both owned and foreign association neighbors")
+  void testGetNeighborsOfTopic_ReturnsOwnedAndForeignNeighbors() {
+    // Arrange
+    Topic foreignNeighbor = new Topic();
+    foreignNeighbor.id = UUID.randomUUID();
+    Topic owningNeighbor = new Topic();
+    owningNeighbor.id = UUID.randomUUID();
+
+    TopicAssociation ownedAssociation = new TopicAssociation();
+    ownedAssociation.foreignTopic = foreignNeighbor;
+    TopicAssociation foreignAssociation = new TopicAssociation();
+    foreignAssociation.owningTopic = owningNeighbor;
+
+    testTopic.ownedAssociations = List.of(ownedAssociation);
+    testTopic.foreignAssociations = List.of(foreignAssociation);
+
+    when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.of(testTopic));
+    GraphTopicDto dto1 = GraphTopicDto.builder().id(UUID.randomUUID()).build();
+    GraphTopicDto dto2 = GraphTopicDto.builder().id(UUID.randomUUID()).build();
+    when(mappingRegistry.mapListWithAdditionalData(
+            List.of(foreignNeighbor, owningNeighbor), GraphTopicDto.class))
+        .thenReturn(List.of(dto1, dto2));
+
+    // Act
+    List<GraphTopicDto> result = topicGraphService.getNeighborsOfTopic(topicId);
+
+    // Assert
+    assertEquals(List.of(dto1, dto2), result);
+    verify(mappingRegistry)
+        .mapListWithAdditionalData(List.of(foreignNeighbor, owningNeighbor), GraphTopicDto.class);
+  }
+
+  @Test
+  @DisplayName("getNeighborsOfTopic should throw when the topic does not exist")
+  void testGetNeighborsOfTopic_TopicNotFound_ThrowsException() {
+    // Arrange
+    when(topicRepository.findByIdOptional(topicId)).thenReturn(Optional.empty());
+
+    // Act & Assert
+    assertThrows(
+        EntityInstanceNotFoundException.class,
+        () -> topicGraphService.getNeighborsOfTopic(topicId));
   }
 }

@@ -19,7 +19,7 @@ public abstract class MyndBaseCustomIdRepository<T extends BaseEntity, I>
     implements PanacheRepositoryBase<T, I> {
 
   public List<T> findAllWithLimit(int limit) {
-    return findAll().range(0, limit).list();
+    return findAll().range(0, limit - 1).list();
   }
 
   protected PaginationDto<T> buildPaginationFromQuery(

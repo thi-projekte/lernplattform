@@ -251,6 +251,66 @@ class StreakServiceImplTest {
   }
 
   // =========================================================================
+  // getLatestPreferredStreakForUser
+  // =========================================================================
+
+  @Nested
+  class GetLatestPreferredStreak {
+
+    @Test
+    void returnsMappedDto_whenActiveStreakOfPreferredTypeExists() {
+      StreakPreference preference = new StreakPreference();
+      preference.creatorId = CREATOR_ID;
+      preference.type = StreakType.WEEKLY;
+      preference.isPublic = false;
+
+      Streak streak = buildStreak(StreakType.WEEKLY, LocalDateTime.now());
+      StreakDto expectedDto = StreakDto.builder().build();
+
+      when(streakPreferenceRepository.findByIdOptional(any(CreatorIdKey.class)))
+          .thenReturn(Optional.of(preference));
+      when(streakRepository.findNotEndedByCreatorIdAndType(CREATOR_ID, StreakType.WEEKLY))
+          .thenReturn(Optional.of(streak));
+      when(mappingRegistry.map(streak, StreakDto.class)).thenReturn(expectedDto);
+
+      StreakDto result = streakService.getLatestPreferredStreakForUser(CREATOR_ID);
+
+      assertEquals(expectedDto, result);
+    }
+
+    @Test
+    void returnsNull_whenNoActiveStreakOfPreferredTypeExists() {
+      StreakPreference preference = new StreakPreference();
+      preference.creatorId = CREATOR_ID;
+      preference.type = StreakType.DAILY;
+      preference.isPublic = false;
+
+      when(streakPreferenceRepository.findByIdOptional(any(CreatorIdKey.class)))
+          .thenReturn(Optional.of(preference));
+      when(streakRepository.findNotEndedByCreatorIdAndType(CREATOR_ID, StreakType.DAILY))
+          .thenReturn(Optional.empty());
+
+      StreakDto result = streakService.getLatestPreferredStreakForUser(CREATOR_ID);
+
+      assertNull(result);
+      verify(mappingRegistry, never()).map(any(Streak.class), eq(StreakDto.class));
+    }
+
+    @Test
+    void createsPreference_whenNoneExistsYet_thenLooksUpStreak() {
+      when(streakPreferenceRepository.findByIdOptional(any(CreatorIdKey.class)))
+          .thenReturn(Optional.empty());
+      when(streakRepository.findNotEndedByCreatorIdAndType(CREATOR_ID, StreakType.DAILY))
+          .thenReturn(Optional.empty());
+
+      StreakDto result = streakService.getLatestPreferredStreakForUser(CREATOR_ID);
+
+      assertNull(result);
+      verify(streakPreferenceRepository).persistAndFlush(any(StreakPreference.class));
+    }
+  }
+
+  // =========================================================================
   // continueOrStartStreaksForCurrentUser
   // =========================================================================
 

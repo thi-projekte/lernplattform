@@ -182,4 +182,52 @@ class InvitationServiceImplTest {
         CannotAcceptInvitationException.class,
         () -> invitationService.redeemInvitation(invitationId, "wrong-secret"));
   }
+
+  @Test
+  void testRedeemInvitation_AlreadyAccepted_ThrowsException() {
+    UUID invitationId = UUID.randomUUID();
+    String correctSecret = "secret-token-xyz";
+
+    Invitation invitation = new Invitation();
+    invitation.id = invitationId;
+    invitation.creatorId = "external-user";
+    invitation.redemptionSecret = correctSecret;
+    invitation.acceptedBy = "someone-else"; // Already redeemed by another user
+
+    when(invitationRepository.findByIdOptional(invitationId)).thenReturn(Optional.of(invitation));
+
+    assertThrows(
+        CannotAcceptInvitationException.class,
+        () -> invitationService.redeemInvitation(invitationId, correctSecret));
+
+    verify(identityService, never()).addRolesToUser(any(), any());
+  }
+
+  @Test
+  void testGetSentInvitations_DelegatesToRepositoryPagination() {
+    Invitation invitation = new Invitation();
+    invitation.id = UUID.randomUUID();
+    invitation.creatorId = CURRENT_USER_ID;
+    InvitationDto invitationDto = InvitationDto.builder().id(invitation.id).build();
+
+    de.thi.mynd.common.dto.PaginationDto<Invitation> repositoryPagination =
+        de.thi.mynd.common.dto.PaginationDto.<Invitation>builder()
+            .results(List.of(invitation))
+            .totalPages(4)
+            .build();
+
+    when(invitationRepository.getInvitationsForCreatorPaginated(CURRENT_USER_ID, 1, 10))
+        .thenReturn(repositoryPagination);
+    when(mappingRegistry.mapList(repositoryPagination.results, InvitationDto.class))
+        .thenReturn(List.of(invitationDto));
+
+    de.thi.mynd.common.dto.PaginationDto<InvitationDto> result =
+        invitationService.getSentInvitations(1, 10);
+
+    assertEquals(1, result.results.size());
+    assertEquals(invitationDto, result.results.get(0));
+    assertEquals(4, result.totalPages);
+    verify(invitationRepository, times(1))
+        .getInvitationsForCreatorPaginated(CURRENT_USER_ID, 1, 10);
+  }
 }
