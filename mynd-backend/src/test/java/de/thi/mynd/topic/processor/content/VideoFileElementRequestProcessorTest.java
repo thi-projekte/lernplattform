@@ -13,6 +13,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+import de.thi.mynd.common.exception.FileTooLargeException;
 import de.thi.mynd.common.exception.InvalidFileTypeException;
 import de.thi.mynd.common.exception.NoFileProvidedException;
 import de.thi.mynd.common.service.ObjectStorageService;
@@ -95,6 +96,29 @@ class VideoFileElementRequestProcessorTest {
             InvalidFileTypeException.class,
             () -> processor.creteContentElementFromRequest(request, mockFile));
     assertEquals("The file is not a valid video file", ex.getMessage());
+  }
+
+  @Test
+  void testCreteContentElementFromRequest_NullContentType_ThrowsInvalidFileTypeException() {
+    VideoFileElementRequest request = new VideoFileElementRequest();
+    FileUpload mockFile = mock(FileUpload.class);
+    when(mockFile.contentType()).thenReturn(null);
+
+    assertThrows(
+        InvalidFileTypeException.class,
+        () -> processor.creteContentElementFromRequest(request, mockFile));
+  }
+
+  @Test
+  void testCreteContentElementFromRequest_FileTooLarge_ThrowsFileTooLargeException() {
+    VideoFileElementRequest request = new VideoFileElementRequest();
+    FileUpload mockFile = mock(FileUpload.class);
+    when(mockFile.contentType()).thenReturn("video/mp4");
+    when(mockFile.size()).thenReturn(101L * 1024 * 1024);
+
+    assertThrows(
+        FileTooLargeException.class,
+        () -> processor.creteContentElementFromRequest(request, mockFile));
   }
 
   @Test

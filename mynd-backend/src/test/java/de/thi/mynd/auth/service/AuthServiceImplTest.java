@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.keycloak.representations.idm.RoleRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 
 @QuarkusTest
@@ -53,6 +54,19 @@ class AuthServiceImplTest {
     boolean isBuilder = authService.checkUserIsBuilder(USERNAME);
 
     assertFalse(isBuilder);
+  }
+
+  @Test
+  void testCheckUserIsBuilder_True() {
+    // Setup: User has the "builder" role among their Mynd roles
+    RoleRepresentation builderRole = new RoleRepresentation();
+    builderRole.setName("builder");
+
+    when(identityService.getMyndRoles(USERNAME)).thenReturn(List.of(builderRole));
+
+    boolean isBuilder = authService.checkUserIsBuilder(USERNAME);
+
+    assertTrue(isBuilder);
   }
 
   @Test
@@ -103,6 +117,26 @@ class AuthServiceImplTest {
     authService.makeUserALearner(USERNAME);
 
     // Verifikation: addRolesToUser wurde mit der korrekten Liste aufgerufen
+    verify(identityService, times(1)).addRolesToUser(USERNAME, List.of("learner"));
+  }
+
+  @Test
+  void testMakeUserALearner_NoExistingProfile_CreatesPersonalProfile()
+      throws UserNotFoundException {
+    // Setup: kein bestehendes UserProfile vorhanden -> orElseGet Fallback wird ausgelöst
+    UserRepresentation user = new UserRepresentation();
+    user.setClientRoles(Map.of(CLIENT_UUID, List.of("viewer")));
+    UserProfile newlyCreated = new UserProfile();
+    newlyCreated.invitationsLeft = 0;
+    newlyCreated.creatorId = USERNAME;
+
+    when(identityService.getUser(USERNAME)).thenReturn(user);
+    when(userProfileService.getPersonalUserProfile()).thenReturn(Optional.empty());
+    when(userProfileService.createPersonalUserProfile()).thenReturn(newlyCreated);
+
+    authService.makeUserALearner(USERNAME);
+
+    verify(userProfileService, times(1)).createPersonalUserProfile();
     verify(identityService, times(1)).addRolesToUser(USERNAME, List.of("learner"));
   }
 }

@@ -8,6 +8,7 @@
  */
 package de.thi.mynd.subscription.service;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
@@ -15,6 +16,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
 import de.thi.mynd.subscription.StripeFeatureFlagConstants;
+import de.thi.mynd.subscription.dto.LimitsDto;
 import de.thi.mynd.subscription.entity.Feature;
 import de.thi.mynd.subscription.entity.FeatureQuota;
 import de.thi.mynd.subscription.entity.Subscription;
@@ -55,6 +57,18 @@ class FeatureQuotaRetrievalServiceImplTest {
     mockSubscription.features = new ArrayList<>();
 
     when(subscriptionService.getSubscriptionForUser(USER_ID)).thenReturn(mockSubscription);
+  }
+
+  // =========================================================================
+  // getLimitForFreePlan() Tests
+  // =========================================================================
+
+  @Test
+  void getLimitForFreePlan_returnsConfiguredLimits() {
+    LimitsDto result = service.getLimitForFreePlan();
+
+    assertEquals(3, result.dailyLearningLimit);
+    assertEquals(2, result.parallelTopics);
   }
 
   // =========================================================================

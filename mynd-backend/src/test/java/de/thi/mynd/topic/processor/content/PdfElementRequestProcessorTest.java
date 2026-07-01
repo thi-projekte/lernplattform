@@ -13,6 +13,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+import de.thi.mynd.common.exception.FileTooLargeException;
 import de.thi.mynd.common.exception.InvalidFileTypeException;
 import de.thi.mynd.common.exception.NoFileProvidedException;
 import de.thi.mynd.common.service.ObjectStorageService;
@@ -96,6 +97,31 @@ class PdfElementRequestProcessorTest {
             InvalidFileTypeException.class,
             () -> processor.creteContentElementFromRequest(request, mockFile));
     assertEquals("The file is not a valid pdf", ex.getMessage());
+  }
+
+  @Test
+  void testCreteContentElementFromRequest_NullContentType_ThrowsInvalidFileTypeException() {
+    PdfElementRequest request = new PdfElementRequest();
+    FileUpload mockFile = mock(FileUpload.class);
+    when(mockFile.contentType()).thenReturn(null);
+
+    assertThrows(
+        InvalidFileTypeException.class,
+        () -> processor.creteContentElementFromRequest(request, mockFile));
+  }
+
+  @Test
+  void testCreteContentElementFromRequest_FileTooLarge_ThrowsFileTooLargeException() {
+    PdfElementRequest request = new PdfElementRequest();
+    FileUpload mockFile = mock(FileUpload.class);
+    when(mockFile.contentType()).thenReturn("application/pdf");
+    when(mockFile.size()).thenReturn(11L * 1024 * 1024);
+
+    FileTooLargeException ex =
+        assertThrows(
+            FileTooLargeException.class,
+            () -> processor.creteContentElementFromRequest(request, mockFile));
+    assertEquals("PDF file must not exceed 10 MB", ex.getMessage());
   }
 
   @Test

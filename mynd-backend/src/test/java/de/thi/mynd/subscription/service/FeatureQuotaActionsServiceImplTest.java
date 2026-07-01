@@ -13,6 +13,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+import de.thi.mynd.subscription.StripeFeatureFlagConstants;
 import de.thi.mynd.subscription.entity.Feature;
 import de.thi.mynd.subscription.entity.FeatureQuota;
 import de.thi.mynd.subscription.entity.Subscription;
@@ -112,6 +113,45 @@ class FeatureQuotaActionsServiceImplTest {
     verify(featureQuotaRepository, times(2)).persistAndFlush(any(FeatureQuota.class));
   }
 
+  @Test
+  void learnContentElement_ExistingQuotaFromPreviousDay_ResetsCountAndDay()
+      throws FeatureQuotaHitException {
+    // No quota recorded for today, but one exists from a previous day: findOrUpdateOrCreateDefault
+    // Quota must roll it over (reset count to 0, bump dayAccountedFor) instead of reusing the
+    // stale count.
+    mockQuota.count = 3;
+    mockQuota.dayAccountedFor = LocalDate.now().minusDays(2);
+
+    when(featureQuotaRepository.findByCreatorAndFeatureAndDate(
+            eq(USER_ID), eq(Feature.LearnContentElementOrTopic), any(LocalDate.class)))
+        .thenReturn(Optional.empty());
+    when(featureQuotaRepository.findByCreatorAndFeature(
+            USER_ID, Feature.LearnContentElementOrTopic))
+        .thenReturn(Optional.of(mockQuota));
+
+    assertDoesNotThrow(() -> service.learnContentElement(USER_ID));
+
+    assertEquals(LocalDate.now(), mockQuota.dayAccountedFor);
+    // Count is reset to 0 by the rollover, then incremented by learnContentElement itself.
+    assertEquals(1, mockQuota.count);
+  }
+
+  @Test
+  void learnContentElement_ExceedsFreeLimitWithUnlimitedLearningFeature_ShouldSucceed()
+      throws FeatureQuotaHitException {
+    mockQuota.count = 3; // Increments to 4 (> 3 limit)
+    mockSubscription.features.add(StripeFeatureFlagConstants.UnlimitedLearning);
+
+    when(featureQuotaRepository.findByCreatorAndFeatureAndDate(
+            eq(USER_ID), eq(Feature.LearnContentElementOrTopic), any(LocalDate.class)))
+        .thenReturn(Optional.of(mockQuota));
+
+    assertDoesNotThrow(() -> service.learnContentElement(USER_ID));
+
+    assertEquals(4, mockQuota.count);
+    verify(featureQuotaRepository, times(1)).persistAndFlush(mockQuota);
+  }
+
   // =========================================================================
   // completeTopic() Tests
   // =========================================================================
@@ -127,6 +167,21 @@ class FeatureQuotaActionsServiceImplTest {
 
     assertEquals(1, mockQuota.count);
     verify(featureQuotaRepository, times(2)).persistAndFlush(mockQuota);
+  }
+
+  @Test
+  void completeTopic_CountIsZero_ShouldBeNoOpAndNotPersist() throws FeatureQuotaHitException {
+    mockQuota.count = 0;
+    when(featureQuotaRepository.findByCreatorAndFeature(USER_ID, Feature.StartTopic))
+        .thenReturn(Optional.of(mockQuota));
+
+    assertDoesNotThrow(() -> service.completeTopic(USER_ID));
+
+    assertEquals(0, mockQuota.count);
+    // findOrUpdateOrCreateDefaultQuota persists once unconditionally whenever it finds an
+    // existing quota (even with no field changes); completeTopic's own decrement branch is what
+    // doesn't run here, so the call count is 1, not 0.
+    verify(featureQuotaRepository, times(1)).persistAndFlush(mockQuota);
   }
 
   // =========================================================================
@@ -147,5 +202,33 @@ class FeatureQuotaActionsServiceImplTest {
             });
 
     assertEquals("You cannot have that many topics running in parallel", exception.getMessage());
+  }
+
+  @Test
+  void startNewTopic_WithinFreeLimit_ShouldIncrementAndPersist() throws FeatureQuotaHitException {
+    mockQuota.count = 0; // Increments to 1 (<= 2 limit)
+    when(featureQuotaRepository.findByCreatorAndFeature(USER_ID, Feature.StartTopic))
+        .thenReturn(Optional.of(mockQuota));
+
+    assertDoesNotThrow(() -> service.startNewTopic(USER_ID));
+
+    assertEquals(1, mockQuota.count);
+    // findOrUpdateOrCreateDefaultQuota persists once unconditionally on lookup, then
+    // startNewTopic persists again after incrementing the count.
+    verify(featureQuotaRepository, times(2)).persistAndFlush(mockQuota);
+  }
+
+  @Test
+  void startNewTopic_ExceedsFreeLimitWithUnlimitedParallelTopicsFeature_ShouldSucceed()
+      throws FeatureQuotaHitException {
+    mockQuota.count = 2; // Increments to 3 (> 2 limit)
+    mockSubscription.features.add(StripeFeatureFlagConstants.UnlimitedParallelTopics);
+    when(featureQuotaRepository.findByCreatorAndFeature(USER_ID, Feature.StartTopic))
+        .thenReturn(Optional.of(mockQuota));
+
+    assertDoesNotThrow(() -> service.startNewTopic(USER_ID));
+
+    assertEquals(3, mockQuota.count);
+    verify(featureQuotaRepository, times(2)).persistAndFlush(mockQuota);
   }
 }

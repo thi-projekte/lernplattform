@@ -101,6 +101,33 @@ class StripeWebhookServiceImplTest {
   }
 
   @Test
+  void processWebhook_subscriptionCreated_withProductFeatures_extractsLookupKeys()
+      throws Exception {
+    Subscription stripeSubscription = buildStripeSubscription(false);
+    Event event = mockEvent("customer.subscription.created", stripeSubscription);
+    stubWebhook(event);
+
+    Product product = mockProductWithTier(TIER);
+    when(stripeService.getFullProductById(PRODUCT_ID)).thenReturn(product);
+
+    com.stripe.model.entitlements.Feature entitlementFeature =
+        mock(com.stripe.model.entitlements.Feature.class);
+    when(entitlementFeature.getLookupKey()).thenReturn("unlimited-learning");
+    ProductFeature productFeature = mock(ProductFeature.class);
+    when(productFeature.getEntitlementFeature()).thenReturn(entitlementFeature);
+    when(stripeService.getProductFeatures(PRODUCT_ID)).thenReturn(List.of(productFeature));
+
+    stripeWebhookService.processWebhook(PAYLOAD, SIG_HEADER);
+
+    verify(subscriptionService)
+        .setSubscriptionIdAndStatusForCustomerId(
+            eq(CUSTOMER_ID),
+            eq(SUBSCRIPTION_ID),
+            eq(SubscriptionStatus.PREMIUM),
+            eq(List.of("unlimited-learning")));
+  }
+
+  @Test
   void processWebhook_subscriptionCreated_withEmptyDeserializedObject_doesNothing()
       throws Exception {
     Event event = mockEventWithEmptyObject("customer.subscription.created");

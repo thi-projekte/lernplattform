@@ -13,6 +13,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
+import de.thi.mynd.common.exception.FileTooLargeException;
 import de.thi.mynd.common.exception.InvalidFileTypeException;
 import de.thi.mynd.common.exception.NoFileProvidedException;
 import de.thi.mynd.common.service.ObjectStorageService;
@@ -102,6 +103,31 @@ class AudioFileElementRequestProcessorTest {
               processor.creteContentElementFromRequest(request, mockFile);
             });
     assertEquals("The file is not a valid audio", ex.getMessage());
+  }
+
+  @Test
+  void testCreteContentElementFromRequest_NullContentType_ThrowsInvalidFileTypeException() {
+    AudioFileElementRequest request = new AudioFileElementRequest();
+    FileUpload mockFile = mock(FileUpload.class);
+    when(mockFile.contentType()).thenReturn(null);
+
+    assertThrows(
+        InvalidFileTypeException.class,
+        () -> processor.creteContentElementFromRequest(request, mockFile));
+  }
+
+  @Test
+  void testCreteContentElementFromRequest_FileTooLarge_ThrowsFileTooLargeException() {
+    AudioFileElementRequest request = new AudioFileElementRequest();
+    FileUpload mockFile = mock(FileUpload.class);
+    when(mockFile.contentType()).thenReturn("audio/mpeg");
+    when(mockFile.size()).thenReturn(21L * 1024 * 1024);
+
+    FileTooLargeException ex =
+        assertThrows(
+            FileTooLargeException.class,
+            () -> processor.creteContentElementFromRequest(request, mockFile));
+    assertEquals("Audio file must not exceed 20 MB", ex.getMessage());
   }
 
   @Test

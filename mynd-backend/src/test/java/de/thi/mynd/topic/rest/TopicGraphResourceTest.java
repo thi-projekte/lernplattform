@@ -51,6 +51,36 @@ public class TopicGraphResourceTest {
   @TestSecurity(
       user = "alice",
       roles = {"builder", "authorizedUser"})
+  public void testGetMostPopularWithoutBuilderMode_returnsLearnGraph() {
+    when(topicGraphService.getLearnGraph())
+        .thenReturn(List.of(GraphTopicDto.builder().build(), GraphTopicDto.builder().build()));
+
+    given().when().get("/topics/graph").then().statusCode(200).body("size()", is(2));
+  }
+
+  @Test
+  @TestSecurity(
+      user = "alice",
+      roles = {"builder", "authorizedUser"})
+  public void testSearchTopic_returnsMatchingTopics() {
+    UUID topicId = UUID.randomUUID();
+    GraphTopicDto dto = GraphTopicDto.builder().id(topicId).build();
+    when(topicGraphService.searchTopicNodes("physics", 5)).thenReturn(List.of(dto));
+
+    given()
+        .queryParam("search", "physics")
+        .when()
+        .get("/topics/graph/search")
+        .then()
+        .statusCode(200)
+        .body("size()", is(1))
+        .body("[0].id", is(topicId.toString()));
+  }
+
+  @Test
+  @TestSecurity(
+      user = "alice",
+      roles = {"builder", "authorizedUser"})
   public void testGetMostPopularNoCategoriesPersonalFails() {
     UUID topicId = UUID.randomUUID();
 

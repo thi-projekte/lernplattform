@@ -27,6 +27,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 
 @QuarkusTest
 class TopicNoteServiceImplTest {
@@ -127,6 +128,35 @@ class TopicNoteServiceImplTest {
     assertNotNull(result);
     assertEquals("Updated Content", existingNote.content); // Verify entity was mutated
     verify(topicNoteRepository, times(1)).persistAndFlush(existingNote);
+  }
+
+  @Test
+  void updateTopicNoteForCurrentUser_WhenNoteDoesNotExist_CreatesDefaultThenAppliesUpdate() {
+    // Arrange
+    TopicNoteRequest request = new TopicNoteRequest();
+    request.content = "Brand New Content";
+
+    TopicNoteDto expectedDto = TopicNoteDto.builder().build();
+
+    when(topicNoteRepository.findByIdOptional(any(TopicNoteId.class))).thenReturn(Optional.empty());
+    when(mappingRegistry.map(any(TopicNote.class), eq(TopicNoteDto.class))).thenReturn(expectedDto);
+
+    // Act
+    TopicNoteDto result = topicNoteService.updateTopicNoteForCurrentUser(MOCK_TOPIC_ID, request);
+
+    // Assert
+    assertNotNull(result);
+    assertEquals(expectedDto, result);
+    // createDefaultForCurrentUser persists the default note, then update persists it again with
+    // the new content. Both calls record the SAME mutable TopicNote reference, so capture rather
+    // than match on content (an argThat on content would match both invocations once content is
+    // mutated, since Mockito stores arguments by reference, not by snapshot).
+    ArgumentCaptor<TopicNote> captor = ArgumentCaptor.forClass(TopicNote.class);
+    verify(topicNoteRepository, times(2)).persistAndFlush(captor.capture());
+    TopicNote persisted = captor.getValue();
+    assertEquals(MOCK_USER, persisted.id.creatorId);
+    assertEquals(MOCK_TOPIC_ID, persisted.id.topicId);
+    assertEquals("Brand New Content", persisted.content);
   }
 
   // ==========================================
